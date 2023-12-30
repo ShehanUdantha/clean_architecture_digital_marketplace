@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "129786538008",
+    "project_id": "digital-marketplace-22733",
+    "storage_bucket": "digital-marketplace-22733.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:129786538008:android:c8a77dde34a1e0cf70fb6d",
+        "android_client_info": {
+          "package_name": "com.example.clean_architecture_digital_marketplace"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZHpO69PlYqWSIVoZ4-NkVQh2jiplt7u0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
