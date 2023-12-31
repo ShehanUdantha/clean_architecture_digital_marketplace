@@ -1,8 +1,8 @@
-import 'package:Pixelcart/presentation/blocs/admin_home/admin_home_bloc.dart';
-import 'package:Pixelcart/presentation/blocs/cart/cart_bloc.dart';
-import 'package:Pixelcart/presentation/blocs/network/network_bloc.dart';
-import 'package:Pixelcart/presentation/blocs/purchase/purchase_bloc.dart';
-import 'package:Pixelcart/presentation/blocs/stripe/stripe_bloc.dart';
+import 'presentation/blocs/admin_home/admin_home_bloc.dart';
+import 'presentation/blocs/cart/cart_bloc.dart';
+import 'presentation/blocs/network/network_bloc.dart';
+import 'presentation/blocs/purchase/purchase_bloc.dart';
+import 'presentation/blocs/stripe/stripe_bloc.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 
 import 'config/routes/router.dart';
@@ -16,7 +16,7 @@ import 'presentation/blocs/admin_tools/category/category_bloc.dart';
 import 'presentation/blocs/admin_tools/product/product_bloc.dart';
 import 'presentation/blocs/admin_tools/users/users_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:Pixelcart/core/services/service_locator.dart' as locator;
+import 'core/services/service_locator.dart' as locator;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

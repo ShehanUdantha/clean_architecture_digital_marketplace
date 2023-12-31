@@ -1,6 +1,6 @@
-import 'package:Pixelcart/core/error/failure.dart';
-import 'package:Pixelcart/core/usecases/usecase.dart';
-import 'package:Pixelcart/domain/repositories/product/product_repository.dart';
+import '../../../core/error/failure.dart';
+import '../../../core/usecases/usecase.dart';
+import '../../repositories/product/product_repository.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../entities/product/product_entity.dart';

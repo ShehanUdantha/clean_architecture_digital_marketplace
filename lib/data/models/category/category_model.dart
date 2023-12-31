@@ -1,5 +1,6 @@
-import '../../../domain/entities/category/category_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../../../domain/entities/category/category_entity.dart';
 
 class CategoryModel extends CategoryEntity {
   const CategoryModel({

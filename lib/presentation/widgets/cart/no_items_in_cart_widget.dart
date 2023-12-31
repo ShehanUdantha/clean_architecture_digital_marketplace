@@ -1,5 +1,5 @@
-import 'package:Pixelcart/core/constants/routes_name.dart';
-import 'package:Pixelcart/core/utils/helper.dart';
+import '../../../core/constants/routes_name.dart';
+import '../../../core/utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 

@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:Pixelcart/data/models/stripe/stripe_model.dart';
+import '../../../models/stripe/stripe_model.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../../core/constants/keys.dart';

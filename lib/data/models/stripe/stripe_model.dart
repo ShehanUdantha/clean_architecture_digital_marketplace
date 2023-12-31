@@ -1,4 +1,4 @@
-import 'package:Pixelcart/domain/entities/stripe/stripe_entity.dart';
+import '../../../domain/entities/stripe/stripe_entity.dart';
 
 class StripeModel extends StripeEntity {
   const StripeModel({

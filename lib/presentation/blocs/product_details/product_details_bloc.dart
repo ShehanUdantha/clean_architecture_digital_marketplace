@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:Pixelcart/core/utils/extension.dart';
-import 'package:Pixelcart/domain/usecases/product/add_favorite_usecase.dart';
+import '../../../core/utils/extension.dart';
+import '../../../domain/usecases/product/add_favorite_usecase.dart';
 import 'package:bloc/bloc.dart';
 import '../../../domain/entities/product/product_entity.dart';
 import '../../../core/usecases/usecase.dart';

@@ -70,4 +70,4 @@ Admin View
 - Product Details Edit
 - Admin Dashboard
 - User/Admin Profile
-- Product Rating
+- Notification

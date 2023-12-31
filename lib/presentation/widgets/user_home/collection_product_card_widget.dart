@@ -5,7 +5,6 @@ import '../../../core/utils/enum.dart';
 import '../../../core/utils/extension.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:iconsax/iconsax.dart';
 
 import '../../../core/constants/colors.dart';
 import '../../../core/utils/helper.dart';
@@ -109,7 +108,7 @@ class CollectionProductCardWidget extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          '\u{20B9}${product.price}',
+                          '\u{20B9}${double.parse(product.price).toStringAsFixed(2)}',
                           style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w700,
@@ -120,16 +119,17 @@ class CollectionProductCardWidget extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(
-                              Iconsax.star1,
-                              color: Colors.amber,
+                            const Icon(
+                              Icons.favorite,
+                              size: 20,
+                              color: AppColors.lightRed,
                             ),
                             const SizedBox(
                               width: 5,
                             ),
                             Text(
-                              '5.0',
-                              style: TextStyle(
+                              product.likes.length.toString(),
+                              style: const TextStyle(
                                 fontSize: 14,
                                 color: AppColors.secondary,
                               ),

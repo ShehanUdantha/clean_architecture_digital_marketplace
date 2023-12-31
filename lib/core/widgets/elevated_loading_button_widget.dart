@@ -1,7 +1,7 @@
-import 'elevated_button_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/colors.dart';
+import 'elevated_button_widget.dart';
 
 class ElevatedLoadingButtonWidget extends StatelessWidget {
   final double radius;

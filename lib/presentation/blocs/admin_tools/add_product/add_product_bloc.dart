@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:Pixelcart/core/utils/extension.dart';
+import '../../../../core/utils/extension.dart';
 import 'package:bloc/bloc.dart';
 import '../../../../core/utils/enum.dart';
 import '../../../../domain/entities/product/product_entity.dart';

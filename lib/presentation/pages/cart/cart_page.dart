@@ -1,6 +1,6 @@
-import 'package:Pixelcart/core/utils/extension.dart';
-import 'package:Pixelcart/core/widgets/app_bar_title_widget.dart';
-import 'package:Pixelcart/presentation/widgets/cart/no_items_in_cart_widget.dart';
+import '../../../core/utils/extension.dart';
+import '../../../core/widgets/app_bar_title_widget.dart';
+import '../../widgets/cart/no_items_in_cart_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/constants/colors.dart';

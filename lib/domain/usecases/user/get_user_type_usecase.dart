@@ -1,7 +1,7 @@
-import '../../../core/usecases/usecase.dart';
-import '../../../core/error/failure.dart';
 import 'package:dartz/dartz.dart';
 
+import '../../../core/error/failure.dart';
+import '../../../core/usecases/usecase.dart';
 import '../../repositories/user/user_repository.dart';
 
 class GetUserTypeUseCase extends UseCase<String, String> {

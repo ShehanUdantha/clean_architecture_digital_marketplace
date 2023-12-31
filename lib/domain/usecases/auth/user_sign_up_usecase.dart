@@ -1,4 +1,4 @@
-import 'package:Pixelcart/domain/usecases/auth/sign_up_params.dart';
+import 'sign_up_params.dart';
 
 import '../../../core/usecases/usecase.dart';
 import '../../../core/error/failure.dart';

@@ -1,4 +1,4 @@
-import 'package:Pixelcart/core/utils/extension.dart';
+import '../../../core/utils/extension.dart';
 
 import '../../../core/utils/enum.dart';
 import '../../../core/utils/helper.dart';

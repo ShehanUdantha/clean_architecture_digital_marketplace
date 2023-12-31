@@ -1,7 +1,7 @@
-import 'package:Pixelcart/core/constants/routes_name.dart';
-import 'package:Pixelcart/core/constants/strings.dart';
-import 'package:Pixelcart/presentation/blocs/purchase/purchase_bloc.dart';
-import 'package:Pixelcart/presentation/widgets/profile/purchase_products_builder_widget.dart';
+import '../../../core/constants/routes_name.dart';
+import '../../../core/constants/strings.dart';
+import '../../blocs/purchase/purchase_bloc.dart';
+import '../../widgets/profile/purchase_products_builder_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';

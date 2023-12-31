@@ -1,4 +1,4 @@
-import 'package:Pixelcart/data/models/product/product_model.dart';
+import '../../models/product/product_model.dart';
 
 import '../../../core/error/failure.dart';
 import '../../data_sources/remote/cart/cart_remote_data_source.dart';

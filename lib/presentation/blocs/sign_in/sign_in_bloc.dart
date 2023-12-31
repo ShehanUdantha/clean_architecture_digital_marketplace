@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:Pixelcart/domain/usecases/auth/sign_in_params.dart';
+import '../../../domain/usecases/auth/sign_in_params.dart';
 import 'package:bloc/bloc.dart';
 import '../../../core/usecases/usecase.dart';
 import '../../../domain/usecases/auth/check_email_verification_usecase.dart';

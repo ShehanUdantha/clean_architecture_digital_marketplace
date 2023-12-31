@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:Pixelcart/domain/usecases/user/get_user_details_usecase.dart';
+import '../../../domain/usecases/user/get_user_details_usecase.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 

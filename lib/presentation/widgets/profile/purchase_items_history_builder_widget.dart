@@ -1,5 +1,5 @@
-import 'package:Pixelcart/presentation/blocs/purchase/purchase_bloc.dart';
-import 'package:Pixelcart/presentation/widgets/profile/purchase_items_card_widget.dart';
+import '../../blocs/purchase/purchase_bloc.dart';
+import 'purchase_items_card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

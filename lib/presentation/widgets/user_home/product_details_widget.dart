@@ -1,13 +1,13 @@
-import 'package:Pixelcart/core/utils/extension.dart';
-import 'package:Pixelcart/presentation/blocs/auth/auth_bloc.dart';
+import '../../../core/utils/extension.dart';
+import '../../blocs/auth/auth_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../core/constants/strings.dart';
 import '../../../domain/entities/product/product_entity.dart';
 import '../../blocs/cart/cart_bloc.dart';
+import '../../blocs/user_home/user_home_bloc.dart';
 import 'product_sub_image_list_builder_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:iconsax/iconsax.dart';
 
 import '../../../core/widgets/base_icon_button_widget.dart';
 import '../../../core/widgets/elevated_button_widget.dart';
@@ -149,51 +149,6 @@ class ProductDetailsWidget extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(
-                          height: 4,
-                        ),
-                        const Row(
-                          children: [
-                            Icon(
-                              Iconsax.star1,
-                              color: Colors.amber,
-                            ),
-                            Icon(
-                              Iconsax.star1,
-                              color: Colors.amber,
-                            ),
-                            Icon(
-                              Iconsax.star1,
-                              color: Colors.amber,
-                            ),
-                            Icon(
-                              Iconsax.star1,
-                              color: Colors.amber,
-                            ),
-                            Icon(
-                              Iconsax.star1,
-                              color: Colors.amber,
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              '5.0',
-                              style: TextStyle(
-                                color: AppColors.textSecondary,
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              '(76 reviews)',
-                              style: TextStyle(
-                                color: AppColors.textPrimary,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
                           height: 8,
                         ),
                         Text(
@@ -293,6 +248,12 @@ class ProductDetailsWidget extends StatelessWidget {
                         AppStrings.removeFromFavorite,
                       );
                     }
+
+                    context.read<UserHomeBloc>()
+                      ..add(GetFeaturedListEvent())
+                      ..add(GetTrendingListEvent())
+                      ..add(GetLatestListEvent());
+
                     context
                         .read<ProductDetailsBloc>()
                         .add(SetProductFavoriteToDefaultEvent());
@@ -318,7 +279,7 @@ class ProductDetailsWidget extends StatelessWidget {
                         )
                       : ElevatedButtonWidget(
                           title: Text(
-                            'Add To Cart | \u{20B9}${product.price}',
+                            'Add To Cart | \u{20B9}${double.parse(product.price).toStringAsFixed(2)}',
                             style: const TextStyle(
                               color: AppColors.white,
                             ),

@@ -1,4 +1,4 @@
-import 'package:Pixelcart/domain/entities/product/purchase_products_entity.dart';
+import '../../../domain/entities/product/purchase_products_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PurchaseProductsModel extends PurchaseProductsEntity {

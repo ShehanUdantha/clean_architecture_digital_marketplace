@@ -1,6 +1,6 @@
-import 'package:Pixelcart/domain/usecases/auth/sign_in_params.dart';
-import 'package:Pixelcart/presentation/blocs/auth/auth_bloc.dart';
-import 'package:Pixelcart/presentation/blocs/network/network_bloc.dart';
+import '../../../domain/usecases/auth/sign_in_params.dart';
+import '../../blocs/auth/auth_bloc.dart';
+import '../../blocs/network/network_bloc.dart';
 
 import '../../../core/constants/routes_name.dart';
 import '../../../core/constants/strings.dart';
@@ -179,18 +179,18 @@ class _SignInPageState extends State<SignInPage> {
         AppValidator.validatePassword(_passwordController.text);
     if (networkState.networkTypes == NetworkTypes.connected) {
       if (emailValidity == null) {
-        // if (passwordValidity == null) {
-        context.read<SignInBloc>().add(
-              SignInButtonClickedEvent(
-                signInParams: SignInParams(
-                  email: _emailController.text,
-                  password: _passwordController.text,
+        if (passwordValidity == null) {
+          context.read<SignInBloc>().add(
+                SignInButtonClickedEvent(
+                  signInParams: SignInParams(
+                    email: _emailController.text,
+                    password: _passwordController.text,
+                  ),
                 ),
-              ),
-            );
-        // } else {
-        //   Helper.showSnackBar(context, passwordValidity);
-        // }
+              );
+        } else {
+          Helper.showSnackBar(context, passwordValidity);
+        }
       } else {
         Helper.showSnackBar(context, emailValidity);
       }

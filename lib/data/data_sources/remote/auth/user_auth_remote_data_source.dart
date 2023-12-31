@@ -1,13 +1,13 @@
-import 'package:Pixelcart/core/utils/enum.dart';
-import 'package:Pixelcart/core/utils/extension.dart';
-import 'package:Pixelcart/domain/usecases/auth/sign_in_params.dart';
-import 'package:Pixelcart/domain/usecases/auth/sign_up_params.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../../../core/constants/strings.dart';
 import '../../../../core/error/exception.dart';
+import '../../../../core/utils/enum.dart';
+import '../../../../core/utils/extension.dart';
+import '../../../../domain/usecases/auth/sign_in_params.dart';
+import '../../../../domain/usecases/auth/sign_up_params.dart';
 import '../../../models/user/user_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 abstract class UserAuthRemoteDataSource {
   Future<String> signInUser(SignInParams signInParams);

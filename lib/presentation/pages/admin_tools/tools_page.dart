@@ -1,4 +1,4 @@
-import 'package:Pixelcart/core/widgets/app_bar_title_widget.dart';
+import '../../../core/widgets/app_bar_title_widget.dart';
 
 import '../../../core/constants/routes_name.dart';
 import 'package:flutter/material.dart';

@@ -1,7 +1,7 @@
-import 'package:Pixelcart/core/utils/enum.dart';
-import 'package:Pixelcart/core/utils/helper.dart';
-import 'package:Pixelcart/presentation/blocs/user_home/user_home_bloc.dart';
-import 'package:Pixelcart/presentation/widgets/profile/profile_card_widget.dart';
+import '../../../core/utils/enum.dart';
+import '../../../core/utils/helper.dart';
+import '../../blocs/user_home/user_home_bloc.dart';
+import '../../widgets/profile/profile_card_widget.dart';
 
 import '../../../core/constants/routes_name.dart';
 import 'package:flutter/material.dart';

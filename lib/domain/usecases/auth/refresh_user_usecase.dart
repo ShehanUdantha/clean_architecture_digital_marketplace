@@ -1,4 +1,4 @@
-import 'package:Pixelcart/domain/repositories/auth/user_auth_repository.dart';
+import '../../repositories/auth/user_auth_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class RefreshUserUseCase {

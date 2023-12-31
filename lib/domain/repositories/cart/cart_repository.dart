@@ -1,4 +1,4 @@
-import 'package:Pixelcart/domain/entities/product/product_entity.dart';
+import '../../entities/product/product_entity.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../../core/error/failure.dart';

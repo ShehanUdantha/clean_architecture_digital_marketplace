@@ -1,5 +1,5 @@
-import 'package:Pixelcart/domain/usecases/auth/sign_in_params.dart';
-import 'package:Pixelcart/domain/usecases/auth/sign_up_params.dart';
+import '../../../domain/usecases/auth/sign_in_params.dart';
+import '../../../domain/usecases/auth/sign_up_params.dart';
 
 import '../../../core/error/exception.dart';
 import '../../../core/error/failure.dart';

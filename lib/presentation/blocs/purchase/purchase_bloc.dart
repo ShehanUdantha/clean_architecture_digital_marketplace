@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:Pixelcart/core/usecases/usecase.dart';
-import 'package:Pixelcart/domain/entities/product/product_entity.dart';
-import 'package:Pixelcart/domain/usecases/cart/purchase/download_product_by_product_id_usecase.dart';
-import 'package:Pixelcart/domain/usecases/cart/purchase/get_all_purchase_history_by_user_id_usecase.dart';
-import 'package:Pixelcart/domain/usecases/cart/purchase/get_all_purchase_items_by_product_id_usecase.dart';
+import '../../../core/usecases/usecase.dart';
+import '../../../domain/entities/product/product_entity.dart';
+import '../../../domain/usecases/cart/purchase/download_product_by_product_id_usecase.dart';
+import '../../../domain/usecases/cart/purchase/get_all_purchase_history_by_user_id_usecase.dart';
+import '../../../domain/usecases/cart/purchase/get_all_purchase_items_by_product_id_usecase.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:Pixelcart/core/utils/extension.dart';
+import '../../../core/utils/extension.dart';
 import 'package:bloc/bloc.dart';
 import '../../../core/utils/enum.dart';
 import '../../../domain/usecases/auth/forgot_password_usecase.dart';

@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:Pixelcart/core/utils/extension.dart';
-import 'package:Pixelcart/domain/usecases/auth/refresh_user_usecase.dart';
+import '../../../core/utils/extension.dart';
+import '../../../domain/usecases/auth/refresh_user_usecase.dart';
 import 'package:bloc/bloc.dart';
 import '../../../core/usecases/usecase.dart';
 import '../../../core/utils/enum.dart';

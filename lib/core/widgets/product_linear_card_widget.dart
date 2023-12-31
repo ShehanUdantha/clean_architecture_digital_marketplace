@@ -1,4 +1,4 @@
-import 'package:Pixelcart/core/widgets/base_icon_button_widget.dart';
+import 'base_icon_button_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../domain/entities/product/product_entity.dart';
 import 'package:flutter/material.dart';
@@ -100,7 +100,7 @@ class ProductLinearCardWidget extends StatelessWidget {
                       height: 5.0,
                     ),
                     Text(
-                      '\u{20B9}${product.price}',
+                      '\u{20B9}${double.parse(product.price).toStringAsFixed(2)}',
                       style: const TextStyle(
                         fontWeight: FontWeight.w600,
                         color: AppColors.textPrimary,
@@ -133,10 +133,10 @@ class ProductLinearCardWidget extends StatelessWidget {
                                         ),
                                         BaseIconButtonWidget(
                                           function: () => editFunction!(),
-                                          icon: Icon(
+                                          icon: const Icon(
                                             Iconsax.edit_2,
                                             size: 18,
-                                            color: Colors.greenAccent.shade400,
+                                            color: AppColors.lightGreen,
                                           ),
                                           size: 35.0,
                                         ),

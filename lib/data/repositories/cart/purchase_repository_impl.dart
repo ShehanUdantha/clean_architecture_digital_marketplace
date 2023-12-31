@@ -1,8 +1,8 @@
-import 'package:Pixelcart/core/error/failure.dart';
-import 'package:Pixelcart/data/data_sources/remote/cart/purchase_remote_data_source.dart';
-import 'package:Pixelcart/domain/entities/product/product_entity.dart';
-import 'package:Pixelcart/domain/entities/product/purchase_products_entity.dart';
-import 'package:Pixelcart/domain/repositories/cart/purchase_repository.dart';
+import '../../../core/error/failure.dart';
+import '../../data_sources/remote/cart/purchase_remote_data_source.dart';
+import '../../../domain/entities/product/product_entity.dart';
+import '../../../domain/entities/product/purchase_products_entity.dart';
+import '../../../domain/repositories/cart/purchase_repository.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../../core/error/exception.dart';

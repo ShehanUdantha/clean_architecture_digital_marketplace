@@ -1,7 +1,7 @@
-import 'package:Pixelcart/core/error/failure.dart';
-import 'package:Pixelcart/core/usecases/usecase.dart';
-import 'package:Pixelcart/domain/entities/product/product_entity.dart';
-import 'package:Pixelcart/domain/repositories/cart/cart_repository.dart';
+import '../../../core/error/failure.dart';
+import '../../../core/usecases/usecase.dart';
+import '../../entities/product/product_entity.dart';
+import '../../repositories/cart/cart_repository.dart';
 import 'package:dartz/dartz.dart';
 
 class GetAllCartedItemsDetailsByIdUseCase

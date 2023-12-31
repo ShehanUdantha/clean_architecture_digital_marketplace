@@ -1,4 +1,4 @@
-import 'package:Pixelcart/domain/usecases/auth/sign_up_params.dart';
+import '../../../domain/usecases/auth/sign_up_params.dart';
 
 import '../../../core/constants/routes_name.dart';
 import '../../../core/utils/extension.dart';
@@ -172,19 +172,19 @@ class _SignUpPageState extends State<SignUpPage> {
     if (networkState.networkTypes == NetworkTypes.connected) {
       if (_userNameController.text.isNotEmpty) {
         if (emailValidity == null) {
-          // if (passwordValidity == null) {
-          context.read<SignUpBloc>().add(
-                SignUpButtonClickedEvent(
-                  signUpParams: SignUpParams(
-                    userName: _userNameController.text,
-                    email: _emailController.text,
-                    password: _passwordController.text,
+          if (passwordValidity == null) {
+            context.read<SignUpBloc>().add(
+                  SignUpButtonClickedEvent(
+                    signUpParams: SignUpParams(
+                      userName: _userNameController.text,
+                      email: _emailController.text,
+                      password: _passwordController.text,
+                    ),
                   ),
-                ),
-              );
-          // } else {
-          //   Helper.showSnackBar(context, passwordValidity);
-          // }
+                );
+          } else {
+            Helper.showSnackBar(context, passwordValidity);
+          }
         } else {
           Helper.showSnackBar(context, emailValidity);
         }

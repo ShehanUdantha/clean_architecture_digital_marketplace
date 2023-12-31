@@ -1,6 +1,6 @@
-import 'package:Pixelcart/core/constants/colors.dart';
-import 'package:Pixelcart/core/utils/enum.dart';
-import 'package:Pixelcart/presentation/blocs/cart/cart_bloc.dart';
+import '../../../core/constants/colors.dart';
+import '../../../core/utils/enum.dart';
+import '../../blocs/cart/cart_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
