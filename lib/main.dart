@@ -1,3 +1,5 @@
+import 'config/theme/theme.dart';
+
 import 'presentation/blocs/admin_home/admin_home_bloc.dart';
 import 'presentation/blocs/cart/cart_bloc.dart';
 import 'presentation/blocs/network/network_bloc.dart';
@@ -6,7 +8,6 @@ import 'presentation/blocs/stripe/stripe_bloc.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 
 import 'config/routes/router.dart';
-import 'core/constants/colors.dart';
 import 'core/constants/keys.dart';
 import 'firebase_options.dart';
 import 'presentation/blocs/product_details/product_details_bloc.dart';
@@ -104,22 +105,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp.router(
         title: 'Pixelcart',
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          brightness: Brightness.light,
-          scaffoldBackgroundColor: AppColors.primary,
-          appBarTheme: const AppBarTheme(
-            backgroundColor: AppColors.primary,
-          ),
-          bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-            backgroundColor: AppColors.primary,
-          ),
-          textSelectionTheme: const TextSelectionThemeData(
-            cursorColor: AppColors.secondary,
-            selectionHandleColor: AppColors.secondary,
-          ),
-          useMaterial3: true,
-          fontFamily: 'Poppins',
-        ),
+        theme: AppTheme.lightTheme,
         routerConfig: goRouter,
       ),
     );

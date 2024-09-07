@@ -11,10 +11,10 @@ class ProfileCardWidget extends StatelessWidget {
   final Function function;
 
   const ProfileCardWidget({
-    Key? key,
+    super.key,
     required this.title,
     required this.function,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

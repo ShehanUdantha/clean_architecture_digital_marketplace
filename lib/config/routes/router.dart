@@ -1,4 +1,3 @@
-import '../../presentation/pages/profile/purchase_history_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -6,12 +5,12 @@ import 'package:go_router/go_router.dart';
 import '../../core/constants/routes_name.dart';
 import '../../core/utils/enum.dart';
 import '../../presentation/blocs/auth/auth_bloc.dart';
-import '../../presentation/pages/admin_home/admin_home_page.dart';
-import '../../presentation/pages/admin_tools/category_manage_page.dart';
-import '../../presentation/pages/admin_tools/product_add_edit_page.dart';
-import '../../presentation/pages/admin_tools/product_manage_page.dart';
-import '../../presentation/pages/admin_tools/tools_page.dart';
-import '../../presentation/pages/admin_tools/user_manage_page.dart';
+import '../../presentation/pages/admin/admin_home_page.dart';
+import '../../presentation/pages/admin/tools/category_manage_page.dart';
+import '../../presentation/pages/admin/tools/product_add_edit_page.dart';
+import '../../presentation/pages/admin/tools/product_manage_page.dart';
+import '../../presentation/pages/admin/tools/tools_page.dart';
+import '../../presentation/pages/admin/tools/user_manage_page.dart';
 import '../../presentation/pages/auth/email_verification_and_forgot_password_page.dart';
 import '../../presentation/pages/auth/forgot_password_page.dart';
 import '../../presentation/pages/auth/sign_in_page.dart';
@@ -24,6 +23,7 @@ import '../../presentation/pages/profile/purchase_products_view_page.dart';
 import '../../presentation/pages/user_home/product_view_page.dart';
 import '../../presentation/pages/user_home/user_home_page.dart';
 import '../../presentation/pages/user_home/view_all_products_page.dart';
+import '../../presentation/pages/profile/purchase_history_page.dart';
 
 // private navigators
 final rootNavigatorKey = GlobalKey<NavigatorState>();

@@ -28,6 +28,9 @@ class AppRoutes {
   static const String toolsPagePath = '/tools';
   static const String toolsPageName = 'tools';
 
+  static const String adminProfilePagePath = '/admin-profile';
+  static const String adminProfilePageName = 'adminProfile';
+
   // tools sub routes
   static const String productsManagePagePath = 'products-manage';
   static const String productsManagePageName = 'productsManage';
@@ -41,12 +44,15 @@ class AppRoutes {
   static const String usersManagePagePath = 'users-manage';
   static const String usersManagePageName = 'usersManage';
 
-  static const String adminProfilePagePath = '/admin-profile';
-  static const String adminProfilePageName = 'adminProfile';
-
-  // user route
+  // user routes
   static const String homePagePath = '/home';
   static const String homePageName = 'home';
+
+  static const String cartPagePath = '/cart';
+  static const String cartPageName = 'cart';
+
+  static const String profilePagePath = '/profile';
+  static const String profilePageName = 'profile';
 
   // home sub routes
   static const String productViewPagePath = 'product-view';
@@ -54,13 +60,6 @@ class AppRoutes {
 
   static const String viewAllProductsPagePath = 'view-all-products';
   static const String viewAllProductsPageName = 'viewAllProducts';
-
-  static const String cartPagePath = '/cart';
-  static const String cartPageName = 'cart';
-
-  // profile route
-  static const String profilePagePath = '/profile';
-  static const String profilePageName = 'profile';
 
   // profile sub routes
   static const String purchaseHistoryPagePath = 'purchase-history';

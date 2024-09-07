@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 
-import '../../../../core/constants/colors.dart';
+import '../../../core/constants/colors.dart';
 import '../../../../core/constants/routes_name.dart';
 import '../../../../core/constants/strings.dart';
 import '../../../../core/utils/enum.dart';

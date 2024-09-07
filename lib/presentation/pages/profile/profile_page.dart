@@ -41,34 +41,26 @@ class ProfilePage extends StatelessWidget {
                   children: [
                     ProfileCardWidget(
                       title: 'User Info',
-                      function: () => _moveToPage(
-                        context,
-                        AppRoutes.profilePageName,
-                      ),
+                      function: () {},
                     ),
                     const SizedBox(
                       height: 16,
                     ),
-                    authState.userType == UserTypes.user.name
-                        ? ProfileCardWidget(
-                            title: 'Purchase History',
-                            function: () => _moveToPage(
-                              context,
-                              AppRoutes.purchaseHistoryPageName,
-                            ),
-                          )
-                        : const SizedBox(),
-                    authState.userType == UserTypes.user.name
-                        ? const SizedBox(
-                            height: 16,
-                          )
-                        : const SizedBox(),
+                    if (authState.userType == UserTypes.user.name)
+                      ProfileCardWidget(
+                        title: 'Purchase History',
+                        function: () => _moveToPage(
+                          context,
+                          AppRoutes.purchaseHistoryPageName,
+                        ),
+                      ),
+                    if (authState.userType == UserTypes.user.name)
+                      const SizedBox(
+                        height: 16,
+                      ),
                     ProfileCardWidget(
                       title: 'Settings',
-                      function: () => _moveToPage(
-                        context,
-                        AppRoutes.profilePageName,
-                      ),
+                      function: () {},
                     ),
                     const SizedBox(
                       height: 16,

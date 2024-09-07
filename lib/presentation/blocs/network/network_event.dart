@@ -8,7 +8,7 @@ sealed class NetworkEvent extends Equatable {
 }
 
 class CheckNetworkConnectivity extends NetworkEvent {
-  final ConnectivityResult result;
+  final List<ConnectivityResult> result;
 
   const CheckNetworkConnectivity({required this.result});
 }

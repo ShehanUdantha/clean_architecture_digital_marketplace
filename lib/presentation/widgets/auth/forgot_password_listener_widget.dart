@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/constants/colors.dart';
+import '../../../core/constants/colors.dart';
 import '../../../../core/constants/strings.dart';
 import '../../../../core/utils/enum.dart';
 import '../../../../core/utils/helper.dart';
@@ -13,9 +13,9 @@ class ForgotPasswordListenerWidget extends StatelessWidget {
   final String email;
 
   const ForgotPasswordListenerWidget({
-    Key? key,
+    super.key,
     required this.email,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

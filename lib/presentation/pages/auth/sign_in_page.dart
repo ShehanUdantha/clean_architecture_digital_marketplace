@@ -11,7 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 
-import '../../../../core/constants/colors.dart';
+import '../../../core/constants/colors.dart';
 import '../../../../core/utils/enum.dart';
 import '../../../../core/utils/validator.dart';
 import '../../../core/widgets/elevated_button_widget.dart';

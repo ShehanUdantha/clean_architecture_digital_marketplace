@@ -13,7 +13,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/utils/helper.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../core/constants/colors.dart';
+import '../../../core/constants/colors.dart';
 import '../../../core/widgets/elevated_button_widget.dart';
 import '../../blocs/product_details/product_details_bloc.dart';
 

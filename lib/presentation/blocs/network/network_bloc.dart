@@ -27,8 +27,8 @@ class NetworkBloc extends Bloc<NetworkEvent, NetworkState> {
     CheckNetworkConnectivity event,
     Emitter<NetworkState> emit,
   ) async {
-    if (event.result == ConnectivityResult.mobile ||
-        event.result == ConnectivityResult.wifi) {
+    if (event.result.contains(ConnectivityResult.mobile) ||
+        event.result.contains(ConnectivityResult.wifi)) {
       emit(const NetworkState(networkTypes: NetworkTypes.connected));
     } else {
       emit(const NetworkState(networkTypes: NetworkTypes.notConnected));

@@ -13,11 +13,11 @@ class ProductGridViewListBuilderWidget extends StatelessWidget {
   final String? type;
 
   const ProductGridViewListBuilderWidget({
-    Key? key,
+    super.key,
     required this.productsList,
     required this.routeName,
     this.type,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
