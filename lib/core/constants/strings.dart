@@ -72,4 +72,5 @@ class AppStrings {
       'Product Successfully downloaded!';
   static const String productStartedToDownload = 'Product download Started!';
   static const String noStoragePermission = 'No permission to storage access!';
+  static const String pageNotFound = 'Page Not Found!';
 }

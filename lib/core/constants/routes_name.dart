@@ -31,7 +31,7 @@ class AppRoutes {
   static const String adminProfilePagePath = '/admin-profile';
   static const String adminProfilePageName = 'adminProfile';
 
-  // tools sub routes
+  // admin tools sub routes
   static const String productsManagePagePath = 'products-manage';
   static const String productsManagePageName = 'productsManage';
 
@@ -43,6 +43,10 @@ class AppRoutes {
 
   static const String usersManagePagePath = 'users-manage';
   static const String usersManagePageName = 'usersManage';
+
+  // admin profile sub routes
+  static const String adminInfoPagePath = 'admin-info';
+  static const String adminInfoPageName = 'adminInfo';
 
   // user routes
   static const String homePagePath = '/home';
@@ -67,4 +71,7 @@ class AppRoutes {
 
   static const String purchaseProductViewPagePath = 'purchase-products-view';
   static const String purchaseProductViewPageName = 'purchaseProductView';
+
+  static const String userInfoPagePath = 'user-info';
+  static const String userInfoPageName = 'userInfo';
 }

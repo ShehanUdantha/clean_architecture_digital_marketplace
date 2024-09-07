@@ -24,6 +24,8 @@ import '../../presentation/pages/user_home/product_view_page.dart';
 import '../../presentation/pages/user_home/user_home_page.dart';
 import '../../presentation/pages/user_home/view_all_products_page.dart';
 import '../../presentation/pages/profile/purchase_history_page.dart';
+import '../../presentation/pages/profile/user_info_page.dart';
+import '../../presentation/widgets/base/page_not_found_widget.dart';
 
 // private navigators
 final rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -45,7 +47,7 @@ GoRouter goRouter = GoRouter(
   initialLocation: AppRoutes.splashPagePath,
   navigatorKey: rootNavigatorKey,
   routes: [
-    // splash page
+    // * splash page
     GoRoute(
       name: AppRoutes.splashPageName,
       path: AppRoutes.splashPagePath,
@@ -78,7 +80,7 @@ GoRouter goRouter = GoRouter(
       },
     ),
 
-    // auth pages
+    // * auth pages
     GoRoute(
       name: AppRoutes.signInPageName,
       path: AppRoutes.signInPagePath,
@@ -124,7 +126,7 @@ GoRouter goRouter = GoRouter(
       },
     ),
 
-    // user base page
+    // * user base page
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
         return BasePage(
@@ -213,7 +215,6 @@ GoRouter goRouter = GoRouter(
                 GoRoute(
                   name: AppRoutes.purchaseHistoryPageName,
                   path: AppRoutes.purchaseHistoryPagePath,
-                  parentNavigatorKey: shellProfileNavigatorKey,
                   pageBuilder: (context, state) {
                     return MaterialPage(
                       key: state.pageKey,
@@ -233,6 +234,16 @@ GoRouter goRouter = GoRouter(
                   },
                   // sub routes
                 ),
+                GoRoute(
+                  name: AppRoutes.userInfoPageName,
+                  path: AppRoutes.userInfoPagePath,
+                  pageBuilder: (context, state) {
+                    return MaterialPage(
+                      key: state.pageKey,
+                      child: const UserInfoPage(),
+                    );
+                  },
+                ),
               ],
             ),
           ],
@@ -240,7 +251,7 @@ GoRouter goRouter = GoRouter(
       ],
     ),
 
-    // admin base page
+    // * admin base page
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
         return BasePage(
@@ -347,10 +358,26 @@ GoRouter goRouter = GoRouter(
                   child: const ProfilePage(),
                 );
               },
+              // sub routes
+              routes: [
+                GoRoute(
+                  name: AppRoutes.adminInfoPageName,
+                  path: AppRoutes.adminInfoPagePath,
+                  pageBuilder: (context, state) {
+                    return MaterialPage(
+                      key: state.pageKey,
+                      child: const UserInfoPage(),
+                    );
+                  },
+                ),
+              ],
             ),
           ],
         ),
       ],
     ),
   ],
+  errorBuilder: (context, state) {
+    return const PageNotFoundWidget();
+  },
 );

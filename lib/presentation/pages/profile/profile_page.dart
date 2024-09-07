@@ -41,7 +41,12 @@ class ProfilePage extends StatelessWidget {
                   children: [
                     ProfileCardWidget(
                       title: 'User Info',
-                      function: () {},
+                      function: () => _moveToPage(
+                        context,
+                        authState.userType == UserTypes.user.name
+                            ? AppRoutes.userInfoPageName
+                            : AppRoutes.adminInfoPageName,
+                      ),
                     ),
                     const SizedBox(
                       height: 16,

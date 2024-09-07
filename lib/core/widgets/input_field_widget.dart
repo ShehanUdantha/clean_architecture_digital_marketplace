@@ -10,6 +10,7 @@ class InputFieldWidget extends StatefulWidget {
   final bool isTextArea;
   final TextInputType? keyBoardType;
   final TextEditingController? controller;
+  final bool? isReadOnly;
 
   const InputFieldWidget({
     super.key,
@@ -20,6 +21,7 @@ class InputFieldWidget extends StatefulWidget {
     this.isTextArea = false,
     this.keyBoardType = TextInputType.text,
     this.controller,
+    this.isReadOnly,
   });
 
   @override
@@ -36,6 +38,7 @@ class _InputFieldWidgetState extends State<InputFieldWidget> {
       obscureText: widget.suffix != null ? isSuffixClicked : false,
       maxLines: widget.isTextArea ? 3 : 1,
       keyboardType: widget.keyBoardType,
+      readOnly: widget.isReadOnly ?? false,
       decoration: InputDecoration(
         prefixIcon: widget.prefix,
         prefixIconColor: AppColors.textThird,
