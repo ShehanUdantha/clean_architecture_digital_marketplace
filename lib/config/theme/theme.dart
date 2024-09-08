@@ -1,4 +1,4 @@
-import 'package:Pixelcart/core/constants/colors.dart';
+import '../../core/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 class AppTheme {

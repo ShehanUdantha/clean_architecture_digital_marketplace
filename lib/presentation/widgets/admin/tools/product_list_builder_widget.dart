@@ -1,8 +1,8 @@
-import 'package:Pixelcart/domain/entities/product/product_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../domain/entities/product/product_entity.dart';
 import '../../../../core/constants/routes_name.dart';
 import '../../../../core/widgets/product_linear_card_widget.dart';
 import '../../../../core/constants/strings.dart';

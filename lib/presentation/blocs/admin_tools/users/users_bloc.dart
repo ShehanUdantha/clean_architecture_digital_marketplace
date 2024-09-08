@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../../domain/entities/user/user_entity.dart';
 import '../../../../domain/usecases/user/get_all_users_usecase.dart';
 import 'package:equatable/equatable.dart';

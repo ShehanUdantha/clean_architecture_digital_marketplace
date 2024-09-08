@@ -2,8 +2,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:Pixelcart/core/utils/extension.dart';
-import 'package:Pixelcart/data/models/product/product_model.dart';
+import '../../../../core/utils/extension.dart';
+import '../../../../data/models/product/product_model.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../core/error/exception.dart';

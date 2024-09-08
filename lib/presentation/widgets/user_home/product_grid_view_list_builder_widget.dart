@@ -1,8 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
-import 'package:Pixelcart/domain/entities/product/product_entity.dart';
-import 'package:Pixelcart/presentation/widgets/user_home/grid_product_card_widget.dart';
+import '../../../domain/entities/product/product_entity.dart';
+import '../../../presentation/widgets/user_home/grid_product_card_widget.dart';
 
 import '../../../core/constants/strings.dart';
 import '../../../core/utils/helper.dart';

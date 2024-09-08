@@ -1,8 +1,9 @@
 import 'dart:async';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../core/utils/extension.dart';
 import '../../../domain/usecases/product/add_favorite_usecase.dart';
-import 'package:bloc/bloc.dart';
 import '../../../domain/entities/product/product_entity.dart';
 import '../../../core/usecases/usecase.dart';
 import '../../../core/utils/enum.dart';

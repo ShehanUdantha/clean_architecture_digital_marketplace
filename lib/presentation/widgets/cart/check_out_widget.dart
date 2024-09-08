@@ -1,12 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:Pixelcart/core/constants/routes_name.dart';
-import 'package:Pixelcart/core/constants/strings.dart';
-import 'package:Pixelcart/core/utils/enum.dart';
-import 'package:Pixelcart/core/widgets/elevated_loading_button_widget.dart';
-import 'package:Pixelcart/presentation/blocs/cart/cart_bloc.dart';
-import 'package:Pixelcart/presentation/blocs/purchase/purchase_bloc.dart';
-import 'package:Pixelcart/presentation/blocs/stripe/stripe_bloc.dart';
+import '../../../core/constants/routes_name.dart';
+import '../../../core/constants/strings.dart';
+import '../../../core/utils/enum.dart';
+import '../../../core/widgets/elevated_loading_button_widget.dart';
+import '../../../presentation/blocs/cart/cart_bloc.dart';
+import '../../../presentation/blocs/purchase/purchase_bloc.dart';
+import '../../../presentation/blocs/stripe/stripe_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 

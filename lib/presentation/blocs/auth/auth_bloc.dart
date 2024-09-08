@@ -1,8 +1,9 @@
 import 'dart:async';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../core/utils/extension.dart';
 import '../../../domain/usecases/auth/refresh_user_usecase.dart';
-import 'package:bloc/bloc.dart';
 import '../../../core/usecases/usecase.dart';
 import '../../../core/utils/enum.dart';
 import '../../../domain/usecases/auth/get_auth_user_usecase.dart';

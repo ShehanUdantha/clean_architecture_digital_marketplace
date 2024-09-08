@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../../domain/entities/product/product_entity.dart';
 import '../../../../domain/usecases/product/delete_product_usecase.dart';
 import '../../../../domain/usecases/product/get_all_products_usecase.dart';

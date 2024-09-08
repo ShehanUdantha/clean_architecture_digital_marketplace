@@ -1,13 +1,14 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 
-import 'package:Pixelcart/core/usecases/usecase.dart';
-import 'package:Pixelcart/core/utils/enum.dart';
-import 'package:Pixelcart/core/utils/extension.dart';
-import 'package:Pixelcart/core/utils/helper.dart';
-import 'package:Pixelcart/domain/entities/product/product_entity.dart';
-import 'package:Pixelcart/domain/usecases/cart/get_all_carted_items_details_by_id_usecase.dart';
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../core/usecases/usecase.dart';
+import '../../../core/utils/enum.dart';
+import '../../../core/utils/extension.dart';
+import '../../../core/utils/helper.dart';
+import '../../../domain/entities/product/product_entity.dart';
+import '../../../domain/usecases/cart/get_all_carted_items_details_by_id_usecase.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../domain/usecases/cart/get_carted_items_usecase.dart';

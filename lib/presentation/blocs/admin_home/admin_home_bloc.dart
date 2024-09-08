@@ -1,7 +1,8 @@
 import 'dart:async';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../domain/usecases/user/get_user_details_usecase.dart';
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../core/usecases/usecase.dart';

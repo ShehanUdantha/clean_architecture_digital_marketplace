@@ -1,11 +1,12 @@
 import 'dart:async';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../core/usecases/usecase.dart';
 import '../../../domain/entities/product/product_entity.dart';
 import '../../../domain/usecases/cart/purchase/download_product_by_product_id_usecase.dart';
 import '../../../domain/usecases/cart/purchase/get_all_purchase_history_by_user_id_usecase.dart';
 import '../../../domain/usecases/cart/purchase/get_all_purchase_items_by_product_id_usecase.dart';
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../core/utils/enum.dart';

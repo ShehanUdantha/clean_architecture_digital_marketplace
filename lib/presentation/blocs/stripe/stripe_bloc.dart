@@ -1,9 +1,10 @@
 import 'dart:async';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../core/utils/enum.dart';
 import '../../../domain/entities/stripe/stripe_entity.dart';
 import '../../../domain/usecases/stripe/make_payments_usecase.dart';
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 

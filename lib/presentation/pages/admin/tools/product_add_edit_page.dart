@@ -2,9 +2,9 @@
 
 import 'dart:io';
 
-import 'package:Pixelcart/core/constants/strings.dart';
-import 'package:Pixelcart/core/utils/extension.dart';
-import 'package:Pixelcart/core/utils/helper.dart';
+import '../../../../core/constants/strings.dart';
+import '../../../../core/utils/extension.dart';
+import '../../../../core/utils/helper.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

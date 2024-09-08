@@ -1,10 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:Pixelcart/core/utils/extension.dart';
+import '../../../../core/utils/extension.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:Pixelcart/data/models/product/product_model.dart';
-import 'package:Pixelcart/data/models/product/purchase_products_model.dart';
+import '../../../../data/models/product/product_model.dart';
+import '../../../../data/models/product/purchase_products_model.dart';
 import 'package:flutter_file_downloader/flutter_file_downloader.dart';
 
 import '../../../../core/error/exception.dart';

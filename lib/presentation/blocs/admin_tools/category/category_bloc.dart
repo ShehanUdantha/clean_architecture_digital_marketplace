@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../../core/usecases/usecase.dart';
 import '../../../../core/utils/enum.dart';
 import '../../../../domain/entities/category/category_entity.dart';

@@ -1,9 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:Pixelcart/domain/entities/product/purchase_products_entity.dart';
+import '../../../domain/entities/product/purchase_products_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:Pixelcart/core/constants/routes_name.dart';
+import '../../../core/constants/routes_name.dart';
 
 import '../../../core/constants/colors.dart';
 import '../../../core/utils/helper.dart';
@@ -12,9 +12,9 @@ class PurchaseItemsCardWidget extends StatelessWidget {
   final PurchaseProductsEntity purchaseDetails;
 
   const PurchaseItemsCardWidget({
-    Key? key,
+    super.key,
     required this.purchaseDetails,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

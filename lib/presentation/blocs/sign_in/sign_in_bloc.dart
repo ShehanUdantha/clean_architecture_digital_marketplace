@@ -1,7 +1,8 @@
 import 'dart:async';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../domain/usecases/auth/sign_in_params.dart';
-import 'package:bloc/bloc.dart';
 import '../../../core/usecases/usecase.dart';
 import '../../../domain/usecases/auth/check_email_verification_usecase.dart';
 import '../../../domain/usecases/user/get_user_type_usecase.dart';

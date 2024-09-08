@@ -1,7 +1,8 @@
 import 'dart:async';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../core/utils/extension.dart';
-import 'package:bloc/bloc.dart';
 import '../../../core/utils/enum.dart';
 import '../../../domain/usecases/auth/forgot_password_usecase.dart';
 import 'package:equatable/equatable.dart';
