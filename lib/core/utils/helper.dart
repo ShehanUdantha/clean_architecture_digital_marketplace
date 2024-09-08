@@ -19,11 +19,13 @@ class Helper {
       MediaQuery.of(context).orientation == Orientation.landscape;
 
   static void showSnackBar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-      ),
-    );
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(message),
+        ),
+      );
   }
 
   static List<DropdownMenuItem> createMarketingDropDownList() {

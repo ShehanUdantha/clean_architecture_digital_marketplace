@@ -114,27 +114,28 @@ class GridProductCard extends StatelessWidget {
                             color: AppColors.secondary,
                           ),
                         ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(
-                              Icons.favorite,
-                              size: 20,
-                              color: AppColors.lightRed,
-                            ),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              product.likes.length.toString(),
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: AppColors.secondary,
+                        if (product.likes.isNotEmpty)
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.favorite,
+                                size: 20,
+                                color: AppColors.lightRed,
                               ),
-                            ),
-                          ],
-                        ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                product.likes.length.toString(),
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: AppColors.secondary,
+                                ),
+                              ),
+                            ],
+                          ),
                       ],
                     ),
                   ),

@@ -7,38 +7,45 @@ import 'package:bloc/bloc.dart';
 import '../../../../core/utils/enum.dart';
 import '../../../../domain/entities/product/product_entity.dart';
 import '../../../../domain/usecases/product/add_product_usecase.dart';
+import '../../../../domain/usecases/product/edit_product_usecase.dart';
 import 'package:equatable/equatable.dart';
 
-part 'add_product_event.dart';
-part 'add_product_state.dart';
+part 'add_and_edit_product_event.dart';
+part 'add_and_edit_product_state.dart';
 
-class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
+class AddAndEditProductBloc
+    extends Bloc<AddAndEditProductEvent, AddAndEditProductState> {
   final AddProductUseCase addProductUseCase;
+  final EditProductUseCase editProductUseCase;
 
-  AddProductBloc(this.addProductUseCase) : super(const AddProductState()) {
+  AddAndEditProductBloc(
+    this.addProductUseCase,
+    this.editProductUseCase,
+  ) : super(const AddAndEditProductState()) {
     on<CategoryNameFieldChangeEvent>(onCategoryNameFieldChangeEvent);
     on<MarketingTypeFieldChangeEvent>(onMarketingTypeFieldChangeEvent);
     on<ProductUploadButtonClickedEvent>(onProductUploadButtonClickedEvent);
     on<SetProductStatusToDefault>(onSetProductStatusToDefault);
+    on<ProductEditButtonClickedEvent>(onProductEditButtonClickedEvent);
   }
 
   FutureOr<void> onCategoryNameFieldChangeEvent(
     CategoryNameFieldChangeEvent event,
-    Emitter<AddProductState> emit,
+    Emitter<AddAndEditProductState> emit,
   ) {
     emit(state.copyWith(category: event.category));
   }
 
   FutureOr<void> onMarketingTypeFieldChangeEvent(
     MarketingTypeFieldChangeEvent event,
-    Emitter<AddProductState> emit,
+    Emitter<AddAndEditProductState> emit,
   ) {
     emit(state.copyWith(marketingType: event.type));
   }
 
   FutureOr<void> onProductUploadButtonClickedEvent(
     ProductUploadButtonClickedEvent event,
-    Emitter<AddProductState> emit,
+    Emitter<AddAndEditProductState> emit,
   ) async {
     emit(state.copyWith(status: BlocStatus.loading));
 
@@ -85,11 +92,60 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
 
   FutureOr<void> onSetProductStatusToDefault(
     SetProductStatusToDefault event,
-    Emitter<AddProductState> emit,
+    Emitter<AddAndEditProductState> emit,
   ) {
     emit(state.copyWith(
       status: BlocStatus.initial,
       message: '',
     ));
+  }
+
+  FutureOr<void> onProductEditButtonClickedEvent(
+    ProductEditButtonClickedEvent event,
+    Emitter<AddAndEditProductState> emit,
+  ) async {
+    emit(state.copyWith(status: BlocStatus.loading));
+
+    ProductEntity productEntity = ProductEntity(
+      id: event.id,
+      productName: event.productName,
+      price: event.productPrice,
+      category: state.category,
+      marketingType: state.marketingType,
+      description: event.productDescription,
+      coverImage: event.coverImage,
+      subImages: event.subImages,
+      zipFile: event.zipFile,
+      sharedSubImages: event.sharedSubImages,
+      likes: event.likes,
+      status: event.status,
+    );
+
+    final result = await editProductUseCase.call(productEntity);
+    result.fold(
+      (l) => emit(
+        state.copyWith(
+          status: BlocStatus.error,
+          message: l.errorMessage,
+        ),
+      ),
+      (r) {
+        if (r == ResponseTypes.success.response) {
+          emit(
+            state.copyWith(
+              message: r,
+              status: BlocStatus.success,
+            ),
+          );
+        } else {
+          emit(
+            state.copyWith(
+              message: r,
+              status: BlocStatus.error,
+            ),
+          );
+        }
+      },
+    );
   }
 }

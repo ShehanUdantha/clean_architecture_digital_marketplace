@@ -12,6 +12,7 @@ import '../../domain/usecases/cart/purchase/download_product_by_product_id_useca
 import '../../domain/usecases/cart/purchase/get_all_purchase_history_by_user_id_usecase.dart';
 import '../../domain/usecases/cart/purchase/get_all_purchase_items_by_product_id_usecase.dart';
 import '../../domain/usecases/product/add_favorite_usecase.dart';
+import '../../domain/usecases/product/edit_product_usecase.dart';
 import '../../domain/usecases/stripe/make_payments_usecase.dart';
 import '../../presentation/blocs/admin_home/admin_home_bloc.dart';
 import '../../presentation/blocs/cart/cart_bloc.dart';
@@ -67,7 +68,7 @@ import '../../presentation/blocs/forgot_password/forgot_password_bloc.dart';
 import '../../presentation/blocs/product_details/product_details_bloc.dart';
 import '../../presentation/blocs/sign_in/sign_in_bloc.dart';
 import '../../presentation/blocs/sign_up/sign_up_bloc.dart';
-import '../../presentation/blocs/admin_tools/add_product/add_product_bloc.dart';
+import '../../presentation/blocs/admin_tools/add_and_edit_product/add_and_edit_product_bloc.dart';
 import '../../presentation/blocs/admin_tools/category/category_bloc.dart';
 import '../../presentation/blocs/admin_tools/product/product_bloc.dart';
 import '../../presentation/blocs/admin_tools/users/users_bloc.dart';
@@ -209,6 +210,9 @@ Future<void> serviceLocator() async {
   sl.registerSingleton<AddProductUseCase>(
     AddProductUseCase(productRepository: sl()),
   );
+  sl.registerSingleton<EditProductUseCase>(
+    EditProductUseCase(productRepository: sl()),
+  );
   sl.registerSingleton<GetAllProductsUseCase>(
     GetAllProductsUseCase(productRepository: sl()),
   );
@@ -312,8 +316,9 @@ Future<void> serviceLocator() async {
     ),
   );
   // product
-  sl.registerFactory<AddProductBloc>(
-    () => AddProductBloc(
+  sl.registerFactory<AddAndEditProductBloc>(
+    () => AddAndEditProductBloc(
+      sl(),
       sl(),
     ),
   );

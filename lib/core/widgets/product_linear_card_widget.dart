@@ -1,6 +1,7 @@
 import 'base_icon_button_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../domain/entities/product/product_entity.dart';
+import '../../core/widgets/network_image_placeholder.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -39,28 +40,24 @@ class ProductLinearCardWidget extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Row(
             children: [
-              CachedNetworkImage(
-                imageUrl: product.coverImage,
-                imageBuilder: (context, imageProvider) => Container(
-                  height: Helper.screeHeight(context),
-                  width: Helper.isLandscape(context)
-                      ? Helper.screeWidth(context) * 0.3
-                      : Helper.screeWidth(context) * 0.35,
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(15)),
-                    image: DecorationImage(
-                      image: imageProvider,
-                      fit: BoxFit.cover,
+              SizedBox(
+                height: Helper.screeHeight(context),
+                width: Helper.isLandscape(context)
+                    ? Helper.screeWidth(context) * 0.3
+                    : Helper.screeWidth(context) * 0.35,
+                child: CachedNetworkImage(
+                  imageUrl: product.coverImage,
+                  imageBuilder: (context, imageProvider) => Container(
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(15)),
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
-                ),
-                placeholder: (context, url) => SizedBox(
-                  width: Helper.screeWidth(context) * 0.32,
-                  child: const Center(
-                    child: CircularProgressIndicator(
-                      color: AppColors.secondary,
-                    ),
-                  ),
+                  placeholder: (context, url) =>
+                      const NetworkImagePlaceholder(),
                 ),
               ),
               const SizedBox(

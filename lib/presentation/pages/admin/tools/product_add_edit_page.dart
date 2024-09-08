@@ -11,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 
+import '../../../../domain/entities/product/product_entity.dart';
 import '../../../../core/widgets/elevated_button_widget.dart';
 import '../../../../core/widgets/elevated_loading_button_widget.dart';
 import '../../../../core/widgets/input_field_widget.dart';
@@ -19,7 +20,7 @@ import '../../../../core/constants/colors.dart';
 import '../../../../core/constants/lists.dart';
 import '../../../../core/constants/routes_name.dart';
 import '../../../../core/utils/enum.dart';
-import '../../../blocs/admin_tools/add_product/add_product_bloc.dart';
+import '../../../blocs/admin_tools/add_and_edit_product/add_and_edit_product_bloc.dart';
 import '../../../blocs/admin_tools/category/category_bloc.dart';
 import '../../../blocs/admin_tools/product/product_bloc.dart';
 import '../../../widgets/admin/tools/drop_down_widget.dart';
@@ -29,9 +30,12 @@ import '../../../widgets/admin/tools/upload_cover_image_widget.dart';
 
 class ProductAddEditPage extends StatefulWidget {
   final String title;
+  final ProductEntity? product;
+
   const ProductAddEditPage({
     super.key,
     required this.title,
+    this.product,
   });
 
   @override
@@ -47,6 +51,18 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
   final TextEditingController _productPriceController = TextEditingController();
   final TextEditingController _productDescriptionController =
       TextEditingController();
+
+  String? sharedCategoryDropDownValue;
+  String? sharedMarketingTypeDropDownValue;
+  bool isUploadAssetsAvailableInSharedProduct = false;
+  String? sharedCoverImage;
+  List<String>? sharedSubImages;
+
+  @override
+  void initState() {
+    _initProductAddAndEditPage();
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -84,7 +100,10 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
                   children: [
                     GestureDetector(
                       onTap: () => _handleSelectCoverImage(),
-                      child: UploadCoverImageWidget(coverImage: coverImage),
+                      child: UploadCoverImageWidget(
+                        coverImage: coverImage,
+                        sharedCoverImage: sharedCoverImage,
+                      ),
                     ),
                     const SizedBox(
                       height: 16,
@@ -112,8 +131,11 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
                           const SizedBox(
                             width: 8,
                           ),
-                          subImages != null
-                              ? SubImageWidget(subImages: subImages)
+                          subImages != null || sharedSubImages != null
+                              ? SubImageWidget(
+                                  subImages: subImages,
+                                  sharedSubImages: sharedSubImages,
+                                )
                               : const SizedBox(),
                         ],
                       ),
@@ -139,7 +161,7 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
                       height: 16,
                     ),
                     DropDownWidget(
-                      value: '0',
+                      value: sharedCategoryDropDownValue ?? '0',
                       items: _createProductCategoryList(context),
                       function: (value) => _handleCategoryDropDown(value),
                     ),
@@ -147,7 +169,7 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
                       height: 16,
                     ),
                     DropDownWidget(
-                      value: '0',
+                      value: sharedMarketingTypeDropDownValue ?? '0',
                       items: _createMarketingList(),
                       function: (value) => _handleMarketingDropDown(value),
                     ),
@@ -195,9 +217,11 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 )
-                              : const Text(
-                                  "No file selected",
-                                  style: TextStyle(
+                              : Text(
+                                  isUploadAssetsAvailableInSharedProduct
+                                      ? "Asset available"
+                                      : "No file selected",
+                                  style: const TextStyle(
                                     color: AppColors.textThird,
                                   ),
                                   maxLines: 1,
@@ -212,11 +236,11 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
               const SizedBox(
                 height: 32,
               ),
-              BlocConsumer<AddProductBloc, AddProductState>(
+              BlocConsumer<AddAndEditProductBloc, AddAndEditProductState>(
                 listener: (context, state) {
                   if (state.status == BlocStatus.error) {
                     context
-                        .read<AddProductBloc>()
+                        .read<AddAndEditProductBloc>()
                         .add(SetProductStatusToDefault());
                     Helper.showSnackBar(
                       context,
@@ -227,12 +251,14 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
                   }
                   if (state.status == BlocStatus.success) {
                     context
-                        .read<AddProductBloc>()
+                        .read<AddAndEditProductBloc>()
                         .add(SetProductStatusToDefault());
 
                     Helper.showSnackBar(
                       context,
-                      AppStrings.productAdded,
+                      widget.title == "Update"
+                          ? AppStrings.productUpdated
+                          : AppStrings.productAdded,
                     );
 
                     context.read<ProductBloc>().add(GetAllProductsEvent());
@@ -260,6 +286,40 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
     );
   }
 
+  _initProductAddAndEditPage() {
+    if (widget.product != null && widget.title == 'Update') {
+      final product = widget.product!;
+      _productNameController.text = product.productName;
+      _productPriceController.text = product.price;
+      _productDescriptionController.text = product.description;
+
+      sharedCategoryDropDownValue =
+          _getSharedCategoryIndexFromList(context, product.category);
+      sharedMarketingTypeDropDownValue =
+          _getSharedMarketingIndexFromList(context, product.marketingType);
+
+      context.read<AddAndEditProductBloc>().add(
+            CategoryNameFieldChangeEvent(
+              category: product.category,
+            ),
+          );
+
+      context.read<AddAndEditProductBloc>().add(
+            MarketingTypeFieldChangeEvent(
+              type: product.marketingType,
+            ),
+          );
+
+      isUploadAssetsAvailableInSharedProduct = product.zipFile != "";
+      sharedCoverImage = product.coverImage;
+      final List<String>? formattedSharedList =
+          product.subImages?.map((e) => e.toString()).cast<String>().toList();
+      sharedSubImages = formattedSharedList;
+
+      setState(() {});
+    }
+  }
+
   _handleBackButton() {
     context.goNamed(AppRoutes.productsManagePageName);
   }
@@ -285,7 +345,7 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
   }
 
   _handleCategoryDropDown(String value) {
-    context.read<AddProductBloc>().add(
+    context.read<AddAndEditProductBloc>().add(
           CategoryNameFieldChangeEvent(
             category: context
                 .read<CategoryBloc>()
@@ -297,7 +357,7 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
   }
 
   _handleMarketingDropDown(String value) {
-    context.read<AddProductBloc>().add(
+    context.read<AddAndEditProductBloc>().add(
           MarketingTypeFieldChangeEvent(
             type: AppLists.listOfMarketingType[int.parse(value) - 1],
           ),
@@ -315,26 +375,52 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
   }
 
   _handleSubmitButton() {
-    final state = context.read<AddProductBloc>().state;
-    if (coverImage != null) {
-      if (subImages != null) {
+    final state = context.read<AddAndEditProductBloc>().state;
+    if (coverImage != null || sharedCoverImage != null) {
+      if (subImages != null || sharedSubImages != null) {
         if (_productNameController.text.isNotEmpty) {
           if (_productPriceController.text.isNotEmpty) {
             if (state.category.isNotEmpty) {
               if (state.marketingType.isNotEmpty) {
                 if (_productDescriptionController.text.isNotEmpty) {
-                  if (asset != null) {
-                    context.read<AddProductBloc>().add(
-                          ProductUploadButtonClickedEvent(
-                            coverImage: coverImage!.bytes!,
-                            subImages: Helper.subImagesList(subImages!),
-                            zipFile: File(asset!.path!),
-                            productName: _productNameController.text,
-                            productPrice: _productPriceController.text,
-                            productDescription:
-                                _productDescriptionController.text,
-                          ),
-                        );
+                  if (asset != null || isUploadAssetsAvailableInSharedProduct) {
+                    if (widget.product != null && widget.title == 'Update') {
+                      final product = widget.product!;
+
+                      context.read<AddAndEditProductBloc>().add(
+                            ProductEditButtonClickedEvent(
+                              id: product.id!,
+                              coverImage: coverImage?.bytes != null
+                                  ? coverImage!.bytes
+                                  : product.coverImage,
+                              subImages: subImages != null
+                                  ? Helper.subImagesList(subImages!)
+                                  : [],
+                              zipFile: asset?.path != null
+                                  ? File(asset!.path!)
+                                  : product.zipFile,
+                              productName: _productNameController.text,
+                              productPrice: _productPriceController.text,
+                              productDescription:
+                                  _productDescriptionController.text,
+                              sharedSubImages: sharedSubImages ?? [],
+                              likes: product.likes,
+                              status: product.status,
+                            ),
+                          );
+                    } else {
+                      context.read<AddAndEditProductBloc>().add(
+                            ProductUploadButtonClickedEvent(
+                              coverImage: coverImage!.bytes!,
+                              subImages: Helper.subImagesList(subImages!),
+                              zipFile: File(asset!.path!),
+                              productName: _productNameController.text,
+                              productPrice: _productPriceController.text,
+                              productDescription:
+                                  _productDescriptionController.text,
+                            ),
+                          );
+                    }
                   } else {
                     Helper.showSnackBar(context, AppStrings.requiredZipFile);
                   }
@@ -415,4 +501,34 @@ List<DropdownMenuItem> _createMarketingList() {
   ];
 
   return items + Helper.createMarketingDropDownList();
+}
+
+String _getSharedCategoryIndexFromList(
+  BuildContext context,
+  String category,
+) {
+  final categoryList = context.read<CategoryBloc>().state.listOfCategories;
+  final index = categoryList.isNotEmpty
+      ? categoryList.indexWhere((cat) => cat.name == category)
+      : -1;
+
+  if (index == -1) {
+    return "0";
+  } else {
+    return (index + 1).toString();
+  }
+}
+
+String _getSharedMarketingIndexFromList(
+  BuildContext context,
+  String marketingType,
+) {
+  final index =
+      AppLists.listOfMarketingType.indexWhere((type) => type == marketingType);
+
+  if (index == -1) {
+    return "0";
+  } else {
+    return (index + 1).toString();
+  }
 }

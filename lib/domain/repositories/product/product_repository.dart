@@ -19,4 +19,5 @@ abstract class ProductRepository {
     String id,
   );
   Future<Either<Failure, ProductEntity>> addFavorite(String id);
+  Future<Either<Failure, String>> editProduct(ProductEntity productEntity);
 }

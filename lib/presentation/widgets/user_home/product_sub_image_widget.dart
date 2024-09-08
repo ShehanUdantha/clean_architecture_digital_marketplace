@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/constants/colors.dart';
 import '../../../core/utils/helper.dart';
+import '../../../core/widgets/network_image_placeholder.dart';
 import '../../../domain/entities/product/product_entity.dart';
 
 class ProductSubImageWidget extends StatelessWidget {
@@ -40,11 +41,7 @@ class ProductSubImageWidget extends StatelessWidget {
                 ),
               ),
             ),
-            placeholder: (context, url) => const Center(
-              child: CircularProgressIndicator(
-                color: AppColors.secondary,
-              ),
-            ),
+            placeholder: (context, url) => const NetworkImagePlaceholder(),
           ),
           index != currentIndex
               ? Container(

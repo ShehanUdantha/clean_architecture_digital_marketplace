@@ -26,6 +26,7 @@ import '../../presentation/pages/user_home/view_all_products_page.dart';
 import '../../presentation/pages/profile/purchase_history_page.dart';
 import '../../presentation/pages/profile/user_info_page.dart';
 import '../../presentation/widgets/base/page_not_found_widget.dart';
+import '../../domain/entities/product/product_entity.dart';
 
 // private navigators
 final rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -308,9 +309,13 @@ GoRouter goRouter = GoRouter(
                       path: AppRoutes.productsAddPagePath,
                       builder: (context, state) {
                         final title = state.uri.queryParameters['title'];
+                        final product = state.extra != null
+                            ? state.extra as ProductEntity
+                            : null;
 
                         return ProductAddEditPage(
                           title: title!,
+                          product: product,
                         );
                       },
                     ),

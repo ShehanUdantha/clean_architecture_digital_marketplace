@@ -1,6 +1,6 @@
-part of 'add_product_bloc.dart';
+part of 'add_and_edit_product_bloc.dart';
 
-class AddProductState extends Equatable {
+class AddAndEditProductState extends Equatable {
   final String productName;
   final String price;
   final String category;
@@ -9,7 +9,7 @@ class AddProductState extends Equatable {
   final BlocStatus status;
   final String message;
 
-  const AddProductState({
+  const AddAndEditProductState({
     this.productName = '',
     this.price = '',
     this.category = '',
@@ -19,7 +19,7 @@ class AddProductState extends Equatable {
     this.message = '',
   });
 
-  AddProductState copyWith({
+  AddAndEditProductState copyWith({
     String? productName,
     String? price,
     String? category,
@@ -28,7 +28,7 @@ class AddProductState extends Equatable {
     BlocStatus? status,
     String? message,
   }) =>
-      AddProductState(
+      AddAndEditProductState(
         productName: productName ?? this.productName,
         price: price ?? this.price,
         category: category ?? this.category,

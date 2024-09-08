@@ -90,4 +90,15 @@ class ProductRepositoryImpl implements ProductRepository {
       return Left(FirebaseFailure(errorMessage: e.errorMessage));
     }
   }
+
+  @override
+  Future<Either<Failure, String>> editProduct(
+      ProductEntity productEntity) async {
+    try {
+      final result = await productRemoteDataSource.editProduct(productEntity);
+      return Right(result);
+    } on DBException catch (e) {
+      return Left(FirebaseFailure(errorMessage: e.errorMessage));
+    }
+  }
 }

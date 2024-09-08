@@ -50,6 +50,7 @@ class AppStrings {
   static const String categoryDeleted = 'Category deleted successfully';
   static const String categoriesNotAddedYet = 'Categories Not Added Yet';
   static const String productAdded = 'Product added successfully';
+  static const String productUpdated = 'Product updated successfully';
   static const String productsNotAddedYet = 'Products Not Added Yet';
   static const String productDeleted = 'Product deleted successfully';
   static const String usersNotAddedYet = 'Users Not Registered Yet';

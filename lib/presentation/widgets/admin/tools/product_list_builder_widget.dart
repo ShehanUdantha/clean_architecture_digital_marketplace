@@ -1,6 +1,9 @@
+import 'package:Pixelcart/domain/entities/product/product_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../core/constants/routes_name.dart';
 import '../../../../core/widgets/product_linear_card_widget.dart';
 import '../../../../core/constants/strings.dart';
 import '../../../blocs/admin_tools/product/product_bloc.dart';
@@ -25,11 +28,10 @@ class ProductListBuilderWidget extends StatelessWidget {
                     context,
                     productState.listOfProducts[index].id!,
                   ),
-                  editFunction: () {},
-                  // editFunction: () => _handleEditProduct(
-                  //   context,
-                  //   productState.listOfProducts[index],
-                  // ),
+                  editFunction: () => _handleEditProduct(
+                    context,
+                    productState.listOfProducts[index],
+                  ),
                 );
               },
             )
@@ -47,10 +49,11 @@ class ProductListBuilderWidget extends StatelessWidget {
     context.read<ProductBloc>().add(GetAllProductsEvent());
   }
 
-  // _handleEditProduct(BuildContext context, ProductEntity product) {
-  // context.goNamed(
-  //   AppRoutes.productsAddPageName,
-  //   queryParameters: {'title': 'Edit'},
-  // );
-  // }
+  _handleEditProduct(BuildContext context, ProductEntity product) {
+    context.goNamed(
+      AppRoutes.productsAddPageName,
+      queryParameters: {'title': 'Update'},
+      extra: product,
+    );
+  }
 }

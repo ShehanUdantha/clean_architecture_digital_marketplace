@@ -67,7 +67,6 @@ Admin View
 
 ## Future Implements
 
-- Product Details Edit
 - Admin Dashboard
 - Settings
 - Notification

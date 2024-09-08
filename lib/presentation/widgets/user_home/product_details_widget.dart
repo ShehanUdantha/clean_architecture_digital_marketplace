@@ -1,3 +1,5 @@
+import 'package:like_button/like_button.dart';
+
 import '../../../core/utils/extension.dart';
 import '../../blocs/auth/auth_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -91,34 +93,12 @@ class ProductDetailsWidget extends StatelessWidget {
                               color: AppColors.secondary,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(15.0))),
-                          child: Row(
-                            children: [
-                              GestureDetector(
-                                onTap: () => _favoriteButton(context),
-                                child: SizedBox(
-                                  child: product.likes
-                                          .contains(authState.user!.uid)
-                                      ? const Icon(
-                                          Icons.favorite,
-                                          color: AppColors.lightRed,
-                                        )
-                                      : const Icon(
-                                          Icons.favorite_outline,
-                                          color: AppColors.secondWhite,
-                                        ),
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                product.likes.length.toString(),
-                                style: const TextStyle(
-                                  color: AppColors.textSecondary,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
+                          child: LikeButton(
+                            onTap: (value) => _favoriteButton(context, value),
+                            isLiked:
+                                product.likes.contains(authState.user!.uid),
+                            likeCount: product.likes.length,
+                            size: 25,
                           ),
                         ),
                       ),
@@ -306,7 +286,8 @@ class ProductDetailsWidget extends StatelessWidget {
     context.read<ProductDetailsBloc>().add(RemoveProductFromCartEvent(id: id));
   }
 
-  _favoriteButton(BuildContext context) {
+  Future<bool> _favoriteButton(BuildContext context, bool value) async {
     context.read<ProductDetailsBloc>().add(AddFavoriteToProductEvent());
+    return !value;
   }
 }

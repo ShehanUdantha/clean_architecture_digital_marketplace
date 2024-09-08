@@ -13,6 +13,7 @@ class ProductEntity extends Equatable {
   final dynamic dateCreated;
   final List<String> likes;
   final String status;
+  final List<String>? sharedSubImages;
 
   const ProductEntity({
     this.id,
@@ -27,6 +28,7 @@ class ProductEntity extends Equatable {
     this.dateCreated,
     required this.likes,
     required this.status,
+    this.sharedSubImages,
   });
 
   @override
@@ -43,5 +45,6 @@ class ProductEntity extends Equatable {
         dateCreated,
         likes,
         status,
+        sharedSubImages,
       ];
 }

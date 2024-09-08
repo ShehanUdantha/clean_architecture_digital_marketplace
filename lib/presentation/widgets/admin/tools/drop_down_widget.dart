@@ -36,6 +36,7 @@ class DropDownWidget extends StatelessWidget {
         fontSize: 16,
         fontWeight: FontWeight.normal,
       ),
+      dropdownColor: AppColors.white,
       value: value,
       items: items,
       onChanged: (value) => function(value),

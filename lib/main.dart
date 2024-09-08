@@ -12,7 +12,7 @@ import 'core/constants/keys.dart';
 import 'firebase_options.dart';
 import 'presentation/blocs/product_details/product_details_bloc.dart';
 import 'presentation/blocs/admin_tools/add_category/add_category_bloc.dart';
-import 'presentation/blocs/admin_tools/add_product/add_product_bloc.dart';
+import 'presentation/blocs/admin_tools/add_and_edit_product/add_and_edit_product_bloc.dart';
 import 'presentation/blocs/admin_tools/category/category_bloc.dart';
 import 'presentation/blocs/admin_tools/product/product_bloc.dart';
 import 'presentation/blocs/admin_tools/users/users_bloc.dart';
@@ -74,7 +74,7 @@ class MyApp extends StatelessWidget {
               locator.sl<CategoryBloc>()..add(GetAllCategoriesEvent()),
         ),
         BlocProvider(
-          create: (context) => locator.sl<AddProductBloc>(),
+          create: (context) => locator.sl<AddAndEditProductBloc>(),
         ),
         BlocProvider(
           create: (context) =>

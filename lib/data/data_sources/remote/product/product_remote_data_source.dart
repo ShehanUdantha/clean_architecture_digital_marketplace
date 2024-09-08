@@ -7,8 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
 
-import 'package:Pixelcart/core/utils/extension.dart';
-
+import '../../../../core/utils/extension.dart';
 import '../../../../core/error/exception.dart';
 import '../../../../core/utils/enum.dart';
 import '../../../../domain/entities/product/product_entity.dart';
@@ -22,6 +21,7 @@ abstract class ProductRemoteDataSource {
   Future<List<ProductModel>> getProductByQuery(String query);
   Future<ProductModel> getProductDetailsById(String productId);
   Future<ProductModel> addFavorite(String productId);
+  Future<String> editProduct(ProductEntity productEntity);
 }
 
 class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
@@ -258,5 +258,60 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
     } on FirebaseAuthException catch (e) {
       throw AuthException(errorMessage: e.toString());
     }
+  }
+
+  @override
+  Future<String> editProduct(ProductEntity productEntity) async {
+    try {
+      final result =
+          await fireStore.collection('products').doc(productEntity.id).get();
+
+      if (result.exists) {
+        final productId = productEntity.id!;
+
+        final String coverImageUrl = await getCoverImageUrl(productEntity);
+        final String zipFileUrl = await getZipFileUrl(productEntity);
+        final List<String> subImagesUrls =
+            await getSubImagesUrls(productEntity);
+
+        await fireStore.collection('products').doc(productId).update({
+          "productName": productEntity.productName,
+          "price": productEntity.price,
+          "category": productEntity.category,
+          "marketingType": productEntity.marketingType,
+          "description": productEntity.description,
+          "coverImage": coverImageUrl,
+          "subImages": subImagesUrls,
+          "zipFile": zipFileUrl,
+        });
+
+        return ResponseTypes.success.response;
+      } else {
+        return ResponseTypes.failure.response;
+      }
+    } on FirebaseException catch (e) {
+      throw DBException(errorMessage: e.toString());
+    }
+  }
+
+  Future<String> getCoverImageUrl(ProductEntity productEntity) async {
+    return productEntity.coverImage is Uint8List
+        ? await uploadImage(productEntity.coverImage, productEntity.id ?? "")
+        : productEntity.coverImage;
+  }
+
+  Future<String> getZipFileUrl(ProductEntity productEntity) async {
+    return productEntity.zipFile is File
+        ? await uploadFile(productEntity.zipFile, productEntity.id ?? "")
+        : productEntity.zipFile;
+  }
+
+  Future<List<String>> getSubImagesUrls(ProductEntity productEntity) async {
+    final tempSubImagesUrls = productEntity.subImages != null
+        ? await uploadMultipleImages(
+            productEntity.subImages, productEntity.id ?? "")
+        : [];
+
+    return [...tempSubImagesUrls, ...productEntity.sharedSubImages ?? []];
   }
 }
