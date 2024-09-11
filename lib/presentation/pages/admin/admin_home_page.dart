@@ -1,8 +1,12 @@
+import '../../../core/utils/helper.dart';
+
 import '../../blocs/admin_home/admin_home_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/widgets/main_header_widget.dart';
+import '../../blocs/admin_tools/notification/notification_bloc.dart';
+import '../../blocs/auth/auth_bloc.dart';
 
 class AdminHomePage extends StatefulWidget {
   const AdminHomePage({super.key});
@@ -14,7 +18,15 @@ class AdminHomePage extends StatefulWidget {
 class _AdminHomePageState extends State<AdminHomePage> {
   @override
   void initState() {
+    initAdminHomePage();
     context.read<AdminHomeBloc>().add(GetAdminDetailsEvent());
+
+    final uid = context.read<AuthBloc>().state.user?.uid ?? "-1";
+    context
+        .read<NotificationBloc>()
+        .add(GetNotificationCountEvent(userId: uid));
+
+    Helper.getNotificationPermission();
     super.initState();
   }
 
@@ -45,5 +57,9 @@ class _AdminHomePageState extends State<AdminHomePage> {
         ),
       ),
     );
+  }
+
+  void initAdminHomePage() {
+    Helper.getNotificationPermission();
   }
 }

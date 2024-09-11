@@ -10,6 +10,7 @@ class AdminHomeState extends Equatable {
       userName: '',
       email: '',
       password: '',
+      deviceToken: '',
     ),
   });
 

@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 
+import '../../presentation/blocs/admin_tools/notification/notification_bloc.dart';
+import '../../presentation/blocs/auth/auth_bloc.dart';
+import '../constants/routes_name.dart';
+import '../utils/enum.dart';
 import 'base_icon_button_widget.dart';
 import '../constants/colors.dart';
 import '../utils/helper.dart';
@@ -54,16 +60,31 @@ class MainHeaderWidget extends StatelessWidget {
               ),
             ],
           ),
-          BaseIconButtonWidget(
-            function: () {},
-            isNotify: true,
-            icon: const Icon(
-              Iconsax.notification,
-              color: AppColors.secondary,
-            ),
+          BlocBuilder<NotificationBloc, NotificationState>(
+            builder: (context, state) {
+              return BaseIconButtonWidget(
+                function: () => _handleViewNotificationPage(context),
+                isNotify: state.notificationCount > 0,
+                icon: const Icon(
+                  Iconsax.notification,
+                  color: AppColors.secondary,
+                ),
+              );
+            },
+            buildWhen: (previousState, currentState) =>
+                previousState.notificationCount !=
+                currentState.notificationCount,
           ),
         ],
       ),
     );
+  }
+
+  _handleViewNotificationPage(BuildContext context) {
+    final authState = context.read<AuthBloc>().state;
+
+    context.goNamed(authState.userType == UserTypes.user.name
+        ? AppRoutes.notificationViewPageName
+        : AppRoutes.notificationAdminViewPageName);
   }
 }

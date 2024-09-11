@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import '../../../../core/constants/strings.dart';
 import '../../../../core/error/exception.dart';
@@ -23,10 +24,12 @@ abstract class UserAuthRemoteDataSource {
 class UserAuthRemoteDataSourceImpl implements UserAuthRemoteDataSource {
   final FirebaseAuth auth;
   final FirebaseFirestore fireStore;
+  final FirebaseMessaging firebaseMessaging;
 
   UserAuthRemoteDataSourceImpl({
     required this.auth,
     required this.fireStore,
+    required this.firebaseMessaging,
   });
 
   @override
@@ -36,9 +39,22 @@ class UserAuthRemoteDataSourceImpl implements UserAuthRemoteDataSource {
         email: signInParams.email,
         password: signInParams.password,
       );
+
       auth.currentUser!.reload();
 
-      return auth.currentUser!.uid;
+      final uid = auth.currentUser!.uid;
+
+      final result = await fireStore.collection('users').doc(uid).get();
+
+      if (result.exists) {
+        String deviceToken = await getDeviceToken();
+
+        await fireStore.collection('users').doc(uid).update({
+          "deviceToken": deviceToken,
+        });
+      }
+
+      return uid;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-email') {
         throw AuthException(errorMessage: AppStrings.invalidEmail);
@@ -65,12 +81,15 @@ class UserAuthRemoteDataSourceImpl implements UserAuthRemoteDataSource {
         password: signUpParams.password,
       );
 
+      String deviceToken = await getDeviceToken();
+
       UserModel userAuthModel = UserModel(
         userId: credential.user!.uid,
         userType: 'user',
         userName: signUpParams.userName,
         email: signUpParams.email,
         password: signUpParams.password,
+        deviceToken: deviceToken,
       );
 
       await fireStore.collection('users').doc(credential.user!.uid).set(
@@ -170,5 +189,9 @@ class UserAuthRemoteDataSourceImpl implements UserAuthRemoteDataSource {
     User? refreshedUser = auth.currentUser;
 
     return refreshedUser;
+  }
+
+  Future<String> getDeviceToken() async {
+    return await firebaseMessaging.getToken() ?? "";
   }
 }

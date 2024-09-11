@@ -28,12 +28,12 @@ class UserHomeState extends Equatable {
 
   const UserHomeState({
     this.userEntity = const UserEntity(
-      userId: '',
-      userType: '',
-      userName: '',
-      email: '',
-      password: '',
-    ),
+        userId: '',
+        userType: '',
+        userName: '',
+        email: '',
+        password: '',
+        deviceToken: ''),
     this.listOfCategories = const [],
     this.currentCategory = 0,
     this.currentCategoryName = 'All Items',

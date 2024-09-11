@@ -7,23 +7,27 @@ class AppRoutes {
   static const String networkPageName = 'network';
 
   // auth routes
-  static const String signUpPagePath = '/sign-up';
-  static const String signUpPageName = 'signUp';
-
   static const String signInPagePath = '/sign-in';
   static const String signInPageName = 'signIn';
 
-  static const String forgotPasswordPagePath = '/forgot-password';
+  static const String signUpPagePath = 'sign-up';
+  static const String signUpPageName = 'signUp';
+
+  static const String forgotPasswordPagePath = 'forgot-password';
   static const String forgotPasswordPageName = 'forgotPassword';
 
   static const String emailVerificationAndForgotPasswordPagePath =
-      '/email-verification-and-forgot-password';
+      'email-verification-and-forgot-password';
   static const String emailVerificationAndForgotPasswordPageName =
       'emailVerificationAndForgotPassword';
 
   // admin routes
   static const String adminPagePath = '/admin';
   static const String adminPageName = 'admin';
+
+  // admin home sub routes
+  static const String notificationAdminViewPagePath = 'notification-admin-view';
+  static const String notificationAdminViewPageName = 'notificationAdminView';
 
   static const String toolsPagePath = '/tools';
   static const String toolsPageName = 'tools';
@@ -43,6 +47,12 @@ class AppRoutes {
 
   static const String usersManagePagePath = 'users-manage';
   static const String usersManagePageName = 'usersManage';
+
+  static const String notificationManagePagePath = 'notification-manage';
+  static const String notificationManagePageName = 'notificationManage';
+
+  static const String notificationSendPagePath = 'notification-send';
+  static const String notificationSendPageName = 'notificationSend';
 
   // admin profile sub routes
   static const String adminInfoPagePath = 'admin-info';
@@ -64,6 +74,9 @@ class AppRoutes {
 
   static const String viewAllProductsPagePath = 'view-all-products';
   static const String viewAllProductsPageName = 'viewAllProducts';
+
+  static const String notificationViewPagePath = 'notification-view';
+  static const String notificationViewPageName = 'notificationView';
 
   // profile sub routes
   static const String purchaseHistoryPagePath = 'purchase-history';

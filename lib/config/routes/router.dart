@@ -4,9 +4,12 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/constants/routes_name.dart';
 import '../../core/utils/enum.dart';
+import '../../domain/entities/product/product_entity.dart';
 import '../../presentation/blocs/auth/auth_bloc.dart';
 import '../../presentation/pages/admin/admin_home_page.dart';
 import '../../presentation/pages/admin/tools/category_manage_page.dart';
+import '../../presentation/pages/admin/tools/notification_manage_page.dart';
+import '../../presentation/pages/admin/tools/notification_send_page.dart';
 import '../../presentation/pages/admin/tools/product_add_edit_page.dart';
 import '../../presentation/pages/admin/tools/product_manage_page.dart';
 import '../../presentation/pages/admin/tools/tools_page.dart';
@@ -18,15 +21,15 @@ import '../../presentation/pages/auth/sign_up_page.dart';
 import '../../presentation/pages/base/base_page.dart';
 import '../../presentation/pages/base/splash_screen.dart';
 import '../../presentation/pages/cart/cart_page.dart';
+import '../../presentation/pages/notification/notification_view_page.dart';
 import '../../presentation/pages/profile/profile_page.dart';
+import '../../presentation/pages/profile/purchase_history_page.dart';
 import '../../presentation/pages/profile/purchase_products_view_page.dart';
+import '../../presentation/pages/profile/user_info_page.dart';
 import '../../presentation/pages/user_home/product_view_page.dart';
 import '../../presentation/pages/user_home/user_home_page.dart';
 import '../../presentation/pages/user_home/view_all_products_page.dart';
-import '../../presentation/pages/profile/purchase_history_page.dart';
-import '../../presentation/pages/profile/user_info_page.dart';
 import '../../presentation/widgets/base/page_not_found_widget.dart';
-import '../../domain/entities/product/product_entity.dart';
 
 // private navigators
 final rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -91,40 +94,42 @@ GoRouter goRouter = GoRouter(
           child: const SignInPage(),
         );
       },
-    ),
-    GoRoute(
-      name: AppRoutes.signUpPageName,
-      path: AppRoutes.signUpPagePath,
-      pageBuilder: (context, state) {
-        return MaterialPage(
-          key: state.pageKey,
-          child: const SignUpPage(),
-        );
-      },
-    ),
-    GoRoute(
-      name: AppRoutes.forgotPasswordPageName,
-      path: AppRoutes.forgotPasswordPagePath,
-      pageBuilder: (context, state) {
-        return MaterialPage(
-          key: state.pageKey,
-          child: const ForgotPasswordPage(),
-        );
-      },
-    ),
-    GoRoute(
-      name: AppRoutes.emailVerificationAndForgotPasswordPageName,
-      path: AppRoutes.emailVerificationAndForgotPasswordPagePath,
-      builder: (context, state) {
-        final email = state.uri.queryParameters['email'];
-        final goBackPage = state.uri.queryParameters['page'];
-        final isForgot = state.uri.queryParameters['isForgot'];
-        return EmailVerificationPage(
-          email: email!,
-          page: goBackPage!,
-          isForgot: isForgot == 'true',
-        );
-      },
+      routes: [
+        GoRoute(
+          name: AppRoutes.signUpPageName,
+          path: AppRoutes.signUpPagePath,
+          pageBuilder: (context, state) {
+            return MaterialPage(
+              key: state.pageKey,
+              child: const SignUpPage(),
+            );
+          },
+        ),
+        GoRoute(
+          name: AppRoutes.forgotPasswordPageName,
+          path: AppRoutes.forgotPasswordPagePath,
+          pageBuilder: (context, state) {
+            return MaterialPage(
+              key: state.pageKey,
+              child: const ForgotPasswordPage(),
+            );
+          },
+        ),
+        GoRoute(
+          name: AppRoutes.emailVerificationAndForgotPasswordPageName,
+          path: AppRoutes.emailVerificationAndForgotPasswordPagePath,
+          builder: (context, state) {
+            final email = state.uri.queryParameters['email'];
+            final goBackPage = state.uri.queryParameters['page'];
+            final isForgot = state.uri.queryParameters['isForgot'];
+            return EmailVerificationPage(
+              email: email!,
+              page: goBackPage!,
+              isForgot: isForgot == 'true',
+            );
+          },
+        ),
+      ],
     ),
 
     // * user base page
@@ -173,6 +178,14 @@ GoRouter goRouter = GoRouter(
                     return ViewAllProductsPage(
                       type: type!,
                     );
+                  },
+                  // sub routes
+                ),
+                GoRoute(
+                  name: AppRoutes.notificationViewPageName,
+                  path: AppRoutes.notificationViewPagePath,
+                  builder: (context, state) {
+                    return const NotificationViewPage();
                   },
                   // sub routes
                 ),
@@ -265,15 +278,25 @@ GoRouter goRouter = GoRouter(
           navigatorKey: shellAdminNavigatorKey,
           routes: [
             GoRoute(
-              name: AppRoutes.adminPageName,
-              path: AppRoutes.adminPagePath,
-              pageBuilder: (context, state) {
-                return MaterialPage(
-                  key: state.pageKey,
-                  child: const AdminHomePage(),
-                );
-              },
-            ),
+                name: AppRoutes.adminPageName,
+                path: AppRoutes.adminPagePath,
+                pageBuilder: (context, state) {
+                  return MaterialPage(
+                    key: state.pageKey,
+                    child: const AdminHomePage(),
+                  );
+                },
+                // sub routes
+                routes: [
+                  GoRoute(
+                    name: AppRoutes.notificationAdminViewPageName,
+                    path: AppRoutes.notificationAdminViewPagePath,
+                    builder: (context, state) {
+                      return const NotificationViewPage();
+                    },
+                    // sub routes
+                  ),
+                ]),
           ],
         ),
 
@@ -344,6 +367,28 @@ GoRouter goRouter = GoRouter(
                       child: const UserManagePage(),
                     );
                   },
+                ),
+
+                // notification manage
+                GoRoute(
+                  name: AppRoutes.notificationManagePageName,
+                  path: AppRoutes.notificationManagePagePath,
+                  pageBuilder: (context, state) {
+                    return MaterialPage(
+                      key: state.pageKey,
+                      child: const NotificationManagePage(),
+                    );
+                  },
+                  routes: [
+                    // product add and edit
+                    GoRoute(
+                      name: AppRoutes.notificationSendPageName,
+                      path: AppRoutes.notificationManagePagePath,
+                      builder: (context, state) {
+                        return const NotificationSendPage();
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),

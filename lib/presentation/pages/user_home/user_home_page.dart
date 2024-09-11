@@ -1,3 +1,6 @@
+import '../../blocs/admin_tools/notification/notification_bloc.dart';
+import '../../blocs/auth/auth_bloc.dart';
+
 import '../../../core/widgets/main_header_widget.dart';
 import '../../widgets/user_home/search_product_list_builder_widget.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +31,13 @@ class _UserHomePageState extends State<UserHomePage> {
       ..add(GetFeaturedListEvent())
       ..add(GetTrendingListEvent())
       ..add(GetLatestListEvent());
+
+    final uid = context.read<AuthBloc>().state.user?.uid ?? "-1";
+    context
+        .read<NotificationBloc>()
+        .add(GetNotificationCountEvent(userId: uid));
+
+    Helper.getNotificationPermission();
     super.initState();
   }
 

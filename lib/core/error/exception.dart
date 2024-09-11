@@ -15,3 +15,7 @@ class DBException extends Exception {
 class StripeException extends Exception {
   StripeException({required super.errorMessage});
 }
+
+class APIException extends Exception {
+  APIException({required super.errorMessage});
+}

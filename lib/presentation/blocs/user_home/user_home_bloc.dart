@@ -239,6 +239,7 @@ class UserHomeBloc extends Bloc<UserHomeEvent, UserHomeState> {
           userName: '',
           email: '',
           password: '',
+          deviceToken: '',
         ),
       ),
     );

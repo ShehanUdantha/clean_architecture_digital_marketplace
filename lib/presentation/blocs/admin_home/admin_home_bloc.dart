@@ -46,6 +46,7 @@ class AdminHomeBloc extends Bloc<AdminHomeEvent, AdminHomeState> {
           userName: '',
           email: '',
           password: '',
+          deviceToken: '',
         ),
       ),
     );

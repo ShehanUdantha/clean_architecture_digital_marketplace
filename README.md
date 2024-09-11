@@ -12,6 +12,7 @@ User View
 - Product Rating
 - View Purchase History
 - Download Purchase Product
+- View Notifications
 
 Admin View
 
@@ -19,6 +20,7 @@ Admin View
 - Product Add/Edit/Delete
 - Category Add/Delete
 - User Manage
+- Notifications Manage
 
 ## Screenshots
 
@@ -45,6 +47,7 @@ Admin View
 <img src="./screenshots/payment.jpg" width="250" />
 <img src="./screenshots/purchase_history.jpg" width="250" />
 <img src="./screenshots/purchase_products.jpg" width="250" />
+<img src="./screenshots/notifications.jpg" width="250" />
 <img src="./screenshots/user_profile.jpg" width="250" />
 </p>
 
@@ -56,6 +59,7 @@ Admin View
 <img src="./screenshots/product_add.jpg" width="250" />
 <img src="./screenshots/category_manage.jpg" width="250" />
 <img src="./screenshots/user_manage.jpg" width="250" />
+<img src="./screenshots/notification_manage.jpg" width="250" />
 <img src="./screenshots/admin_profile.jpg" width="250" />
 </p>
 
@@ -69,4 +73,3 @@ Admin View
 
 - Admin Dashboard
 - Settings
-- Notification

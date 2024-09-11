@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 import '../../domain/entities/category/category_entity.dart';
 import '../../domain/entities/product/product_entity.dart';
@@ -129,5 +130,19 @@ class Helper {
     } else {
       return false;
     }
+  }
+
+  static void getNotificationPermission() async {
+    await Permission.notification.isDenied.then(
+      (value) {
+        if (value) {
+          Permission.notification.request();
+        }
+      },
+    );
+  }
+
+  static String formatTimeago(DateTime date) {
+    return timeago.format(date);
   }
 }

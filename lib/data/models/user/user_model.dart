@@ -8,6 +8,7 @@ class UserModel extends UserEntity {
     required super.userName,
     required super.email,
     required super.password,
+    super.deviceToken,
   });
 
   Map<String, dynamic> toJson() => {
@@ -16,6 +17,7 @@ class UserModel extends UserEntity {
         'userName': userName,
         'email': email,
         'password': password,
+        'deviceToken': deviceToken,
       };
 
   factory UserModel.fromEntity(UserEntity userAuthEntity) => UserModel(
@@ -24,6 +26,7 @@ class UserModel extends UserEntity {
         userName: userAuthEntity.userName,
         email: userAuthEntity.email,
         password: userAuthEntity.password,
+        deviceToken: userAuthEntity.deviceToken,
       );
 
   factory UserModel.fromMap(Map<String, dynamic> map) => UserModel(
@@ -32,6 +35,7 @@ class UserModel extends UserEntity {
         userName: map['userName'],
         email: map['email'],
         password: map['password'],
+        deviceToken: map['deviceToken'],
       );
 
   factory UserModel.fromDocument(
@@ -43,5 +47,6 @@ class UserModel extends UserEntity {
         userName: document['userName'],
         email: document['email'],
         password: document['password'],
+        deviceToken: document.data()?['deviceToken'],
       );
 }

@@ -44,6 +44,14 @@ class ToolsPage extends StatelessWidget {
                 image: 'assets/images/manage_user.png',
                 function: () => _handleUserPage(context),
               ),
+              const SizedBox(
+                height: 16,
+              ),
+              ToolsCardWidget(
+                title: 'Manage Notifications',
+                image: 'assets/images/manage_notification.png',
+                function: () => _handleNotificationPage(context),
+              ),
             ],
           ),
         ),
@@ -61,5 +69,9 @@ class ToolsPage extends StatelessWidget {
 
   _handleUserPage(BuildContext context) {
     context.goNamed(AppRoutes.usersManagePageName);
+  }
+
+  _handleNotificationPage(BuildContext context) {
+    context.goNamed(AppRoutes.notificationManagePageName);
   }
 }

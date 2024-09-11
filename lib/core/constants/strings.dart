@@ -13,8 +13,6 @@ class AppStrings {
   static const String forgotPasswordLinkSendSuccess =
       'Password reset email send successfully';
   static const String invalidForgotEmail = 'Your email is not registered';
-  static const String categoryAlreadyAdded = 'This category is already added';
-  static const String productAlreadyAdded = 'This product is already added';
 
   // validate
   static const String requiredEmail = 'Email is required';
@@ -36,6 +34,7 @@ class AppStrings {
   static const String requiredMarketingType = 'Marketing Type is required';
   static const String requiredDescription = 'Description is required';
   static const String requiredZipFile = 'Zip file is required';
+  static const String requiredNotificationTitle = 'Title is required';
 
   // normal
   static const String emailVerify = 'Verify Your Email Address';
@@ -74,4 +73,8 @@ class AppStrings {
   static const String productStartedToDownload = 'Product download Started!';
   static const String noStoragePermission = 'No permission to storage access!';
   static const String pageNotFound = 'Page Not Found!';
+  static const String notificationSend = 'Notification send successfully';
+  static const String notificationDeleted = 'Notification deleted successfully';
+  static const String categoryAlreadyAdded = 'This category is already added';
+  static const String productAlreadyAdded = 'This product is already added';
 }
