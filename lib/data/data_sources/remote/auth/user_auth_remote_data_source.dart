@@ -1,3 +1,4 @@
+import '../../../../core/constants/variable_names.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -44,12 +45,13 @@ class UserAuthRemoteDataSourceImpl implements UserAuthRemoteDataSource {
 
       final uid = auth.currentUser!.uid;
 
-      final result = await fireStore.collection('users').doc(uid).get();
+      final result =
+          await fireStore.collection(AppVariableNames.users).doc(uid).get();
 
       if (result.exists) {
         String deviceToken = await getDeviceToken();
 
-        await fireStore.collection('users').doc(uid).update({
+        await fireStore.collection(AppVariableNames.users).doc(uid).update({
           "deviceToken": deviceToken,
         });
       }
@@ -92,12 +94,15 @@ class UserAuthRemoteDataSourceImpl implements UserAuthRemoteDataSource {
         deviceToken: deviceToken,
       );
 
-      await fireStore.collection('users').doc(credential.user!.uid).set(
+      await fireStore
+          .collection(AppVariableNames.users)
+          .doc(credential.user!.uid)
+          .set(
             userAuthModel.toJson(),
           );
 
       await fireStore
-          .collection('cart')
+          .collection(AppVariableNames.cart)
           .doc(credential.user!.uid)
           .set({'ids': []});
 
@@ -166,7 +171,7 @@ class UserAuthRemoteDataSourceImpl implements UserAuthRemoteDataSource {
   Future<String> forgotPassword(String email) async {
     try {
       final result = await fireStore
-          .collection('users')
+          .collection(AppVariableNames.users)
           .where('email', isEqualTo: email)
           .get();
 

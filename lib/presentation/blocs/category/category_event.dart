@@ -7,6 +7,14 @@ sealed class CategoryEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class CategoryButtonClickedEvent extends CategoryEvent {
+  final String category;
+
+  const CategoryButtonClickedEvent({required this.category});
+}
+
+class SetCategoryAddStatusToDefault extends CategoryEvent {}
+
 class GetAllCategoriesEvent extends CategoryEvent {}
 
 class DeleteCategoriesEvent extends CategoryEvent {

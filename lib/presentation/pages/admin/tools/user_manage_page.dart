@@ -8,7 +8,7 @@ import '../../../../core/constants/colors.dart';
 import '../../../../core/constants/routes_name.dart';
 import '../../../../core/utils/enum.dart';
 import '../../../../core/utils/helper.dart';
-import '../../../blocs/admin_tools/users/users_bloc.dart';
+import '../../../blocs/users/users_bloc.dart';
 
 class UserManagePage extends StatelessWidget {
   const UserManagePage({super.key});

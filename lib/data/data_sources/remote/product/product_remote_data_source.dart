@@ -7,6 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../../core/constants/variable_names.dart';
 import '../../../../core/utils/extension.dart';
 import '../../../../core/error/exception.dart';
 import '../../../../core/utils/enum.dart';
@@ -39,7 +40,7 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   Future<String> addProduct(ProductEntity productEntity) async {
     try {
       final result = await fireStore
-          .collection('products')
+          .collection(AppVariableNames.products)
           .where('productName', isEqualTo: productEntity.productName)
           .get();
 
@@ -77,7 +78,7 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
         );
 
         await fireStore
-            .collection('products')
+            .collection(AppVariableNames.products)
             .doc(productId)
             .set(productModel.toJson());
 
@@ -142,12 +143,12 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
     try {
       final result = category != 'All Items'
           ? await fireStore
-              .collection('products')
+              .collection(AppVariableNames.products)
               .where('category', isEqualTo: category)
               .where('status', isEqualTo: ProductStatus.active.product)
               .get()
           : await fireStore
-              .collection('products')
+              .collection(AppVariableNames.products)
               .where('status', isEqualTo: ProductStatus.active.product)
               .get();
 
@@ -161,7 +162,10 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   @override
   Future<String> deleteProduct(String productId) async {
     try {
-      await fireStore.collection('products').doc(productId).update({
+      await fireStore
+          .collection(AppVariableNames.products)
+          .doc(productId)
+          .update({
         'status': ProductStatus.deActive.product,
       });
 
@@ -176,7 +180,7 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
       String marketingType) async {
     try {
       final result = await fireStore
-          .collection('products')
+          .collection(AppVariableNames.products)
           .where('marketingType', isEqualTo: marketingType)
           .where('status', isEqualTo: ProductStatus.active.product)
           .get();
@@ -192,7 +196,7 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   Future<List<ProductModel>> getProductByQuery(String query) async {
     try {
       final result = await fireStore
-          .collection('products')
+          .collection(AppVariableNames.products)
           .where('productName', isGreaterThanOrEqualTo: query)
           .get();
 
@@ -214,8 +218,10 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   @override
   Future<ProductModel> getProductDetailsById(String productId) async {
     try {
-      final result =
-          await fireStore.collection('products').doc(productId).get();
+      final result = await fireStore
+          .collection(AppVariableNames.products)
+          .doc(productId)
+          .get();
 
       return ProductModel.fromDocument(result);
     } on FirebaseException catch (e) {
@@ -228,27 +234,39 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
     try {
       final currentUser = auth.currentUser;
       try {
-        final result =
-            await fireStore.collection('products').doc(productId).get();
+        final result = await fireStore
+            .collection(AppVariableNames.products)
+            .doc(productId)
+            .get();
 
         final product = ProductModel.fromDocument(result);
 
         if (product.likes.contains(currentUser!.uid)) {
-          await fireStore.collection('products').doc(productId).update({
+          await fireStore
+              .collection(AppVariableNames.products)
+              .doc(productId)
+              .update({
             'likes': FieldValue.arrayRemove([currentUser.uid]),
           });
 
-          final result =
-              await fireStore.collection('products').doc(productId).get();
+          final result = await fireStore
+              .collection(AppVariableNames.products)
+              .doc(productId)
+              .get();
 
           return ProductModel.fromDocument(result);
         } else {
-          await fireStore.collection('products').doc(productId).update({
+          await fireStore
+              .collection(AppVariableNames.products)
+              .doc(productId)
+              .update({
             'likes': FieldValue.arrayUnion([currentUser.uid]),
           });
 
-          final result =
-              await fireStore.collection('products').doc(productId).get();
+          final result = await fireStore
+              .collection(AppVariableNames.products)
+              .doc(productId)
+              .get();
 
           return ProductModel.fromDocument(result);
         }
@@ -263,8 +281,10 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   @override
   Future<String> editProduct(ProductEntity productEntity) async {
     try {
-      final result =
-          await fireStore.collection('products').doc(productEntity.id).get();
+      final result = await fireStore
+          .collection(AppVariableNames.products)
+          .doc(productEntity.id)
+          .get();
 
       if (result.exists) {
         final productId = productEntity.id!;
@@ -274,7 +294,10 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
         final List<String> subImagesUrls =
             await getSubImagesUrls(productEntity);
 
-        await fireStore.collection('products').doc(productId).update({
+        await fireStore
+            .collection(AppVariableNames.products)
+            .doc(productId)
+            .update({
           "productName": productEntity.productName,
           "price": productEntity.price,
           "category": productEntity.category,

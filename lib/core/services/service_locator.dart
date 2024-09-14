@@ -72,13 +72,10 @@ import '../../domain/usecases/user/get_all_users_usecase.dart';
 import '../../domain/usecases/user/get_user_details_usecase.dart';
 import '../../domain/usecases/user/get_user_type_usecase.dart';
 import '../../presentation/blocs/admin_home/admin_home_bloc.dart';
-import '../../presentation/blocs/admin_tools/add_and_edit_product/add_and_edit_product_bloc.dart';
-import '../../presentation/blocs/admin_tools/add_category/add_category_bloc.dart';
-import '../../presentation/blocs/admin_tools/category/category_bloc.dart';
-import '../../presentation/blocs/admin_tools/notification/notification_bloc.dart';
-import '../../presentation/blocs/admin_tools/product/product_bloc.dart';
-import '../../presentation/blocs/admin_tools/send_notification/send_notification_bloc.dart';
-import '../../presentation/blocs/admin_tools/users/users_bloc.dart';
+import '../../presentation/blocs/category/category_bloc.dart';
+import '../../presentation/blocs/notification/notification_bloc.dart';
+import '../../presentation/blocs/product/product_bloc.dart';
+import '../../presentation/blocs/users/users_bloc.dart';
 import '../../presentation/blocs/auth/auth_bloc.dart';
 import '../../presentation/blocs/cart/cart_bloc.dart';
 import '../../presentation/blocs/forgot_password/forgot_password_bloc.dart';
@@ -372,26 +369,18 @@ Future<void> serviceLocator() async {
     ),
   );
   // category
-  sl.registerFactory<AddCategoryBloc>(
-    () => AddCategoryBloc(
-      sl(),
-    ),
-  );
   sl.registerFactory<CategoryBloc>(
     () => CategoryBloc(
+      sl(),
       sl(),
       sl(),
     ),
   );
   // product
-  sl.registerFactory<AddAndEditProductBloc>(
-    () => AddAndEditProductBloc(
-      sl(),
-      sl(),
-    ),
-  );
   sl.registerFactory<ProductBloc>(
     () => ProductBloc(
+      sl(),
+      sl(),
       sl(),
       sl(),
     ),
@@ -403,13 +392,9 @@ Future<void> serviceLocator() async {
     ),
   );
   // notifications
-  sl.registerFactory<SendNotificationBloc>(
-    () => SendNotificationBloc(
-      sl(),
-    ),
-  );
   sl.registerFactory<NotificationBloc>(
     () => NotificationBloc(
+      sl(),
       sl(),
       sl(),
       sl(),

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 
-import '../../presentation/blocs/admin_tools/notification/notification_bloc.dart';
+import '../../presentation/blocs/notification/notification_bloc.dart';
 import '../../presentation/blocs/auth/auth_bloc.dart';
 import '../constants/routes_name.dart';
 import '../utils/enum.dart';

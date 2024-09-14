@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../../../core/constants/variable_names.dart';
 import '../../../../core/utils/extension.dart';
 import '../../../../data/models/product/product_model.dart';
 import 'package:uuid/uuid.dart';
@@ -31,15 +32,23 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
     try {
       final currentUser = auth.currentUser;
       try {
-        final checkDocument =
-            await fireStore.collection('cart').doc(currentUser!.uid).get();
+        final checkDocument = await fireStore
+            .collection(AppVariableNames.cart)
+            .doc(currentUser!.uid)
+            .get();
 
         if (checkDocument.exists) {
-          await fireStore.collection('cart').doc(currentUser.uid).update({
+          await fireStore
+              .collection(AppVariableNames.cart)
+              .doc(currentUser.uid)
+              .update({
             'ids': FieldValue.arrayUnion([productId])
           });
         } else {
-          await fireStore.collection('cart').doc(currentUser.uid).set({
+          await fireStore
+              .collection(AppVariableNames.cart)
+              .doc(currentUser.uid)
+              .set({
             'ids': FieldValue.arrayUnion([productId])
           });
         }
@@ -58,8 +67,10 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
     try {
       final currentUser = auth.currentUser;
       try {
-        final result =
-            await fireStore.collection('cart').doc(currentUser!.uid).get();
+        final result = await fireStore
+            .collection(AppVariableNames.cart)
+            .doc(currentUser!.uid)
+            .get();
 
         if (result.exists) {
           return List<String>.from(
@@ -81,7 +92,10 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
     try {
       final currentUser = auth.currentUser;
       try {
-        await fireStore.collection('cart').doc(currentUser!.uid).update({
+        await fireStore
+            .collection(AppVariableNames.cart)
+            .doc(currentUser!.uid)
+            .update({
           'ids': FieldValue.arrayRemove([productId])
         });
 
@@ -99,8 +113,10 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
     try {
       final currentUser = auth.currentUser;
       try {
-        final cartedIdsDocuments =
-            await fireStore.collection('cart').doc(currentUser!.uid).get();
+        final cartedIdsDocuments = await fireStore
+            .collection(AppVariableNames.cart)
+            .doc(currentUser!.uid)
+            .get();
 
         List<ProductModel> cartedItemsDetailsList = [];
 
@@ -138,9 +154,9 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
 
         final cartedProductIdsList = await getCartedItems();
         await fireStore
-            .collection('purchase')
+            .collection(AppVariableNames.purchase)
             .doc(currentUser!.uid)
-            .collection('history')
+            .collection(AppVariableNames.history)
             .doc(purchaseId)
             .set({
           'purchaseId': purchaseId,
@@ -150,16 +166,19 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
 
         for (final productId in cartedProductIdsList) {
           await fireStore
-              .collection('purchase')
+              .collection(AppVariableNames.purchase)
               .doc(currentUser.uid)
-              .collection('history')
+              .collection(AppVariableNames.history)
               .doc(purchaseId)
               .update({
             'ids': FieldValue.arrayUnion([productId])
           });
         }
 
-        await fireStore.collection('cart').doc(currentUser.uid).delete();
+        await fireStore
+            .collection(AppVariableNames.cart)
+            .doc(currentUser.uid)
+            .delete();
 
         return ResponseTypes.success.response;
       } on FirebaseException catch (e) {

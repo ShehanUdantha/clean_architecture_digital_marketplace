@@ -7,6 +7,18 @@ sealed class NotificationEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class NotificationSendButtonClickedEvent extends NotificationEvent {
+  final String title;
+  final String description;
+
+  const NotificationSendButtonClickedEvent({
+    required this.title,
+    required this.description,
+  });
+}
+
+class SetNotificationSendStatusToDefault extends NotificationEvent {}
+
 class GetAllNotificationsEvent extends NotificationEvent {}
 
 class NotificationDeleteEvent extends NotificationEvent {

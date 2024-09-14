@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import '../../../../core/constants/variable_names.dart';
 import '../../../../core/utils/extension.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -32,9 +33,9 @@ class PurchaseRemoteDataSourceImpl implements PurchaseRemoteDataSource {
       final currentUser = auth.currentUser;
       try {
         final result = await fireStore
-            .collection('purchase')
+            .collection(AppVariableNames.purchase)
             .doc(currentUser!.uid)
-            .collection('history')
+            .collection(AppVariableNames.history)
             .orderBy('date', descending: true)
             .get();
 
@@ -55,8 +56,10 @@ class PurchaseRemoteDataSourceImpl implements PurchaseRemoteDataSource {
       final List<ProductModel> productList = [];
 
       for (final productId in productIds) {
-        final result =
-            await fireStore.collection('products').doc(productId).get();
+        final result = await fireStore
+            .collection(AppVariableNames.products)
+            .doc(productId)
+            .get();
         productList.add(ProductModel.fromDocument(result));
       }
 
@@ -69,8 +72,10 @@ class PurchaseRemoteDataSourceImpl implements PurchaseRemoteDataSource {
   @override
   Future<String> downloadProductByProductId(String productId) async {
     try {
-      final result =
-          await fireStore.collection('products').doc(productId).get();
+      final result = await fireStore
+          .collection(AppVariableNames.products)
+          .doc(productId)
+          .get();
 
       ProductModel productModel = ProductModel.fromDocument(result);
 

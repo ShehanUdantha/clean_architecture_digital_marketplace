@@ -27,51 +27,48 @@ class UserInfoPage extends StatelessWidget {
         ? context.watch<UserHomeBloc>().state.userEntity
         : context.watch<AdminHomeBloc>().state.userEntity;
 
-    return WillPopScope(
-      onWillPop: () => _handleBackButton(context, authState),
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0).copyWith(bottom: 0),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                PageHeaderWidget(
-                  title: 'User Information',
-                  function: () => _handleBackButton(context, authState),
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0).copyWith(bottom: 0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              PageHeaderWidget(
+                title: 'User Information',
+                function: () => _handleBackButton(context, authState),
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              SizedBox(
+                height: Helper.screeHeight(context) * 0.718,
+                child: ListView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: [
+                    const InputFieldTitleWidget(
+                      title: "User Name",
+                    ),
+                    InputFieldWidget(
+                      hint: userEntity.userName,
+                      isTextArea: false,
+                      isReadOnly: true,
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    const InputFieldTitleWidget(
+                      title: "User Email",
+                    ),
+                    InputFieldWidget(
+                      hint: userEntity.email,
+                      isTextArea: false,
+                      isReadOnly: true,
+                    ),
+                  ],
                 ),
-                const SizedBox(
-                  height: 16,
-                ),
-                SizedBox(
-                  height: Helper.screeHeight(context) * 0.718,
-                  child: ListView(
-                    physics: const NeverScrollableScrollPhysics(),
-                    children: [
-                      const InputFieldTitleWidget(
-                        title: "User Name",
-                      ),
-                      InputFieldWidget(
-                        hint: userEntity.userName,
-                        isTextArea: false,
-                        isReadOnly: true,
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      const InputFieldTitleWidget(
-                        title: "User Email",
-                      ),
-                      InputFieldWidget(
-                        hint: userEntity.email,
-                        isTextArea: false,
-                        isReadOnly: true,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

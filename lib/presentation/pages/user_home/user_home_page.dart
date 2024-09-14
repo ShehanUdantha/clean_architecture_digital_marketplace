@@ -1,4 +1,4 @@
-import '../../blocs/admin_tools/notification/notification_bloc.dart';
+import '../../blocs/notification/notification_bloc.dart';
 import '../../blocs/auth/auth_bloc.dart';
 
 import '../../../core/widgets/main_header_widget.dart';

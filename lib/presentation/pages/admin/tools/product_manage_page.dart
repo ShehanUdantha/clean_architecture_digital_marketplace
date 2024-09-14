@@ -11,8 +11,8 @@ import '../../../../core/constants/colors.dart';
 import '../../../../core/constants/strings.dart';
 import '../../../../core/utils/enum.dart';
 import '../../../../core/utils/helper.dart';
-import '../../../blocs/admin_tools/category/category_bloc.dart';
-import '../../../blocs/admin_tools/product/product_bloc.dart';
+import '../../../blocs/category/category_bloc.dart';
+import '../../../blocs/product/product_bloc.dart';
 
 class ProductManagePage extends StatelessWidget {
   const ProductManagePage({super.key});

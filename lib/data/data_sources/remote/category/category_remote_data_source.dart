@@ -1,3 +1,4 @@
+import '../../../../core/constants/variable_names.dart';
 import '../../../../core/utils/extension.dart';
 
 import '../../../../core/utils/enum.dart';
@@ -24,7 +25,7 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
   Future<String> addCategory(String name) async {
     try {
       final result = await fireStore
-          .collection('categories')
+          .collection(AppVariableNames.categories)
           .where('name', isEqualTo: name)
           .get();
 
@@ -37,7 +38,7 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
           dateCreated: DateTime.now(),
         );
         await fireStore
-            .collection('categories')
+            .collection(AppVariableNames.categories)
             .doc(categoryId)
             .set(categoryModel.toJson());
 
@@ -54,7 +55,7 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
   Future<List<CategoryModel>> getAllCategories() async {
     try {
       final result = await fireStore
-          .collection('categories')
+          .collection(AppVariableNames.categories)
           .orderBy('dateCreated', descending: true)
           .get();
 
@@ -68,7 +69,7 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
   @override
   Future<String> deleteCategory(String id) async {
     try {
-      await fireStore.collection('categories').doc(id).delete();
+      await fireStore.collection(AppVariableNames.categories).doc(id).delete();
 
       return ResponseTypes.success.response;
     } on FirebaseException catch (e) {

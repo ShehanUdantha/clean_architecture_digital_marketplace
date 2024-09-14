@@ -1,4 +1,4 @@
-import '../../../blocs/admin_tools/notification/notification_bloc.dart';
+import '../../../blocs/notification/notification_bloc.dart';
 import '../../../widgets/notification/notification_list_builder_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

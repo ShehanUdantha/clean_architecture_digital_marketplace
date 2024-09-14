@@ -1,5 +1,4 @@
-import '../../../blocs/admin_tools/notification/notification_bloc.dart';
-import '../../../blocs/admin_tools/send_notification/send_notification_bloc.dart';
+import '../../../blocs/notification/notification_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -80,21 +79,22 @@ class _NotificationSendPageState extends State<NotificationSendPage> {
               const SizedBox(
                 height: 32,
               ),
-              BlocConsumer<SendNotificationBloc, SendNotificationState>(
+              BlocConsumer<NotificationBloc, NotificationState>(
                 listener: (context, state) {
-                  if (state.status == BlocStatus.error) {
+                  if (state.notificationSendStatus == BlocStatus.error) {
                     context
-                        .read<SendNotificationBloc>()
-                        .add(SetNotificationStatusToDefault());
+                        .read<NotificationBloc>()
+                        .add(SetNotificationSendStatusToDefault());
+                    print(state.notificationSendMessage);
                     Helper.showSnackBar(
                       context,
-                      state.message,
+                      state.notificationSendMessage,
                     );
                   }
-                  if (state.status == BlocStatus.success) {
+                  if (state.notificationSendStatus == BlocStatus.success) {
                     context
-                        .read<SendNotificationBloc>()
-                        .add(SetNotificationStatusToDefault());
+                        .read<NotificationBloc>()
+                        .add(SetNotificationSendStatusToDefault());
 
                     Helper.showSnackBar(
                       context,
@@ -109,7 +109,7 @@ class _NotificationSendPageState extends State<NotificationSendPage> {
                   }
                 },
                 builder: (context, state) {
-                  if (state.status == BlocStatus.loading) {
+                  if (state.notificationSendStatus == BlocStatus.loading) {
                     return const ElevatedLoadingButtonWidget();
                   }
                   return ElevatedButtonWidget(
@@ -135,7 +135,7 @@ class _NotificationSendPageState extends State<NotificationSendPage> {
   _handleSubmitButton() async {
     if (_notificationTitleController.text.isNotEmpty) {
       if (_notificationDescriptionController.text.isNotEmpty) {
-        context.read<SendNotificationBloc>().add(
+        context.read<NotificationBloc>().add(
               NotificationSendButtonClickedEvent(
                 title: _notificationTitleController.text,
                 description: _notificationDescriptionController.text,

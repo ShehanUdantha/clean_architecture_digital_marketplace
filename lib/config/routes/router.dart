@@ -6,7 +6,7 @@ import '../../core/constants/routes_name.dart';
 import '../../core/utils/enum.dart';
 import '../../domain/entities/product/product_entity.dart';
 import '../../presentation/blocs/auth/auth_bloc.dart';
-import '../../presentation/pages/admin/admin_home_page.dart';
+import '../../presentation/pages/admin/dashboard/admin_home_page.dart';
 import '../../presentation/pages/admin/tools/category_manage_page.dart';
 import '../../presentation/pages/admin/tools/notification_manage_page.dart';
 import '../../presentation/pages/admin/tools/notification_send_page.dart';

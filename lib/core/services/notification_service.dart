@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import '../../config/routes/router.dart';
-import '../../presentation/blocs/admin_tools/notification/notification_bloc.dart';
+import '../../presentation/blocs/notification/notification_bloc.dart';
 import '../../presentation/blocs/auth/auth_bloc.dart';
 import '../constants/routes_name.dart';
 import '../utils/enum.dart';

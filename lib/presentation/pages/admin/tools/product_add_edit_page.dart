@@ -20,9 +20,8 @@ import '../../../../core/constants/colors.dart';
 import '../../../../core/constants/lists.dart';
 import '../../../../core/constants/routes_name.dart';
 import '../../../../core/utils/enum.dart';
-import '../../../blocs/admin_tools/add_and_edit_product/add_and_edit_product_bloc.dart';
-import '../../../blocs/admin_tools/category/category_bloc.dart';
-import '../../../blocs/admin_tools/product/product_bloc.dart';
+import '../../../blocs/category/category_bloc.dart';
+import '../../../blocs/product/product_bloc.dart';
 import '../../../widgets/admin/tools/drop_down_widget.dart';
 import '../../../widgets/admin/tools/sub_image_widget.dart';
 import '../../../widgets/admin/tools/sub_images_add_button_widget.dart';
@@ -236,23 +235,24 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
               const SizedBox(
                 height: 32,
               ),
-              BlocConsumer<AddAndEditProductBloc, AddAndEditProductState>(
+              BlocConsumer<ProductBloc, ProductState>(
                 listener: (context, state) {
-                  if (state.status == BlocStatus.error) {
+                  if (state.productAddAndEditStatus == BlocStatus.error) {
                     context
-                        .read<AddAndEditProductBloc>()
-                        .add(SetProductStatusToDefault());
+                        .read<ProductBloc>()
+                        .add(SetProductAddAndEditStatusToDefault());
                     Helper.showSnackBar(
                       context,
-                      state.message == ResponseTypes.failure.response
+                      state.productAddAndEditMessage ==
+                              ResponseTypes.failure.response
                           ? AppStrings.productAlreadyAdded
-                          : state.message,
+                          : state.productAddAndEditMessage,
                     );
                   }
-                  if (state.status == BlocStatus.success) {
+                  if (state.productAddAndEditStatus == BlocStatus.success) {
                     context
-                        .read<AddAndEditProductBloc>()
-                        .add(SetProductStatusToDefault());
+                        .read<ProductBloc>()
+                        .add(SetProductAddAndEditStatusToDefault());
 
                     Helper.showSnackBar(
                       context,
@@ -267,7 +267,7 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
                   }
                 },
                 builder: (context, state) {
-                  if (state.status == BlocStatus.loading) {
+                  if (state.productAddAndEditStatus == BlocStatus.loading) {
                     return const ElevatedLoadingButtonWidget();
                   }
                   return ElevatedButtonWidget(
@@ -298,13 +298,13 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
       sharedMarketingTypeDropDownValue =
           _getSharedMarketingIndexFromList(context, product.marketingType);
 
-      context.read<AddAndEditProductBloc>().add(
+      context.read<ProductBloc>().add(
             CategoryNameFieldChangeEvent(
               category: product.category,
             ),
           );
 
-      context.read<AddAndEditProductBloc>().add(
+      context.read<ProductBloc>().add(
             MarketingTypeFieldChangeEvent(
               type: product.marketingType,
             ),
@@ -345,7 +345,7 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
   }
 
   _handleCategoryDropDown(String value) {
-    context.read<AddAndEditProductBloc>().add(
+    context.read<ProductBloc>().add(
           CategoryNameFieldChangeEvent(
             category: context
                 .read<CategoryBloc>()
@@ -357,7 +357,7 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
   }
 
   _handleMarketingDropDown(String value) {
-    context.read<AddAndEditProductBloc>().add(
+    context.read<ProductBloc>().add(
           MarketingTypeFieldChangeEvent(
             type: AppLists.listOfMarketingType[int.parse(value) - 1],
           ),
@@ -375,7 +375,7 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
   }
 
   _handleSubmitButton() {
-    final state = context.read<AddAndEditProductBloc>().state;
+    final state = context.read<ProductBloc>().state;
     if (coverImage != null || sharedCoverImage != null) {
       if (subImages != null || sharedSubImages != null) {
         if (_productNameController.text.isNotEmpty) {
@@ -387,7 +387,7 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
                     if (widget.product != null && widget.title == 'Update') {
                       final product = widget.product!;
 
-                      context.read<AddAndEditProductBloc>().add(
+                      context.read<ProductBloc>().add(
                             ProductEditButtonClickedEvent(
                               id: product.id!,
                               coverImage: coverImage?.bytes != null
@@ -409,7 +409,7 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
                             ),
                           );
                     } else {
-                      context.read<AddAndEditProductBloc>().add(
+                      context.read<ProductBloc>().add(
                             ProductUploadButtonClickedEvent(
                               coverImage: coverImage!.bytes!,
                               subImages: Helper.subImagesList(subImages!),

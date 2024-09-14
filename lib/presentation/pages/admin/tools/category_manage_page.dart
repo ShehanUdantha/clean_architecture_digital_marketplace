@@ -13,8 +13,7 @@ import '../../../../core/widgets/page_header_widget.dart';
 import '../../../../core/constants/colors.dart';
 import '../../../../core/constants/routes_name.dart';
 import '../../../../core/constants/strings.dart';
-import '../../../blocs/admin_tools/add_category/add_category_bloc.dart';
-import '../../../blocs/admin_tools/category/category_bloc.dart';
+import '../../../blocs/category/category_bloc.dart';
 import '../../../widgets/admin/tools/category_list_builder_widget.dart';
 
 class CategoryManagePage extends StatefulWidget {
@@ -66,23 +65,24 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
                   width: 10,
                 ),
                 Expanded(
-                  child: BlocConsumer<AddCategoryBloc, AddCategoryState>(
+                  child: BlocConsumer<CategoryBloc, CategoryState>(
                     listener: (context, state) {
-                      if (state.status == BlocStatus.error) {
+                      if (state.categoryAddStatus == BlocStatus.error) {
                         context
-                            .read<AddCategoryBloc>()
-                            .add(SetCategoryStatusToDefault());
+                            .read<CategoryBloc>()
+                            .add(SetCategoryAddStatusToDefault());
                         Helper.showSnackBar(
                           context,
-                          state.message == ResponseTypes.failure.response
+                          state.categoryAddMessage ==
+                                  ResponseTypes.failure.response
                               ? AppStrings.categoryAlreadyAdded
-                              : state.message,
+                              : state.categoryAddMessage,
                         );
                       }
-                      if (state.status == BlocStatus.success) {
+                      if (state.categoryAddStatus == BlocStatus.success) {
                         context
-                            .read<AddCategoryBloc>()
-                            .add(SetCategoryStatusToDefault());
+                            .read<CategoryBloc>()
+                            .add(SetCategoryAddStatusToDefault());
                         context
                             .read<CategoryBloc>()
                             .add(GetAllCategoriesEvent());
@@ -94,7 +94,7 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
                       }
                     },
                     builder: (context, state) {
-                      if (state.status == BlocStatus.loading) {
+                      if (state.categoryAddStatus == BlocStatus.loading) {
                         return const ElevatedLoadingButtonWidget(
                           radius: 15.0,
                         );
@@ -160,7 +160,7 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
 
   _handleCategoryAdd() {
     if (_categoryController.text.isNotEmpty) {
-      context.read<AddCategoryBloc>().add(
+      context.read<CategoryBloc>().add(
             CategoryButtonClickedEvent(category: _categoryController.text),
           );
     } else {

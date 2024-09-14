@@ -8,7 +8,7 @@ import '../../../../core/constants/strings.dart';
 import '../../../../core/utils/enum.dart';
 import '../../../../core/utils/helper.dart';
 import '../../../../core/widgets/page_header_widget.dart';
-import '../../blocs/admin_tools/notification/notification_bloc.dart';
+import '../../blocs/notification/notification_bloc.dart';
 import '../../blocs/auth/auth_bloc.dart';
 import '../../widgets/notification/notification_list_builder_widget.dart';
 

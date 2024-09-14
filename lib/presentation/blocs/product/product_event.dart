@@ -1,26 +1,26 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-part of 'add_and_edit_product_bloc.dart';
+part of 'product_bloc.dart';
 
-sealed class AddAndEditProductEvent extends Equatable {
-  const AddAndEditProductEvent();
+sealed class ProductEvent extends Equatable {
+  const ProductEvent();
 
   @override
   List<Object> get props => [];
 }
 
-class CategoryNameFieldChangeEvent extends AddAndEditProductEvent {
+class CategoryNameFieldChangeEvent extends ProductEvent {
   final String category;
 
   const CategoryNameFieldChangeEvent({required this.category});
 }
 
-class MarketingTypeFieldChangeEvent extends AddAndEditProductEvent {
+class MarketingTypeFieldChangeEvent extends ProductEvent {
   final String type;
 
   const MarketingTypeFieldChangeEvent({required this.type});
 }
 
-class ProductUploadButtonClickedEvent extends AddAndEditProductEvent {
+class ProductUploadButtonClickedEvent extends ProductEvent {
   final Uint8List? coverImage;
   final List<Uint8List> subImages;
   final File? zipFile;
@@ -38,9 +38,7 @@ class ProductUploadButtonClickedEvent extends AddAndEditProductEvent {
   });
 }
 
-class SetProductStatusToDefault extends AddAndEditProductEvent {}
-
-class ProductEditButtonClickedEvent extends AddAndEditProductEvent {
+class ProductEditButtonClickedEvent extends ProductEvent {
   final String id;
   final dynamic coverImage;
   final List<Uint8List> subImages;
@@ -65,3 +63,27 @@ class ProductEditButtonClickedEvent extends AddAndEditProductEvent {
     required this.status,
   });
 }
+
+class SetProductAddAndEditStatusToDefault extends ProductEvent {}
+
+class CategorySelectEvent extends ProductEvent {
+  final int value;
+  final String name;
+
+  const CategorySelectEvent({
+    required this.value,
+    required this.name,
+  });
+}
+
+class GetAllProductsEvent extends ProductEvent {}
+
+class ProductDeleteEvent extends ProductEvent {
+  final String id;
+
+  const ProductDeleteEvent({required this.id});
+}
+
+class ProductEditEvent extends ProductEvent {}
+
+class SetProductDeleteStateToDefault extends ProductEvent {}

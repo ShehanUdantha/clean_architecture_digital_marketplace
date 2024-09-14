@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import '../../../../core/constants/urls.dart';
+import '../../../../core/constants/variable_names.dart';
 import '../../../../data/models/notification/notification_model.dart';
 import '../../../../domain/entities/notification/notification_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -38,14 +39,17 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
     try {
       final notificationId = const Uuid().v1();
 
-      await fireStore.collection('notifications').doc(notificationId).set({
+      await sendNotificationsToAllUsers(notification);
+
+      await fireStore
+          .collection(AppVariableNames.notifications)
+          .doc(notificationId)
+          .set({
         "id": notificationId,
         "title": notification.title,
         "description": notification.description,
         "dateCreated": DateTime.now(),
       });
-
-      await sendNotificationsToAllUsers(notification);
 
       return ResponseTypes.success.response;
     } on FirebaseException catch (e) {
@@ -58,7 +62,10 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
   @override
   Future<String> deleteNotification(String notificationId) async {
     try {
-      await fireStore.collection('notifications').doc(notificationId).delete();
+      await fireStore
+          .collection(AppVariableNames.notifications)
+          .doc(notificationId)
+          .delete();
 
       return ResponseTypes.success.response;
     } on FirebaseException catch (e) {
@@ -69,7 +76,8 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
   @override
   Future<List<NotificationEntity>> getAllNotifications() async {
     try {
-      final result = await fireStore.collection('notifications').get();
+      final result =
+          await fireStore.collection(AppVariableNames.notifications).get();
 
       return List<NotificationEntity>.from(
           (result.docs).map((e) => NotificationModel.fromMap(e)));
@@ -80,7 +88,7 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
 
   Future<Set<String>> getAllDeviceTokens() async {
     try {
-      final result = await fireStore.collection('users').get();
+      final result = await fireStore.collection(AppVariableNames.users).get();
 
       return result.docs
           .map((e) => e.data()['deviceToken'] as String?)
