@@ -75,6 +75,8 @@ class AppStrings {
   static const String pageNotFound = 'Page Not Found!';
   static const String notificationSend = 'Notification send successfully';
   static const String notificationDeleted = 'Notification deleted successfully';
+  static const String notificationNotReceivedYet =
+      'Notification Not Received Yet';
   static const String categoryAlreadyAdded = 'This category is already added';
   static const String productAlreadyAdded = 'This product is already added';
 }

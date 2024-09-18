@@ -147,7 +147,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       return const ElevatedLoadingButtonWidget();
                     }
                     return ElevatedButtonWidget(
-                      title: const Text('Sign Up'),
+                      title: 'Sign Up',
                       function: () => _handleSignUp(networkState),
                     );
                   },

@@ -7,6 +7,7 @@ import '../../../../core/utils/enum.dart';
 import '../../../../core/utils/helper.dart';
 import '../../blocs/network/network_bloc.dart';
 import '../../blocs/sign_up/sign_up_bloc.dart';
+import '../../blocs/theme/theme_bloc.dart';
 
 class EmailVerificationListenerWidget extends StatelessWidget {
   const EmailVerificationListenerWidget({
@@ -16,6 +17,7 @@ class EmailVerificationListenerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final networkState = context.watch<NetworkBloc>().state;
+    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -42,10 +44,10 @@ class EmailVerificationListenerWidget extends StatelessWidget {
               context,
               networkState,
             ),
-            child: const Text(
+            child: Text(
               "Resend Email",
               style: TextStyle(
-                color: AppColors.textPrimary,
+                color: isDarkMode ? AppColors.lightGrey : AppColors.textPrimary,
               ),
             ),
           ),

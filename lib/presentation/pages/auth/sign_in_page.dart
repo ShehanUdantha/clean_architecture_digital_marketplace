@@ -1,3 +1,4 @@
+import '../../../core/widgets/base_icon_button_widget.dart';
 import '../../../domain/usecases/auth/sign_in_params.dart';
 import '../../blocs/auth/auth_bloc.dart';
 import '../../blocs/network/network_bloc.dart';
@@ -19,6 +20,7 @@ import '../../../core/widgets/elevated_loading_button_widget.dart';
 import '../../../core/widgets/input_field_widget.dart';
 import '../../../core/widgets/outline_button_widget.dart';
 import '../../blocs/sign_in/sign_in_bloc.dart';
+import '../../blocs/theme/theme_bloc.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -47,6 +49,7 @@ class _SignInPageState extends State<SignInPage> {
 
   _bodyWidget() {
     final networkState = context.watch<NetworkBloc>().state;
+    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
 
     return SafeArea(
       child: Padding(
@@ -56,8 +59,22 @@ class _SignInPageState extends State<SignInPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SizedBox(
-                height: Helper.screeHeight(context) * 0.15,
+              Stack(
+                children: [
+                  SizedBox(
+                    height: Helper.screeHeight(context) * 0.15,
+                  ),
+                  Positioned(
+                    right: 0,
+                    child: BaseIconButtonWidget(
+                      icon: const Icon(
+                        Icons.settings,
+                        color: AppColors.textFourth,
+                      ),
+                      function: () => _handleMoveToSettingsPage(),
+                    ),
+                  ),
+                ],
               ),
               Image(
                 height: Helper.isLandscape(context)
@@ -98,10 +115,12 @@ class _SignInPageState extends State<SignInPage> {
                 children: [
                   TextButton(
                     onPressed: () => _handleMoveToForgotPage(),
-                    child: const Text(
+                    child: Text(
                       "Forgot Password?",
                       style: TextStyle(
-                        color: AppColors.textPrimary,
+                        color: isDarkMode
+                            ? AppColors.textFifth
+                            : AppColors.textPrimary,
                       ),
                     ),
                   ),
@@ -154,7 +173,7 @@ class _SignInPageState extends State<SignInPage> {
                     return const ElevatedLoadingButtonWidget();
                   }
                   return ElevatedButtonWidget(
-                    title: const Text('Sign In'),
+                    title: 'Sign In',
                     function: () => _handleSignIn(networkState),
                   );
                 },
@@ -205,5 +224,9 @@ class _SignInPageState extends State<SignInPage> {
 
   _handleMoveToSignUpPage() {
     context.goNamed(AppRoutes.signUpPageName);
+  }
+
+  _handleMoveToSettingsPage() {
+    context.goNamed(AppRoutes.authSettingsPageName);
   }
 }

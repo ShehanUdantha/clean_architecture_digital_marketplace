@@ -1,4 +1,3 @@
-import '../../../core/constants/colors.dart';
 import '../../../core/constants/routes_name.dart';
 import '../../../core/utils/extension.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/utils/enum.dart';
+import '../../../core/widgets/circular_loading_indicator.dart';
 import '../../blocs/product_details/product_details_bloc.dart';
 import '../../widgets/user_home/product_details_widget.dart';
 
@@ -49,11 +49,7 @@ class _ProductViewPageState extends State<ProductViewPage> {
         builder: (context, state) {
           switch (state.status) {
             case BlocStatus.loading:
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: AppColors.secondary,
-                ),
-              );
+              return const CircularLoadingIndicator();
             case BlocStatus.success:
               return ProductDetailsWidget(
                 product: state.productEntity,

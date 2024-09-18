@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
+import '../../../core/widgets/item_not_found_text.dart';
 import '../../../domain/entities/product/product_entity.dart';
 import '../../../presentation/widgets/user_home/grid_product_card_widget.dart';
 
@@ -45,9 +46,7 @@ class ProductGridViewListBuilderWidget extends StatelessWidget {
                 );
               },
             )
-          : const Center(
-              child: Text(AppStrings.productsNotAddedYet),
-            ),
+          : const ItemNotFoundText(title: AppStrings.productsNotAddedYet),
     );
   }
 }

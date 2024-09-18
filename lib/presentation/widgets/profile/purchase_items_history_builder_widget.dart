@@ -1,3 +1,4 @@
+import '../../../core/widgets/item_not_found_text.dart';
 import '../../blocs/purchase/purchase_bloc.dart';
 import 'purchase_items_card_widget.dart';
 import 'package:flutter/material.dart';
@@ -24,9 +25,7 @@ class PurchaseItemsHistoryBuilder extends StatelessWidget {
                 );
               },
             )
-          : const Center(
-              child: Text(AppStrings.purchaseNotHappen),
-            ),
+          : const ItemNotFoundText(title: AppStrings.purchaseNotHappen),
     );
   }
 }

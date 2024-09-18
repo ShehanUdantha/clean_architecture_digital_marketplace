@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import '../../../core/constants/colors.dart';
 import '../../../core/widgets/elevated_button_widget.dart';
 import '../../blocs/product_details/product_details_bloc.dart';
+import '../../blocs/theme/theme_bloc.dart';
 
 class CheckOutWidget extends StatelessWidget {
   const CheckOutWidget({
@@ -25,6 +26,7 @@ class CheckOutWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cartState = context.watch<CartBloc>().state;
+    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
 
     return SizedBox(
       child: Column(
@@ -33,10 +35,10 @@ class CheckOutWidget extends StatelessWidget {
           const SizedBox(
             height: 16,
           ),
-          const Text(
+          Text(
             'Payment Information',
             style: TextStyle(
-              color: AppColors.textPrimary,
+              color: isDarkMode ? AppColors.textFifth : AppColors.textPrimary,
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
@@ -47,17 +49,21 @@ class CheckOutWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 'Sub Total',
                 style: TextStyle(
-                  color: AppColors.textPrimary,
+                  color: isDarkMode
+                      ? AppColors.textSecondary
+                      : AppColors.textPrimary,
                   fontSize: 16,
                 ),
               ),
               Text(
                 '\u{20B9}${cartState.subTotal.toStringAsFixed(2)}',
-                style: const TextStyle(
-                  color: AppColors.textPrimary,
+                style: TextStyle(
+                  color: isDarkMode
+                      ? AppColors.textSecondary
+                      : AppColors.textPrimary,
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                 ),
@@ -70,17 +76,21 @@ class CheckOutWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 'Transaction Fee',
                 style: TextStyle(
-                  color: AppColors.textPrimary,
+                  color: isDarkMode
+                      ? AppColors.textSecondary
+                      : AppColors.textPrimary,
                   fontSize: 16,
                 ),
               ),
               Text(
                 '\u{20B9}${cartState.transactionFee.toStringAsFixed(2)}',
-                style: const TextStyle(
-                  color: AppColors.textPrimary,
+                style: TextStyle(
+                  color: isDarkMode
+                      ? AppColors.textSecondary
+                      : AppColors.textPrimary,
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                 ),
@@ -93,17 +103,21 @@ class CheckOutWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 'Total',
                 style: TextStyle(
-                  color: AppColors.textPrimary,
+                  color: isDarkMode
+                      ? AppColors.textSecondary
+                      : AppColors.textPrimary,
                   fontSize: 16,
                 ),
               ),
               Text(
                 '\u{20B9}${cartState.totalPrice.toStringAsFixed(2)}',
-                style: const TextStyle(
-                  color: AppColors.textPrimary,
+                style: TextStyle(
+                  color: isDarkMode
+                      ? AppColors.textSecondary
+                      : AppColors.textPrimary,
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                 ),
@@ -172,10 +186,7 @@ class CheckOutWidget extends StatelessWidget {
                 return const ElevatedLoadingButtonWidget();
               }
               return ElevatedButtonWidget(
-                title: const Text(
-                  'Check Out',
-                  style: TextStyle(color: AppColors.white),
-                ),
+                title: 'Check Out',
                 function: () =>
                     _handleCheckOutButtonClick(context, cartState.totalPrice),
               );

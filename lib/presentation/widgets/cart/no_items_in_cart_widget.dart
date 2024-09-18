@@ -1,3 +1,5 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../core/constants/routes_name.dart';
 import '../../../core/utils/helper.dart';
 import 'package:flutter/material.dart';
@@ -6,12 +8,15 @@ import 'package:go_router/go_router.dart';
 import '../../../core/constants/colors.dart';
 import '../../../core/constants/strings.dart';
 import '../../../core/widgets/elevated_button_widget.dart';
+import '../../blocs/theme/theme_bloc.dart';
 
 class NoItemsInCartWidget extends StatelessWidget {
   const NoItemsInCartWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -29,10 +34,10 @@ class NoItemsInCartWidget extends StatelessWidget {
         const SizedBox(
           height: 8.0,
         ),
-        const Text(
+        Text(
           AppStrings.emptyCart,
           style: TextStyle(
-            color: AppColors.textPrimary,
+            color: isDarkMode ? AppColors.textFifth : AppColors.textPrimary,
             fontWeight: FontWeight.w600,
             fontSize: 22,
           ),
@@ -54,7 +59,7 @@ class NoItemsInCartWidget extends StatelessWidget {
           height: 32.0,
         ),
         ElevatedButtonWidget(
-          title: const Text('Explore Products'),
+          title: 'Explore Products',
           function: () => _handleExploreButton(context),
         ),
         const SizedBox(

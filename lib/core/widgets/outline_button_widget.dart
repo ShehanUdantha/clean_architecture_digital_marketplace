@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../presentation/blocs/theme/theme_bloc.dart';
 import '../constants/colors.dart';
 
 class OutlineButtonWidget extends StatelessWidget {
@@ -14,6 +16,8 @@ class OutlineButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
+
     return OutlinedButton(
       onPressed: () => function(),
       style: OutlinedButton.styleFrom(
@@ -29,7 +33,14 @@ class OutlineButtonWidget extends StatelessWidget {
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(40.0)),
       ),
-      child: Text(title),
+      child: Text(
+        title,
+        style: TextStyle(
+          color: isDarkMode ? AppColors.textFifth : AppColors.textPrimary,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
     );
   }
 }

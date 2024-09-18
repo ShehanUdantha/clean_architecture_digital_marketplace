@@ -1,9 +1,9 @@
 import '../../../core/utils/extension.dart';
+import '../../../core/widgets/linear_loading_indicator.dart';
 import 'product_grid_view_list_builder_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../core/constants/colors.dart';
 import '../../../core/utils/enum.dart';
 import '../../blocs/user_home/user_home_bloc.dart';
 
@@ -19,11 +19,7 @@ class ProductsListByCategoryBuilderWidget extends StatelessWidget {
         builder: (context, state) {
           switch (state.productsStatus) {
             case BlocStatus.loading:
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: AppColors.secondary,
-                ),
-              );
+              return const LinearLoadingIndicator();
             case BlocStatus.success:
               return ProductGridViewListBuilderWidget(
                 productsList: state.listOfProductsByCategory,

@@ -9,8 +9,8 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/widgets/elevated_button_widget.dart';
 import '../../../../core/widgets/elevated_loading_button_widget.dart';
 import '../../../../core/widgets/input_field_widget.dart';
+import '../../../../core/widgets/linear_loading_indicator.dart';
 import '../../../../core/widgets/page_header_widget.dart';
-import '../../../../core/constants/colors.dart';
 import '../../../../core/constants/routes_name.dart';
 import '../../../../core/constants/strings.dart';
 import '../../../blocs/category/category_bloc.dart';
@@ -100,7 +100,7 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
                         );
                       }
                       return ElevatedButtonWidget(
-                        title: const Text('Add'),
+                        title: 'Add',
                         radius: 15.0,
                         function: () => _handleCategoryAdd(),
                       );
@@ -132,11 +132,7 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
               builder: (context, state) {
                 switch (state.status) {
                   case BlocStatus.loading:
-                    return const Center(
-                      child: LinearProgressIndicator(
-                        color: AppColors.secondary,
-                      ),
-                    );
+                    return const LinearLoadingIndicator();
                   case BlocStatus.success:
                     return const CategoryListBuilderWidget();
                   case BlocStatus.error:

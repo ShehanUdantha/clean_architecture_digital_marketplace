@@ -180,6 +180,7 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
                       hint: 'Product Description',
                       prefix: const Icon(Iconsax.card_edit),
                       isTextArea: true,
+                      areaSize: 5,
                     ),
                     const SizedBox(
                       height: 16,
@@ -196,7 +197,7 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
                           child: const Text(
                             'Upload Asset',
                             style: TextStyle(
-                              color: AppColors.white,
+                              color: AppColors.textWhite,
                             ),
                           ),
                         ),
@@ -271,7 +272,7 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
                     return const ElevatedLoadingButtonWidget();
                   }
                   return ElevatedButtonWidget(
-                    title: Text('${widget.title} Product'),
+                    title: '${widget.title} Product',
                     function: () => _handleSubmitButton(),
                   );
                 },

@@ -1,10 +1,10 @@
+import '../../../../core/widgets/linear_loading_indicator.dart';
 import '../../../blocs/notification/notification_bloc.dart';
 import '../../../widgets/notification/notification_list_builder_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/constants/colors.dart';
 import '../../../../core/constants/routes_name.dart';
 import '../../../../core/constants/strings.dart';
 import '../../../../core/utils/enum.dart';
@@ -12,25 +12,20 @@ import '../../../../core/utils/helper.dart';
 import '../../../../core/widgets/page_header_widget.dart';
 import '../../../widgets/admin/tools/floating_button_widget.dart';
 
-class NotificationManagePage extends StatefulWidget {
+class NotificationManagePage extends StatelessWidget {
   const NotificationManagePage({super.key});
 
   @override
-  State<NotificationManagePage> createState() => _NotificationManagePageState();
-}
-
-class _NotificationManagePageState extends State<NotificationManagePage> {
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _bodyWidget(),
+      body: _bodyWidget(context),
       floatingActionButton: FloatingButtonWidget(
         function: () => _handleFloatingButton(context),
       ),
     );
   }
 
-  _bodyWidget() {
+  _bodyWidget(BuildContext context) {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(16.0).copyWith(bottom: 0),
@@ -38,7 +33,7 @@ class _NotificationManagePageState extends State<NotificationManagePage> {
           children: [
             PageHeaderWidget(
               title: 'Manage Notifications',
-              function: () => _handleBackButton(),
+              function: () => _handleBackButton(context),
             ),
             const SizedBox(
               height: 26,
@@ -64,11 +59,7 @@ class _NotificationManagePageState extends State<NotificationManagePage> {
               builder: (context, state) {
                 switch (state.status) {
                   case BlocStatus.loading:
-                    return const Center(
-                      child: LinearProgressIndicator(
-                        color: AppColors.secondary,
-                      ),
-                    );
+                    return const LinearLoadingIndicator();
                   case BlocStatus.success:
                     return const NotificationListBuilderWidget();
                   case BlocStatus.error:
@@ -86,7 +77,7 @@ class _NotificationManagePageState extends State<NotificationManagePage> {
     );
   }
 
-  _handleBackButton() {
+  _handleBackButton(BuildContext context) {
     context.goNamed(AppRoutes.toolsPageName);
   }
 

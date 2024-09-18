@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../constants/colors.dart';
+import 'circular_loading_indicator.dart';
 
 class NetworkImagePlaceholder extends StatelessWidget {
   const NetworkImagePlaceholder({super.key});
@@ -17,11 +18,7 @@ class NetworkImagePlaceholder extends StatelessWidget {
           Radius.circular(15.0),
         ),
       ),
-      child: const Center(
-        child: CircularProgressIndicator(
-          color: AppColors.secondary,
-        ),
-      ),
+      child: const CircularLoadingIndicator(),
     );
   }
 }

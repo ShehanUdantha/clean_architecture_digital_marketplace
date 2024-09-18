@@ -1,11 +1,13 @@
 import 'package:like_button/like_button.dart';
 
 import '../../../core/utils/extension.dart';
+import '../../../core/widgets/circular_loading_indicator.dart';
 import '../../blocs/auth/auth_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../core/constants/strings.dart';
 import '../../../domain/entities/product/product_entity.dart';
 import '../../blocs/cart/cart_bloc.dart';
+import '../../blocs/theme/theme_bloc.dart';
 import '../../blocs/user_home/user_home_bloc.dart';
 import 'product_sub_image_list_builder_widget.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +35,7 @@ class ProductDetailsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final productDetailsState = context.watch<ProductDetailsBloc>().state;
     final authState = context.watch<AuthBloc>().state;
+    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
 
     return Stack(
       children: [
@@ -67,11 +70,7 @@ class ProductDetailsWidget extends StatelessWidget {
                               ? Helper.screeHeight(context) * 1.2
                               : Helper.screeHeight(context) * 0.42,
                           width: Helper.screeWidth(context),
-                          child: const Center(
-                            child: CircularProgressIndicator(
-                              color: AppColors.secondary,
-                            ),
-                          ),
+                          child: const CircularLoadingIndicator(),
                         ),
                       ),
                       Positioned(
@@ -111,10 +110,12 @@ class ProductDetailsWidget extends StatelessWidget {
                       children: [
                         Text(
                           product.productName,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 24,
-                            color: AppColors.textPrimary,
+                            color: isDarkMode
+                                ? AppColors.textFifth
+                                : AppColors.textPrimary,
                           ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -246,24 +247,15 @@ class ProductDetailsWidget extends StatelessWidget {
 
                   return state.cartedItems.contains(product.id)
                       ? ElevatedButtonWidget(
-                          title: const Text(
-                            'Remove From Cart',
-                            style: TextStyle(
-                              color: AppColors.white,
-                            ),
-                          ),
+                          title: 'Remove From Cart',
                           function: () => _handleRemoveFromCartButton(
                             context,
                             product.id!,
                           ),
                         )
                       : ElevatedButtonWidget(
-                          title: Text(
-                            'Add To Cart | \u{20B9}${double.parse(product.price).toStringAsFixed(2)}',
-                            style: const TextStyle(
-                              color: AppColors.white,
-                            ),
-                          ),
+                          title:
+                              'Add To Cart | \u{20B9}${double.parse(product.price).toStringAsFixed(2)}',
                           function: () => _handleAddToCartButton(
                             context,
                             product.id!,

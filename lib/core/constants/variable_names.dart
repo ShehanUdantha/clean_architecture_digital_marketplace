@@ -10,4 +10,7 @@ class AppVariableNames {
 
   // db keys
   static const String notificationBox = 'notificationBox';
+
+  // shared preferences key
+  static const String currentTheme = 'currentTheme';
 }

@@ -1,5 +1,5 @@
-import '../../../core/constants/colors.dart';
 import '../../../core/utils/enum.dart';
+import '../../../core/widgets/circular_loading_indicator.dart';
 import '../../blocs/cart/cart_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,11 +16,7 @@ class CartListBuilderWidget extends StatelessWidget {
     final cartState = context.watch<CartBloc>().state;
 
     if (cartState.listStatus == BlocStatus.loading) {
-      return const Center(
-        child: CircularProgressIndicator(
-          color: AppColors.secondary,
-        ),
-      );
+      return const CircularLoadingIndicator();
     }
 
     return SizedBox(

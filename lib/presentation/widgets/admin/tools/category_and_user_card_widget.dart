@@ -1,9 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../../core/constants/colors.dart';
 import '../../../../core/utils/helper.dart';
+import '../../../blocs/theme/theme_bloc.dart';
 
 class CategoryAndUserCardWidget extends StatelessWidget {
   final String title;
@@ -19,6 +21,8 @@ class CategoryAndUserCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
+
     return Column(
       children: [
         Container(
@@ -37,8 +41,10 @@ class CategoryAndUserCardWidget extends StatelessWidget {
                     width: Helper.screeWidth(context) * 0.8,
                     child: Text(
                       title,
-                      style: const TextStyle(
-                        color: AppColors.textPrimary,
+                      style: TextStyle(
+                        color: isDarkMode
+                            ? AppColors.textFifth
+                            : AppColors.textPrimary,
                         fontSize: 14.5,
                       ),
                       maxLines: 2,

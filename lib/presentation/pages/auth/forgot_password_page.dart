@@ -113,7 +113,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     return const ElevatedLoadingButtonWidget();
                   }
                   return ElevatedButtonWidget(
-                    title: const Text('Submit'),
+                    title: 'Submit',
                     function: () => _handleForgotPassword(networkState),
                   );
                 },

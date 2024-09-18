@@ -46,7 +46,7 @@ class ProductSubImageWidget extends StatelessWidget {
           index != currentIndex
               ? Container(
                   decoration: const BoxDecoration(
-                    color: AppColors.lightWhite,
+                    color: AppColors.mediumDarkGrey,
                     borderRadius: BorderRadius.all(
                       Radius.circular(15.0),
                     ),

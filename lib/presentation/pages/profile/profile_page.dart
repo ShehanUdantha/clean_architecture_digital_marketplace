@@ -10,7 +10,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/widgets/app_bar_title_widget.dart';
 import '../../../core/widgets/elevated_button_widget.dart';
-import '../../../core/constants/colors.dart';
 import '../../blocs/auth/auth_bloc.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -65,7 +64,12 @@ class ProfilePage extends StatelessWidget {
                       ),
                     ProfileCardWidget(
                       title: 'Settings',
-                      function: () {},
+                      function: () => _moveToPage(
+                        context,
+                        authState.userType == UserTypes.user.name
+                            ? AppRoutes.settingsPageName
+                            : AppRoutes.adminSettingsPageName,
+                      ),
                     ),
                     const SizedBox(
                       height: 16,
@@ -82,10 +86,7 @@ class ProfilePage extends StatelessWidget {
                   }
                 },
                 child: ElevatedButtonWidget(
-                  title: const Text(
-                    'Sign Out',
-                    style: TextStyle(color: AppColors.white),
-                  ),
+                  title: 'Sign Out',
                   function: () => _handleSignOut(context),
                 ),
               ),

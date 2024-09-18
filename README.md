@@ -4,15 +4,16 @@
 
 User View
 
-- Products view
+- Products View
 - Search Products
-- Product AddTo Cart
+- Product Add To Cart
 - Product Purchase
 - Add Favorite
 - Product Rating
 - View Purchase History
 - Download Purchase Product
 - View Notifications
+- Change Theme
 
 Admin View
 
@@ -49,6 +50,7 @@ Admin View
 <img src="./screenshots/purchase_products.jpg" width="250" />
 <img src="./screenshots/notifications.jpg" width="250" />
 <img src="./screenshots/user_profile.jpg" width="250" />
+<img src="./screenshots/settings.jpg" width="250" />
 </p>
 
 #### Admin View
@@ -72,4 +74,3 @@ Admin View
 ## Future Implements
 
 - Admin Dashboard
-- Settings

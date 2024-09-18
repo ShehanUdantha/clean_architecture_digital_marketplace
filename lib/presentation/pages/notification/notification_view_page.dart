@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/constants/colors.dart';
 import '../../../../core/constants/routes_name.dart';
 import '../../../../core/constants/strings.dart';
 import '../../../../core/utils/enum.dart';
 import '../../../../core/utils/helper.dart';
 import '../../../../core/widgets/page_header_widget.dart';
+import '../../../core/widgets/linear_loading_indicator.dart';
 import '../../blocs/notification/notification_bloc.dart';
 import '../../blocs/auth/auth_bloc.dart';
 import '../../widgets/notification/notification_list_builder_widget.dart';
@@ -71,11 +71,7 @@ class _NotificationViewPageState extends State<NotificationViewPage> {
               builder: (context, state) {
                 switch (state.status) {
                   case BlocStatus.loading:
-                    return const Center(
-                      child: LinearProgressIndicator(
-                        color: AppColors.secondary,
-                      ),
-                    );
+                    return const LinearLoadingIndicator();
                   case BlocStatus.success:
                     return const NotificationListBuilderWidget(
                       isHide: true,

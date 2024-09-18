@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/constants/routes_name.dart';
+import '../../../core/widgets/circular_loading_indicator.dart';
 import '../../../domain/entities/product/product_entity.dart';
 import '../../../core/utils/enum.dart';
 import '../../../core/utils/extension.dart';
@@ -8,6 +10,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/colors.dart';
 import '../../../core/utils/helper.dart';
+import '../../blocs/theme/theme_bloc.dart';
 
 class CollectionProductCardWidget extends StatelessWidget {
   final ProductEntity product;
@@ -19,6 +22,8 @@ class CollectionProductCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
+
     return GestureDetector(
       onTap: () => _handleMoveProductViewPage(
         context,
@@ -63,11 +68,7 @@ class CollectionProductCardWidget extends StatelessWidget {
                     ? Helper.screeHeight(context) * 0.5
                     : Helper.screeHeight(context) * 0.23,
                 width: Helper.screeWidth(context),
-                child: const Center(
-                  child: CircularProgressIndicator(
-                    color: AppColors.secondary,
-                  ),
-                ),
+                child: const CircularLoadingIndicator(),
               ),
             ),
             Padding(
@@ -78,9 +79,11 @@ class CollectionProductCardWidget extends StatelessWidget {
                 children: [
                   Text(
                     product.productName,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14.5,
-                      color: AppColors.textPrimary,
+                      color: isDarkMode
+                          ? AppColors.textFifth
+                          : AppColors.textPrimary,
                       fontWeight: FontWeight.w600,
                       height: 1.2,
                     ),

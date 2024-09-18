@@ -1,5 +1,8 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../domain/entities/notification/notification_entity.dart';
 
+import '../../presentation/blocs/theme/theme_bloc.dart';
 import 'base_icon_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
@@ -19,14 +22,16 @@ class NotificationLinearCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           notification.title,
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.w600,
-            color: AppColors.textFourth,
+            color: isDarkMode ? AppColors.textWhite : AppColors.textFourth,
             fontSize: 15,
           ),
           maxLines: Helper.isLandscape(context) ? 2 : 1,

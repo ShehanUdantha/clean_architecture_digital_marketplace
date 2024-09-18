@@ -8,6 +8,7 @@ import '../../../../core/utils/enum.dart';
 import '../../../../core/utils/helper.dart';
 import '../../blocs/forgot_password/forgot_password_bloc.dart';
 import '../../blocs/network/network_bloc.dart';
+import '../../blocs/theme/theme_bloc.dart';
 
 class ForgotPasswordListenerWidget extends StatelessWidget {
   final String email;
@@ -20,6 +21,7 @@ class ForgotPasswordListenerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final networkState = context.watch<NetworkBloc>().state;
+    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -51,10 +53,10 @@ class ForgotPasswordListenerWidget extends StatelessWidget {
               email,
               networkState,
             ),
-            child: const Text(
+            child: Text(
               "Resend Email",
               style: TextStyle(
-                color: AppColors.textPrimary,
+                color: isDarkMode ? AppColors.lightGrey : AppColors.textPrimary,
               ),
             ),
           ),

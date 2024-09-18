@@ -40,4 +40,10 @@ class AppLists {
     'Trending',
     'Latest',
   ];
+
+  static const Map<String, ThemeMode> themes = {
+    'Light': ThemeMode.light,
+    'Dark': ThemeMode.dark,
+    'System': ThemeMode.system,
+  };
 }

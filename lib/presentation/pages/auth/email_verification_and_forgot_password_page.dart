@@ -1,3 +1,5 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../core/constants/colors.dart';
 import '../../../core/constants/strings.dart';
 import '../../../core/utils/enum.dart';
@@ -9,6 +11,7 @@ import '../../../../core/constants/routes_name.dart';
 import '../../../../core/utils/helper.dart';
 import '../../../core/widgets/base_icon_button_widget.dart';
 import '../../../core/widgets/elevated_button_widget.dart';
+import '../../blocs/theme/theme_bloc.dart';
 import '../../widgets/auth/email_verification_listener_widget.dart';
 import '../../widgets/auth/forgot_password_listener_widget.dart';
 
@@ -32,6 +35,8 @@ class EmailVerificationPage extends StatelessWidget {
   }
 
   _bodyWidget(BuildContext context) {
+    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
+
     return WillPopScope(
       onWillPop: () => _handleWillPop(context),
       child: SafeArea(
@@ -67,8 +72,10 @@ class EmailVerificationPage extends StatelessWidget {
                 ),
                 Text(
                   isForgot ? AppStrings.forgotPassword : AppStrings.emailVerify,
-                  style: const TextStyle(
-                    color: AppColors.textPrimary,
+                  style: TextStyle(
+                    color: isDarkMode
+                        ? AppColors.textFifth
+                        : AppColors.textPrimary,
                     fontWeight: FontWeight.w600,
                     fontSize: 22,
                   ),
@@ -79,8 +86,10 @@ class EmailVerificationPage extends StatelessWidget {
                 ),
                 Text(
                   email,
-                  style: const TextStyle(
-                    color: AppColors.textPrimary,
+                  style: TextStyle(
+                    color: isDarkMode
+                        ? AppColors.lightGrey
+                        : AppColors.textPrimary,
                     fontWeight: FontWeight.w400,
                     fontSize: 12,
                   ),
@@ -104,7 +113,7 @@ class EmailVerificationPage extends StatelessWidget {
                   height: 32.0,
                 ),
                 ElevatedButtonWidget(
-                  title: const Text('Continue'),
+                  title: 'Continue',
                   function: () => _handleContinueButton(context),
                 ),
                 const SizedBox(

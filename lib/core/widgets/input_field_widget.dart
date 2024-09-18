@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../presentation/blocs/theme/theme_bloc.dart';
 import '../constants/colors.dart';
 
 class InputFieldWidget extends StatefulWidget {
@@ -8,6 +10,7 @@ class InputFieldWidget extends StatefulWidget {
   final Icon? suffix;
   final Icon? suffixSecondary;
   final bool isTextArea;
+  final int areaSize;
   final TextInputType? keyBoardType;
   final TextEditingController? controller;
   final bool? isReadOnly;
@@ -19,6 +22,7 @@ class InputFieldWidget extends StatefulWidget {
     this.suffix,
     this.suffixSecondary,
     this.isTextArea = false,
+    this.areaSize = 3,
     this.keyBoardType = TextInputType.text,
     this.controller,
     this.isReadOnly,
@@ -33,12 +37,18 @@ class _InputFieldWidgetState extends State<InputFieldWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
+
     return TextField(
       controller: widget.controller,
       obscureText: widget.suffix != null ? isSuffixClicked : false,
-      maxLines: widget.isTextArea ? 3 : 1,
+      maxLines: widget.isTextArea ? widget.areaSize : 1,
       keyboardType: widget.keyBoardType,
       readOnly: widget.isReadOnly ?? false,
+      style: TextStyle(
+        color: isDarkMode ? AppColors.textFifth : AppColors.textPrimary,
+        fontWeight: FontWeight.normal,
+      ),
       decoration: InputDecoration(
         prefixIcon: widget.prefix,
         prefixIconColor: AppColors.textThird,

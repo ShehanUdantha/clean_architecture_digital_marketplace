@@ -1,4 +1,5 @@
 import '../../../../core/constants/routes_name.dart';
+import '../../../../core/widgets/linear_loading_indicator.dart';
 import '../../../widgets/admin/tools/floating_button_widget.dart';
 import '../../../widgets/admin/tools/product_list_builder_widget.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/widgets/category_chip_widget.dart';
 import '../../../../core/widgets/page_header_widget.dart';
-import '../../../../core/constants/colors.dart';
 import '../../../../core/constants/strings.dart';
 import '../../../../core/utils/enum.dart';
 import '../../../../core/utils/helper.dart';
@@ -94,11 +94,7 @@ class ProductManagePage extends StatelessWidget {
               builder: (context, state) {
                 switch (state.status) {
                   case BlocStatus.loading:
-                    return const Center(
-                      child: LinearProgressIndicator(
-                        color: AppColors.secondary,
-                      ),
-                    );
+                    return const LinearLoadingIndicator();
                   case BlocStatus.success:
                     return const ProductListBuilderWidget();
                   case BlocStatus.error:

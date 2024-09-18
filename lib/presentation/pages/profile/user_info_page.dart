@@ -51,7 +51,6 @@ class UserInfoPage extends StatelessWidget {
                     ),
                     InputFieldWidget(
                       hint: userEntity.userName,
-                      isTextArea: false,
                       isReadOnly: true,
                     ),
                     const SizedBox(
@@ -62,7 +61,6 @@ class UserInfoPage extends StatelessWidget {
                     ),
                     InputFieldWidget(
                       hint: userEntity.email,
-                      isTextArea: false,
                       isReadOnly: true,
                     ),
                   ],

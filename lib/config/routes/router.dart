@@ -26,6 +26,7 @@ import '../../presentation/pages/profile/profile_page.dart';
 import '../../presentation/pages/profile/purchase_history_page.dart';
 import '../../presentation/pages/profile/purchase_products_view_page.dart';
 import '../../presentation/pages/profile/user_info_page.dart';
+import '../../presentation/pages/settings/settings_page.dart';
 import '../../presentation/pages/user_home/product_view_page.dart';
 import '../../presentation/pages/user_home/user_home_page.dart';
 import '../../presentation/pages/user_home/view_all_products_page.dart';
@@ -126,6 +127,18 @@ GoRouter goRouter = GoRouter(
               email: email!,
               page: goBackPage!,
               isForgot: isForgot == 'true',
+            );
+          },
+        ),
+        GoRoute(
+          name: AppRoutes.authSettingsPageName,
+          path: AppRoutes.authSettingsPagePath,
+          pageBuilder: (context, state) {
+            return MaterialPage(
+              key: state.pageKey,
+              child: const SettingsPage(
+                fromAuth: true,
+              ),
             );
           },
         ),
@@ -255,6 +268,16 @@ GoRouter goRouter = GoRouter(
                     return MaterialPage(
                       key: state.pageKey,
                       child: const UserInfoPage(),
+                    );
+                  },
+                ),
+                GoRoute(
+                  name: AppRoutes.settingsPageName,
+                  path: AppRoutes.settingsPagePath,
+                  pageBuilder: (context, state) {
+                    return MaterialPage(
+                      key: state.pageKey,
+                      child: const SettingsPage(),
                     );
                   },
                 ),
@@ -417,6 +440,16 @@ GoRouter goRouter = GoRouter(
                     return MaterialPage(
                       key: state.pageKey,
                       child: const UserInfoPage(),
+                    );
+                  },
+                ),
+                GoRoute(
+                  name: AppRoutes.adminSettingsPageName,
+                  path: AppRoutes.adminSettingsPagePath,
+                  pageBuilder: (context, state) {
+                    return MaterialPage(
+                      key: state.pageKey,
+                      child: const SettingsPage(),
                     );
                   },
                 ),

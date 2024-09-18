@@ -1,10 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../core/constants/colors.dart';
 import '../../../core/utils/helper.dart';
 import '../../../core/widgets/base_icon_button_widget.dart';
+import '../../blocs/theme/theme_bloc.dart';
 
 class ProfileCardWidget extends StatelessWidget {
   final String title;
@@ -18,6 +20,8 @@ class ProfileCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
+
     return GestureDetector(
       onTap: () => function(),
       child: Container(
@@ -42,10 +46,11 @@ class ProfileCardWidget extends StatelessWidget {
               width: Helper.screeWidth(context) * 0.45,
               child: Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
-                  color: AppColors.textPrimary,
+                  color:
+                      isDarkMode ? AppColors.textFifth : AppColors.textPrimary,
                 ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,

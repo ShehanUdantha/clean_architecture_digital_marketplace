@@ -1,4 +1,6 @@
+import 'package:Pixelcart/presentation/blocs/theme/theme_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../../core/constants/colors.dart';
@@ -13,12 +15,14 @@ class FloatingButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
+
     return FloatingActionButton(
       onPressed: () => function(),
-      backgroundColor: AppColors.secondary,
-      child: const Icon(
+      backgroundColor: isDarkMode ? AppColors.lightGrey : AppColors.secondary,
+      child: Icon(
         Iconsax.add,
-        color: AppColors.white,
+        color: isDarkMode ? AppColors.textPrimary : AppColors.textFifth,
       ),
     );
   }

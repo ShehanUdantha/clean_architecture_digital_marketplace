@@ -28,6 +28,7 @@ import 'presentation/blocs/sign_in/sign_in_bloc.dart';
 import 'presentation/blocs/sign_up/sign_up_bloc.dart';
 import 'presentation/blocs/stripe/stripe_bloc.dart';
 import 'presentation/blocs/user_home/user_home_bloc.dart';
+import 'presentation/blocs/theme/theme_bloc.dart';
 
 void main() async {
   // initialize Flutter Binding
@@ -119,12 +120,22 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => locator.sl<NetworkBloc>(),
         ),
+        BlocProvider(
+          create: (context) =>
+              locator.sl<ThemeBloc>()..add(GetCurrentThemeMode()),
+        ),
       ],
-      child: MaterialApp.router(
-        title: 'Pixelcart',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
-        routerConfig: goRouter,
+      child: BlocBuilder<ThemeBloc, ThemeState>(
+        builder: (context, state) {
+          return MaterialApp.router(
+            title: 'Pixelcart',
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: state.themeMode,
+            routerConfig: goRouter,
+          );
+        },
       ),
     );
   }

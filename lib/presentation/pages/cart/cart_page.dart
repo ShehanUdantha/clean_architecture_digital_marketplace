@@ -1,9 +1,9 @@
 import '../../../core/utils/extension.dart';
 import '../../../core/widgets/app_bar_title_widget.dart';
+import '../../../core/widgets/circular_loading_indicator.dart';
 import '../../widgets/cart/no_items_in_cart_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../core/constants/colors.dart';
 import '../../../core/constants/strings.dart';
 import '../../../core/utils/enum.dart';
 import '../../../core/utils/helper.dart';
@@ -76,11 +76,7 @@ class _CartPageState extends State<CartPage> {
                     case BlocStatus.loading:
                       return SizedBox(
                         height: Helper.screeHeight(context) * 0.8,
-                        child: const Center(
-                          child: CircularProgressIndicator(
-                            color: AppColors.secondary,
-                          ),
-                        ),
+                        child: const CircularLoadingIndicator(),
                       );
                     case BlocStatus.success:
                       return Column(

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../../core/constants/colors.dart';
 import '../../../../core/utils/helper.dart';
+import '../../../blocs/theme/theme_bloc.dart';
 
 class SubImagesAddButtonWidget extends StatelessWidget {
   const SubImagesAddButtonWidget({
@@ -11,6 +13,8 @@ class SubImagesAddButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
+
     return Container(
       height: Helper.screeHeight(context),
       width: Helper.isLandscape(context)
@@ -22,10 +26,10 @@ class SubImagesAddButtonWidget extends StatelessWidget {
           Radius.circular(15.0),
         ),
       ),
-      child: const Center(
+      child: Center(
         child: Icon(
           Iconsax.add,
-          color: AppColors.secondary,
+          color: isDarkMode ? AppColors.textFifth : AppColors.textPrimary,
           size: 32,
         ),
       ),

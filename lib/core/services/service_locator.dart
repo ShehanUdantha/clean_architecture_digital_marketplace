@@ -1,3 +1,5 @@
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../domain/usecases/notification/get_notification_count_usecase.dart';
 import '../../domain/usecases/notification/reset_notification_count_usecase.dart';
 import '../../domain/usecases/notification/update_notification_count_usecase.dart';
@@ -75,6 +77,7 @@ import '../../presentation/blocs/admin_home/admin_home_bloc.dart';
 import '../../presentation/blocs/category/category_bloc.dart';
 import '../../presentation/blocs/notification/notification_bloc.dart';
 import '../../presentation/blocs/product/product_bloc.dart';
+import '../../presentation/blocs/theme/theme_bloc.dart';
 import '../../presentation/blocs/users/users_bloc.dart';
 import '../../presentation/blocs/auth/auth_bloc.dart';
 import '../../presentation/blocs/cart/cart_bloc.dart';
@@ -101,10 +104,13 @@ Future<void> serviceLocator() async {
   // http for network request
   sl.registerSingleton<http.Client>(http.Client());
 
-  // hive db
+  // local storage
   sl.registerSingleton<Box<dynamic>>(
     await Hive.openBox(AppVariableNames.notificationBox),
     instanceName: AppVariableNames.notificationBox,
+  );
+  sl.registerSingleton<SharedPreferences>(
+    await SharedPreferences.getInstance(),
   );
 
   // data source
@@ -451,6 +457,13 @@ Future<void> serviceLocator() async {
   // network
   sl.registerFactory<NetworkBloc>(
     () => NetworkBloc(),
+  );
+
+  // network
+  sl.registerFactory<ThemeBloc>(
+    () => ThemeBloc(
+      sl(),
+    ),
   );
 
   // notifications

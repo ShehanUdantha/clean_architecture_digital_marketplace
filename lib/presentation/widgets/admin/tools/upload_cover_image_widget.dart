@@ -1,13 +1,16 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../../core/constants/colors.dart';
 import '../../../../core/utils/helper.dart';
 import '../../../../core/widgets/network_image_placeholder.dart';
+import '../../../blocs/theme/theme_bloc.dart';
 
 class UploadCoverImageWidget extends StatelessWidget {
   final PlatformFile? coverImage;
@@ -71,7 +74,9 @@ class UploadCoverImageWidget extends StatelessWidget {
                           Radius.circular(15.0),
                         ),
                       ),
-                      child: const CoverImageUpdateTextWidget(),
+                      child: const CoverImageUpdateTextWidget(
+                        needToChangeColor: false,
+                      ),
                     ),
                   ],
                 )
@@ -81,27 +86,40 @@ class UploadCoverImageWidget extends StatelessWidget {
 }
 
 class CoverImageUpdateTextWidget extends StatelessWidget {
+  final bool needToChangeColor;
+
   const CoverImageUpdateTextWidget({
     super.key,
+    this.needToChangeColor = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
+
+    return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
             Iconsax.document_upload,
-            color: AppColors.textPrimary,
+            color: needToChangeColor
+                ? isDarkMode
+                    ? AppColors.textFifth
+                    : AppColors.textPrimary
+                : AppColors.textPrimary,
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Text(
             'Upload Cover Image',
             style: TextStyle(
-              color: AppColors.textPrimary,
+              color: needToChangeColor
+                  ? isDarkMode
+                      ? AppColors.textFifth
+                      : AppColors.textPrimary
+                  : AppColors.textPrimary,
             ),
           ),
         ],

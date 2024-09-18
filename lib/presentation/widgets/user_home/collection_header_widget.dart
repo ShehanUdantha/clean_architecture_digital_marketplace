@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/constants/colors.dart';
+import '../../blocs/theme/theme_bloc.dart';
 
 class CollectionHeaderWidget extends StatelessWidget {
   final String title;
@@ -14,15 +16,17 @@ class CollectionHeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            color: AppColors.textPrimary,
+            color: isDarkMode ? AppColors.textFifth : AppColors.textPrimary,
           ),
         ),
         TextButton(

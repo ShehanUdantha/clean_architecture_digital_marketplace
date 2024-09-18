@@ -1,3 +1,6 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../presentation/blocs/theme/theme_bloc.dart';
 import 'base_icon_button_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../domain/entities/product/product_entity.dart';
@@ -28,6 +31,8 @@ class ProductLinearCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
+
     return Column(
       children: [
         Container(
@@ -73,9 +78,11 @@ class ProductLinearCardWidget extends StatelessWidget {
                   children: [
                     Text(
                       product.productName,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.w600,
-                        color: AppColors.textFourth,
+                        color: isDarkMode
+                            ? AppColors.textWhite
+                            : AppColors.textFourth,
                         fontSize: 15,
                       ),
                       maxLines: Helper.isLandscape(context) ? 2 : 1,
@@ -98,9 +105,11 @@ class ProductLinearCardWidget extends StatelessWidget {
                     ),
                     Text(
                       '\u{20B9}${double.parse(product.price).toStringAsFixed(2)}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
+                        color: isDarkMode
+                            ? AppColors.textFifth
+                            : AppColors.textPrimary,
                         fontSize: 17,
                       ),
                       maxLines: 1,

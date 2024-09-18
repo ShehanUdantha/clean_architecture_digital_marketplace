@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+import '../../config/routes/router.dart';
 import '../../domain/entities/category/category_entity.dart';
 import '../../domain/entities/product/product_entity.dart';
 import '../constants/lists.dart';
@@ -144,5 +145,15 @@ class Helper {
 
   static String formatTimeago(DateTime date) {
     return timeago.format(date);
+  }
+
+  static void displayBottomSheet(Widget childWidget) {
+    showModalBottomSheet(
+      showDragHandle: true,
+      context: rootNavigatorKey.currentContext!,
+      builder: (context) {
+        return childWidget;
+      },
+    );
   }
 }

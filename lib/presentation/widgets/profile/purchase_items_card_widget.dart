@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../domain/entities/product/purchase_products_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -7,6 +9,7 @@ import '../../../core/constants/routes_name.dart';
 
 import '../../../core/constants/colors.dart';
 import '../../../core/utils/helper.dart';
+import '../../blocs/theme/theme_bloc.dart';
 
 class PurchaseItemsCardWidget extends StatelessWidget {
   final PurchaseProductsEntity purchaseDetails;
@@ -18,6 +21,8 @@ class PurchaseItemsCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
+
     return Container(
       margin: const EdgeInsets.only(bottom: 10.0),
       padding: const EdgeInsets.all(8.0).copyWith(left: 12.0),
@@ -46,11 +51,13 @@ class PurchaseItemsCardWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${purchaseDetails.products.length} Products',
-                      style: const TextStyle(
+                      '${purchaseDetails.products.length} Product${purchaseDetails.products.length > 1 ? "s" : ""}',
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
-                        color: AppColors.textPrimary,
+                        color: isDarkMode
+                            ? AppColors.textFifth
+                            : AppColors.textPrimary,
                       ),
                     ),
                     Text(
@@ -66,10 +73,12 @@ class PurchaseItemsCardWidget extends StatelessWidget {
               ),
               Text(
                 '\u{20B9}${double.parse(purchaseDetails.price).toStringAsFixed(2)}',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
-                  color: AppColors.textPrimary,
+                  color: isDarkMode
+                      ? AppColors.textSecondary
+                      : AppColors.textPrimary,
                 ),
               ),
             ],

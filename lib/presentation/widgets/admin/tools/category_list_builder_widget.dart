@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/constants/strings.dart';
+import '../../../../core/widgets/item_not_found_text.dart';
 import '../../../blocs/category/category_bloc.dart';
 import 'category_and_user_card_widget.dart';
 
@@ -28,9 +29,7 @@ class CategoryListBuilderWidget extends StatelessWidget {
                 );
               },
             )
-          : const Center(
-              child: Text(AppStrings.categoriesNotAddedYet),
-            ),
+          : const ItemNotFoundText(title: AppStrings.categoriesNotAddedYet),
     );
   }
 

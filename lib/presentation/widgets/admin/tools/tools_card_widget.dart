@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../../core/widgets/base_icon_button_widget.dart';
 import '../../../../core/constants/colors.dart';
 import '../../../../core/utils/helper.dart';
+import '../../../blocs/theme/theme_bloc.dart';
 
 class ToolsCardWidget extends StatelessWidget {
   final String title;
@@ -19,6 +21,8 @@ class ToolsCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
+
     return GestureDetector(
       onTap: () => function(),
       child: Container(
@@ -26,9 +30,9 @@ class ToolsCardWidget extends StatelessWidget {
         height: Helper.isLandscape(context)
             ? Helper.screeHeight(context) * 0.26
             : Helper.screeHeight(context) * 0.125,
-        decoration: const BoxDecoration(
-          color: AppColors.lightDark,
-          borderRadius: BorderRadius.all(
+        decoration: BoxDecoration(
+          color: isDarkMode ? AppColors.secondWhite : AppColors.lightDark,
+          borderRadius: const BorderRadius.all(
             Radius.circular(15.0),
           ),
         ),

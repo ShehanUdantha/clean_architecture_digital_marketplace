@@ -1,4 +1,3 @@
-import '../../../core/constants/colors.dart';
 import '../../../core/utils/enum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,8 +43,6 @@ class BasePage extends StatelessWidget {
             ? AppLists.listOfAdminBottomNavigationBarItems
             : AppLists.listOfUserBottomNavigationBarItems,
         currentIndex: statefulNavigationShell.currentIndex,
-        selectedItemColor: AppColors.secondary,
-        unselectedItemColor: AppColors.textSecondary,
         onTap: (index) => _goBranch(index),
       ),
     );

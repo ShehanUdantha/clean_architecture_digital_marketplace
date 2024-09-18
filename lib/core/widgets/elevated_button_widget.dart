@@ -1,38 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../presentation/blocs/theme/theme_bloc.dart';
 import '../constants/colors.dart';
 
 class ElevatedButtonWidget extends StatelessWidget {
-  final Widget title;
+  final String? title;
+  final Widget? actionChild;
   final Function? function;
   final double radius;
 
   const ElevatedButtonWidget({
     super.key,
-    required this.title,
+    this.title,
+    this.actionChild,
     this.function,
     this.radius = 40.0,
   });
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
+
     return ElevatedButton(
       onPressed: () => function != null ? function!() : () {},
       style: ElevatedButton.styleFrom(
         elevation: 0,
-        foregroundColor: AppColors.lightGrey,
-        backgroundColor: AppColors.secondary,
+        foregroundColor: isDarkMode ? AppColors.lightDark : AppColors.lightGrey,
+        backgroundColor: isDarkMode ? AppColors.primary : AppColors.secondary,
         padding: const EdgeInsets.symmetric(vertical: 20.0),
-        textStyle: const TextStyle(
-          fontSize: 16,
-          color: AppColors.white,
-          fontWeight: FontWeight.w600,
-        ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(radius),
         ),
       ),
-      child: title,
+      child: title != null
+          ? Text(
+              title!,
+              style: TextStyle(
+                color: isDarkMode ? AppColors.textPrimary : AppColors.textFifth,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            )
+          : actionChild ?? const SizedBox(),
     );
   }
 }

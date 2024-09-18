@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/constants/colors.dart';
 import '../../../core/constants/strings.dart';
 import '../../../core/utils/helper.dart';
+import '../../blocs/theme/theme_bloc.dart';
 
 class NetworkViewWidget extends StatelessWidget {
   const NetworkViewWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
+
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -29,10 +33,11 @@ class NetworkViewWidget extends StatelessWidget {
               const SizedBox(
                 height: 8.0,
               ),
-              const Text(
+              Text(
                 AppStrings.noInternetTitle,
                 style: TextStyle(
-                  color: AppColors.textPrimary,
+                  color:
+                      isDarkMode ? AppColors.textFifth : AppColors.textPrimary,
                   fontWeight: FontWeight.w600,
                   fontSize: 22,
                 ),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../core/constants/colors.dart';
+import '../../blocs/theme/theme_bloc.dart';
 
 class SearchBarWidget extends StatelessWidget {
   final TextEditingController controller;
@@ -17,9 +19,15 @@ class SearchBarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
+
     return TextField(
       controller: controller,
       onChanged: (value) => function(value),
+      style: TextStyle(
+        color: isDarkMode ? AppColors.textFifth : AppColors.textPrimary,
+        fontWeight: FontWeight.normal,
+      ),
       decoration: InputDecoration(
         prefixIcon: const Icon(Iconsax.search_normal),
         prefixIconColor: AppColors.mediumGrey,
@@ -29,7 +37,8 @@ class SearchBarWidget extends StatelessWidget {
                 icon: const Icon(Iconsax.close_circle),
               )
             : const SizedBox(),
-        suffixIconColor: AppColors.secondary,
+        suffixIconColor:
+            isDarkMode ? AppColors.secondWhite : AppColors.secondary,
         hintText: 'Search Products',
         hintStyle: const TextStyle(
           color: AppColors.mediumGrey,

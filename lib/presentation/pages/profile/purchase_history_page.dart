@@ -1,10 +1,10 @@
 import '../../../core/constants/routes_name.dart';
+import '../../../core/widgets/linear_loading_indicator.dart';
 import '../../blocs/purchase/purchase_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/constants/colors.dart';
 import '../../../core/utils/enum.dart';
 import '../../../core/utils/helper.dart';
 import '../../../core/widgets/page_header_widget.dart';
@@ -61,11 +61,7 @@ class _PurchaseHistoryPageState extends State<PurchaseHistoryPage> {
                 builder: (context, state) {
                   switch (state.status) {
                     case BlocStatus.loading:
-                      return const Center(
-                        child: LinearProgressIndicator(
-                          color: AppColors.secondary,
-                        ),
-                      );
+                      return const LinearLoadingIndicator();
                     case BlocStatus.success:
                       return const PurchaseItemsHistoryBuilder();
                     case BlocStatus.error:

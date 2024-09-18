@@ -113,7 +113,7 @@ class _NotificationSendPageState extends State<NotificationSendPage> {
                     return const ElevatedLoadingButtonWidget();
                   }
                   return ElevatedButtonWidget(
-                    title: const Text('Send Notification'),
+                    title: 'Send Notification',
                     function: () => _handleSubmitButton(),
                   );
                 },

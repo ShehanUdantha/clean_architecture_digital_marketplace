@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../constants/colors.dart';
+import 'circular_loading_indicator.dart';
 import 'elevated_button_widget.dart';
 
 class ElevatedLoadingButtonWidget extends StatelessWidget {
@@ -14,12 +13,12 @@ class ElevatedLoadingButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButtonWidget(
-      title: const SizedBox(
+      actionChild: const SizedBox(
         height: 20,
         width: 20,
-        child: CircularProgressIndicator(
-          color: AppColors.white,
-          strokeWidth: 2,
+        child: CircularLoadingIndicator(
+          strokeWidth: 2.0,
+          isButtonLoading: true,
         ),
       ),
       radius: radius,

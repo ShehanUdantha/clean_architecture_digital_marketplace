@@ -59,6 +59,7 @@ dependencies:
   hive: ^2.2.3
   path_provider: ^2.1.4
   timeago: ^3.7.0
+  shared_preferences: ^2.3.2
 
 dev_dependencies:
   flutter_lints: ^4.0.0

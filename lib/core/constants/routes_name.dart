@@ -21,6 +21,9 @@ class AppRoutes {
   static const String emailVerificationAndForgotPasswordPageName =
       'emailVerificationAndForgotPassword';
 
+  static const String authSettingsPagePath = 'auth-to-settings';
+  static const String authSettingsPageName = 'authToSettings';
+
   // admin routes
   static const String adminPagePath = '/admin';
   static const String adminPageName = 'admin';
@@ -58,6 +61,9 @@ class AppRoutes {
   static const String adminInfoPagePath = 'admin-info';
   static const String adminInfoPageName = 'adminInfo';
 
+  static const String adminSettingsPagePath = 'admin-settings';
+  static const String adminSettingsPageName = 'adminSettings';
+
   // user routes
   static const String homePagePath = '/home';
   static const String homePageName = 'home';
@@ -87,4 +93,7 @@ class AppRoutes {
 
   static const String userInfoPagePath = 'user-info';
   static const String userInfoPageName = 'userInfo';
+
+  static const String settingsPagePath = 'settings';
+  static const String settingsPageName = 'settings';
 }

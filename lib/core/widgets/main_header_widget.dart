@@ -1,3 +1,4 @@
+import '../../presentation/blocs/theme/theme_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -21,6 +22,8 @@ class MainHeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
+
     return SizedBox(
       height: Helper.isLandscape(context)
           ? Helper.screeHeight(context) * 0.18
@@ -37,10 +40,12 @@ class MainHeaderWidget extends StatelessWidget {
               const SizedBox(
                 height: 8,
               ),
-              const Text(
+              Text(
                 'Hello, Welcome 👋',
                 style: TextStyle(
-                  color: AppColors.textPrimary,
+                  color: isDarkMode
+                      ? AppColors.textSecondary
+                      : AppColors.textPrimary,
                   fontSize: 16,
                   height: 0.8,
                   fontWeight: FontWeight.w500,
@@ -50,7 +55,9 @@ class MainHeaderWidget extends StatelessWidget {
                 width: Helper.screeWidth(context) * 0.6,
                 child: Text(
                   userName,
-                  style: const TextStyle(
+                  style: TextStyle(
+                    color:
+                        isDarkMode ? AppColors.textWhite : AppColors.textBlack,
                     fontWeight: FontWeight.bold,
                     fontSize: 26,
                   ),

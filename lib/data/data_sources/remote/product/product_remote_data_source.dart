@@ -198,17 +198,17 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
       final result = await fireStore
           .collection(AppVariableNames.products)
           .where('productName', isGreaterThanOrEqualTo: query)
+          .where('productName', isLessThanOrEqualTo: '$query\uf8ff')
           .get();
 
+      if (result.docs.isEmpty) {
+        return [];
+      }
+
       return List<ProductModel>.from(
-        (result.docs).map(
-          (e) {
-            ProductModel product = ProductModel.fromMap(e);
-            if (product.status == ProductStatus.active.product) {
-              return product;
-            }
-          },
-        ),
+        result.docs
+            .map((e) => ProductModel.fromMap(e))
+            .where((product) => product.status == ProductStatus.active.product),
       );
     } on FirebaseException catch (e) {
       throw DBException(errorMessage: e.toString());

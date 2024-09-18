@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/widgets/item_not_found_text.dart';
 import '../../../../domain/entities/product/product_entity.dart';
 import '../../../../core/constants/routes_name.dart';
 import '../../../../core/widgets/product_linear_card_widget.dart';
@@ -35,9 +36,7 @@ class ProductListBuilderWidget extends StatelessWidget {
                 );
               },
             )
-          : const Center(
-              child: Text(AppStrings.productsNotAddedYet),
-            ),
+          : const ItemNotFoundText(title: AppStrings.productsNotAddedYet),
     );
   }
 

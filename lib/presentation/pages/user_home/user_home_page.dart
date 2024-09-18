@@ -185,5 +185,6 @@ class _UserHomePageState extends State<UserHomePage> {
   _handleClearFunction() {
     context.read<UserHomeBloc>().add(ClearSearchFiledEvent());
     _searchController.clear();
+    FocusScope.of(context).unfocus();
   }
 }
