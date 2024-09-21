@@ -60,6 +60,8 @@ dependencies:
   path_provider: ^2.1.4
   timeago: ^3.7.0
   shared_preferences: ^2.3.2
+  flutter_localizations:
+    sdk: flutter
 
 dev_dependencies:
   flutter_lints: ^4.0.0
@@ -71,6 +73,7 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  generate: true
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/

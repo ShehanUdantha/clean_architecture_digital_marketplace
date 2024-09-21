@@ -9,19 +9,21 @@ User View
 - Product Add To Cart
 - Product Purchase
 - Add Favorite
-- Product Rating
 - View Purchase History
 - Download Purchase Product
 - View Notifications
 - Change Theme
+- Change Language
 
 Admin View
 
 - Admin Dashboard
-- Product Add/Edit/Delete
-- Category Add/Delete
+- Product Manage
+- Category Manage
 - User Manage
 - Notifications Manage
+- Change Theme
+- Change Language
 
 ## Screenshots
 
@@ -60,7 +62,7 @@ Admin View
 <img src="./screenshots/product_manage.jpg" width="250" />
 <img src="./screenshots/product_add.jpg" width="250" />
 <img src="./screenshots/category_manage.jpg" width="250" />
-<img src="./screenshots/user_manage.jpg" width="250" />
+<img src="./screenshots/users_manage.jpg" width="250" />
 <img src="./screenshots/notification_manage.jpg" width="250" />
 <img src="./screenshots/admin_profile.jpg" width="250" />
 </p>

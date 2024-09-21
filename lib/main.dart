@@ -6,29 +6,31 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'config/routes/router.dart';
-import 'config/theme/theme.dart';
-import 'core/constants/keys.dart';
-import 'core/services/notification_service.dart';
-import 'core/services/service_locator.dart' as locator;
+import 'src/config/routes/router.dart';
+import 'src/config/theme/theme.dart';
+import 'src/core/constants/keys.dart';
+import 'src/core/services/notification_service.dart';
+import 'src/core/services/service_locator.dart' as locator;
 import 'firebase_options.dart';
-import 'presentation/blocs/admin_home/admin_home_bloc.dart';
-import 'presentation/blocs/category/category_bloc.dart';
-import 'presentation/blocs/notification/notification_bloc.dart';
-import 'presentation/blocs/product/product_bloc.dart';
-import 'presentation/blocs/users/users_bloc.dart';
-import 'presentation/blocs/auth/auth_bloc.dart';
-import 'presentation/blocs/cart/cart_bloc.dart';
-import 'presentation/blocs/forgot_password/forgot_password_bloc.dart';
-import 'presentation/blocs/network/network_bloc.dart';
-import 'presentation/blocs/product_details/product_details_bloc.dart';
-import 'presentation/blocs/purchase/purchase_bloc.dart';
-import 'presentation/blocs/sign_in/sign_in_bloc.dart';
-import 'presentation/blocs/sign_up/sign_up_bloc.dart';
-import 'presentation/blocs/stripe/stripe_bloc.dart';
-import 'presentation/blocs/user_home/user_home_bloc.dart';
-import 'presentation/blocs/theme/theme_bloc.dart';
+import 'src/presentation/blocs/admin_home/admin_home_bloc.dart';
+import 'src/presentation/blocs/category/category_bloc.dart';
+import 'src/presentation/blocs/language/language_bloc.dart';
+import 'src/presentation/blocs/notification/notification_bloc.dart';
+import 'src/presentation/blocs/product/product_bloc.dart';
+import 'src/presentation/blocs/users/users_bloc.dart';
+import 'src/presentation/blocs/auth/auth_bloc.dart';
+import 'src/presentation/blocs/cart/cart_bloc.dart';
+import 'src/presentation/blocs/forgot_password/forgot_password_bloc.dart';
+import 'src/presentation/blocs/network/network_bloc.dart';
+import 'src/presentation/blocs/product_details/product_details_bloc.dart';
+import 'src/presentation/blocs/purchase/purchase_bloc.dart';
+import 'src/presentation/blocs/sign_in/sign_in_bloc.dart';
+import 'src/presentation/blocs/sign_up/sign_up_bloc.dart';
+import 'src/presentation/blocs/stripe/stripe_bloc.dart';
+import 'src/presentation/blocs/user_home/user_home_bloc.dart';
+import 'src/presentation/blocs/theme/theme_bloc.dart';
 
 void main() async {
   // initialize Flutter Binding
@@ -124,16 +126,31 @@ class MyApp extends StatelessWidget {
           create: (context) =>
               locator.sl<ThemeBloc>()..add(GetCurrentThemeMode()),
         ),
+        BlocProvider(
+          create: (context) =>
+              locator.sl<LanguageBloc>()..add(GetCurrentLanguage()),
+        ),
       ],
       child: BlocBuilder<ThemeBloc, ThemeState>(
-        builder: (context, state) {
-          return MaterialApp.router(
-            title: 'Pixelcart',
-            debugShowCheckedModeBanner: false,
-            theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
-            themeMode: state.themeMode,
-            routerConfig: goRouter,
+        buildWhen: (previous, current) =>
+            previous.themeMode != current.themeMode,
+        builder: (context, themeState) {
+          return BlocBuilder<LanguageBloc, LanguageState>(
+            buildWhen: (previous, current) =>
+                previous.languageLocale != current.languageLocale,
+            builder: (context, languageState) {
+              return MaterialApp.router(
+                title: 'Pixelcart',
+                debugShowCheckedModeBanner: false,
+                theme: AppTheme.lightTheme,
+                darkTheme: AppTheme.darkTheme,
+                themeMode: themeState.themeMode,
+                locale: languageState.languageLocale,
+                supportedLocales: AppLocalizations.supportedLocales,
+                localizationsDelegates: AppLocalizations.localizationsDelegates,
+                routerConfig: goRouter,
+              );
+            },
           );
         },
       ),
