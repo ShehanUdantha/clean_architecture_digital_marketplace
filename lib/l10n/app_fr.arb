@@ -119,5 +119,21 @@
   "description": "Description",
   "notificationSend": "Notification envoyée avec succès",
   "requiredTitle": "Le titre est requis",
-  "notificationNotReceivedYet": "Notification non encore reçue"
+  "notificationNotReceivedYet": "Notification non encore reçue",
+  "january": "Janvier",
+  "february": "Février",
+  "march": "Mars",
+  "april": "Avril",
+  "may": "Mai",
+  "june": "Juin",
+  "july": "Juillet",
+  "august": "Août",
+  "september": "Septembre",
+  "october": "Octobre",
+  "november": "Novembre",
+  "december": "Décembre",
+  "totalBalance": "Solde total",
+  "week": "Semaine",
+  "topSellingProducts": "Produits les plus vendus",
+  "productsNotFound": "Produits non trouvés"
 }

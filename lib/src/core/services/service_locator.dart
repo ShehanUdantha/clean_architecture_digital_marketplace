@@ -1,5 +1,9 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../domain/usecases/cart/purchase/get_all_purchase_history_by_month_usecase.dart';
+import '../../domain/usecases/cart/purchase/get_all_purchase_total_balance_by_month_usecase.dart';
+import '../../domain/usecases/cart/purchase/get_all_purchase_total_balance_percentage_usecase.dart';
+import '../../domain/usecases/cart/purchase/get_top_sellings_products_by_month_usecase.dart';
 import '../../domain/usecases/notification/get_notification_count_usecase.dart';
 import '../../domain/usecases/notification/reset_notification_count_usecase.dart';
 import '../../domain/usecases/notification/update_notification_count_usecase.dart';
@@ -295,11 +299,26 @@ Future<void> serviceLocator() async {
   sl.registerSingleton<ResetNotificationCountUseCase>(
     ResetNotificationCountUseCase(notificationCountRepository: sl()),
   );
+  // purchases
+  sl.registerSingleton<GetAllPurchaseHistoryByMonthUseCase>(
+    GetAllPurchaseHistoryByMonthUseCase(purchaseRepository: sl()),
+  );
+  sl.registerSingleton<GetAllPurchaseBalanceByMonthUseCase>(
+    GetAllPurchaseBalanceByMonthUseCase(purchaseRepository: sl()),
+  );
+  sl.registerSingleton<GetAllPurchaseBalancePercentageByMonthUseCase>(
+    GetAllPurchaseBalancePercentageByMonthUseCase(purchaseRepository: sl()),
+  );
+  sl.registerSingleton<GetTopSellingProductsByMonthUseCase>(
+    GetTopSellingProductsByMonthUseCase(purchaseRepository: sl()),
+  );
 
   // user
+  // user details
   sl.registerSingleton<GetUserDetailsUseCase>(
     GetUserDetailsUseCase(userRepository: sl()),
   );
+  // products
   sl.registerSingleton<GetProductsByMarketingTypeUseCase>(
     GetProductsByMarketingTypeUseCase(productRepository: sl()),
   );
@@ -309,6 +328,10 @@ Future<void> serviceLocator() async {
   sl.registerSingleton<GetProductDetailsByIdUseCase>(
     GetProductDetailsByIdUseCase(productRepository: sl()),
   );
+  sl.registerSingleton<AddFavoriteUseCase>(
+    AddFavoriteUseCase(productRepository: sl()),
+  );
+  // cart
   sl.registerSingleton<AddProductToCartUseCase>(
     AddProductToCartUseCase(cartRepository: sl()),
   );
@@ -321,20 +344,19 @@ Future<void> serviceLocator() async {
   sl.registerSingleton<RemoveProductFromCartUseCase>(
     RemoveProductFromCartUseCase(cartRepository: sl()),
   );
-  sl.registerSingleton<AddFavoriteUseCase>(
-    AddFavoriteUseCase(productRepository: sl()),
-  );
-  sl.registerSingleton<MakePaymentsUseCase>(
-    MakePaymentsUseCase(stripeRepository: sl()),
-  );
   sl.registerSingleton<SetCartDetailsToPurchaseHistoryAndDeleteCartUseCase>(
     SetCartDetailsToPurchaseHistoryAndDeleteCartUseCase(cartRepository: sl()),
   );
+  // stripe
+  sl.registerSingleton<MakePaymentsUseCase>(
+    MakePaymentsUseCase(stripeRepository: sl()),
+  );
+  // purchase
   sl.registerSingleton<GetAllPurchaseHistoryByUserIdUseCase>(
     GetAllPurchaseHistoryByUserIdUseCase(purchaseRepository: sl()),
   );
-  sl.registerSingleton<GetAllPurchaseItemsByProductIdUseCase>(
-    GetAllPurchaseItemsByProductIdUseCase(purchaseRepository: sl()),
+  sl.registerSingleton<GetAllPurchaseItemsByItsProductIdsUseCase>(
+    GetAllPurchaseItemsByItsProductIdsUseCase(purchaseRepository: sl()),
   );
   sl.registerSingleton<DownloadProductByProductIdUsecase>(
     DownloadProductByProductIdUsecase(purchaseRepository: sl()),
@@ -372,6 +394,10 @@ Future<void> serviceLocator() async {
   // admin home
   sl.registerFactory<AdminHomeBloc>(
     () => AdminHomeBloc(
+      sl(),
+      sl(),
+      sl(),
+      sl(),
       sl(),
     ),
   );

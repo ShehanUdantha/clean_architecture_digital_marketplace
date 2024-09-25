@@ -18,7 +18,7 @@ part 'purchase_state.dart';
 class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
   final GetAllPurchaseHistoryByUserIdUseCase
       getAllPurchaseHistoryByUserIdUseCase;
-  final GetAllPurchaseItemsByProductIdUseCase
+  final GetAllPurchaseItemsByItsProductIdsUseCase
       getAllPurchaseItemsByProductIdUseCase;
   final DownloadProductByProductIdUsecase downloadProductByProductIdUsecase;
 
@@ -28,7 +28,8 @@ class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
     this.downloadProductByProductIdUsecase,
   ) : super(const PurchaseState()) {
     on<GetAllPurchaseHistory>(onGetAllPurchaseHistory);
-    on<GetAllPurchaseItemsByDate>(onGetAllPurchaseItemsByDate);
+    on<GetAllPurchaseItemsByItsProductIds>(
+        onGetAllPurchaseItemsByItsProductIds);
     on<SetPurchaseStatusToDefault>(onSetPurchaseStatusToDefault);
     on<SetPurchaseProductsStatusToDefault>(
         onSetPurchaseProductsStatusToDefault);
@@ -61,8 +62,8 @@ class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
     );
   }
 
-  FutureOr<void> onGetAllPurchaseItemsByDate(
-    GetAllPurchaseItemsByDate event,
+  FutureOr<void> onGetAllPurchaseItemsByItsProductIds(
+    GetAllPurchaseItemsByItsProductIds event,
     Emitter<PurchaseState> emit,
   ) async {
     emit(state.copyWith(productStatus: BlocStatus.loading));

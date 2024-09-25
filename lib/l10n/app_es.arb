@@ -119,5 +119,21 @@
   "description": "Descripción",
   "notificationSend": "Notificación enviada con éxito",
   "requiredTitle": "El título es obligatorio",
-  "notificationNotReceivedYet": "Notificación no recibida aún"
+  "notificationNotReceivedYet": "Notificación no recibida aún",
+  "january": "Enero",
+  "february": "Febrero",
+  "march": "Marzo",
+  "april": "Abril",
+  "may": "Mayo",
+  "june": "Junio",
+  "july": "Julio",
+  "august": "Agosto",
+  "september": "Septiembre",
+  "october": "Octubre",
+  "november": "Noviembre",
+  "december": "Diciembre",
+  "totalBalance": "Balance total",
+  "week": "Semana",
+  "topSellingProducts": "Productos más vendidos",
+  "productsNotFound": "Productos no encontrados"
 }

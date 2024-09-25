@@ -10,4 +10,20 @@ abstract class PurchaseRepository {
   Future<Either<Failure, List<ProductEntity>>> getAllPurchaseItemsByProductId(
       List<String> productIds);
   Future<Either<Failure, String>> downloadProductByProductId(String productId);
+  Future<Either<Failure, Map<String, int>>> getAllPurchaseHistoryByMonth(
+    int year,
+    int month,
+  );
+  Future<Either<Failure, double>> getAllPurchasesTotalBalanceByMonth(
+    int year,
+    int month,
+  );
+  Future<Either<Failure, double>> getAllPurchasesTotalBalancePercentageByMonth(
+    int year,
+    int month,
+  );
+  Future<Either<Failure, List<ProductEntity>>> getAllTopSellingProductsByMonth(
+    int year,
+    int month,
+  );
 }

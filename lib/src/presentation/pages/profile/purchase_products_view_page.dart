@@ -29,7 +29,7 @@ class _PurchaseProductViewPageState extends State<PurchaseProductViewPage> {
   @override
   void initState() {
     context.read<PurchaseBloc>().add(
-          GetAllPurchaseItemsByDate(
+          GetAllPurchaseItemsByItsProductIds(
             productIds: widget.productIds,
           ),
         );

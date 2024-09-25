@@ -35,6 +35,7 @@ import 'src/presentation/blocs/theme/theme_bloc.dart';
 void main() async {
   // initialize Flutter Binding
   WidgetsFlutterBinding.ensureInitialized();
+
   // initialize firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -60,7 +61,7 @@ void main() async {
   Stripe.publishableKey = AppKeys.STRIPE_TEST_PUBLISHABLE_KEY;
   await Stripe.instance.applySettings();
 
-  // initialize local notification
+  // initialize notification
   locator.sl<NotificationService>().initLocalNotification();
   locator.sl<NotificationService>().initFirebaseMessagingListeners();
 

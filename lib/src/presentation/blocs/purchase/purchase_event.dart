@@ -9,10 +9,10 @@ sealed class PurchaseEvent extends Equatable {
 
 class GetAllPurchaseHistory extends PurchaseEvent {}
 
-class GetAllPurchaseItemsByDate extends PurchaseEvent {
+class GetAllPurchaseItemsByItsProductIds extends PurchaseEvent {
   final List<String> productIds;
 
-  const GetAllPurchaseItemsByDate({required this.productIds});
+  const GetAllPurchaseItemsByItsProductIds({required this.productIds});
 }
 
 class SetPurchaseStatusToDefault extends PurchaseEvent {}

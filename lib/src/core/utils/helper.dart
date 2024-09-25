@@ -156,4 +156,8 @@ class Helper {
       },
     );
   }
+
+  static int getWeekFromDay(int day) {
+    return ((day - 1) ~/ 7) + 1;
+  }
 }

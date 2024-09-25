@@ -10,3 +10,23 @@ sealed class AdminHomeEvent extends Equatable {
 class GetAdminDetailsEvent extends AdminHomeEvent {}
 
 class SetAdminDetailsToDefault extends AdminHomeEvent {}
+
+class UpdateYear extends AdminHomeEvent {
+  final int year;
+
+  const UpdateYear({required this.year});
+}
+
+class UpdateMonth extends AdminHomeEvent {
+  final int month;
+
+  const UpdateMonth({required this.month});
+}
+
+class GetMonthlyPurchaseStatus extends AdminHomeEvent {}
+
+class GetMonthlyTotalBalance extends AdminHomeEvent {}
+
+class GetMonthlyTotalBalancePercentage extends AdminHomeEvent {}
+
+class GetMonthlyTopSellingProducts extends AdminHomeEvent {}

@@ -62,4 +62,36 @@ class AppLists {
     "Chinese": const Locale('zh', 'CN'),
     "French": const Locale('fr', 'FR'),
   };
+
+  static Map<int, String> months(BuildContext context) => {
+        1: context.loc.january,
+        2: context.loc.february,
+        3: context.loc.march,
+        4: context.loc.april,
+        5: context.loc.may,
+        6: context.loc.june,
+        7: context.loc.july,
+        8: context.loc.august,
+        9: context.loc.september,
+        10: context.loc.october,
+        11: context.loc.november,
+        12: context.loc.december,
+      };
+
+  static const monthlyPurchaseStatusChartLeftTitles = {
+    0: '0',
+    20: '20',
+    40: '40',
+    60: '60',
+    80: '80',
+    100: '100',
+  };
+
+  static monthlyPurchaseStatusChartBottomTitles(BuildContext context) => {
+        20: '${context.loc.week} 1',
+        40: '${context.loc.week} 2',
+        60: '${context.loc.week} 3',
+        80: '${context.loc.week} 4',
+        100: '${context.loc.week} 5',
+      };
 }

@@ -153,9 +153,16 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
         final purchaseId = const Uuid().v4();
 
         final cartedProductIdsList = await getCartedItems();
-        await fireStore
-            .collection(AppVariableNames.purchase)
+
+        CollectionReference purchaseCollection =
+            fireStore.collection(AppVariableNames.purchase);
+
+        await purchaseCollection
             .doc(currentUser!.uid)
+            .set({"id": currentUser.uid});
+
+        await purchaseCollection
+            .doc(currentUser.uid)
             .collection(AppVariableNames.history)
             .doc(purchaseId)
             .set({
@@ -165,8 +172,7 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
         });
 
         for (final productId in cartedProductIdsList) {
-          await fireStore
-              .collection(AppVariableNames.purchase)
+          await purchaseCollection
               .doc(currentUser.uid)
               .collection(AppVariableNames.history)
               .doc(purchaseId)

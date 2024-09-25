@@ -4,10 +4,10 @@ import '../../../entities/product/product_entity.dart';
 import '../../../repositories/cart/purchase_repository.dart';
 import 'package:dartz/dartz.dart';
 
-class GetAllPurchaseItemsByProductIdUseCase
+class GetAllPurchaseItemsByItsProductIdsUseCase
     extends UseCase<List<ProductEntity>, List<String>> {
   final PurchaseRepository purchaseRepository;
-  GetAllPurchaseItemsByProductIdUseCase({required this.purchaseRepository});
+  GetAllPurchaseItemsByItsProductIdsUseCase({required this.purchaseRepository});
 
   @override
   Future<Either<Failure, List<ProductEntity>>> call(List<String> params) async {

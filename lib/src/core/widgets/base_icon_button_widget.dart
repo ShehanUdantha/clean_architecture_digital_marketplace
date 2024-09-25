@@ -44,6 +44,11 @@ class BaseIconButtonWidget extends StatelessWidget {
             child: IconButton(
               onPressed: () => function(),
               icon: icon,
+              padding: EdgeInsets.zero,
+              constraints: BoxConstraints(
+                minHeight: size,
+                minWidth: size,
+              ),
             ),
           ),
         ),

@@ -60,6 +60,7 @@ dependencies:
   path_provider: ^2.1.4
   timeago: ^3.7.0
   shared_preferences: ^2.3.2
+  fl_chart: ^0.69.0
   flutter_localizations:
     sdk: flutter
 

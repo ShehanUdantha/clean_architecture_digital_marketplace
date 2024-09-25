@@ -1,12 +1,13 @@
-import '../../../../core/utils/helper.dart';
-
-import '../../../blocs/admin_home/admin_home_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/utils/helper.dart';
 import '../../../../core/widgets/main_header_widget.dart';
-import '../../../blocs/notification/notification_bloc.dart';
+import '../../../blocs/admin_home/admin_home_bloc.dart';
 import '../../../blocs/auth/auth_bloc.dart';
+import '../../../blocs/notification/notification_bloc.dart';
+import '../../../widgets/admin/dashboard/monthly_status_widget.dart';
+import '../../../widgets/admin/dashboard/top_selling_products_widget.dart';
 
 class AdminHomePage extends StatefulWidget {
   const AdminHomePage({super.key});
@@ -20,6 +21,11 @@ class _AdminHomePageState extends State<AdminHomePage> {
   void initState() {
     initAdminHomePage();
     context.read<AdminHomeBloc>().add(GetAdminDetailsEvent());
+
+    context.read<AdminHomeBloc>().add(GetMonthlyPurchaseStatus());
+    context.read<AdminHomeBloc>().add(GetMonthlyTotalBalance());
+    context.read<AdminHomeBloc>().add(GetMonthlyTotalBalancePercentage());
+    context.read<AdminHomeBloc>().add(GetMonthlyTopSellingProducts());
 
     final uid = context.read<AuthBloc>().state.user?.uid ?? "-1";
     context
@@ -52,6 +58,11 @@ class _AdminHomePageState extends State<AdminHomePage> {
               const SizedBox(
                 height: 26,
               ),
+              const MonthlyStatusWidget(),
+              const SizedBox(
+                height: 15,
+              ),
+              const TopSellingProductsWidget(),
             ],
           ),
         ),

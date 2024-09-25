@@ -58,6 +58,7 @@ Admin View
 #### Admin View
 
 <p float="left">
+<img src="./screenshots/admin_dashboard.jpg" width="250" />
 <img src="./screenshots/admin_tools.jpg" width="250" />
 <img src="./screenshots/product_manage.jpg" width="250" />
 <img src="./screenshots/product_add.jpg" width="250" />
@@ -72,7 +73,3 @@ Admin View
 <p float="left">
 <img src="./screenshots/no_internet.jpg" width="250" />
 </p>
-
-## Future Implements
-
-- Admin Dashboard
