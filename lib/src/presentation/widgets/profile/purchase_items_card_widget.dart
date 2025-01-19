@@ -73,7 +73,7 @@ class PurchaseItemsCardWidget extends StatelessWidget {
                 ),
               ),
               Text(
-                '\u{20B9}${double.parse(purchaseDetails.price).toStringAsFixed(2)}',
+                '\$${double.parse(purchaseDetails.price).toStringAsFixed(2)}',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w500,

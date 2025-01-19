@@ -254,7 +254,7 @@ class ProductDetailsWidget extends StatelessWidget {
                         )
                       : ElevatedButtonWidget(
                           title:
-                              '${context.loc.addToCart} | \u{20B9}${double.parse(product.price).toStringAsFixed(2)}',
+                              '${context.loc.addToCart} | \$${double.parse(product.price).toStringAsFixed(2)}',
                           function: () => _handleAddToCartButton(
                             context,
                             product.id!,

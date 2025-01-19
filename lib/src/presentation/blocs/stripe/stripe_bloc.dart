@@ -18,10 +18,7 @@ class StripeBloc extends Bloc<StripeEvent, StripeState> {
     on<MakePaymentRequestEvent>(onMakePaymentRequest);
     on<InitializePaymentSheetEvent>(onInitializePaymentSheetEvent);
     on<PresentPaymentSheetEvent>(onPresentPaymentSheetEvent);
-    on<SetStripeStatusToDefault>(onSetStripeStatusToDefault);
-    on<SetStripePaymentStatusToDefault>(onSetStripePaymentStatusToDefault);
-    on<SetStripePaymentSheetStatusToDefault>(
-        onSetStripePaymentSheetStatusToDefault);
+    on<SetStripePaymentValuesToDefault>(onSetStripePaymentValuesToDefault);
   }
 
   FutureOr<void> onMakePaymentRequest(
@@ -39,11 +36,8 @@ class StripeBloc extends Bloc<StripeEvent, StripeState> {
         ),
       ),
       (r) {
-        emit(
-          state.copyWith(
-            status: BlocStatus.success,
-            stripeIntentResponse: r,
-          ),
+        add(
+          InitializePaymentSheetEvent(stripeIntentResponse: r),
         );
       },
     );
@@ -54,33 +48,18 @@ class StripeBloc extends Bloc<StripeEvent, StripeState> {
     Emitter<StripeState> emit,
   ) async {
     try {
-      // initialize Payment Sheet
-      await Stripe.instance
-          .initPaymentSheet(
-            paymentSheetParameters: SetupPaymentSheetParameters(
-              paymentIntentClientSecret:
-                  state.stripeIntentResponse.client_secret,
-              merchantDisplayName: 'Pixelcart',
-              billingDetails: const BillingDetails(
-                address: Address(
-                  country: 'IN',
-                  city: '',
-                  line1: '',
-                  line2: '',
-                  state: '',
-                  postalCode: '',
-                ),
-              ),
-            ),
-          )
-          .then((value) {});
-
-      emit(state.copyWith(paymentStatus: BlocStatus.success));
+      await Stripe.instance.initPaymentSheet(
+        paymentSheetParameters: SetupPaymentSheetParameters(
+          paymentIntentClientSecret: event.stripeIntentResponse.client_secret,
+          merchantDisplayName: 'Pixelcart',
+        ),
+      );
+      add(PresentPaymentSheetEvent());
     } catch (e) {
       emit(
         state.copyWith(
-          paymentStatus: BlocStatus.error,
-          paymentMessage: e.toString(),
+          status: BlocStatus.error,
+          message: e.toString(),
         ),
       );
     }
@@ -91,56 +70,31 @@ class StripeBloc extends Bloc<StripeEvent, StripeState> {
     Emitter<StripeState> emit,
   ) async {
     try {
-      await Stripe.instance.presentPaymentSheet().then((e) {});
-      emit(state.copyWith(paymentSheetStatus: BlocStatus.success));
+      await Stripe.instance.presentPaymentSheet();
+      emit(
+        state.copyWith(
+          status: BlocStatus.success,
+          message: '',
+        ),
+      );
     } catch (e) {
       emit(
         state.copyWith(
-          paymentSheetStatus: BlocStatus.error,
-          paymentSheetMessage: e.toString(),
+          status: BlocStatus.error,
+          message: e.toString(),
         ),
       );
     }
   }
 
-  FutureOr<void> onSetStripeStatusToDefault(
-    SetStripeStatusToDefault event,
+  FutureOr<void> onSetStripePaymentValuesToDefault(
+    SetStripePaymentValuesToDefault event,
     Emitter<StripeState> emit,
   ) {
     emit(
       state.copyWith(
         status: BlocStatus.initial,
         message: '',
-        stripeIntentResponse: const StripeEntity(
-          id: '',
-          amount: 0,
-          client_secret: '',
-          currency: '',
-        ),
-      ),
-    );
-  }
-
-  FutureOr<void> onSetStripePaymentStatusToDefault(
-    SetStripePaymentStatusToDefault event,
-    Emitter<StripeState> emit,
-  ) {
-    emit(
-      state.copyWith(
-        paymentMessage: '',
-        paymentStatus: BlocStatus.initial,
-      ),
-    );
-  }
-
-  FutureOr<void> onSetStripePaymentSheetStatusToDefault(
-    SetStripePaymentSheetStatusToDefault event,
-    Emitter<StripeState> emit,
-  ) {
-    emit(
-      state.copyWith(
-        paymentSheetMessage: '',
-        paymentSheetStatus: BlocStatus.initial,
       ),
     );
   }

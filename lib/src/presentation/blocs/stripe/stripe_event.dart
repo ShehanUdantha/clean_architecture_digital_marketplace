@@ -13,12 +13,12 @@ class MakePaymentRequestEvent extends StripeEvent {
   const MakePaymentRequestEvent({required this.amount});
 }
 
-class InitializePaymentSheetEvent extends StripeEvent {}
+class InitializePaymentSheetEvent extends StripeEvent {
+  final StripeEntity stripeIntentResponse;
+
+  const InitializePaymentSheetEvent({required this.stripeIntentResponse});
+}
 
 class PresentPaymentSheetEvent extends StripeEvent {}
 
-class SetStripeStatusToDefault extends StripeEvent {}
-
-class SetStripePaymentStatusToDefault extends StripeEvent {}
-
-class SetStripePaymentSheetStatusToDefault extends StripeEvent {}
+class SetStripePaymentValuesToDefault extends StripeEvent {}

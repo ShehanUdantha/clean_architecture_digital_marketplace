@@ -135,5 +135,6 @@
   "totalBalance": "Total balance",
   "week": "Week",
   "topSellingProducts": "Top Selling Products",
-  "productsNotFound": "Products Not Found"
+  "productsNotFound": "Products Not Found",
+  "stripPaymentFail":"Strip payment fail"
 }

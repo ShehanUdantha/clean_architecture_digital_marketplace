@@ -105,7 +105,7 @@ class ProductLinearCardWidget extends StatelessWidget {
                       height: 5.0,
                     ),
                     Text(
-                      '\u{20B9}${double.parse(product.price).toStringAsFixed(2)}',
+                      '\$${double.parse(product.price).toStringAsFixed(2)}',
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         color: isDarkMode
