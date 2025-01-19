@@ -1,5 +1,27 @@
 # Clean Architecture Flutter E-Commerce App
 
+## Project Setup
+
+Before you run the project, make sure to follow the steps below to properly set up the environment, generate necessary files, and run the tests.
+
+### 1. Setup the `.env` file
+You need to set up the `.env` file in the root directory of the project with your environment-specific variables.
+
+#### Example:
+
+Create a `.env` file in the root directory and include the following keys (replace with your values):
+
+`STRIPE_TEST_PUBLISHABLE_KEY=your_publishable_key
+STRIPE_TEST_SECRET_KEY=your_secret_key`
+
+## 2. Generate Required Files
+
+Run the following command to generate the necessary files (e.g., mocks, code related to the environment variables):
+
+`dart run build_runner build`
+
+
+
 ## Features
 
 User View
@@ -73,8 +95,3 @@ Admin View
 <p float="left">
 <img src="./screenshots/no_internet.jpg" width="250" />
 </p>
-
-
-### Test
-
-run 'dart run build_runner build' to generate mock files

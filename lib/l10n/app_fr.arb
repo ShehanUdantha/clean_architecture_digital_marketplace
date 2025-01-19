@@ -135,5 +135,6 @@
   "totalBalance": "Solde total",
   "week": "Semaine",
   "topSellingProducts": "Produits les plus vendus",
-  "productsNotFound": "Produits non trouvés"
+  "productsNotFound": "Produits non trouvés",
+  "stripPaymentFail": "Échec du paiement Stripe"
 }

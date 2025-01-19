@@ -1,3 +1,4 @@
+import 'package:Pixelcart/src/core/services/env.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -10,7 +11,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'src/config/routes/router.dart';
 import 'src/config/theme/theme.dart';
-import 'src/core/constants/keys.dart';
 import 'src/core/services/notification_service.dart';
 import 'src/core/services/service_locator.dart' as locator;
 import 'firebase_options.dart';
@@ -58,7 +58,7 @@ void main() async {
   await locator.serviceLocator();
 
   // initialize stripe publishable key
-  Stripe.publishableKey = AppKeys.STRIPE_TEST_PUBLISHABLE_KEY;
+  Stripe.publishableKey = Env.stripeTestPublishableKey;
   await Stripe.instance.applySettings();
 
   // initialize notification

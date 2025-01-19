@@ -111,7 +111,7 @@ class CollectionProductCardWidget extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          '\u{20B9}${double.parse(product.price).toStringAsFixed(2)}',
+                          '\$${double.parse(product.price).toStringAsFixed(2)}',
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w700,

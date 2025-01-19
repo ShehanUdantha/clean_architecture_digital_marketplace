@@ -119,7 +119,7 @@ class MonthlyStatusWidget extends StatelessWidget {
               child: SizedBox(
                 width: Helper.screeWidth(context) * 0.6,
                 child: Text(
-                  '\u{20B9} ${state.totalBalance.toStringAsFixed(3)}',
+                  '\$ ${state.totalBalance.toStringAsFixed(3)}',
                   style: TextStyle(
                     color:
                         isDarkMode ? AppColors.textWhite : AppColors.textFourth,

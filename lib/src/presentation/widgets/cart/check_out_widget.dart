@@ -60,7 +60,7 @@ class CheckOutWidget extends StatelessWidget {
                 ),
               ),
               Text(
-                '\u{20B9}${cartState.subTotal.toStringAsFixed(2)}',
+                '\$${cartState.subTotal.toStringAsFixed(2)}',
                 style: TextStyle(
                   color: isDarkMode
                       ? AppColors.textSecondary
@@ -87,7 +87,7 @@ class CheckOutWidget extends StatelessWidget {
                 ),
               ),
               Text(
-                '\u{20B9}${cartState.transactionFee.toStringAsFixed(2)}',
+                '\$${cartState.transactionFee.toStringAsFixed(2)}',
                 style: TextStyle(
                   color: isDarkMode
                       ? AppColors.textSecondary
@@ -114,7 +114,7 @@ class CheckOutWidget extends StatelessWidget {
                 ),
               ),
               Text(
-                '\u{20B9}${cartState.totalPrice.toStringAsFixed(2)}',
+                '\$${cartState.totalPrice.toStringAsFixed(2)}',
                 style: TextStyle(
                   color: isDarkMode
                       ? AppColors.textSecondary
@@ -127,71 +127,6 @@ class CheckOutWidget extends StatelessWidget {
           ),
           const SizedBox(
             height: 20,
-          ),
-          BlocConsumer<StripeBloc, StripeState>(
-            listener: (context, state) async {
-              if (state.status == BlocStatus.error) {
-                context.read<StripeBloc>().add(SetStripeStatusToDefault());
-                Helper.showSnackBar(
-                  context,
-                  state.message,
-                );
-              }
-
-              if (state.paymentStatus == BlocStatus.error) {
-                context
-                    .read<StripeBloc>()
-                    .add(SetStripePaymentStatusToDefault());
-                Helper.showSnackBar(
-                  context,
-                  state.paymentMessage,
-                );
-              }
-
-              if (state.paymentSheetStatus == BlocStatus.error) {
-                context
-                    .read<StripeBloc>()
-                    .add(SetStripePaymentSheetStatusToDefault());
-                Helper.showSnackBar(
-                  context,
-                  state.paymentSheetMessage,
-                );
-              }
-
-              if (state.status == BlocStatus.success) {
-                context.read<StripeBloc>().add(InitializePaymentSheetEvent());
-                context.read<StripeBloc>().add(SetStripeStatusToDefault());
-              }
-
-              if (state.paymentStatus == BlocStatus.success) {
-                context.read<StripeBloc>().add(PresentPaymentSheetEvent());
-                context
-                    .read<StripeBloc>()
-                    .add(SetStripePaymentStatusToDefault());
-              }
-
-              if (state.paymentSheetStatus == BlocStatus.success) {
-                context.read<StripeBloc>().add(SetStripeStatusToDefault());
-
-                Helper.showSnackBar(
-                  context,
-                  context.loc.paymentSuccessful,
-                );
-
-                context.read<CartBloc>().add(
-                    SetCartDetailsToPurchaseHistoryAndDeleteCartDetailsEvent());
-              }
-            },
-            builder: (context, state) {
-              if (state.status == BlocStatus.loading) {
-                return const ElevatedLoadingButtonWidget();
-              }
-              return ElevatedButtonWidget(
-                title: context.loc.checkOut,
-                function: () =>
-                    _handleCheckOutButtonClick(context, cartState.totalPrice),
-              );
-            },
           ),
           BlocListener<CartBloc, CartState>(
             listener: (context, state) {
@@ -216,7 +151,40 @@ class CheckOutWidget extends StatelessWidget {
                 context.goNamed(AppRoutes.purchaseHistoryPageName);
               }
             },
-            child: const SizedBox(),
+            child: BlocConsumer<StripeBloc, StripeState>(
+              listener: (context, state) async {
+                if (state.status == BlocStatus.error) {
+                  Helper.showSnackBar(
+                    context,
+                    state.message,
+                  );
+                }
+
+                if (state.status == BlocStatus.success) {
+                  context
+                      .read<StripeBloc>()
+                      .add(SetStripePaymentValuesToDefault());
+
+                  Helper.showSnackBar(
+                    context,
+                    context.loc.paymentSuccessful,
+                  );
+
+                  context.read<CartBloc>().add(
+                      SetCartDetailsToPurchaseHistoryAndDeleteCartDetailsEvent());
+                }
+              },
+              builder: (context, state) {
+                if (state.status == BlocStatus.loading) {
+                  return const ElevatedLoadingButtonWidget();
+                }
+                return ElevatedButtonWidget(
+                  title: context.loc.checkOut,
+                  function: () =>
+                      _handleCheckOutButtonClick(context, cartState.totalPrice),
+                );
+              },
+            ),
           ),
           Helper.isLandscape(context)
               ? const SizedBox(
