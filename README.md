@@ -73,3 +73,8 @@ Admin View
 <p float="left">
 <img src="./screenshots/no_internet.jpg" width="250" />
 </p>
+
+
+### Test
+
+run 'dart run build_runner build' to generate mock files
