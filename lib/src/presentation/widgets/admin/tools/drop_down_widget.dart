@@ -2,21 +2,23 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/constants/colors.dart';
 
-class DropDownWidget extends StatelessWidget {
-  final String value;
-  final List<DropdownMenuItem> items;
-  final Function function;
+class DropDownWidget<T> extends StatelessWidget {
+  final T? value;
+  final List<DropdownMenuItem<T>> items;
+  final ValueChanged<T?> function;
+  final bool isReadOnly;
 
   const DropDownWidget({
     super.key,
     required this.value,
     required this.items,
     required this.function,
+    this.isReadOnly = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButtonFormField(
+    return DropdownButtonFormField<T>(
       decoration: InputDecoration(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15.0),
@@ -39,7 +41,7 @@ class DropDownWidget extends StatelessWidget {
       dropdownColor: AppColors.white,
       value: value,
       items: items,
-      onChanged: (value) => function(value),
+      onChanged: isReadOnly ? null : function,
     );
   }
 }

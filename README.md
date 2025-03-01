@@ -5,6 +5,7 @@
 Before you run the project, make sure to follow the steps below to properly set up the environment, generate necessary files, and run the tests.
 
 ### 1. Setup the `.env` file
+
 You need to set up the `.env` file in the root directory of the project with your environment-specific variables.
 
 #### Example:
@@ -12,6 +13,9 @@ You need to set up the `.env` file in the root directory of the project with you
 Create a `.env` file in the root directory and include the following keys (replace with your values):
 
 `STRIPE_TEST_PUBLISHABLE_KEY=your_publishable_key`
+
+</br>
+
 `STRIPE_TEST_SECRET_KEY=your_secret_key`
 
 ### 2. Generate Required Files
@@ -26,24 +30,24 @@ Run the following command to generate the necessary files (e.g., mocks, code rel
 
 User View
 
-- Products View
+- View Products
 - Search Products
-- Product Add To Cart
-- Product Purchase
-- Add Favorite
+- Add Products to Cart
+- Purchase Products
+- Add to Favorites
 - View Purchase History
-- Download Purchase Product
+- Download Purchased Products
 - View Notifications
 - Change Theme
 - Change Language
 
 Admin View
 
-- Admin Dashboard
-- Product Manage
-- Category Manage
-- User Manage
-- Notifications Manage
+- Access Admin Dashboard
+- Manage Products
+- Manage Categories
+- Manage Users Manage
+- Notifications
 - Change Theme
 - Change Language
 

@@ -136,5 +136,6 @@
   "week": "Semaine",
   "topSellingProducts": "Produits les plus vendus",
   "productsNotFound": "Produits non trouvés",
-  "stripPaymentFail": "Échec du paiement Stripe"
+  "stripPaymentFail": "Échec du paiement Stripe",
+  "authenticationErrorOccurred": "Une erreur d’authentification s’est produite."
 }

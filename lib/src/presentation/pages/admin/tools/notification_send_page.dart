@@ -46,83 +46,87 @@ class _NotificationSendPageState extends State<NotificationSendPage> {
       child: Padding(
         padding: const EdgeInsets.all(16.0).copyWith(bottom: 0),
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              PageHeaderWidget(
-                title: context.loc.sendNotification,
-                function: () => _handleBackButton(),
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              Form(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    InputFieldWidget(
-                      controller: _notificationTitleController,
-                      hint: context.loc.title,
-                      prefix: const Icon(Iconsax.notification),
-                    ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    InputFieldWidget(
-                      controller: _notificationDescriptionController,
-                      hint: context.loc.description,
-                      prefix: const Icon(Iconsax.text_block),
-                      isTextArea: true,
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 32,
-              ),
-              BlocConsumer<NotificationBloc, NotificationState>(
-                listener: (context, state) {
-                  if (state.notificationSendStatus == BlocStatus.error) {
-                    context
-                        .read<NotificationBloc>()
-                        .add(SetNotificationSendStatusToDefault());
+          child: BlocConsumer<NotificationBloc, NotificationState>(
+            listenWhen: (previous, current) =>
+                previous.status != current.status,
+            listener: (context, state) {
+              if (state.notificationSendStatus == BlocStatus.error) {
+                context
+                    .read<NotificationBloc>()
+                    .add(SetNotificationSendStatusToDefault());
 
-                    Helper.showSnackBar(
-                      context,
-                      state.notificationSendMessage,
-                    );
-                  }
-                  if (state.notificationSendStatus == BlocStatus.success) {
-                    context
-                        .read<NotificationBloc>()
-                        .add(SetNotificationSendStatusToDefault());
+                Helper.showSnackBar(
+                  context,
+                  state.notificationSendMessage,
+                );
+              }
+              if (state.notificationSendStatus == BlocStatus.success) {
+                context
+                    .read<NotificationBloc>()
+                    .add(SetNotificationSendStatusToDefault());
 
-                    Helper.showSnackBar(
-                      context,
-                      context.loc.notificationSend,
-                    );
+                Helper.showSnackBar(
+                  context,
+                  context.loc.notificationSend,
+                );
 
-                    context
-                        .read<NotificationBloc>()
-                        .add(GetAllNotificationsEvent());
+                context
+                    .read<NotificationBloc>()
+                    .add(GetAllNotificationsEvent());
 
-                    context.goNamed(AppRoutes.notificationManagePageName);
-                  }
-                },
-                builder: (context, state) {
-                  if (state.notificationSendStatus == BlocStatus.loading) {
-                    return const ElevatedLoadingButtonWidget();
-                  }
-                  return ElevatedButtonWidget(
+                context.goNamed(AppRoutes.notificationManagePageName);
+              }
+            },
+            buildWhen: (previous, current) => previous.status != current.status,
+            builder: (context, state) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  PageHeaderWidget(
                     title: context.loc.sendNotification,
-                    function: () => _handleSubmitButton(),
-                  );
-                },
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-            ],
+                    function: () => _handleBackButton(),
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  Form(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        InputFieldWidget(
+                          controller: _notificationTitleController,
+                          hint: context.loc.title,
+                          prefix: const Icon(Iconsax.notification),
+                          isReadOnly: state.status == BlocStatus.loading,
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        InputFieldWidget(
+                          controller: _notificationDescriptionController,
+                          hint: context.loc.description,
+                          prefix: const Icon(Iconsax.text_block),
+                          isTextArea: true,
+                          isReadOnly: state.status == BlocStatus.loading,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 32,
+                  ),
+                  state.status == BlocStatus.loading
+                      ? const ElevatedLoadingButtonWidget()
+                      : ElevatedButtonWidget(
+                          title: context.loc.sendNotification,
+                          function: () => _handleSubmitButton(),
+                        ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ),

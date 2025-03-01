@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import '../../../core/utils/extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,7 +8,7 @@ import 'package:iconsax/iconsax.dart';
 import '../../../core/constants/colors.dart';
 import '../../blocs/theme/theme_bloc.dart';
 
-class SearchBarWidget extends StatelessWidget {
+class SearchBarWidget extends StatefulWidget {
   final TextEditingController controller;
   final Function function;
   final Function clearFunction;
@@ -19,12 +21,25 @@ class SearchBarWidget extends StatelessWidget {
   });
 
   @override
+  State<SearchBarWidget> createState() => _SearchBarWidgetState();
+}
+
+class _SearchBarWidgetState extends State<SearchBarWidget> {
+  Timer? _debounce;
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
 
     return TextField(
-      controller: controller,
-      onChanged: (value) => function(value),
+      controller: widget.controller,
+      onChanged: (value) => _searchOnChangeFunction(value),
       style: TextStyle(
         color: isDarkMode ? AppColors.textFifth : AppColors.textPrimary,
         fontWeight: FontWeight.normal,
@@ -32,9 +47,9 @@ class SearchBarWidget extends StatelessWidget {
       decoration: InputDecoration(
         prefixIcon: const Icon(Iconsax.search_normal),
         prefixIconColor: AppColors.mediumGrey,
-        suffixIcon: controller.text.isNotEmpty
+        suffixIcon: widget.controller.text.isNotEmpty
             ? IconButton(
-                onPressed: () => clearFunction(),
+                onPressed: () => widget.clearFunction(),
                 icon: const Icon(Iconsax.close_circle),
               )
             : const SizedBox(),
@@ -58,6 +73,19 @@ class SearchBarWidget extends StatelessWidget {
           borderSide: const BorderSide(color: AppColors.mediumGrey),
         ),
       ),
+    );
+  }
+
+  void _searchOnChangeFunction(String? value) {
+    // cancel timer
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+
+    // start new timer
+    _debounce = Timer(
+      const Duration(milliseconds: 500),
+      () {
+        widget.function(value);
+      },
     );
   }
 }

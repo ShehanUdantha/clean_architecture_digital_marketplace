@@ -22,7 +22,7 @@ import '../../../../core/utils/enum.dart';
 import '../../../blocs/category/category_bloc.dart';
 import '../../../blocs/product/product_bloc.dart';
 import '../../../widgets/admin/tools/drop_down_widget.dart';
-import '../../../widgets/admin/tools/sub_image_widget.dart';
+import '../../../widgets/admin/tools/sub_image_chip_widget.dart';
 import '../../../widgets/admin/tools/sub_images_add_button_widget.dart';
 import '../../../widgets/admin/tools/upload_cover_image_widget.dart';
 
@@ -86,204 +86,295 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
       child: Padding(
         padding: const EdgeInsets.all(16.0).copyWith(bottom: 0),
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              PageHeaderWidget(
-                title: '$headerName ${context.loc.product}',
-                function: () => _handleBackButton(),
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              Form(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    GestureDetector(
-                      onTap: () => _handleSelectCoverImage(),
-                      child: UploadCoverImageWidget(
-                        coverImage: coverImage,
-                        sharedCoverImage: sharedCoverImage,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    Text(
-                      context.loc.uploadSubImages,
-                      style: const TextStyle(
-                        color: AppColors.textThird,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    SizedBox(
-                      height: Helper.isLandscape(context)
-                          ? Helper.screeHeight(context) * 0.2
-                          : Helper.screeHeight(context) * 0.1,
-                      width: Helper.screeWidth(context),
-                      child: Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () => _handleSelectSubImages(),
-                            child: const SubImagesAddButtonWidget(),
-                          ),
-                          const SizedBox(
-                            width: 8,
-                          ),
-                          subImages != null || sharedSubImages != null
-                              ? SubImageWidget(
-                                  subImages: subImages,
-                                  sharedSubImages: sharedSubImages,
-                                )
-                              : const SizedBox(),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    InputFieldWidget(
-                      controller: _productNameController,
-                      hint: context.loc.productName,
-                      prefix: const Icon(Iconsax.bag_2),
-                    ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    InputFieldWidget(
-                      controller: _productPriceController,
-                      hint: context.loc.price,
-                      prefix: const Icon(Iconsax.dollar_circle),
-                      keyBoardType: TextInputType.number,
-                    ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    DropDownWidget(
-                      value: sharedCategoryDropDownValue ?? '0',
-                      items: _createProductCategoryList(context),
-                      function: (value) => _handleCategoryDropDown(value),
-                    ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    DropDownWidget(
-                      value: sharedMarketingTypeDropDownValue ?? '0',
-                      items: _createMarketingList(context),
-                      function: (value) => _handleMarketingDropDown(value),
-                    ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    InputFieldWidget(
-                      controller: _productDescriptionController,
-                      hint: context.loc.productDescription,
-                      prefix: const Icon(Iconsax.card_edit),
-                      isTextArea: true,
-                      areaSize: 5,
-                    ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    Row(
+          child: BlocConsumer<ProductBloc, ProductState>(
+            listenWhen: (previous, current) =>
+                previous.productAddAndEditStatus !=
+                current.productAddAndEditStatus,
+            listener: (context, state) {
+              if (state.productAddAndEditStatus == BlocStatus.error) {
+                context
+                    .read<ProductBloc>()
+                    .add(SetProductAddAndEditStatusToDefault());
+                Helper.showSnackBar(
+                  context,
+                  state.productAddAndEditMessage ==
+                          ResponseTypes.failure.response
+                      ? context.loc.productAlreadyAdded
+                      : state.productAddAndEditMessage,
+                );
+              }
+              if (state.productAddAndEditStatus == BlocStatus.success) {
+                context
+                    .read<ProductBloc>()
+                    .add(SetProductAddAndEditStatusToDefault());
+
+                Helper.showSnackBar(
+                  context,
+                  widget.title == CURDTypes.update.name
+                      ? context.loc.productUpdated
+                      : context.loc.productAdded,
+                );
+
+                context.read<ProductBloc>().add(GetAllProductsEvent());
+
+                context.goNamed(AppRoutes.productsManagePageName);
+              }
+            },
+            buildWhen: (previous, current) =>
+                previous.productAddAndEditStatus !=
+                current.productAddAndEditStatus,
+            builder: (context, state) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  PageHeaderWidget(
+                    title: '$headerName ${context.loc.product}',
+                    function: () => _handleBackButton(),
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  Form(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        TextButton(
-                          onPressed: () => _handleUploadAsset(),
-                          style: const ButtonStyle(
-                            backgroundColor: WidgetStatePropertyAll(
-                              AppColors.textPrimary,
-                            ),
-                          ),
-                          child: Text(
-                            context.loc.uploadAsset,
-                            style: const TextStyle(
-                              color: AppColors.textWhite,
-                            ),
+                        GestureDetector(
+                          onTap: () => state.productAddAndEditStatus ==
+                                  BlocStatus.loading
+                              ? () {}
+                              : _handleSelectCoverImage(),
+                          child: UploadCoverImageWidget(
+                            coverImage: coverImage,
+                            sharedCoverImage: sharedCoverImage,
                           ),
                         ),
                         const SizedBox(
-                          width: 10,
+                          height: 16,
+                        ),
+                        Text(
+                          context.loc.uploadSubImages,
+                          style: const TextStyle(
+                            color: AppColors.textThird,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 8,
                         ),
                         SizedBox(
-                          width: Helper.isLandscape(context)
-                              ? Helper.screeWidth(context) * 0.75
-                              : Helper.screeWidth(context) * 0.55,
-                          child: asset != null
-                              ? Text(
-                                  asset!.name,
-                                  style: const TextStyle(
-                                    color: AppColors.textThird,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                )
-                              : Text(
-                                  isUploadAssetsAvailableInSharedProduct
-                                      ? context.loc.assetAvailable
-                                      : context.loc.noFileSelected,
-                                  style: const TextStyle(
-                                    color: AppColors.textThird,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
+                          height: Helper.isLandscape(context)
+                              ? Helper.screeHeight(context) * 0.2
+                              : Helper.screeHeight(context) * 0.1,
+                          width: Helper.screeWidth(context),
+                          child: Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () => state.productAddAndEditStatus ==
+                                        BlocStatus.loading
+                                    ? () {}
+                                    : _handleSelectSubImages(),
+                                child: const SubImagesAddButtonWidget(),
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              subImages != null || sharedSubImages != null
+                                  ? Expanded(
+                                      child: Row(
+                                        children: [
+                                          // newly added sub images list
+                                          subImages != null
+                                              ? subImages!.isNotEmpty
+                                                  ? Expanded(
+                                                      child: ListView.builder(
+                                                        scrollDirection:
+                                                            Axis.horizontal,
+                                                        itemCount:
+                                                            subImages!.length,
+                                                        itemBuilder:
+                                                            (context, index) {
+                                                          return SubImageChipWidget(
+                                                            subImage:
+                                                                subImages![
+                                                                        index]
+                                                                    .path,
+                                                            isFiles: true,
+                                                            removeFunction: () => state
+                                                                        .productAddAndEditStatus ==
+                                                                    BlocStatus
+                                                                        .loading
+                                                                ? () {}
+                                                                : _handleSelectedSubImageRemove(
+                                                                    subImages![
+                                                                        index]),
+                                                          );
+                                                        },
+                                                      ),
+                                                    )
+                                                  : const SizedBox()
+                                              : const SizedBox(),
+                                          const SizedBox(
+                                            width: 5,
+                                          ),
+                                          // already exist sub images list - in firestore
+                                          sharedSubImages != null
+                                              ? sharedSubImages!.isNotEmpty
+                                                  ? Expanded(
+                                                      child: ListView.builder(
+                                                        scrollDirection:
+                                                            Axis.horizontal,
+                                                        itemCount:
+                                                            sharedSubImages!
+                                                                .length,
+                                                        itemBuilder:
+                                                            (context, index) {
+                                                          return SubImageChipWidget(
+                                                            subImage:
+                                                                sharedSubImages![
+                                                                    index],
+                                                            isFiles: false,
+                                                            removeFunction: () => state
+                                                                        .productAddAndEditStatus ==
+                                                                    BlocStatus
+                                                                        .loading
+                                                                ? () {}
+                                                                : _handleSharedSubImageRemove(
+                                                                    sharedSubImages![
+                                                                        index]),
+                                                          );
+                                                        },
+                                                      ),
+                                                    )
+                                                  : const SizedBox()
+                                              : const SizedBox(),
+                                        ],
+                                      ),
+                                    )
+                                  : const SizedBox(),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        InputFieldWidget(
+                          controller: _productNameController,
+                          hint: context.loc.productName,
+                          prefix: const Icon(Iconsax.bag_2),
+                          isReadOnly: state.productAddAndEditStatus ==
+                              BlocStatus.loading,
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        InputFieldWidget(
+                          controller: _productPriceController,
+                          hint: context.loc.price,
+                          prefix: const Icon(Iconsax.dollar_circle),
+                          keyBoardType: TextInputType.number,
+                          isReadOnly: state.productAddAndEditStatus ==
+                              BlocStatus.loading,
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        DropDownWidget(
+                          value: sharedCategoryDropDownValue ?? '0',
+                          items: _createProductCategoryList(context),
+                          function: (value) => _handleCategoryDropDown(value),
+                          isReadOnly: state.productAddAndEditStatus ==
+                              BlocStatus.loading,
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        DropDownWidget(
+                          value: sharedMarketingTypeDropDownValue ?? '0',
+                          items: _createMarketingList(context),
+                          function: (value) => _handleMarketingDropDown(value),
+                          isReadOnly: state.productAddAndEditStatus ==
+                              BlocStatus.loading,
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        InputFieldWidget(
+                          controller: _productDescriptionController,
+                          hint: context.loc.productDescription,
+                          prefix: const Icon(Iconsax.card_edit),
+                          isTextArea: true,
+                          areaSize: 5,
+                          isReadOnly: state.productAddAndEditStatus ==
+                              BlocStatus.loading,
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        Row(
+                          children: [
+                            TextButton(
+                              onPressed: () => state.productAddAndEditStatus ==
+                                      BlocStatus.loading
+                                  ? () {}
+                                  : _handleUploadAsset(),
+                              style: const ButtonStyle(
+                                backgroundColor: WidgetStatePropertyAll(
+                                  AppColors.textPrimary,
                                 ),
+                              ),
+                              child: Text(
+                                context.loc.uploadAsset,
+                                style: const TextStyle(
+                                  color: AppColors.textWhite,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            SizedBox(
+                              width: Helper.isLandscape(context)
+                                  ? Helper.screeWidth(context) * 0.75
+                                  : Helper.screeWidth(context) * 0.55,
+                              child: asset != null
+                                  ? Text(
+                                      asset!.name,
+                                      style: const TextStyle(
+                                        color: AppColors.textThird,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    )
+                                  : Text(
+                                      isUploadAssetsAvailableInSharedProduct
+                                          ? context.loc.assetAvailable
+                                          : context.loc.noFileSelected,
+                                      style: const TextStyle(
+                                        color: AppColors.textThird,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 32,
-              ),
-              BlocConsumer<ProductBloc, ProductState>(
-                listener: (context, state) {
-                  if (state.productAddAndEditStatus == BlocStatus.error) {
-                    context
-                        .read<ProductBloc>()
-                        .add(SetProductAddAndEditStatusToDefault());
-                    Helper.showSnackBar(
-                      context,
-                      state.productAddAndEditMessage ==
-                              ResponseTypes.failure.response
-                          ? context.loc.productAlreadyAdded
-                          : state.productAddAndEditMessage,
-                    );
-                  }
-                  if (state.productAddAndEditStatus == BlocStatus.success) {
-                    context
-                        .read<ProductBloc>()
-                        .add(SetProductAddAndEditStatusToDefault());
-
-                    Helper.showSnackBar(
-                      context,
-                      widget.title == CURDTypes.update.name
-                          ? context.loc.productUpdated
-                          : context.loc.productAdded,
-                    );
-
-                    context.read<ProductBloc>().add(GetAllProductsEvent());
-
-                    context.goNamed(AppRoutes.productsManagePageName);
-                  }
-                },
-                builder: (context, state) {
-                  if (state.productAddAndEditStatus == BlocStatus.loading) {
-                    return const ElevatedLoadingButtonWidget();
-                  }
-                  return ElevatedButtonWidget(
-                    title: '$headerName ${context.loc.product}',
-                    function: () => _handleSubmitButton(),
-                  );
-                },
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-            ],
+                  ),
+                  const SizedBox(
+                    height: 32,
+                  ),
+                  state.productAddAndEditStatus == BlocStatus.loading
+                      ? const ElevatedLoadingButtonWidget()
+                      : ElevatedButtonWidget(
+                          title: '$headerName ${context.loc.product}',
+                          function: () => _handleSubmitButton(),
+                        ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ),
@@ -348,6 +439,23 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
     }
   }
 
+  _handleSelectedSubImageRemove(PlatformFile? selectedFile) async {
+    if (selectedFile == null) return;
+
+    setState(() {
+      subImages?.removeWhere((file) =>
+          file.path == selectedFile.path || file.name == selectedFile.name);
+    });
+  }
+
+  _handleSharedSubImageRemove(String? selectedImageUrl) async {
+    if (selectedImageUrl == null) return;
+
+    setState(() {
+      sharedSubImages?.removeWhere((url) => url == selectedImageUrl);
+    });
+  }
+
   _handleCategoryDropDown(String value) {
     context.read<ProductBloc>().add(
           CategoryNameFieldChangeEvent(
@@ -398,6 +506,7 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
                               coverImage: coverImage?.bytes != null
                                   ? coverImage!.bytes
                                   : product.coverImage,
+                              // newly added sub images list
                               subImages: subImages != null
                                   ? Helper.subImagesList(subImages!)
                                   : [],
@@ -408,6 +517,7 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
                               productPrice: _productPriceController.text,
                               productDescription:
                                   _productDescriptionController.text,
+                              // already exist sub images list - in firestore
                               sharedSubImages: sharedSubImages ?? [],
                               likes: product.likes,
                               status: product.status,

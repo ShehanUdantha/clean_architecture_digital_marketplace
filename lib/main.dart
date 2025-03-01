@@ -1,4 +1,4 @@
-import 'package:Pixelcart/src/core/services/env.dart';
+import 'src/core/services/env.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
