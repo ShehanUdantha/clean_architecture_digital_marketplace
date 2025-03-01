@@ -52,10 +52,30 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
       });
 
       return ResponseTypes.success.response;
+    } on FirebaseAuthException catch (e) {
+      throw AuthException(errorMessage: e.toString());
     } on FirebaseException catch (e) {
       throw DBException(errorMessage: e.toString());
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
     } on APIException catch (e) {
-      throw APIException(errorMessage: e.errorMessage.toString());
+      throw APIException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -68,8 +88,25 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
           .delete();
 
       return ResponseTypes.success.response;
+    } on FirebaseAuthException catch (e) {
+      throw AuthException(errorMessage: e.toString());
     } on FirebaseException catch (e) {
       throw DBException(errorMessage: e.toString());
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -81,8 +118,25 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
 
       return List<NotificationEntity>.from(
           (result.docs).map((e) => NotificationModel.fromMap(e)));
+    } on FirebaseAuthException catch (e) {
+      throw AuthException(errorMessage: e.toString());
     } on FirebaseException catch (e) {
       throw DBException(errorMessage: e.toString());
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -95,8 +149,25 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
           .where((token) => token != null && token.isNotEmpty)
           .cast<String>()
           .toSet();
+    } on FirebaseAuthException catch (e) {
+      throw AuthException(errorMessage: e.toString());
     } on FirebaseException catch (e) {
       throw DBException(errorMessage: e.toString());
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -124,8 +195,11 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
       client.close();
 
       return credentials.accessToken.data;
-    } catch (e) {
-      throw APIException(errorMessage: e.toString());
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -161,10 +235,26 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
           debugPrint("Notification send failed to $tokenId");
         }
       }
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
     } on APIException catch (e) {
-      throw APIException(errorMessage: e.errorMessage.toString());
-    } catch (e) {
-      throw APIException(errorMessage: e.toString());
+      throw APIException(
+        errorMessage: e.errorMessage.toString(),
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw APIException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 }

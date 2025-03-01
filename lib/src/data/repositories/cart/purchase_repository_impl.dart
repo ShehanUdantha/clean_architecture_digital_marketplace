@@ -19,10 +19,20 @@ class PurchaseRepositoryImpl implements PurchaseRepository {
       final result =
           await purchaseRemoteDataSource.getAllPurchaseHistoryByUserId();
       return Right(result);
-    } on DBException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
     } on AuthException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
+    } on DBException catch (e) {
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     }
   }
 
@@ -33,8 +43,20 @@ class PurchaseRepositoryImpl implements PurchaseRepository {
       final result = await purchaseRemoteDataSource
           .getAllPurchaseItemsByItsProductIds(productIds);
       return Right(result);
+    } on AuthException catch (e) {
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     } on DBException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     }
   }
 
@@ -45,8 +67,20 @@ class PurchaseRepositoryImpl implements PurchaseRepository {
       final result =
           await purchaseRemoteDataSource.downloadProductByProductId(productId);
       return Right(result);
+    } on AuthException catch (e) {
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     } on DBException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     }
   }
 
@@ -59,8 +93,20 @@ class PurchaseRepositoryImpl implements PurchaseRepository {
       final result = await purchaseRemoteDataSource
           .getAllPurchaseHistoryByMonth(year, month);
       return Right(result);
+    } on AuthException catch (e) {
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     } on DBException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     }
   }
 
@@ -73,8 +119,20 @@ class PurchaseRepositoryImpl implements PurchaseRepository {
       final result = await purchaseRemoteDataSource
           .getAllPurchasesTotalBalanceByMonth(year, month);
       return Right(result);
+    } on AuthException catch (e) {
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     } on DBException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     }
   }
 
@@ -87,8 +145,20 @@ class PurchaseRepositoryImpl implements PurchaseRepository {
       final result = await purchaseRemoteDataSource
           .getAllPurchasesTotalBalancePercentageByMonth(year, month);
       return Right(result);
+    } on AuthException catch (e) {
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     } on DBException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     }
   }
 
@@ -101,8 +171,20 @@ class PurchaseRepositoryImpl implements PurchaseRepository {
       final result = await purchaseRemoteDataSource
           .getAllTopSellingProductsByMonth(year, month);
       return Right(result);
+    } on AuthException catch (e) {
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     } on DBException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     }
   }
 }

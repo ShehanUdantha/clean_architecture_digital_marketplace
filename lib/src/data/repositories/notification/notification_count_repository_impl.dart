@@ -20,7 +20,12 @@ class NotificationCountRepositoryImpl implements NotificationCountRepository {
           await notificationLocalDataSource.getNotificationCount(userId);
       return Right(result);
     } on DBException catch (e) {
-      return Left(LocalDBFailure(errorMessage: e.errorMessage));
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     }
   }
 
@@ -31,7 +36,12 @@ class NotificationCountRepositoryImpl implements NotificationCountRepository {
           await notificationLocalDataSource.resetNotificationCount(userId);
       return Right(result);
     } on DBException catch (e) {
-      return Left(LocalDBFailure(errorMessage: e.errorMessage));
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     }
   }
 
@@ -42,7 +52,12 @@ class NotificationCountRepositoryImpl implements NotificationCountRepository {
           await notificationLocalDataSource.updateNotificationCount(userId);
       return Right(result);
     } on DBException catch (e) {
-      return Left(LocalDBFailure(errorMessage: e.errorMessage));
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     }
   }
 }

@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+
 import '../../../../core/constants/variable_names.dart';
 import '../../../../core/utils/extension.dart';
 
@@ -46,8 +48,25 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
       } else {
         return ResponseTypes.failure.response;
       }
+    } on FirebaseAuthException catch (e) {
+      throw AuthException(errorMessage: e.toString());
     } on FirebaseException catch (e) {
       throw DBException(errorMessage: e.toString());
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -61,8 +80,25 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
 
       return List<CategoryModel>.from(
           (result.docs).map((e) => CategoryModel.fromMap(e)));
+    } on FirebaseAuthException catch (e) {
+      throw AuthException(errorMessage: e.toString());
     } on FirebaseException catch (e) {
       throw DBException(errorMessage: e.toString());
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -72,8 +108,25 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
       await fireStore.collection(AppVariableNames.categories).doc(id).delete();
 
       return ResponseTypes.success.response;
+    } on FirebaseAuthException catch (e) {
+      throw AuthException(errorMessage: e.toString());
     } on FirebaseException catch (e) {
       throw DBException(errorMessage: e.toString());
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 }

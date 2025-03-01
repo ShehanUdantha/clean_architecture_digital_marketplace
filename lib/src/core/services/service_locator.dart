@@ -32,7 +32,7 @@ import '../../data/repositories/category/category_repository_impl.dart';
 import '../../data/repositories/notification/notification_count_repository_impl.dart';
 import '../../data/repositories/notification/notification_repository_impl.dart';
 import '../../data/repositories/product/product_repository_impl.dart';
-import '../../data/repositories/stripe/stripe_repository_ipl.dart';
+import '../../data/repositories/stripe/stripe_repository_impl.dart';
 import '../../data/repositories/user/user_repository_impl.dart';
 import '../../domain/repositories/auth/user_auth_repository.dart';
 import '../../domain/repositories/cart/cart_repository.dart';

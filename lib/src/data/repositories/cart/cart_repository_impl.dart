@@ -17,10 +17,20 @@ class CartRepositoryImpl implements CartRepository {
     try {
       final result = await cartRemoteDataSource.addProductToCart(id);
       return Right(result);
-    } on DBException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
     } on AuthException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
+    } on DBException catch (e) {
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     }
   }
 
@@ -29,10 +39,20 @@ class CartRepositoryImpl implements CartRepository {
     try {
       final result = await cartRemoteDataSource.getCartedItems();
       return Right(result);
-    } on DBException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
     } on AuthException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
+    } on DBException catch (e) {
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     }
   }
 
@@ -41,10 +61,20 @@ class CartRepositoryImpl implements CartRepository {
     try {
       final result = await cartRemoteDataSource.getAllCartedItemsDetailsById();
       return Right(result);
-    } on DBException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
     } on AuthException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
+    } on DBException catch (e) {
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     }
   }
 
@@ -53,10 +83,20 @@ class CartRepositoryImpl implements CartRepository {
     try {
       final result = await cartRemoteDataSource.removeProductFromCart(id);
       return Right(result);
-    } on DBException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
     } on AuthException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
+    } on DBException catch (e) {
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     }
   }
 
@@ -67,10 +107,20 @@ class CartRepositoryImpl implements CartRepository {
       final result = await cartRemoteDataSource
           .setCartDetailsToPurchaseHistoryAndDeleteCart(price);
       return Right(result);
-    } on DBException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
     } on AuthException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
+    } on DBException catch (e) {
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     }
   }
 }

@@ -47,21 +47,35 @@ class PurchaseRemoteDataSourceImpl implements PurchaseRemoteDataSource {
   Future<List<PurchaseProductsModel>> getAllPurchaseHistoryByUserId() async {
     try {
       final currentUser = auth.currentUser;
-      try {
-        final result = await fireStore
-            .collection(AppVariableNames.purchase)
-            .doc(currentUser!.uid)
-            .collection(AppVariableNames.history)
-            .orderBy('date', descending: true)
-            .get();
 
-        return List<PurchaseProductsModel>.from(
-            (result.docs).map((e) => PurchaseProductsModel.fromMap(e.data())));
-      } on FirebaseException catch (e) {
-        throw DBException(errorMessage: e.toString());
-      }
+      final result = await fireStore
+          .collection(AppVariableNames.purchase)
+          .doc(currentUser!.uid)
+          .collection(AppVariableNames.history)
+          .orderBy('date', descending: true)
+          .get();
+
+      return List<PurchaseProductsModel>.from(
+          (result.docs).map((e) => PurchaseProductsModel.fromMap(e.data())));
     } on FirebaseAuthException catch (e) {
       throw AuthException(errorMessage: e.toString());
+    } on FirebaseException catch (e) {
+      throw DBException(errorMessage: e.toString());
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -80,8 +94,25 @@ class PurchaseRemoteDataSourceImpl implements PurchaseRemoteDataSource {
       }
 
       return productList;
+    } on FirebaseAuthException catch (e) {
+      throw AuthException(errorMessage: e.toString());
     } on FirebaseException catch (e) {
       throw DBException(errorMessage: e.toString());
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -97,8 +128,25 @@ class PurchaseRemoteDataSourceImpl implements PurchaseRemoteDataSource {
 
       FileDownloader.downloadFile(url: productModel.zipFile);
       return ResponseTypes.success.response;
+    } on FirebaseAuthException catch (e) {
+      throw AuthException(errorMessage: e.toString());
     } on FirebaseException catch (e) {
       throw DBException(errorMessage: e.toString());
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -144,8 +192,25 @@ class PurchaseRemoteDataSourceImpl implements PurchaseRemoteDataSource {
       }
 
       return purchaseHistoryByMonth;
+    } on FirebaseAuthException catch (e) {
+      throw AuthException(errorMessage: e.toString());
     } on FirebaseException catch (e) {
       throw DBException(errorMessage: e.toString());
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -182,8 +247,25 @@ class PurchaseRemoteDataSourceImpl implements PurchaseRemoteDataSource {
       }
 
       return balance;
+    } on FirebaseAuthException catch (e) {
+      throw AuthException(errorMessage: e.toString());
     } on FirebaseException catch (e) {
       throw DBException(errorMessage: e.toString());
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -213,8 +295,25 @@ class PurchaseRemoteDataSourceImpl implements PurchaseRemoteDataSource {
       }
 
       return percentage;
+    } on FirebaseAuthException catch (e) {
+      throw AuthException(errorMessage: e.toString());
     } on FirebaseException catch (e) {
       throw DBException(errorMessage: e.toString());
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -276,8 +375,25 @@ class PurchaseRemoteDataSourceImpl implements PurchaseRemoteDataSource {
       }
 
       return topSellingProducts;
+    } on FirebaseAuthException catch (e) {
+      throw AuthException(errorMessage: e.toString());
     } on FirebaseException catch (e) {
       throw DBException(errorMessage: e.toString());
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 }

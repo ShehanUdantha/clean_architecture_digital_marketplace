@@ -11,16 +11,16 @@ You need to set up the `.env` file in the root directory of the project with you
 
 Create a `.env` file in the root directory and include the following keys (replace with your values):
 
-`STRIPE_TEST_PUBLISHABLE_KEY=your_publishable_key
-STRIPE_TEST_SECRET_KEY=your_secret_key`
+`STRIPE_TEST_PUBLISHABLE_KEY=your_publishable_key`
+`STRIPE_TEST_SECRET_KEY=your_secret_key`
 
-## 2. Generate Required Files
+### 2. Generate Required Files
 
 Run the following command to generate the necessary files (e.g., mocks, code related to the environment variables):
 
 `dart run build_runner build`
 
-
+</br>
 
 ## Features
 

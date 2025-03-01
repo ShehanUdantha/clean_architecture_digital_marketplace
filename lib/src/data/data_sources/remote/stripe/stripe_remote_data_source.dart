@@ -38,11 +38,20 @@ class StripRemoteDataSourceImpl implements StripeRemoteDataSource {
         return StripeModel.fromMap(jsonDecode(response.body));
       } else {
         throw StripeException(
-            errorMessage: jsonDecode(response.body)['error'] ??
-                rootNavigatorKey.currentContext!.loc.stripPaymentFail);
+          errorMessage: jsonDecode(response.body)['error'] ??
+              rootNavigatorKey.currentContext!.loc.stripPaymentFail,
+        );
       }
-    } catch (e) {
-      throw StripeException(errorMessage: e.toString());
+    } on StripeException catch (e) {
+      throw StripeException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw StripeException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 }

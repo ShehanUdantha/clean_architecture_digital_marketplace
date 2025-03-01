@@ -12,7 +12,7 @@ class UsersState extends Equatable {
     this.message = '',
     this.listOfUsers = const [],
     this.currentUserType = 0,
-    this.currentUserTypeName = 'All Account',
+    this.currentUserTypeName = AppVariableNames.allUsersType,
   });
 
   UsersState copyWith({

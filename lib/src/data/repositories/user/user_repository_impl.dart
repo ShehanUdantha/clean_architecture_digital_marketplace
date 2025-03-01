@@ -17,10 +17,20 @@ class UserRepositoryImpl implements UserRepository {
     try {
       final result = await userRemoteDataSource.getUserDetails();
       return Right(result);
-    } on DBException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
     } on AuthException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
+    } on DBException catch (e) {
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     }
   }
 
@@ -30,7 +40,19 @@ class UserRepositoryImpl implements UserRepository {
       final result = await userRemoteDataSource.getUserType(id);
       return Right(result);
     } on AuthException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
+    } on DBException catch (e) {
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     }
   }
 
@@ -39,8 +61,20 @@ class UserRepositoryImpl implements UserRepository {
     try {
       final result = await userRemoteDataSource.getAllUsers(userType);
       return Right(result);
+    } on AuthException catch (e) {
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     } on DBException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     }
   }
 }
