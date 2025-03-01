@@ -36,14 +36,21 @@ class UserAuthRemoteDataSourceImpl implements UserAuthRemoteDataSource {
   @override
   Future<String> signInUser(SignInParams signInParams) async {
     try {
-      await auth.signInWithEmailAndPassword(
+      final userCredential = await auth.signInWithEmailAndPassword(
         email: signInParams.email,
         password: signInParams.password,
       );
 
-      auth.currentUser!.reload();
+      final user = userCredential.user;
+      if (user == null) {
+        throw AuthException(
+          errorMessage:
+              rootNavigatorKey.currentContext!.loc.authenticationErrorOccurred,
+        );
+      }
 
-      final uid = auth.currentUser!.uid;
+      await user.reload();
+      final uid = user.uid;
 
       final result =
           await fireStore.collection(AppVariableNames.users).doc(uid).get();
@@ -60,23 +67,36 @@ class UserAuthRemoteDataSourceImpl implements UserAuthRemoteDataSource {
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-email') {
         throw AuthException(
-            errorMessage: rootNavigatorKey.currentContext!.loc.invalidEmail);
+          errorMessage: rootNavigatorKey.currentContext!.loc.invalidEmail,
+        );
       }
       if (e.code == 'user-not-found') {
         throw AuthException(
-            errorMessage: rootNavigatorKey.currentContext!.loc.userNotFound);
+          errorMessage: rootNavigatorKey.currentContext!.loc.userNotFound,
+        );
       }
       if (e.code == 'wrong-password') {
         throw AuthException(
-            errorMessage: rootNavigatorKey.currentContext!.loc.wrongPassword);
+          errorMessage: rootNavigatorKey.currentContext!.loc.wrongPassword,
+        );
       }
       if (e.code == 'invalid-credential') {
         throw AuthException(
-            errorMessage:
-                rootNavigatorKey.currentContext!.loc.invalidCredential);
+          errorMessage: rootNavigatorKey.currentContext!.loc.invalidCredential,
+        );
       } else {
         throw AuthException(errorMessage: e.toString());
       }
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw AuthException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -115,17 +135,29 @@ class UserAuthRemoteDataSourceImpl implements UserAuthRemoteDataSource {
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         throw AuthException(
-            errorMessage: rootNavigatorKey.currentContext!.loc.weekPassword);
+          errorMessage: rootNavigatorKey.currentContext!.loc.weekPassword,
+        );
       } else if (e.code == 'email-already-in-use') {
         throw AuthException(
-            errorMessage:
-                rootNavigatorKey.currentContext!.loc.emailAlreadyUsed);
+          errorMessage: rootNavigatorKey.currentContext!.loc.emailAlreadyUsed,
+        );
       } else if (e.code == 'invalid-email') {
         throw AuthException(
-            errorMessage: rootNavigatorKey.currentContext!.loc.invalidEmail);
+          errorMessage: rootNavigatorKey.currentContext!.loc.invalidEmail,
+        );
       } else {
         throw AuthException(errorMessage: e.toString());
       }
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw AuthException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -141,6 +173,16 @@ class UserAuthRemoteDataSourceImpl implements UserAuthRemoteDataSource {
       }
     } on FirebaseAuthException catch (e) {
       throw AuthException(errorMessage: e.toString());
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw AuthException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -155,6 +197,16 @@ class UserAuthRemoteDataSourceImpl implements UserAuthRemoteDataSource {
       }
     } on FirebaseAuthException catch (e) {
       throw AuthException(errorMessage: e.toString());
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw AuthException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -173,6 +225,16 @@ class UserAuthRemoteDataSourceImpl implements UserAuthRemoteDataSource {
       }
     } on FirebaseAuthException catch (e) {
       throw AuthException(errorMessage: e.toString());
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw AuthException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -192,6 +254,16 @@ class UserAuthRemoteDataSourceImpl implements UserAuthRemoteDataSource {
       }
     } on FirebaseAuthException catch (e) {
       throw AuthException(errorMessage: e.toString());
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw AuthException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 

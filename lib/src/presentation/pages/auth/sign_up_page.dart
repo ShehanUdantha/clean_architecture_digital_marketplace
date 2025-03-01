@@ -57,101 +57,103 @@ class _SignUpPageState extends State<SignUpPage> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Stack(
+            child: BlocConsumer<SignUpBloc, SignUpState>(
+              listenWhen: (previous, current) =>
+                  previous.status != current.status,
+              listener: (context, state) {
+                if (state.status == BlocStatus.error) {
+                  context.read<SignUpBloc>().add(SetSignUpStatusToDefault());
+                  Helper.showSnackBar(
+                    context,
+                    state.authMessage,
+                  );
+                }
+                if (state.status == BlocStatus.success) {
+                  context.read<SignUpBloc>().add(SetSignUpStatusToDefault());
+                  context.goNamed(
+                    AppRoutes.emailVerificationAndForgotPasswordPageName,
+                    queryParameters: {
+                      'email': _emailController.text,
+                      'page': AuthTypes.signUp.auth,
+                      'isForgot': 'false',
+                    },
+                  );
+                  context.read<AuthBloc>().add(RefreshUserEvent());
+                }
+              },
+              buildWhen: (previous, current) =>
+                  previous.status != current.status,
+              builder: (context, state) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    SizedBox(
-                      height: Helper.screeHeight(context) * 0.15,
+                    Stack(
+                      children: [
+                        SizedBox(
+                          height: Helper.screeHeight(context) * 0.15,
+                        ),
+                        Positioned(
+                          child: BaseIconButtonWidget(
+                            function: () => _handleBackButton(),
+                          ),
+                        ),
+                      ],
                     ),
-                    Positioned(
-                      child: BaseIconButtonWidget(
-                        function: () => _handleBackButton(),
+                    Image(
+                      height: Helper.isLandscape(context)
+                          ? Helper.screeHeight(context) * 0.3
+                          : Helper.screeHeight(context) * 0.12,
+                      image: const AssetImage(AppAssetsPaths.signUpImage),
+                    ),
+                    const SizedBox(
+                      height: 48.0,
+                    ),
+                    Form(
+                      child: Column(
+                        children: [
+                          InputFieldWidget(
+                            controller: _userNameController,
+                            hint: context.loc.userName,
+                            prefix: const Icon(Iconsax.user),
+                            isReadOnly: state.status == BlocStatus.loading,
+                          ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          InputFieldWidget(
+                            controller: _emailController,
+                            hint: context.loc.emailAddress,
+                            prefix: const Icon(Iconsax.direct_right),
+                            keyBoardType: TextInputType.emailAddress,
+                            isReadOnly: state.status == BlocStatus.loading,
+                          ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          InputFieldWidget(
+                            controller: _passwordController,
+                            hint: context.loc.password,
+                            prefix: const Icon(Iconsax.password_check),
+                            suffix: const Icon(Iconsax.eye),
+                            suffixSecondary: const Icon(Iconsax.eye_slash),
+                            isReadOnly: state.status == BlocStatus.loading,
+                          ),
+                        ],
                       ),
                     ),
+                    const SizedBox(
+                      height: 32.0,
+                    ),
+                    state.status == BlocStatus.loading
+                        ? const ElevatedLoadingButtonWidget()
+                        : ElevatedButtonWidget(
+                            title: context.loc.signUp,
+                            function: () => _handleSignUp(networkState),
+                          ),
                   ],
-                ),
-                Image(
-                  height: Helper.isLandscape(context)
-                      ? Helper.screeHeight(context) * 0.3
-                      : Helper.screeHeight(context) * 0.12,
-                  image: const AssetImage(AppAssetsPaths.signUpImage),
-                ),
-                const SizedBox(
-                  height: 48.0,
-                ),
-                Form(
-                  child: Column(
-                    children: [
-                      InputFieldWidget(
-                        controller: _userNameController,
-                        hint: context.loc.userName,
-                        prefix: const Icon(Iconsax.user),
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      InputFieldWidget(
-                        controller: _emailController,
-                        hint: context.loc.emailAddress,
-                        prefix: const Icon(Iconsax.direct_right),
-                        keyBoardType: TextInputType.emailAddress,
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      InputFieldWidget(
-                        controller: _passwordController,
-                        hint: context.loc.password,
-                        prefix: const Icon(Iconsax.password_check),
-                        suffix: const Icon(Iconsax.eye),
-                        suffixSecondary: const Icon(Iconsax.eye_slash),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 32.0,
-                ),
-                BlocConsumer<SignUpBloc, SignUpState>(
-                  listener: (context, state) {
-                    if (state.status == BlocStatus.error) {
-                      context
-                          .read<SignUpBloc>()
-                          .add(SetSignUpStatusToDefault());
-                      Helper.showSnackBar(
-                        context,
-                        state.authMessage,
-                      );
-                    }
-                    if (state.status == BlocStatus.success) {
-                      context
-                          .read<SignUpBloc>()
-                          .add(SetSignUpStatusToDefault());
-                      context.goNamed(
-                        AppRoutes.emailVerificationAndForgotPasswordPageName,
-                        queryParameters: {
-                          'email': _emailController.text,
-                          'page': AuthTypes.signUp.auth,
-                          'isForgot': 'false',
-                        },
-                      );
-                      context.read<AuthBloc>().add(RefreshUserEvent());
-                    }
-                  },
-                  builder: (context, state) {
-                    if (state.status == BlocStatus.loading) {
-                      return const ElevatedLoadingButtonWidget();
-                    }
-                    return ElevatedButtonWidget(
-                      title: context.loc.signUp,
-                      function: () => _handleSignUp(networkState),
-                    );
-                  },
-                ),
-              ],
+                );
+              },
             ),
           ),
         ),

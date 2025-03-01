@@ -51,67 +51,71 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
             const SizedBox(
               height: 16,
             ),
-            Row(
-              children: [
-                SizedBox(
-                  width: Helper.screeWidth(context) * 0.7,
-                  child: InputFieldWidget(
-                    controller: _categoryController,
-                    hint: context.loc.categoryName,
-                  ),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: BlocConsumer<CategoryBloc, CategoryState>(
-                    listener: (context, state) {
-                      if (state.categoryAddStatus == BlocStatus.error) {
-                        context
-                            .read<CategoryBloc>()
-                            .add(SetCategoryAddStatusToDefault());
-                        Helper.showSnackBar(
-                          context,
-                          state.categoryAddMessage ==
-                                  ResponseTypes.failure.response
-                              ? context.loc.categoryAlreadyAdded
-                              : state.categoryAddMessage,
-                        );
-                      }
-                      if (state.categoryAddStatus == BlocStatus.success) {
-                        context
-                            .read<CategoryBloc>()
-                            .add(SetCategoryAddStatusToDefault());
-                        context
-                            .read<CategoryBloc>()
-                            .add(GetAllCategoriesEvent());
-                        _categoryController.clear();
-                        Helper.showSnackBar(
-                          context,
-                          context.loc.categoryAdded,
-                        );
-                      }
-                    },
-                    builder: (context, state) {
-                      if (state.categoryAddStatus == BlocStatus.loading) {
-                        return const ElevatedLoadingButtonWidget(
-                          radius: 15.0,
-                        );
-                      }
-                      return ElevatedButtonWidget(
-                        title: context.loc.add,
-                        radius: 15.0,
-                        function: () => _handleCategoryAdd(),
-                      );
-                    },
-                  ),
-                ),
-              ],
+            BlocConsumer<CategoryBloc, CategoryState>(
+              listenWhen: (previous, current) =>
+                  previous.categoryAddStatus != current.categoryAddStatus,
+              listener: (context, state) {
+                if (state.categoryAddStatus == BlocStatus.error) {
+                  context
+                      .read<CategoryBloc>()
+                      .add(SetCategoryAddStatusToDefault());
+                  Helper.showSnackBar(
+                    context,
+                    state.categoryAddMessage == ResponseTypes.failure.response
+                        ? context.loc.categoryAlreadyAdded
+                        : state.categoryAddMessage,
+                  );
+                }
+                if (state.categoryAddStatus == BlocStatus.success) {
+                  context
+                      .read<CategoryBloc>()
+                      .add(SetCategoryAddStatusToDefault());
+                  context.read<CategoryBloc>().add(GetAllCategoriesEvent());
+                  _categoryController.clear();
+                  Helper.showSnackBar(
+                    context,
+                    context.loc.categoryAdded,
+                  );
+                }
+              },
+              buildWhen: (previous, current) =>
+                  previous.categoryAddStatus != current.categoryAddStatus,
+              builder: (context, state) {
+                return Row(
+                  children: [
+                    SizedBox(
+                      width: Helper.screeWidth(context) * 0.7,
+                      child: InputFieldWidget(
+                        controller: _categoryController,
+                        hint: context.loc.categoryName,
+                        isReadOnly:
+                            state.categoryAddStatus == BlocStatus.loading,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Expanded(
+                      child: state.categoryAddStatus == BlocStatus.loading
+                          ? const ElevatedLoadingButtonWidget(
+                              radius: 15.0,
+                            )
+                          : ElevatedButtonWidget(
+                              title: context.loc.add,
+                              radius: 15.0,
+                              function: () => _handleCategoryAdd(),
+                            ),
+                    ),
+                  ],
+                );
+              },
             ),
             const SizedBox(
               height: 16,
             ),
             BlocConsumer<CategoryBloc, CategoryState>(
+              listenWhen: (previous, current) =>
+                  previous.status != current.status,
               listener: (context, state) {
                 if (state.status == BlocStatus.error) {
                   Helper.showSnackBar(
@@ -128,6 +132,8 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
                   );
                 }
               },
+              buildWhen: (previous, current) =>
+                  previous.status != current.status,
               builder: (context, state) {
                 switch (state.status) {
                   case BlocStatus.loading:

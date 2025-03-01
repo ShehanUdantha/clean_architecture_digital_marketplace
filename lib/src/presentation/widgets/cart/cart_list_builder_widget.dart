@@ -1,3 +1,5 @@
+import '../../blocs/stripe/stripe_bloc.dart';
+
 import '../../../core/utils/enum.dart';
 import '../../../core/widgets/circular_loading_indicator.dart';
 import '../../blocs/cart/cart_bloc.dart';
@@ -13,32 +15,45 @@ class CartListBuilderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cartState = context.watch<CartBloc>().state;
+    return BlocBuilder<CartBloc, CartState>(
+      buildWhen: (previous, current) =>
+          previous.listStatus != current.listStatus,
+      builder: (context, state) {
+        if (state.listStatus == BlocStatus.loading) {
+          return const CircularLoadingIndicator();
+        }
 
-    if (cartState.listStatus == BlocStatus.loading) {
-      return const CircularLoadingIndicator();
-    }
-
-    return SizedBox(
-      child: OrientationBuilder(
-        builder: (context, orientation) {
-          return ListView.builder(
-            physics: const BouncingScrollPhysics(),
-            itemCount: cartState.listOfCartedItems.length,
-            itemBuilder: (context, index) {
-              return ProductLinearCardWidget(
-                product: cartState.listOfCartedItems[index],
-                isEdit: false,
-                deleteFunction: () => _handleDeleteProduct(
-                  context,
-                  cartState.listOfCartedItems[index].id!,
-                  cartState.listOfCartedItems.length,
-                ),
+        return SizedBox(
+          child: OrientationBuilder(
+            builder: (context, orientation) {
+              return BlocBuilder<StripeBloc, StripeState>(
+                buildWhen: (previous, current) =>
+                    previous.status != current.status,
+                builder: (context, stripeState) {
+                  return ListView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: state.listOfCartedItems.length,
+                    itemBuilder: (context, index) {
+                      return ProductLinearCardWidget(
+                        product: state.listOfCartedItems[index],
+                        isEdit: false,
+                        deleteFunction: () =>
+                            stripeState.status == BlocStatus.loading
+                                ? () {}
+                                : _handleDeleteProduct(
+                                    context,
+                                    state.listOfCartedItems[index].id!,
+                                    state.listOfCartedItems.length,
+                                  ),
+                      );
+                    },
+                  );
+                },
               );
             },
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 

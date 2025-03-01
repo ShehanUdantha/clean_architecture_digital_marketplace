@@ -25,8 +25,16 @@ class NotificationLocalDataSourceImpl implements NotificationLocalDataSource {
       return count ?? 0;
     } on HiveError catch (e) {
       throw DBException(errorMessage: e.toString());
-    } catch (e) {
-      throw DBException(errorMessage: e.toString());
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -41,8 +49,16 @@ class NotificationLocalDataSourceImpl implements NotificationLocalDataSource {
       return ResponseTypes.success.response;
     } on HiveError catch (e) {
       throw DBException(errorMessage: e.toString());
-    } catch (e) {
-      throw DBException(errorMessage: e.toString());
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -61,8 +77,16 @@ class NotificationLocalDataSourceImpl implements NotificationLocalDataSource {
       return newCount;
     } on HiveError catch (e) {
       throw DBException(errorMessage: e.toString());
-    } catch (e) {
-      throw DBException(errorMessage: e.toString());
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 }

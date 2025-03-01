@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import '../../../core/constants/variable_names.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/entities/user/user_entity.dart';

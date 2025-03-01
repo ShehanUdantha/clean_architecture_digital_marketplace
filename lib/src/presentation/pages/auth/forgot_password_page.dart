@@ -46,78 +46,81 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              PageHeaderWidget(
-                title: context.loc.forgotPassword,
-                function: () => _handleBackButton(),
-              ),
-              const SizedBox(
-                height: 16.0,
-              ),
-              Text(
-                context.loc.forgotPasswordMessage,
-                style: const TextStyle(
-                  color: AppColors.textThird,
-                ),
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              Form(
-                child: Column(
-                  children: [
-                    InputFieldWidget(
-                      controller: _emailController,
-                      hint: context.loc.emailAddress,
-                      prefix: const Icon(Iconsax.direct_right),
-                      keyBoardType: TextInputType.emailAddress,
+          child: BlocConsumer<ForgotPasswordBloc, ForgotPasswordState>(
+            listenWhen: (previous, current) =>
+                previous.status != current.status,
+            listener: (context, state) {
+              if (state.status == BlocStatus.error) {
+                context
+                    .read<ForgotPasswordBloc>()
+                    .add(SetForgotStatusToDefault());
+                Helper.showSnackBar(
+                  context,
+                  state.authMessage == ResponseTypes.failure.response
+                      ? context.loc.invalidForgotEmail
+                      : state.authMessage,
+                );
+              }
+              if (state.status == BlocStatus.success) {
+                context
+                    .read<ForgotPasswordBloc>()
+                    .add(SetForgotStatusToDefault());
+                context.goNamed(
+                  AppRoutes.emailVerificationAndForgotPasswordPageName,
+                  queryParameters: {
+                    'email': state.email,
+                    'page': AuthTypes.forgot.auth,
+                    'isForgot': 'true',
+                  },
+                );
+              }
+            },
+            buildWhen: (previous, current) => previous.status != current.status,
+            builder: (context, state) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  PageHeaderWidget(
+                    title: context.loc.forgotPassword,
+                    function: () => _handleBackButton(),
+                  ),
+                  const SizedBox(
+                    height: 16.0,
+                  ),
+                  Text(
+                    context.loc.forgotPasswordMessage,
+                    style: const TextStyle(
+                      color: AppColors.textThird,
                     ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 26.0,
-              ),
-              BlocConsumer<ForgotPasswordBloc, ForgotPasswordState>(
-                listener: (context, state) {
-                  if (state.status == BlocStatus.error) {
-                    context
-                        .read<ForgotPasswordBloc>()
-                        .add(SetForgotStatusToDefault());
-                    Helper.showSnackBar(
-                      context,
-                      state.authMessage == ResponseTypes.failure.response
-                          ? context.loc.invalidForgotEmail
-                          : state.authMessage,
-                    );
-                  }
-                  if (state.status == BlocStatus.success) {
-                    context
-                        .read<ForgotPasswordBloc>()
-                        .add(SetForgotStatusToDefault());
-                    context.goNamed(
-                      AppRoutes.emailVerificationAndForgotPasswordPageName,
-                      queryParameters: {
-                        'email': state.email,
-                        'page': AuthTypes.forgot.auth,
-                        'isForgot': 'true',
-                      },
-                    );
-                  }
-                },
-                builder: (context, state) {
-                  if (state.status == BlocStatus.loading) {
-                    return const ElevatedLoadingButtonWidget();
-                  }
-                  return ElevatedButtonWidget(
-                    title: context.loc.submit,
-                    function: () => _handleForgotPassword(networkState),
-                  );
-                },
-              ),
-            ],
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  Form(
+                    child: Column(
+                      children: [
+                        InputFieldWidget(
+                          controller: _emailController,
+                          hint: context.loc.emailAddress,
+                          prefix: const Icon(Iconsax.direct_right),
+                          keyBoardType: TextInputType.emailAddress,
+                          isReadOnly: state.status == BlocStatus.loading,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 26.0,
+                  ),
+                  state.status == BlocStatus.loading
+                      ? const ElevatedLoadingButtonWidget()
+                      : ElevatedButtonWidget(
+                          title: context.loc.submit,
+                          function: () => _handleForgotPassword(networkState),
+                        ),
+                ],
+              );
+            },
           ),
         ),
       ),

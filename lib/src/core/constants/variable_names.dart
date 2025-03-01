@@ -8,6 +8,9 @@ class AppVariableNames {
   static const String categories = 'categories';
   static const String notifications = 'notifications';
 
+  // users
+  static const String allUsersType = 'All Account';
+
   // db keys
   static const String notificationBox = 'notificationBox';
 

@@ -18,10 +18,27 @@ class NotificationRepositoryImpl implements NotificationRepository {
       final result = await notificationRemoteDataSource
           .sendNotification(notificationEntity);
       return Right(result);
+    } on AuthException catch (e) {
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     } on DBException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     } on APIException catch (e) {
-      return Left(APIFailure(errorMessage: e.errorMessage));
+      return Left(
+        APIFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     }
   }
 
@@ -30,8 +47,20 @@ class NotificationRepositoryImpl implements NotificationRepository {
     try {
       final result = await notificationRemoteDataSource.deleteNotification(id);
       return Right(result);
+    } on AuthException catch (e) {
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     } on DBException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     }
   }
 
@@ -41,8 +70,20 @@ class NotificationRepositoryImpl implements NotificationRepository {
     try {
       final result = await notificationRemoteDataSource.getAllNotifications();
       return Right(result);
+    } on AuthException catch (e) {
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     } on DBException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     }
   }
 }

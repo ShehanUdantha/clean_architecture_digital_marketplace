@@ -32,6 +32,23 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
       return result.userType;
     } on FirebaseAuthException catch (e) {
       throw AuthException(errorMessage: e.toString());
+    } on FirebaseException catch (e) {
+      throw DBException(errorMessage: e.toString());
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -39,25 +56,39 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   Future<UserModel> getUserDetails() async {
     try {
       final currentUser = auth.currentUser;
-      try {
-        final result = await fireStore
-            .collection(AppVariableNames.users)
-            .doc(currentUser!.uid)
-            .get();
 
-        return UserModel.fromDocument(result);
-      } on FirebaseException catch (e) {
-        throw DBException(errorMessage: e.toString());
-      }
+      final result = await fireStore
+          .collection(AppVariableNames.users)
+          .doc(currentUser!.uid)
+          .get();
+
+      return UserModel.fromDocument(result);
     } on FirebaseAuthException catch (e) {
       throw AuthException(errorMessage: e.toString());
+    } on FirebaseException catch (e) {
+      throw DBException(errorMessage: e.toString());
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 
   @override
   Future<List<UserModel>> getAllUsers(String userType) async {
     try {
-      final result = userType != 'All Account'
+      final result = userType != AppVariableNames.allUsersType
           ? await fireStore
               .collection(AppVariableNames.users)
               .where('userType', isEqualTo: userType.toLowerCase())
@@ -66,8 +97,25 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
 
       return List<UserModel>.from(
           (result.docs).map((e) => UserModel.fromDocument(e)));
+    } on FirebaseAuthException catch (e) {
+      throw AuthException(errorMessage: e.toString());
     } on FirebaseException catch (e) {
       throw DBException(errorMessage: e.toString());
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 }

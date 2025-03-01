@@ -16,8 +16,20 @@ class CategoryRepositoryImpl implements CategoryRepository {
     try {
       final result = await categoryRemoteDataSource.addCategory(name);
       return Right(result);
+    } on AuthException catch (e) {
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     } on DBException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     }
   }
 
@@ -26,8 +38,20 @@ class CategoryRepositoryImpl implements CategoryRepository {
     try {
       final result = await categoryRemoteDataSource.getAllCategories();
       return Right(result);
+    } on AuthException catch (e) {
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     } on DBException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     }
   }
 
@@ -36,8 +60,20 @@ class CategoryRepositoryImpl implements CategoryRepository {
     try {
       final result = await categoryRemoteDataSource.deleteCategory(id);
       return Right(result);
+    } on AuthException catch (e) {
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     } on DBException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     }
   }
 }

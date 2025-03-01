@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:Pixelcart/src/config/routes/router.dart';
-import 'package:Pixelcart/src/core/services/env.dart';
-import 'package:Pixelcart/src/core/utils/extension.dart';
+import '../../../../config/routes/router.dart';
+import '../../../../core/services/env.dart';
+import '../../../../core/utils/extension.dart';
 
 import '../../../models/stripe/stripe_model.dart';
 import 'package:http/http.dart' as http;
@@ -38,11 +38,20 @@ class StripRemoteDataSourceImpl implements StripeRemoteDataSource {
         return StripeModel.fromMap(jsonDecode(response.body));
       } else {
         throw StripeException(
-            errorMessage: jsonDecode(response.body)['error'] ??
-                rootNavigatorKey.currentContext!.loc.stripPaymentFail);
+          errorMessage: jsonDecode(response.body)['error'] ??
+              rootNavigatorKey.currentContext!.loc.stripPaymentFail,
+        );
       }
-    } catch (e) {
-      throw StripeException(errorMessage: e.toString());
+    } on StripeException catch (e) {
+      throw StripeException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw StripeException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 }

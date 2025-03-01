@@ -99,7 +99,7 @@ class LineChartCard extends StatelessWidget {
         AppLists.monthlyPurchaseStatusChartBottomTitles(context)[value.toInt()];
     return item != null
         ? SideTitleWidget(
-            meta: meta,
+            axisSide: meta.axisSide,
             space: 10,
             child: Text(
               item.toString(),

@@ -136,5 +136,6 @@
   "week": "星期",
   "topSellingProducts": "畅销产品",
   "productsNotFound": "未找到产品",
-  "stripPaymentFail":"Stripe支付失败"
+  "stripPaymentFail":"Stripe支付失败",
+  "authenticationErrorOccurred": "发生身份验证错误。"
 }

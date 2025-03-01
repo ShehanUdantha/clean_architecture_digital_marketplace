@@ -31,34 +31,48 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
   Future<String> addProductToCart(String productId) async {
     try {
       final currentUser = auth.currentUser;
-      try {
-        final checkDocument = await fireStore
+
+      final checkDocument = await fireStore
+          .collection(AppVariableNames.cart)
+          .doc(currentUser!.uid)
+          .get();
+
+      if (checkDocument.exists) {
+        await fireStore
             .collection(AppVariableNames.cart)
-            .doc(currentUser!.uid)
-            .get();
-
-        if (checkDocument.exists) {
-          await fireStore
-              .collection(AppVariableNames.cart)
-              .doc(currentUser.uid)
-              .update({
-            'ids': FieldValue.arrayUnion([productId])
-          });
-        } else {
-          await fireStore
-              .collection(AppVariableNames.cart)
-              .doc(currentUser.uid)
-              .set({
-            'ids': FieldValue.arrayUnion([productId])
-          });
-        }
-
-        return ResponseTypes.success.response;
-      } on FirebaseException catch (e) {
-        throw DBException(errorMessage: e.toString());
+            .doc(currentUser.uid)
+            .update({
+          'ids': FieldValue.arrayUnion([productId])
+        });
+      } else {
+        await fireStore
+            .collection(AppVariableNames.cart)
+            .doc(currentUser.uid)
+            .set({
+          'ids': FieldValue.arrayUnion([productId])
+        });
       }
+
+      return ResponseTypes.success.response;
     } on FirebaseAuthException catch (e) {
       throw AuthException(errorMessage: e.toString());
+    } on FirebaseException catch (e) {
+      throw DBException(errorMessage: e.toString());
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -66,24 +80,38 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
   Future<List<String>> getCartedItems() async {
     try {
       final currentUser = auth.currentUser;
-      try {
-        final result = await fireStore
-            .collection(AppVariableNames.cart)
-            .doc(currentUser!.uid)
-            .get();
 
-        if (result.exists) {
-          return List<String>.from(
-            (result['ids'] as List).map((e) => e),
-          ).toList();
-        } else {
-          return [];
-        }
-      } on FirebaseException catch (e) {
-        throw DBException(errorMessage: e.toString());
+      final result = await fireStore
+          .collection(AppVariableNames.cart)
+          .doc(currentUser!.uid)
+          .get();
+
+      if (result.exists) {
+        return List<String>.from(
+          (result['ids'] as List).map((e) => e),
+        ).toList();
+      } else {
+        return [];
       }
     } on FirebaseAuthException catch (e) {
       throw AuthException(errorMessage: e.toString());
+    } on FirebaseException catch (e) {
+      throw DBException(errorMessage: e.toString());
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -91,20 +119,34 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
   Future<String> removeProductFromCart(String productId) async {
     try {
       final currentUser = auth.currentUser;
-      try {
-        await fireStore
-            .collection(AppVariableNames.cart)
-            .doc(currentUser!.uid)
-            .update({
-          'ids': FieldValue.arrayRemove([productId])
-        });
 
-        return ResponseTypes.success.response;
-      } on FirebaseException catch (e) {
-        throw DBException(errorMessage: e.toString());
-      }
+      await fireStore
+          .collection(AppVariableNames.cart)
+          .doc(currentUser!.uid)
+          .update({
+        'ids': FieldValue.arrayRemove([productId])
+      });
+
+      return ResponseTypes.success.response;
     } on FirebaseAuthException catch (e) {
       throw AuthException(errorMessage: e.toString());
+    } on FirebaseException catch (e) {
+      throw DBException(errorMessage: e.toString());
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -112,35 +154,49 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
   Future<List<ProductModel>> getAllCartedItemsDetailsById() async {
     try {
       final currentUser = auth.currentUser;
-      try {
-        final cartedIdsDocuments = await fireStore
-            .collection(AppVariableNames.cart)
-            .doc(currentUser!.uid)
-            .get();
 
-        List<ProductModel> cartedItemsDetailsList = [];
+      final cartedIdsDocuments = await fireStore
+          .collection(AppVariableNames.cart)
+          .doc(currentUser!.uid)
+          .get();
 
-        if (cartedIdsDocuments.exists) {
-          for (final id in (cartedIdsDocuments['ids'] as List)) {
-            final result = await fireStore.collection('products').doc(id).get();
-            ProductModel product = ProductModel.fromDocument(result);
+      List<ProductModel> cartedItemsDetailsList = [];
 
-            if (product.status == ProductStatus.active.product) {
-              cartedItemsDetailsList.add(
-                ProductModel.fromDocument(result),
-              );
-            } else {
-              removeProductFromCart(id);
-            }
+      if (cartedIdsDocuments.exists) {
+        for (final id in (cartedIdsDocuments['ids'] as List)) {
+          final result = await fireStore.collection('products').doc(id).get();
+          ProductModel product = ProductModel.fromDocument(result);
+
+          if (product.status == ProductStatus.active.product) {
+            cartedItemsDetailsList.add(
+              ProductModel.fromDocument(result),
+            );
+          } else {
+            removeProductFromCart(id);
           }
         }
-
-        return cartedItemsDetailsList;
-      } on FirebaseException catch (e) {
-        throw DBException(errorMessage: e.toString());
       }
+
+      return cartedItemsDetailsList;
     } on FirebaseAuthException catch (e) {
       throw AuthException(errorMessage: e.toString());
+    } on FirebaseException catch (e) {
+      throw DBException(errorMessage: e.toString());
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -149,49 +205,63 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
       String price) async {
     try {
       final currentUser = auth.currentUser;
-      try {
-        final purchaseId = const Uuid().v4();
 
-        final cartedProductIdsList = await getCartedItems();
+      final purchaseId = const Uuid().v4();
 
-        CollectionReference purchaseCollection =
-            fireStore.collection(AppVariableNames.purchase);
+      final cartedProductIdsList = await getCartedItems();
 
-        await purchaseCollection
-            .doc(currentUser!.uid)
-            .set({"id": currentUser.uid});
+      CollectionReference purchaseCollection =
+          fireStore.collection(AppVariableNames.purchase);
 
+      await purchaseCollection
+          .doc(currentUser!.uid)
+          .set({"id": currentUser.uid});
+
+      await purchaseCollection
+          .doc(currentUser.uid)
+          .collection(AppVariableNames.history)
+          .doc(purchaseId)
+          .set({
+        'purchaseId': purchaseId,
+        'date': DateTime.timestamp(),
+        'price': price,
+      });
+
+      for (final productId in cartedProductIdsList) {
         await purchaseCollection
             .doc(currentUser.uid)
             .collection(AppVariableNames.history)
             .doc(purchaseId)
-            .set({
-          'purchaseId': purchaseId,
-          'date': DateTime.timestamp(),
-          'price': price,
+            .update({
+          'ids': FieldValue.arrayUnion([productId])
         });
-
-        for (final productId in cartedProductIdsList) {
-          await purchaseCollection
-              .doc(currentUser.uid)
-              .collection(AppVariableNames.history)
-              .doc(purchaseId)
-              .update({
-            'ids': FieldValue.arrayUnion([productId])
-          });
-        }
-
-        await fireStore
-            .collection(AppVariableNames.cart)
-            .doc(currentUser.uid)
-            .delete();
-
-        return ResponseTypes.success.response;
-      } on FirebaseException catch (e) {
-        throw DBException(errorMessage: e.toString());
       }
+
+      await fireStore
+          .collection(AppVariableNames.cart)
+          .doc(currentUser.uid)
+          .delete();
+
+      return ResponseTypes.success.response;
     } on FirebaseAuthException catch (e) {
       throw AuthException(errorMessage: e.toString());
+    } on FirebaseException catch (e) {
+      throw DBException(errorMessage: e.toString());
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 }
