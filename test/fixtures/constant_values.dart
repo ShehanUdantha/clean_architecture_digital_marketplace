@@ -5,8 +5,11 @@ import 'package:Pixelcart/src/data/models/product/product_model.dart';
 import 'package:Pixelcart/src/data/models/product/purchase_products_model.dart';
 import 'package:Pixelcart/src/data/models/stripe/stripe_model.dart';
 import 'package:Pixelcart/src/data/models/user/user_model.dart';
+import 'package:Pixelcart/src/domain/entities/category/category_entity.dart';
 import 'package:Pixelcart/src/domain/entities/notification/notification_entity.dart';
 import 'package:Pixelcart/src/domain/entities/product/product_entity.dart';
+import 'package:Pixelcart/src/domain/entities/stripe/stripe_entity.dart';
+import 'package:Pixelcart/src/domain/entities/user/user_entity.dart';
 import 'package:Pixelcart/src/domain/usecases/auth/sign_in_params.dart';
 import 'package:Pixelcart/src/domain/usecases/auth/sign_up_params.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -103,6 +106,16 @@ const userDetailsDummyModel = UserModel(
 const String userTypeAdmin = 'Admin';
 const String dummyUserIdToGetUserType = 'user_02';
 
+//  user entity
+const userDetailsDummyEntity = UserEntity(
+  userId: 'user_06',
+  userType: 'User',
+  userName: 'Sam Smith',
+  email: 'sam.smith@example.com',
+  password: 'password90',
+  deviceToken: 'token342',
+);
+
 // payments
 const double paymentAmount = 1000.00;
 
@@ -110,7 +123,15 @@ const dummyStripeModel = StripeModel(
   id: 'stripe_12345',
   amount: 1000,
   client_secret: 'sk_test_4eC39HqLyjWDjt',
-  currency: 'INR',
+  currency: 'USD',
+);
+
+// stripe entity
+const dummyStripeEntity = StripeEntity(
+  id: 'stripe_12345',
+  amount: 1000,
+  client_secret: 'sk_test_4eC39HqLyjWDjt',
+  currency: 'USD',
 );
 
 // products
@@ -226,6 +247,7 @@ const ProductEntity dummyProductEntityForEdit = ProductEntity(
   dateCreated: '2025-01-19',
   likes: ['user_01'],
   status: 'active',
+  sharedSubImages: [],
 );
 
 const List<ProductModel> dummyFontsCategoryProducts = [
@@ -315,6 +337,14 @@ final List<PurchaseProductsModel> dummyPurchasedProducts = [
   ),
 ];
 
+// purchase product entity
+final dummyPurchaseProductEntity = PurchaseProductsModel(
+  purchaseId: '23434',
+  price: '2000.00',
+  dateCreated: Timestamp.fromDate(DateTime(2025, 3, 8, 2, 0, 0)),
+  products: ['product_003', 'product_001'],
+);
+
 const List<String> fakeProductIdList = ['product_003', 'product_002'];
 
 const double fakeTotalPurchaseAmount = 10000.00;
@@ -377,6 +407,13 @@ final List<CategoryModel> dummyCategories = [
   ),
 ];
 
+// category entity
+const dummyCategoryEntity = CategoryEntity(
+  id: '34534',
+  name: 'Fonts',
+  dateCreated: '2025-01-16',
+);
+
 // notifications
 const String dummyUserIdToGetNotifications = 'user_02';
 
@@ -402,6 +439,7 @@ final dummyNotifications = [
   ),
 ];
 
+// notification entity
 const NotificationEntity dummyNotificationEntity = NotificationEntity(
   title: 'Maintenance Scheduled',
   description:
