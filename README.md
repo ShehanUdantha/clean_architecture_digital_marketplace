@@ -46,8 +46,8 @@ Admin View
 - Access Admin Dashboard
 - Manage Products
 - Manage Categories
-- Manage Users Manage
-- Notifications
+- Manage Users
+- Manage Notifications
 - Change Theme
 - Change Language
 

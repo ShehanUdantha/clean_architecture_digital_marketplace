@@ -106,6 +106,24 @@ const userDetailsDummyModel = UserModel(
 const String userTypeAdmin = 'Admin';
 const String dummyUserIdToGetUserType = 'user_02';
 
+const userDetailsDummy = UserModel(
+  userId: 'user_06',
+  userType: 'User',
+  userName: 'Sam Smith',
+  email: 'sam.smith@example.com',
+  password: 'password90',
+  deviceToken: 'token342',
+);
+
+const userDetailsDummyJson = {
+  'userId': 'user_06',
+  'userType': 'User',
+  'userName': 'Sam Smith',
+  'email': 'sam.smith@example.com',
+  'password': 'password90',
+  'deviceToken': 'token342',
+};
+
 //  user entity
 const userDetailsDummyEntity = UserEntity(
   userId: 'user_06',
@@ -125,6 +143,13 @@ const dummyStripeModel = StripeModel(
   client_secret: 'sk_test_4eC39HqLyjWDjt',
   currency: 'USD',
 );
+
+const dummyStripeJson = {
+  'id': 'stripe_12345',
+  'amount': 1000,
+  'client_secret': 'sk_test_4eC39HqLyjWDjt',
+  'currency': 'USD',
+};
 
 // stripe entity
 const dummyStripeEntity = StripeEntity(
@@ -212,6 +237,42 @@ const ProductModel dummyProduct = ProductModel(
   dateCreated: '2025-01-18',
   likes: ['user_01', 'user_02'],
   status: 'active',
+);
+
+final dummyProductJson = {
+  'id': 'product_001',
+  'productName': 'Product One',
+  'price': '999.99',
+  'category': 'Mockups',
+  'marketingType': 'Trending',
+  'description': 'Product One description',
+  'coverImage': 'https://example.com/images/cover/x_1.jpg',
+  'subImages': [
+    'https://example.com/images/sub/x_1.jpg',
+    'https://example.com/images/sub/x_2.jpg',
+  ],
+  'zipFile': 'https://example.com/files/x_1.zip',
+  'dateCreated': '2025-01-18',
+  'likes': ['user_01', 'user_02'],
+  'status': 'active',
+};
+
+const ProductModel dummyProductTwo = ProductModel(
+  id: null,
+  productName: 'Product Four',
+  price: '200.00',
+  category: 'Mockups',
+  marketingType: 'Trending',
+  description: 'Product Four description',
+  coverImage: 'document/y_1.jpg',
+  subImages: [
+    'document/y_2.jpg',
+    'document/y_3.jpg',
+  ],
+  zipFile: 'document/y_4.zip',
+  dateCreated: '2025-01-19',
+  likes: [],
+  status: '',
 );
 
 const ProductEntity dummyProductEntity = ProductEntity(
@@ -337,6 +398,20 @@ final List<PurchaseProductsModel> dummyPurchasedProducts = [
   ),
 ];
 
+final dummyPurchaseProduct = PurchaseProductsModel(
+  purchaseId: '23434',
+  price: '2000.00',
+  dateCreated: Timestamp.fromDate(DateTime(2025, 3, 8, 2, 0, 0)),
+  products: ['product_003', 'product_001'],
+);
+
+final dummyPurchaseProductJson = {
+  'purchaseId': '23434',
+  'price': '2000.00',
+  'date': Timestamp.fromDate(DateTime(2025, 3, 8, 2, 0, 0)),
+  'ids': ['product_003', 'product_001'],
+};
+
 // purchase product entity
 final dummyPurchaseProductEntity = PurchaseProductsModel(
   purchaseId: '23434',
@@ -407,6 +482,18 @@ final List<CategoryModel> dummyCategories = [
   ),
 ];
 
+const dummyCategory = CategoryModel(
+  id: '34534',
+  name: 'Fonts',
+  dateCreated: '2025-01-16',
+);
+
+const dummyCategoryJson = {
+  'id': '34534',
+  'name': 'Fonts',
+  'dateCreated': '2025-01-16',
+};
+
 // category entity
 const dummyCategoryEntity = CategoryEntity(
   id: '34534',
@@ -439,8 +526,32 @@ final dummyNotifications = [
   ),
 ];
 
+const dummyNotification = NotificationModel(
+  id: 'notification_002',
+  title: 'Maintenance Scheduled',
+  description:
+      'We have a scheduled maintenance on January 20th, 2025, from 2 AM to 5 AM.',
+  dateCreated: '2025-01-19',
+);
+
+const dummyNotificationJson = {
+  'id': 'notification_002',
+  'title': 'Maintenance Scheduled',
+  'description':
+      'We have a scheduled maintenance on January 20th, 2025, from 2 AM to 5 AM.',
+  'dateCreated': '2025-01-19',
+};
+
 // notification entity
-const NotificationEntity dummyNotificationEntity = NotificationEntity(
+const dummyNotificationEntity = NotificationEntity(
+  title: 'Maintenance Scheduled',
+  description:
+      'We have a scheduled maintenance on January 20th, 2025, from 2 AM to 5 AM.',
+  dateCreated: '2025-01-19',
+);
+
+const dummyNotificationEntityTwo = NotificationEntity(
+  id: 'notification_002',
   title: 'Maintenance Scheduled',
   description:
       'We have a scheduled maintenance on January 20th, 2025, from 2 AM to 5 AM.',
