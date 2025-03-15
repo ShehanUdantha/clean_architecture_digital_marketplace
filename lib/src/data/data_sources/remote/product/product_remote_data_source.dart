@@ -86,8 +86,25 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
       } else {
         return ResponseTypes.failure.response;
       }
+    } on FirebaseAuthException catch (e) {
+      throw AuthException(errorMessage: e.toString());
     } on FirebaseException catch (e) {
       throw DBException(errorMessage: e.toString());
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -95,47 +112,89 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
     List<Uint8List> images,
     String id,
   ) async {
-    var imageUrls = await Future.wait(
-      images.map((image) {
-        return uploadImage(image, id);
-      }),
-    );
-    return imageUrls;
+    try {
+      var imageUrls = await Future.wait(
+        images.map((image) {
+          return uploadImage(image, id);
+        }),
+      );
+      return imageUrls;
+    } on FirebaseException catch (e) {
+      throw DBException(errorMessage: e.toString());
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
+    }
   }
 
   Future<String> uploadImage(
     Uint8List file,
     String productId,
   ) async {
-    Reference reference = storage
-        .ref()
-        .child('product')
-        .child(productId)
-        .child(const Uuid().v4());
+    try {
+      Reference reference = storage
+          .ref()
+          .child('product')
+          .child(productId)
+          .child(const Uuid().v4());
 
-    // image uploaded and store
-    UploadTask task = reference.putData(file);
-    TaskSnapshot snapshot = await task;
-    // get downloadable url from stored image
-    String downloadableUrl = await snapshot.ref.getDownloadURL();
+      // image uploaded and store
+      UploadTask task = reference.putData(file);
+      TaskSnapshot snapshot = await task;
+      // get downloadable url from stored image
+      String downloadableUrl = await snapshot.ref.getDownloadURL();
 
-    return downloadableUrl;
+      return downloadableUrl;
+    } on FirebaseException catch (e) {
+      throw DBException(errorMessage: e.toString());
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
+    }
   }
 
   Future<String> uploadFile(
     File file,
     String productId,
   ) async {
-    Reference reference =
-        storage.ref().child('product').child(productId).child(file.path);
+    try {
+      Reference reference =
+          storage.ref().child('product').child(productId).child(file.path);
 
-    // file uploaded and store
-    UploadTask task = reference.putFile(file);
-    TaskSnapshot snapshot = await task;
-    // get downloadable url from stored file
-    String downloadableUrl = await snapshot.ref.getDownloadURL();
+      // file uploaded and store
+      UploadTask task = reference.putFile(file);
+      TaskSnapshot snapshot = await task;
+      // get downloadable url from stored file
+      String downloadableUrl = await snapshot.ref.getDownloadURL();
 
-    return downloadableUrl;
+      return downloadableUrl;
+    } on FirebaseException catch (e) {
+      throw DBException(errorMessage: e.toString());
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
+    }
   }
 
   @override
@@ -154,8 +213,25 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
 
       return List<ProductModel>.from(
           (result.docs).map((e) => ProductModel.fromMap(e)));
+    } on FirebaseAuthException catch (e) {
+      throw AuthException(errorMessage: e.toString());
     } on FirebaseException catch (e) {
       throw DBException(errorMessage: e.toString());
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -170,8 +246,25 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
       });
 
       return ResponseTypes.success.response;
+    } on FirebaseAuthException catch (e) {
+      throw AuthException(errorMessage: e.toString());
     } on FirebaseException catch (e) {
       throw DBException(errorMessage: e.toString());
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -187,8 +280,25 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
 
       return List<ProductModel>.from(
           (result.docs).map((e) => ProductModel.fromMap(e)));
+    } on FirebaseAuthException catch (e) {
+      throw AuthException(errorMessage: e.toString());
     } on FirebaseException catch (e) {
       throw DBException(errorMessage: e.toString());
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -210,8 +320,25 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
             .map((e) => ProductModel.fromMap(e))
             .where((product) => product.status == ProductStatus.active.product),
       );
+    } on FirebaseAuthException catch (e) {
+      throw AuthException(errorMessage: e.toString());
     } on FirebaseException catch (e) {
       throw DBException(errorMessage: e.toString());
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -224,8 +351,25 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
           .get();
 
       return ProductModel.fromDocument(result);
+    } on FirebaseAuthException catch (e) {
+      throw AuthException(errorMessage: e.toString());
     } on FirebaseException catch (e) {
       throw DBException(errorMessage: e.toString());
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -233,48 +377,62 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   Future<ProductModel> addFavorite(String productId) async {
     try {
       final currentUser = auth.currentUser;
-      try {
+
+      final result = await fireStore
+          .collection(AppVariableNames.products)
+          .doc(productId)
+          .get();
+
+      final product = ProductModel.fromDocument(result);
+
+      if (product.likes.contains(currentUser!.uid)) {
+        await fireStore
+            .collection(AppVariableNames.products)
+            .doc(productId)
+            .update({
+          'likes': FieldValue.arrayRemove([currentUser.uid]),
+        });
+
         final result = await fireStore
             .collection(AppVariableNames.products)
             .doc(productId)
             .get();
 
-        final product = ProductModel.fromDocument(result);
+        return ProductModel.fromDocument(result);
+      } else {
+        await fireStore
+            .collection(AppVariableNames.products)
+            .doc(productId)
+            .update({
+          'likes': FieldValue.arrayUnion([currentUser.uid]),
+        });
 
-        if (product.likes.contains(currentUser!.uid)) {
-          await fireStore
-              .collection(AppVariableNames.products)
-              .doc(productId)
-              .update({
-            'likes': FieldValue.arrayRemove([currentUser.uid]),
-          });
+        final result = await fireStore
+            .collection(AppVariableNames.products)
+            .doc(productId)
+            .get();
 
-          final result = await fireStore
-              .collection(AppVariableNames.products)
-              .doc(productId)
-              .get();
-
-          return ProductModel.fromDocument(result);
-        } else {
-          await fireStore
-              .collection(AppVariableNames.products)
-              .doc(productId)
-              .update({
-            'likes': FieldValue.arrayUnion([currentUser.uid]),
-          });
-
-          final result = await fireStore
-              .collection(AppVariableNames.products)
-              .doc(productId)
-              .get();
-
-          return ProductModel.fromDocument(result);
-        }
-      } on FirebaseException catch (e) {
-        throw DBException(errorMessage: e.toString());
+        return ProductModel.fromDocument(result);
       }
     } on FirebaseAuthException catch (e) {
       throw AuthException(errorMessage: e.toString());
+    } on FirebaseException catch (e) {
+      throw DBException(errorMessage: e.toString());
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -312,8 +470,25 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
       } else {
         return ResponseTypes.failure.response;
       }
+    } on FirebaseAuthException catch (e) {
+      throw AuthException(errorMessage: e.toString());
     } on FirebaseException catch (e) {
       throw DBException(errorMessage: e.toString());
+    } on AuthException catch (e) {
+      throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } on DBException catch (e) {
+      throw DBException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw DBException(
+        errorMessage: e.toString(),
+        stackTrace: stackTrace,
+      );
     }
   }
 

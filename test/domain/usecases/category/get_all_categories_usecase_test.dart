@@ -40,7 +40,7 @@ void main() {
     'should return a Failure when the get all categories process fails',
     () async {
       // Arrange
-      final failure = StripeFailure(
+      final failure = FirebaseFailure(
         errorMessage: 'Get all categories failed',
       );
       when(mockCategoryRepository.getAllCategories())

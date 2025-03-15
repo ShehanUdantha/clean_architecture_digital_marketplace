@@ -5,8 +5,11 @@ import 'package:Pixelcart/src/data/models/product/product_model.dart';
 import 'package:Pixelcart/src/data/models/product/purchase_products_model.dart';
 import 'package:Pixelcart/src/data/models/stripe/stripe_model.dart';
 import 'package:Pixelcart/src/data/models/user/user_model.dart';
+import 'package:Pixelcart/src/domain/entities/category/category_entity.dart';
 import 'package:Pixelcart/src/domain/entities/notification/notification_entity.dart';
 import 'package:Pixelcart/src/domain/entities/product/product_entity.dart';
+import 'package:Pixelcart/src/domain/entities/stripe/stripe_entity.dart';
+import 'package:Pixelcart/src/domain/entities/user/user_entity.dart';
 import 'package:Pixelcart/src/domain/usecases/auth/sign_in_params.dart';
 import 'package:Pixelcart/src/domain/usecases/auth/sign_up_params.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,6 +22,8 @@ const signUpParams = SignUpParams(
 );
 
 // sign in
+const userId = 'sampleId123';
+
 const signInParams = SignInParams(
   email: 'test@example.com',
   password: 'password123',
@@ -103,6 +108,34 @@ const userDetailsDummyModel = UserModel(
 const String userTypeAdmin = 'Admin';
 const String dummyUserIdToGetUserType = 'user_02';
 
+const userDetailsDummy = UserModel(
+  userId: 'user_06',
+  userType: 'User',
+  userName: 'Sam Smith',
+  email: 'sam.smith@example.com',
+  password: 'password90',
+  deviceToken: 'token342',
+);
+
+const userDetailsDummyJson = {
+  'userId': 'user_06',
+  'userType': 'User',
+  'userName': 'Sam Smith',
+  'email': 'sam.smith@example.com',
+  'password': 'password90',
+  'deviceToken': 'token342',
+};
+
+//  user entity
+const userDetailsDummyEntity = UserEntity(
+  userId: 'user_06',
+  userType: 'User',
+  userName: 'Sam Smith',
+  email: 'sam.smith@example.com',
+  password: 'password90',
+  deviceToken: 'token342',
+);
+
 // payments
 const double paymentAmount = 1000.00;
 
@@ -110,7 +143,22 @@ const dummyStripeModel = StripeModel(
   id: 'stripe_12345',
   amount: 1000,
   client_secret: 'sk_test_4eC39HqLyjWDjt',
-  currency: 'INR',
+  currency: 'USD',
+);
+
+const dummyStripeJson = {
+  'id': 'stripe_12345',
+  'amount': 1000,
+  'client_secret': 'sk_test_4eC39HqLyjWDjt',
+  'currency': 'USD',
+};
+
+// stripe entity
+const dummyStripeEntity = StripeEntity(
+  id: 'stripe_12345',
+  amount: 1000,
+  client_secret: 'sk_test_4eC39HqLyjWDjt',
+  currency: 'USD',
 );
 
 // products
@@ -193,6 +241,42 @@ const ProductModel dummyProduct = ProductModel(
   status: 'active',
 );
 
+final dummyProductJson = {
+  'id': 'product_001',
+  'productName': 'Product One',
+  'price': '999.99',
+  'category': 'Mockups',
+  'marketingType': 'Trending',
+  'description': 'Product One description',
+  'coverImage': 'https://example.com/images/cover/x_1.jpg',
+  'subImages': [
+    'https://example.com/images/sub/x_1.jpg',
+    'https://example.com/images/sub/x_2.jpg',
+  ],
+  'zipFile': 'https://example.com/files/x_1.zip',
+  'dateCreated': '2025-01-18',
+  'likes': ['user_01', 'user_02'],
+  'status': 'active',
+};
+
+const ProductModel dummyProductTwo = ProductModel(
+  id: null,
+  productName: 'Product Four',
+  price: '200.00',
+  category: 'Mockups',
+  marketingType: 'Trending',
+  description: 'Product Four description',
+  coverImage: 'document/y_1.jpg',
+  subImages: [
+    'document/y_2.jpg',
+    'document/y_3.jpg',
+  ],
+  zipFile: 'document/y_4.zip',
+  dateCreated: '2025-01-19',
+  likes: [],
+  status: '',
+);
+
 const ProductEntity dummyProductEntity = ProductEntity(
   productName: 'Product Four',
   price: '200.00',
@@ -226,6 +310,7 @@ const ProductEntity dummyProductEntityForEdit = ProductEntity(
   dateCreated: '2025-01-19',
   likes: ['user_01'],
   status: 'active',
+  sharedSubImages: [],
 );
 
 const List<ProductModel> dummyFontsCategoryProducts = [
@@ -315,6 +400,28 @@ final List<PurchaseProductsModel> dummyPurchasedProducts = [
   ),
 ];
 
+final dummyPurchaseProduct = PurchaseProductsModel(
+  purchaseId: '23434',
+  price: '2000.00',
+  dateCreated: Timestamp.fromDate(DateTime(2025, 3, 8, 2, 0, 0)),
+  products: ['product_003', 'product_001'],
+);
+
+final dummyPurchaseProductJson = {
+  'purchaseId': '23434',
+  'price': '2000.00',
+  'date': Timestamp.fromDate(DateTime(2025, 3, 8, 2, 0, 0)),
+  'ids': ['product_003', 'product_001'],
+};
+
+// purchase product entity
+final dummyPurchaseProductEntity = PurchaseProductsModel(
+  purchaseId: '23434',
+  price: '2000.00',
+  dateCreated: Timestamp.fromDate(DateTime(2025, 3, 8, 2, 0, 0)),
+  products: ['product_003', 'product_001'],
+);
+
 const List<String> fakeProductIdList = ['product_003', 'product_002'];
 
 const double fakeTotalPurchaseAmount = 10000.00;
@@ -377,6 +484,25 @@ final List<CategoryModel> dummyCategories = [
   ),
 ];
 
+const dummyCategory = CategoryModel(
+  id: '34534',
+  name: 'Fonts',
+  dateCreated: '2025-01-16',
+);
+
+const dummyCategoryJson = {
+  'id': '34534',
+  'name': 'Fonts',
+  'dateCreated': '2025-01-16',
+};
+
+// category entity
+const dummyCategoryEntity = CategoryEntity(
+  id: '34534',
+  name: 'Fonts',
+  dateCreated: '2025-01-16',
+);
+
 // notifications
 const String dummyUserIdToGetNotifications = 'user_02';
 
@@ -402,7 +528,32 @@ final dummyNotifications = [
   ),
 ];
 
-const NotificationEntity dummyNotificationEntity = NotificationEntity(
+const dummyNotification = NotificationModel(
+  id: 'notification_002',
+  title: 'Maintenance Scheduled',
+  description:
+      'We have a scheduled maintenance on January 20th, 2025, from 2 AM to 5 AM.',
+  dateCreated: '2025-01-19',
+);
+
+const dummyNotificationJson = {
+  'id': 'notification_002',
+  'title': 'Maintenance Scheduled',
+  'description':
+      'We have a scheduled maintenance on January 20th, 2025, from 2 AM to 5 AM.',
+  'dateCreated': '2025-01-19',
+};
+
+// notification entity
+const dummyNotificationEntity = NotificationEntity(
+  title: 'Maintenance Scheduled',
+  description:
+      'We have a scheduled maintenance on January 20th, 2025, from 2 AM to 5 AM.',
+  dateCreated: '2025-01-19',
+);
+
+const dummyNotificationEntityTwo = NotificationEntity(
+  id: 'notification_002',
   title: 'Maintenance Scheduled',
   description:
       'We have a scheduled maintenance on January 20th, 2025, from 2 AM to 5 AM.',

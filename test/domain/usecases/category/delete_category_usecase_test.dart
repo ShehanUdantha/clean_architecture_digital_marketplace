@@ -41,7 +41,7 @@ void main() {
     'should return a Failure when the delete category process fails',
     () async {
       // Arrange
-      final failure = StripeFailure(
+      final failure = FirebaseFailure(
         errorMessage: 'Delete category failed',
       );
       when(mockCategoryRepository.deleteCategory(fakeProductCategoryId))

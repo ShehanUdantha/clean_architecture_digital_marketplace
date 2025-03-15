@@ -1,36 +1,44 @@
-abstract class Failure {
+import 'package:equatable/equatable.dart';
+
+abstract class Failure extends Equatable {
   final String errorMessage;
   final StackTrace? stackTrace;
 
-  Failure({
+  const Failure({
     required this.errorMessage,
     this.stackTrace,
   });
+
+  @override
+  List<Object?> get props => [
+        errorMessage,
+        stackTrace,
+      ];
 }
 
 class FirebaseFailure extends Failure {
-  FirebaseFailure({
+  const FirebaseFailure({
     required super.errorMessage,
     super.stackTrace,
   });
 }
 
 class StripeFailure extends Failure {
-  StripeFailure({
+  const StripeFailure({
     required super.errorMessage,
     super.stackTrace,
   });
 }
 
 class APIFailure extends Failure {
-  APIFailure({
+  const APIFailure({
     required super.errorMessage,
     super.stackTrace,
   });
 }
 
 class LocalDBFailure extends Failure {
-  LocalDBFailure({
+  const LocalDBFailure({
     required super.errorMessage,
     super.stackTrace,
   });
