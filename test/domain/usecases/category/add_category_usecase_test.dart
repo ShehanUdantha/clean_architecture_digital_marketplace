@@ -41,7 +41,7 @@ void main() {
     'should return a Failure when the add category process fails',
     () async {
       // Arrange
-      final failure = StripeFailure(
+      final failure = FirebaseFailure(
         errorMessage: 'Add category failed',
       );
       when(mockCategoryRepository.addCategory(dummyProductCategoryType))

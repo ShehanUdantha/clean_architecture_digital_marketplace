@@ -22,6 +22,8 @@ const signUpParams = SignUpParams(
 );
 
 // sign in
+const userId = 'sampleId123';
+
 const signInParams = SignInParams(
   email: 'test@example.com',
   password: 'password123',

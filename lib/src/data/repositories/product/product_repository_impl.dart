@@ -18,8 +18,20 @@ class ProductRepositoryImpl implements ProductRepository {
     try {
       final result = await productRemoteDataSource.addProduct(productEntity);
       return Right(result);
+    } on AuthException catch (e) {
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     } on DBException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     }
   }
 
@@ -29,8 +41,20 @@ class ProductRepositoryImpl implements ProductRepository {
     try {
       final result = await productRemoteDataSource.getAllProducts(category);
       return Right(result);
+    } on AuthException catch (e) {
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     } on DBException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     }
   }
 
@@ -39,8 +63,20 @@ class ProductRepositoryImpl implements ProductRepository {
     try {
       final result = await productRemoteDataSource.deleteProduct(id);
       return Right(result);
+    } on AuthException catch (e) {
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     } on DBException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     }
   }
 
@@ -51,8 +87,20 @@ class ProductRepositoryImpl implements ProductRepository {
       final result = await productRemoteDataSource
           .getProductByMarketingTypes(marketingType);
       return Right(result);
+    } on AuthException catch (e) {
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     } on DBException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     }
   }
 
@@ -62,8 +110,20 @@ class ProductRepositoryImpl implements ProductRepository {
     try {
       final result = await productRemoteDataSource.getProductByQuery(query);
       return Right(result);
+    } on AuthException catch (e) {
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     } on DBException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     }
   }
 
@@ -72,22 +132,42 @@ class ProductRepositoryImpl implements ProductRepository {
     try {
       final result = await productRemoteDataSource.getProductDetailsById(id);
       return Right(result);
+    } on AuthException catch (e) {
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     } on DBException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     }
   }
 
   @override
   Future<Either<Failure, ProductModel>> addFavorite(String id) async {
     try {
-      try {
-        final result = await productRemoteDataSource.addFavorite(id);
-        return Right(result);
-      } on DBException catch (e) {
-        return Left(FirebaseFailure(errorMessage: e.errorMessage));
-      }
+      final result = await productRemoteDataSource.addFavorite(id);
+      return Right(result);
     } on AuthException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
+    } on DBException catch (e) {
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     }
   }
 
@@ -97,8 +177,20 @@ class ProductRepositoryImpl implements ProductRepository {
     try {
       final result = await productRemoteDataSource.editProduct(productEntity);
       return Right(result);
+    } on AuthException catch (e) {
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     } on DBException catch (e) {
-      return Left(FirebaseFailure(errorMessage: e.errorMessage));
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     }
   }
 }

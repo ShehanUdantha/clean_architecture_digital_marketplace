@@ -21,7 +21,7 @@ class NotificationCountRepositoryImpl implements NotificationCountRepository {
       return Right(result);
     } on DBException catch (e) {
       return Left(
-        FirebaseFailure(
+        LocalDBFailure(
           errorMessage: e.errorMessage,
           stackTrace: e.stackTrace,
         ),
@@ -37,7 +37,7 @@ class NotificationCountRepositoryImpl implements NotificationCountRepository {
       return Right(result);
     } on DBException catch (e) {
       return Left(
-        FirebaseFailure(
+        LocalDBFailure(
           errorMessage: e.errorMessage,
           stackTrace: e.stackTrace,
         ),
@@ -53,7 +53,7 @@ class NotificationCountRepositoryImpl implements NotificationCountRepository {
       return Right(result);
     } on DBException catch (e) {
       return Left(
-        FirebaseFailure(
+        LocalDBFailure(
           errorMessage: e.errorMessage,
           stackTrace: e.stackTrace,
         ),

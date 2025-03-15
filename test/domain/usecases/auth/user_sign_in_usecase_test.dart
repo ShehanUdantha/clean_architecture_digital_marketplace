@@ -26,7 +26,6 @@ void main() {
     'should return a User Id when the sign-in process is successful',
     () async {
       // Arrange
-      const userId = 'sampleId123';
       when(mockUserAuthRepository.signInUser(signInParams))
           .thenAnswer((_) async => const Right(userId));
 
