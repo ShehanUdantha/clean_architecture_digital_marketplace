@@ -29,12 +29,12 @@ void main() {
         'should return a Success status when a new product is successfully added to firestore',
         () async {
           // Arrange
-          when(mockProductRemoteDataSource.addProduct(dummyProductEntity))
+          when(mockProductRemoteDataSource.addProduct(addProductParams))
               .thenAnswer((_) async => ResponseTypes.success.response);
 
           // Act
           final result =
-              await productRepositoryImpl.addProduct(dummyProductEntity);
+              await productRepositoryImpl.addProduct(addProductParams);
 
           // Assert
           result.fold(
@@ -48,17 +48,44 @@ void main() {
         'should return a Failure status when attempting to add a product that already exists in firestore',
         () async {
           // Arrange
-          when(mockProductRemoteDataSource.addProduct(dummyProductEntity))
+          when(mockProductRemoteDataSource.addProduct(addProductParams))
               .thenAnswer((_) async => ResponseTypes.failure.response);
 
           // Act
           final result =
-              await productRepositoryImpl.addProduct(dummyProductEntity);
+              await productRepositoryImpl.addProduct(addProductParams);
 
           // Assert
           result.fold(
             (l) => fail('test failed'),
             (r) => expect(r, ResponseTypes.failure.response),
+          );
+        },
+      );
+
+      test(
+        'should return a Failure status when adding a new product to firestore fails due to the unauthorized access',
+        () async {
+          // Arrange
+          final dbException = DBException(
+            errorMessage:
+                'Add new product failed - due to the unauthorized access',
+          );
+          when(mockProductRemoteDataSource.addProduct(addProductParamsTwo))
+              .thenThrow(dbException);
+
+          // Act
+          final result =
+              await productRepositoryImpl.addProduct(addProductParamsTwo);
+
+          // Assert
+          final failure = FirebaseFailure(
+            errorMessage:
+                'Add new product failed - due to the unauthorized access',
+          );
+          result.fold(
+            (l) => expect(l, failure),
+            (r) => fail('test failed'),
           );
         },
       );
@@ -70,12 +97,12 @@ void main() {
           final dbException = DBException(
             errorMessage: 'Add new product failed',
           );
-          when(mockProductRemoteDataSource.addProduct(dummyProductEntity))
+          when(mockProductRemoteDataSource.addProduct(addProductParams))
               .thenThrow(dbException);
 
           // Act
           final result =
-              await productRepositoryImpl.addProduct(dummyProductEntity);
+              await productRepositoryImpl.addProduct(addProductParams);
 
           // Assert
           final failure = FirebaseFailure(
@@ -148,17 +175,45 @@ void main() {
         'should return a Success Status when the delete product process is successful',
         () async {
           // Arrange
-          when(mockProductRemoteDataSource.deleteProduct(fakeProductId))
+          when(mockProductRemoteDataSource.deleteProduct(deleteProductParams))
               .thenAnswer((_) async => ResponseTypes.success.response);
 
           // Act
           final result =
-              await productRepositoryImpl.deleteProduct(fakeProductId);
+              await productRepositoryImpl.deleteProduct(deleteProductParams);
 
           // Assert
           result.fold(
             (l) => fail('test failed'),
             (r) => expect(r, ResponseTypes.success.response),
+          );
+        },
+      );
+
+      test(
+        'should return a Failure when the delete product process fails due to the unauthorized access',
+        () async {
+          // Arrange
+          final dBException = DBException(
+            errorMessage:
+                'Delete product failed - due to the unauthorized access',
+          );
+          when(mockProductRemoteDataSource
+                  .deleteProduct(deleteProductParamsTwo))
+              .thenThrow(dBException);
+
+          // Act
+          final result =
+              await productRepositoryImpl.deleteProduct(deleteProductParamsTwo);
+
+          // Assert
+          final failure = FirebaseFailure(
+            errorMessage:
+                'Delete product failed - due to the unauthorized access',
+          );
+          result.fold(
+            (l) => expect(l, failure),
+            (r) => fail('test failed'),
           );
         },
       );
@@ -170,12 +225,12 @@ void main() {
           final dBException = DBException(
             errorMessage: 'Delete product failed',
           );
-          when(mockProductRemoteDataSource.deleteProduct(fakeProductId))
+          when(mockProductRemoteDataSource.deleteProduct(deleteProductParams))
               .thenThrow(dBException);
 
           // Act
           final result =
-              await productRepositoryImpl.deleteProduct(fakeProductId);
+              await productRepositoryImpl.deleteProduct(deleteProductParams);
 
           // Assert
           final failure = FirebaseFailure(
@@ -395,13 +450,12 @@ void main() {
         'should return a Success Status when the edit product process is successful',
         () async {
           // Arrange
-          when(mockProductRemoteDataSource
-                  .editProduct(dummyProductEntityForEdit))
+          when(mockProductRemoteDataSource.editProduct(editProductParams))
               .thenAnswer((_) async => ResponseTypes.success.response);
 
           // Act
-          final result = await productRepositoryImpl
-              .editProduct(dummyProductEntityForEdit);
+          final result =
+              await productRepositoryImpl.editProduct(editProductParams);
 
           // Assert
           result.fold(
@@ -415,18 +469,44 @@ void main() {
         'should return a Failure status when attempting to edit a product that does not exist in firestore',
         () async {
           // Arrange
-          when(mockProductRemoteDataSource
-                  .editProduct(dummyProductEntityForEdit))
+          when(mockProductRemoteDataSource.editProduct(editProductParams))
               .thenAnswer((_) async => ResponseTypes.failure.response);
 
           // Act
-          final result = await productRepositoryImpl
-              .editProduct(dummyProductEntityForEdit);
+          final result =
+              await productRepositoryImpl.editProduct(editProductParams);
 
           // Assert
           result.fold(
             (l) => fail('test failed'),
             (r) => expect(r, ResponseTypes.failure.response),
+          );
+        },
+      );
+
+      test(
+        'should return a Failure when the edit product process fails due to the unauthorized access',
+        () async {
+          // Arrange
+          final dBException = DBException(
+            errorMessage:
+                'Edit product failed - due to the unauthorized access',
+          );
+          when(mockProductRemoteDataSource.editProduct(editProductParamsTwo))
+              .thenThrow(dBException);
+
+          // Act
+          final result =
+              await productRepositoryImpl.editProduct(editProductParamsTwo);
+
+          // Assert
+          final failure = FirebaseFailure(
+            errorMessage:
+                'Edit product failed - due to the unauthorized access',
+          );
+          result.fold(
+            (l) => expect(l, failure),
+            (r) => fail('test failed'),
           );
         },
       );
@@ -438,13 +518,12 @@ void main() {
           final dBException = DBException(
             errorMessage: 'Edit product failed',
           );
-          when(mockProductRemoteDataSource
-                  .editProduct(dummyProductEntityForEdit))
+          when(mockProductRemoteDataSource.editProduct(editProductParams))
               .thenThrow(dBException);
 
           // Act
-          final result = await productRepositoryImpl
-              .editProduct(dummyProductEntityForEdit);
+          final result =
+              await productRepositoryImpl.editProduct(editProductParams);
 
           // Assert
           final failure = FirebaseFailure(

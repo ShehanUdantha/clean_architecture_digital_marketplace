@@ -1,3 +1,5 @@
+import '../../../domain/usecases/notification/delete_notification_params.dart';
+import '../../../domain/usecases/notification/send_notification_params.dart';
 import '../../data_sources/remote/notification/notification_remote_data_source.dart';
 import '../../../domain/entities/notification/notification_entity.dart';
 import '../../../domain/repositories/notification/notification_repository.dart';
@@ -13,10 +15,10 @@ class NotificationRepositoryImpl implements NotificationRepository {
 
   @override
   Future<Either<Failure, String>> sendNotification(
-      NotificationEntity notificationEntity) async {
+      SendNotificationParams sendNotificationParams) async {
     try {
       final result = await notificationRemoteDataSource
-          .sendNotification(notificationEntity);
+          .sendNotification(sendNotificationParams);
       return Right(result);
     } on AuthException catch (e) {
       return Left(
@@ -43,9 +45,11 @@ class NotificationRepositoryImpl implements NotificationRepository {
   }
 
   @override
-  Future<Either<Failure, String>> deleteNotification(String id) async {
+  Future<Either<Failure, String>> deleteNotification(
+      DeleteNotificationParams deleteNotificationParams) async {
     try {
-      final result = await notificationRemoteDataSource.deleteNotification(id);
+      final result = await notificationRemoteDataSource
+          .deleteNotification(deleteNotificationParams);
       return Right(result);
     } on AuthException catch (e) {
       return Left(

@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import '../../../domain/usecases/user/get_all_users_params.dart';
+
 import '../../../core/constants/variable_names.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -26,7 +28,12 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
   ) async {
     emit(state.copyWith(status: BlocStatus.loading));
 
-    final result = await getAllUsersUseCase.call(state.currentUserTypeName);
+    final getAllUsersParams = GetAllUsersParams(
+      userType: state.currentUserTypeName,
+      userId: event.userId,
+    );
+
+    final result = await getAllUsersUseCase.call(getAllUsersParams);
     result.fold(
       (l) => emit(
         state.copyWith(

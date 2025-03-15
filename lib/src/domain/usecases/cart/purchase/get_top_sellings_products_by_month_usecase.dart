@@ -1,3 +1,5 @@
+import 'year_and_month_params.dart';
+
 import '../../../entities/product/product_entity.dart';
 import 'package:dartz/dartz.dart';
 
@@ -13,9 +15,6 @@ class GetTopSellingProductsByMonthUseCase
   @override
   Future<Either<Failure, List<ProductEntity>>> call(
       YearAndMonthParams params) async {
-    return await purchaseRepository.getAllTopSellingProductsByMonth(
-      params.year,
-      params.month,
-    );
+    return await purchaseRepository.getAllTopSellingProductsByMonth(params);
   }
 }

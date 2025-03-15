@@ -1,6 +1,7 @@
 import '../../../../core/utils/extension.dart';
 
 import '../../../../core/constants/lists.dart';
+import '../../../blocs/auth/auth_bloc.dart';
 import 'line_chart_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -163,10 +164,21 @@ class MonthlyStatusWidget extends StatelessWidget {
           .read<AdminHomeBloc>()
           .add(UpdateYear(year: adminHomeState.year - 1));
     }
-    context.read<AdminHomeBloc>().add(GetMonthlyPurchaseStatus());
-    context.read<AdminHomeBloc>().add(GetMonthlyTotalBalance());
-    context.read<AdminHomeBloc>().add(GetMonthlyTotalBalancePercentage());
-    context.read<AdminHomeBloc>().add(GetMonthlyTopSellingProducts());
+
+    final getCurrentUserId = context.read<AuthBloc>().currentUserId ?? "-1";
+
+    context
+        .read<AdminHomeBloc>()
+        .add(GetMonthlyPurchaseStatus(userId: getCurrentUserId));
+    context
+        .read<AdminHomeBloc>()
+        .add(GetMonthlyTotalBalance(userId: getCurrentUserId));
+    context
+        .read<AdminHomeBloc>()
+        .add(GetMonthlyTotalBalancePercentage(userId: getCurrentUserId));
+    context
+        .read<AdminHomeBloc>()
+        .add(GetMonthlyTopSellingProducts(userId: getCurrentUserId));
   }
 
   _handleForWordMonthSelect(
@@ -183,9 +195,20 @@ class MonthlyStatusWidget extends StatelessWidget {
           .read<AdminHomeBloc>()
           .add(UpdateYear(year: adminHomeState.year + 1));
     }
-    context.read<AdminHomeBloc>().add(GetMonthlyPurchaseStatus());
-    context.read<AdminHomeBloc>().add(GetMonthlyTotalBalance());
-    context.read<AdminHomeBloc>().add(GetMonthlyTotalBalancePercentage());
-    context.read<AdminHomeBloc>().add(GetMonthlyTopSellingProducts());
+
+    final getCurrentUserId = context.read<AuthBloc>().currentUserId ?? "-1";
+
+    context
+        .read<AdminHomeBloc>()
+        .add(GetMonthlyPurchaseStatus(userId: getCurrentUserId));
+    context
+        .read<AdminHomeBloc>()
+        .add(GetMonthlyTotalBalance(userId: getCurrentUserId));
+    context
+        .read<AdminHomeBloc>()
+        .add(GetMonthlyTotalBalancePercentage(userId: getCurrentUserId));
+    context
+        .read<AdminHomeBloc>()
+        .add(GetMonthlyTopSellingProducts(userId: getCurrentUserId));
   }
 }

@@ -30,17 +30,45 @@ void main() {
         () async {
           // Arrange
           when(mockNotificationRemoteDataSource
-                  .sendNotification(dummyNotificationEntity))
+                  .sendNotification(sendNotificationParams))
               .thenAnswer((_) async => ResponseTypes.success.response);
 
           // Act
           final result = await notificationRepositoryImpl
-              .sendNotification(dummyNotificationEntity);
+              .sendNotification(sendNotificationParams);
 
           // Assert
           result.fold(
             (l) => fail('test failed'),
             (r) => expect(r, ResponseTypes.success.response),
+          );
+        },
+      );
+
+      test(
+        'should return a Failure when the send notification process fails due to the unauthorized access',
+        () async {
+          // Arrange
+          final dBException = DBException(
+            errorMessage:
+                'Send notification failed - due to the unauthorized access',
+          );
+          when(mockNotificationRemoteDataSource
+                  .sendNotification(sendNotificationParamsTwo))
+              .thenThrow(dBException);
+
+          // Act
+          final result = await notificationRepositoryImpl
+              .sendNotification(sendNotificationParamsTwo);
+
+          // Assert
+          final failure = FirebaseFailure(
+            errorMessage:
+                'Send notification failed - due to the unauthorized access',
+          );
+          result.fold(
+            (l) => expect(l, failure),
+            (r) => fail('test failed'),
           );
         },
       );
@@ -53,12 +81,12 @@ void main() {
             errorMessage: 'Send notification failed - (Firebase)',
           );
           when(mockNotificationRemoteDataSource
-                  .sendNotification(dummyNotificationEntity))
+                  .sendNotification(sendNotificationParams))
               .thenThrow(dBException);
 
           // Act
           final result = await notificationRepositoryImpl
-              .sendNotification(dummyNotificationEntity);
+              .sendNotification(sendNotificationParams);
 
           // Assert
           final failure = FirebaseFailure(
@@ -79,12 +107,12 @@ void main() {
             errorMessage: 'Send notification failed - (API)',
           );
           when(mockNotificationRemoteDataSource
-                  .sendNotification(dummyNotificationEntity))
+                  .sendNotification(sendNotificationParams))
               .thenThrow(apiException);
 
           // Act
           final result = await notificationRepositoryImpl
-              .sendNotification(dummyNotificationEntity);
+              .sendNotification(sendNotificationParams);
 
           // Assert
           final failure = APIFailure(
@@ -107,17 +135,45 @@ void main() {
         () async {
           // Arrange
           when(mockNotificationRemoteDataSource
-                  .deleteNotification(fakeNotificationId))
+                  .deleteNotification(deleteNotificationParams))
               .thenAnswer((_) async => ResponseTypes.success.response);
 
           // Act
           final result = await notificationRepositoryImpl
-              .deleteNotification(fakeNotificationId);
+              .deleteNotification(deleteNotificationParams);
 
           // Assert
           result.fold(
             (l) => fail('test failed'),
             (r) => expect(r, ResponseTypes.success.response),
+          );
+        },
+      );
+
+      test(
+        'should return a Failure when the delete notification process fails due to the unauthorized access',
+        () async {
+          // Arrange
+          final dBException = DBException(
+            errorMessage:
+                'Delete notification failed - due to the unauthorized access',
+          );
+          when(mockNotificationRemoteDataSource
+                  .deleteNotification(deleteNotificationParamsTwo))
+              .thenThrow(dBException);
+
+          // Act
+          final result = await notificationRepositoryImpl
+              .deleteNotification(deleteNotificationParamsTwo);
+
+          // Assert
+          final failure = FirebaseFailure(
+            errorMessage:
+                'Delete notification failed - due to the unauthorized access',
+          );
+          result.fold(
+            (l) => expect(l, failure),
+            (r) => fail('test failed'),
           );
         },
       );
@@ -130,12 +186,12 @@ void main() {
             errorMessage: 'Delete notification failed',
           );
           when(mockNotificationRemoteDataSource
-                  .deleteNotification(fakeNotificationId))
+                  .deleteNotification(deleteNotificationParams))
               .thenThrow(dBException);
 
           // Act
           final result = await notificationRepositoryImpl
-              .deleteNotification(fakeNotificationId);
+              .deleteNotification(deleteNotificationParams);
 
           // Assert
           final failure = FirebaseFailure(

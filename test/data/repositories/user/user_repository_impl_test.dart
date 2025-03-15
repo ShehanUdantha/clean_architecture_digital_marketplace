@@ -123,11 +123,13 @@ void main() {
         'should return an All type of users when the get all users (userType - "All Account") process is successful',
         () async {
           // Arrange
-          when(mockUserRemoteDataSource.getAllUsers(userTypeForAll))
+          when(mockUserRemoteDataSource
+                  .getAllUsers(getAllUsersParamsForAllTypes))
               .thenAnswer((_) async => allTypeOfDummyUsers);
 
           // Act
-          final result = await userRepositoryImpl.getAllUsers(userTypeForAll);
+          final result = await userRepositoryImpl
+              .getAllUsers(getAllUsersParamsForAllTypes);
 
           // Assert
           result.fold(
@@ -141,11 +143,13 @@ void main() {
         'should return Only users when the get all users (userType - "User") process is successful',
         () async {
           // Arrange
-          when(mockUserRemoteDataSource.getAllUsers(userTypeForUser))
+          when(mockUserRemoteDataSource
+                  .getAllUsers(getAllUsersParamsForUserTypes))
               .thenAnswer((_) async => onlyDummyUsers);
 
           // Act
-          final result = await userRepositoryImpl.getAllUsers(userTypeForUser);
+          final result = await userRepositoryImpl
+              .getAllUsers(getAllUsersParamsForUserTypes);
 
           // Assert
           result.fold(
@@ -159,16 +163,102 @@ void main() {
         'should return Only admins when the get all users (userType - "Admin") process is successful',
         () async {
           // Arrange
-          when(mockUserRemoteDataSource.getAllUsers(userTypeForAdmin))
+          when(mockUserRemoteDataSource
+                  .getAllUsers(getAllUsersParamsForAdminTypes))
               .thenAnswer((_) async => onlyDummyAdmins);
 
           // Act
-          final result = await userRepositoryImpl.getAllUsers(userTypeForAdmin);
+          final result = await userRepositoryImpl
+              .getAllUsers(getAllUsersParamsForAdminTypes);
 
           // Assert
           result.fold(
             (l) => fail('test failed'),
             (r) => expect(r, onlyDummyAdmins),
+          );
+        },
+      );
+
+      test(
+        'should return a Failure when the get all users (userType - "All Account") process is fails due to the unauthorized access',
+        () async {
+          // Arrange
+          final dbException = DBException(
+            errorMessage:
+                'Get all users (userType - "All Account") failed - due to the unauthorized access',
+          );
+          when(mockUserRemoteDataSource
+                  .getAllUsers(getAllUsersParamsForAllTypesTwo))
+              .thenThrow(dbException);
+
+          // Act
+          final result = await userRepositoryImpl
+              .getAllUsers(getAllUsersParamsForAllTypesTwo);
+
+          // Assert
+          final failure = FirebaseFailure(
+            errorMessage:
+                'Get all users (userType - "All Account") failed - due to the unauthorized access',
+          );
+          result.fold(
+            (l) => expect(l, failure),
+            (r) => fail('test failed'),
+          );
+        },
+      );
+
+      test(
+        'should return a Failure when the get all users (userType - "User") process is fails due to the unauthorized access',
+        () async {
+          // Arrange
+          final dbException = DBException(
+            errorMessage:
+                'Get all users (userType - "User") failed - due to the unauthorized access',
+          );
+          when(mockUserRemoteDataSource
+                  .getAllUsers(getAllUsersParamsForUserTypesTwo))
+              .thenThrow(dbException);
+
+          // Act
+          final result = await userRepositoryImpl
+              .getAllUsers(getAllUsersParamsForUserTypesTwo);
+
+          // Assert
+          final failure = FirebaseFailure(
+            errorMessage:
+                'Get all users (userType - "User") failed - due to the unauthorized access',
+          );
+          result.fold(
+            (l) => expect(l, failure),
+            (r) => fail('test failed'),
+          );
+        },
+      );
+
+      test(
+        'should return a Failure when the get all users (userType - "Admin") process is fails due to the unauthorized access',
+        () async {
+          // Arrange
+          final dbException = DBException(
+            errorMessage:
+                'Get all users (userType - "Admin") failed - due to the unauthorized access',
+          );
+          when(mockUserRemoteDataSource
+                  .getAllUsers(getAllUsersParamsForAdminTypesTwo))
+              .thenThrow(dbException);
+
+          // Act
+          final result = await userRepositoryImpl
+              .getAllUsers(getAllUsersParamsForAdminTypesTwo);
+
+          // Assert
+          final failure = FirebaseFailure(
+            errorMessage:
+                'Get all users (userType - "Admin") failed - due to the unauthorized access',
+          );
+          result.fold(
+            (l) => expect(l, failure),
+            (r) => fail('test failed'),
           );
         },
       );
@@ -180,11 +270,13 @@ void main() {
           final dbException = DBException(
             errorMessage: 'Get all users (userType - "All Account") failed',
           );
-          when(mockUserRemoteDataSource.getAllUsers(userTypeForAll))
+          when(mockUserRemoteDataSource
+                  .getAllUsers(getAllUsersParamsForAllTypes))
               .thenThrow(dbException);
 
           // Act
-          final result = await userRepositoryImpl.getAllUsers(userTypeForAll);
+          final result = await userRepositoryImpl
+              .getAllUsers(getAllUsersParamsForAllTypes);
 
           // Assert
           final failure = FirebaseFailure(
@@ -204,11 +296,13 @@ void main() {
           final dbException = DBException(
             errorMessage: 'Get all users (userType - "User") failed',
           );
-          when(mockUserRemoteDataSource.getAllUsers(userTypeForUser))
+          when(mockUserRemoteDataSource
+                  .getAllUsers(getAllUsersParamsForUserTypes))
               .thenThrow(dbException);
 
           // Act
-          final result = await userRepositoryImpl.getAllUsers(userTypeForUser);
+          final result = await userRepositoryImpl
+              .getAllUsers(getAllUsersParamsForUserTypes);
 
           // Assert
           final failure = FirebaseFailure(
@@ -228,11 +322,13 @@ void main() {
           final dbException = DBException(
             errorMessage: 'Get all users (userType - "Admin") failed',
           );
-          when(mockUserRemoteDataSource.getAllUsers(userTypeForAdmin))
+          when(mockUserRemoteDataSource
+                  .getAllUsers(getAllUsersParamsForAdminTypes))
               .thenThrow(dbException);
 
           // Act
-          final result = await userRepositoryImpl.getAllUsers(userTypeForAdmin);
+          final result = await userRepositoryImpl
+              .getAllUsers(getAllUsersParamsForAdminTypes);
 
           // Assert
           final failure = FirebaseFailure(

@@ -137,5 +137,6 @@
   "topSellingProducts": "Top Selling Products",
   "productsNotFound": "Products Not Found",
   "stripPaymentFail":"Strip payment fail",
-  "authenticationErrorOccurred":"An authentication error occurred."
+  "authenticationErrorOccurred":"An authentication error occurred.",
+  "unauthorizedAccess":"Unauthorized Access"
 }

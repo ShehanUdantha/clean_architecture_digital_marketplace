@@ -1,8 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import '../../../../config/routes/router.dart';
 import '../../../../core/constants/urls.dart';
 import '../../../../core/constants/variable_names.dart';
+import '../../../../domain/usecases/notification/delete_notification_params.dart';
+import '../../../../domain/usecases/notification/send_notification_params.dart';
 import '../../../models/notification/notification_model.dart';
 import '../../../../domain/entities/notification/notification_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -16,11 +19,14 @@ import '../../../../core/constants/firebase_values.dart';
 import '../../../../core/error/exception.dart';
 import '../../../../core/utils/enum.dart';
 import '../../../../core/utils/extension.dart';
+import '../../../models/user/user_model.dart';
 
 abstract class NotificationRemoteDataSource {
-  Future<String> sendNotification(NotificationEntity notification);
+  Future<String> sendNotification(
+      SendNotificationParams sendNotificationParams);
   Future<List<NotificationEntity>> getAllNotifications();
-  Future<String> deleteNotification(String productId);
+  Future<String> deleteNotification(
+      DeleteNotificationParams deleteNotificationParams);
 }
 
 class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
@@ -35,23 +41,43 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
   });
 
   @override
-  Future<String> sendNotification(NotificationEntity notification) async {
+  Future<String> sendNotification(
+      SendNotificationParams sendNotificationParams) async {
     try {
-      final notificationId = const Uuid().v1();
+      final userDoc = await fireStore
+          .collection(AppVariableNames.users)
+          .doc(sendNotificationParams.userId)
+          .get();
 
-      await sendNotificationsToAllUsers(notification);
+      if (!userDoc.exists) {
+        throw AuthException(
+            errorMessage: rootNavigatorKey.currentContext!.loc.userNotFound);
+      }
 
-      await fireStore
-          .collection(AppVariableNames.notifications)
-          .doc(notificationId)
-          .set({
-        "id": notificationId,
-        "title": notification.title,
-        "description": notification.description,
-        "dateCreated": DateTime.now(),
-      });
+      final userModel =
+          UserModel.fromMap(userDoc.data() as Map<String, dynamic>);
 
-      return ResponseTypes.success.response;
+      if (userModel.userType == UserTypes.admin.name) {
+        final notificationId = const Uuid().v1();
+
+        await sendNotificationsToAllUsers(sendNotificationParams);
+
+        await fireStore
+            .collection(AppVariableNames.notifications)
+            .doc(notificationId)
+            .set({
+          "id": notificationId,
+          "title": sendNotificationParams.notification.title,
+          "description": sendNotificationParams.notification.description,
+          "dateCreated": DateTime.now(),
+        });
+
+        return ResponseTypes.success.response;
+      } else {
+        throw AuthException(
+          errorMessage: rootNavigatorKey.currentContext!.loc.unauthorizedAccess,
+        );
+      }
     } on FirebaseAuthException catch (e) {
       throw AuthException(errorMessage: e.toString());
     } on FirebaseException catch (e) {
@@ -80,14 +106,34 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
   }
 
   @override
-  Future<String> deleteNotification(String notificationId) async {
+  Future<String> deleteNotification(
+      DeleteNotificationParams deleteNotificationParams) async {
     try {
-      await fireStore
-          .collection(AppVariableNames.notifications)
-          .doc(notificationId)
-          .delete();
+      final userDoc = await fireStore
+          .collection(AppVariableNames.users)
+          .doc(deleteNotificationParams.userId)
+          .get();
 
-      return ResponseTypes.success.response;
+      if (!userDoc.exists) {
+        throw AuthException(
+            errorMessage: rootNavigatorKey.currentContext!.loc.userNotFound);
+      }
+
+      final userModel =
+          UserModel.fromMap(userDoc.data() as Map<String, dynamic>);
+
+      if (userModel.userType == UserTypes.admin.name) {
+        await fireStore
+            .collection(AppVariableNames.notifications)
+            .doc(deleteNotificationParams.notificationId)
+            .delete();
+
+        return ResponseTypes.success.response;
+      } else {
+        throw AuthException(
+          errorMessage: rootNavigatorKey.currentContext!.loc.unauthorizedAccess,
+        );
+      }
     } on FirebaseAuthException catch (e) {
       throw AuthException(errorMessage: e.toString());
     } on FirebaseException catch (e) {
@@ -204,7 +250,7 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
   }
 
   Future<void> sendNotificationsToAllUsers(
-      NotificationEntity notification) async {
+      SendNotificationParams sendNotificationParams) async {
     try {
       final Set<String> allDeviceTokens = await getAllDeviceTokens();
       final String serviceAccessToken = await getFirebaseServiceAccessToken();
@@ -214,8 +260,8 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
           'message': {
             'token': tokenId,
             'notification': {
-              'title': notification.title,
-              'body': notification.description,
+              'title': sendNotificationParams.notification.title,
+              'body': sendNotificationParams.notification.description,
             },
           },
         };

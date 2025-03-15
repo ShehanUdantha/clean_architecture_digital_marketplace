@@ -1,4 +1,5 @@
 import '../../../core/error/failure.dart';
+import '../../../domain/usecases/user/get_all_users_params.dart';
 import '../../data_sources/remote/user/user_remote_data_source.dart';
 import '../../models/user/user_model.dart';
 import '../../../domain/entities/user/user_entity.dart';
@@ -57,9 +58,10 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<Either<Failure, List<UserEntity>>> getAllUsers(String userType) async {
+  Future<Either<Failure, List<UserEntity>>> getAllUsers(
+      GetAllUsersParams getAllUsersParams) async {
     try {
-      final result = await userRemoteDataSource.getAllUsers(userType);
+      final result = await userRemoteDataSource.getAllUsers(getAllUsersParams);
       return Right(result);
     } on AuthException catch (e) {
       return Left(

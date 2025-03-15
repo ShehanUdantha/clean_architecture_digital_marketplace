@@ -22,10 +22,10 @@ class NotificationViewPage extends StatefulWidget {
 class _NotificationViewPageState extends State<NotificationViewPage> {
   @override
   void initState() {
-    final uid = context.read<AuthBloc>().state.user?.uid ?? "-1";
+    final getCurrentUserId = context.read<AuthBloc>().currentUserId ?? "-1";
     context
         .read<NotificationBloc>()
-        .add(ResetNotificationCountEvent(userId: uid));
+        .add(ResetNotificationCountEvent(userId: getCurrentUserId));
 
     super.initState();
   }

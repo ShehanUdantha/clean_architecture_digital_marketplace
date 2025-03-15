@@ -22,15 +22,24 @@ class _AdminHomePageState extends State<AdminHomePage> {
     initAdminHomePage();
     context.read<AdminHomeBloc>().add(GetAdminDetailsEvent());
 
-    context.read<AdminHomeBloc>().add(GetMonthlyPurchaseStatus());
-    context.read<AdminHomeBloc>().add(GetMonthlyTotalBalance());
-    context.read<AdminHomeBloc>().add(GetMonthlyTotalBalancePercentage());
-    context.read<AdminHomeBloc>().add(GetMonthlyTopSellingProducts());
+    final getCurrentUserId = context.read<AuthBloc>().currentUserId ?? "-1";
 
-    final uid = context.read<AuthBloc>().state.user?.uid ?? "-1";
+    context
+        .read<AdminHomeBloc>()
+        .add(GetMonthlyPurchaseStatus(userId: getCurrentUserId));
+    context
+        .read<AdminHomeBloc>()
+        .add(GetMonthlyTotalBalance(userId: getCurrentUserId));
+    context
+        .read<AdminHomeBloc>()
+        .add(GetMonthlyTotalBalancePercentage(userId: getCurrentUserId));
+    context
+        .read<AdminHomeBloc>()
+        .add(GetMonthlyTopSellingProducts(userId: getCurrentUserId));
+
     context
         .read<NotificationBloc>()
-        .add(GetNotificationCountEvent(userId: uid));
+        .add(GetNotificationCountEvent(userId: getCurrentUserId));
 
     Helper.getNotificationPermission();
     super.initState();

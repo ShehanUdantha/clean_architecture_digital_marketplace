@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'admin_home_bloc.dart';
 
 sealed class AdminHomeEvent extends Equatable {
@@ -23,10 +24,34 @@ class UpdateMonth extends AdminHomeEvent {
   const UpdateMonth({required this.month});
 }
 
-class GetMonthlyPurchaseStatus extends AdminHomeEvent {}
+class GetMonthlyPurchaseStatus extends AdminHomeEvent {
+  final String userId;
 
-class GetMonthlyTotalBalance extends AdminHomeEvent {}
+  const GetMonthlyPurchaseStatus({
+    required this.userId,
+  });
+}
 
-class GetMonthlyTotalBalancePercentage extends AdminHomeEvent {}
+class GetMonthlyTotalBalance extends AdminHomeEvent {
+  final String userId;
 
-class GetMonthlyTopSellingProducts extends AdminHomeEvent {}
+  const GetMonthlyTotalBalance({
+    required this.userId,
+  });
+}
+
+class GetMonthlyTotalBalancePercentage extends AdminHomeEvent {
+  final String userId;
+
+  const GetMonthlyTotalBalancePercentage({
+    required this.userId,
+  });
+}
+
+class GetMonthlyTopSellingProducts extends AdminHomeEvent {
+  final String userId;
+
+  const GetMonthlyTopSellingProducts({
+    required this.userId,
+  });
+}

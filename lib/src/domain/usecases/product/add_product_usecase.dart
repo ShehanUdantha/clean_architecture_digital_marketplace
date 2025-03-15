@@ -1,16 +1,17 @@
 import '../../../core/usecases/usecase.dart';
 import '../../../core/error/failure.dart';
-import '../../entities/product/product_entity.dart';
 import '../../repositories/product/product_repository.dart';
 import 'package:dartz/dartz.dart';
 
-class AddProductUseCase extends UseCase<String, ProductEntity> {
+import 'add_product_params.dart';
+
+class AddProductUseCase extends UseCase<String, AddProductParams> {
   final ProductRepository productRepository;
 
   AddProductUseCase({required this.productRepository});
 
   @override
-  Future<Either<Failure, String>> call(ProductEntity params) async {
+  Future<Either<Failure, String>> call(AddProductParams params) async {
     return await productRepository.addProduct(params);
   }
 }

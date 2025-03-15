@@ -24,8 +24,8 @@ void main() {
     'should return a List of top selling products for the provided month when the get top selling products by month process is successful',
     () async {
       // Arrange
-      when(mockPurchaseRepository.getAllTopSellingProductsByMonth(
-              fakePurchaseYear, fakePurchaseMonth))
+      when(mockPurchaseRepository
+              .getAllTopSellingProductsByMonth(yearAndMonthParams))
           .thenAnswer((_) async => Right(dummyTopSellingProducts));
 
       // Act
@@ -38,14 +38,34 @@ void main() {
   );
 
   test(
+    'should return a Failure when the get top selling products by month process fails due to the unauthorized access',
+    () async {
+      // Arrange
+      final failure = FirebaseFailure(
+        errorMessage: 'Get top selling products by month failed',
+      );
+      when(mockPurchaseRepository
+              .getAllTopSellingProductsByMonth(yearAndMonthParamsTwo))
+          .thenAnswer((_) async => Left(failure));
+
+      // Act
+      final result =
+          await getTopSellingProductsByMonthUseCase.call(yearAndMonthParamsTwo);
+
+      // Assert
+      expect(result, Left(failure));
+    },
+  );
+
+  test(
     'should return a Failure when the get top selling products by month process fails',
     () async {
       // Arrange
       final failure = FirebaseFailure(
         errorMessage: 'Get top selling products by month failed',
       );
-      when(mockPurchaseRepository.getAllTopSellingProductsByMonth(
-              fakePurchaseYear, fakePurchaseMonth))
+      when(mockPurchaseRepository
+              .getAllTopSellingProductsByMonth(yearAndMonthParams))
           .thenAnswer((_) async => Left(failure));
 
       // Act

@@ -32,10 +32,10 @@ class _UserHomePageState extends State<UserHomePage> {
       ..add(GetTrendingListEvent())
       ..add(GetLatestListEvent());
 
-    final uid = context.read<AuthBloc>().state.user?.uid ?? "-1";
+    final getCurrentUserId = context.read<AuthBloc>().currentUserId ?? "-1";
     context
         .read<NotificationBloc>()
-        .add(GetNotificationCountEvent(userId: uid));
+        .add(GetNotificationCountEvent(userId: getCurrentUserId));
 
     Helper.getNotificationPermission();
     super.initState();

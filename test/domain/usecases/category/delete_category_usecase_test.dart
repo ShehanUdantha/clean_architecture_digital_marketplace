@@ -26,14 +26,32 @@ void main() {
     'should return a Success Status when the delete category process is successful',
     () async {
       // Arrange
-      when(mockCategoryRepository.deleteCategory(fakeProductCategoryId))
+      when(mockCategoryRepository.deleteCategory(deleteCategoryParams))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       // Act
-      final result = await deleteCategoryUseCase.call(fakeProductCategoryId);
+      final result = await deleteCategoryUseCase.call(deleteCategoryParams);
 
       // Assert
       expect(result, Right(ResponseTypes.success.response));
+    },
+  );
+
+  test(
+    'should return a Failure when the delete category process fails due to the unauthorized access',
+    () async {
+      // Arrange
+      final failure = FirebaseFailure(
+        errorMessage: 'Delete category failed - due to the unauthorized access',
+      );
+      when(mockCategoryRepository.deleteCategory(deleteCategoryParamsTwo))
+          .thenAnswer((_) async => Left(failure));
+
+      // Act
+      final result = await deleteCategoryUseCase.call(deleteCategoryParamsTwo);
+
+      // Assert
+      expect(result, Left(failure));
     },
   );
 
@@ -44,11 +62,11 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Delete category failed',
       );
-      when(mockCategoryRepository.deleteCategory(fakeProductCategoryId))
+      when(mockCategoryRepository.deleteCategory(deleteCategoryParams))
           .thenAnswer((_) async => Left(failure));
 
       // Act
-      final result = await deleteCategoryUseCase.call(fakeProductCategoryId);
+      final result = await deleteCategoryUseCase.call(deleteCategoryParams);
 
       // Assert
       expect(result, Left(failure));

@@ -1,19 +1,21 @@
-import 'package:firebase_auth/firebase_auth.dart';
-
-import '../../../../core/constants/variable_names.dart';
-import '../../../../core/utils/extension.dart';
-
-import '../../../../core/utils/enum.dart';
-import '../../../models/category/category_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../../config/routes/router.dart';
+import '../../../../core/constants/variable_names.dart';
 import '../../../../core/error/exception.dart';
+import '../../../../core/utils/enum.dart';
+import '../../../../core/utils/extension.dart';
+import '../../../../domain/usecases/category/add_category_params.dart';
+import '../../../../domain/usecases/category/delete_category_params.dart';
+import '../../../models/category/category_model.dart';
+import '../../../models/user/user_model.dart';
 
 abstract class CategoryRemoteDataSource {
-  Future<String> addCategory(String name);
+  Future<String> addCategory(AddCategoryParams addCategoryParams);
   Future<List<CategoryModel>> getAllCategories();
-  Future<String> deleteCategory(String id);
+  Future<String> deleteCategory(DeleteCategoryParams deleteCategoryParams);
 }
 
 class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
@@ -24,29 +26,48 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
   });
 
   @override
-  Future<String> addCategory(String name) async {
+  Future<String> addCategory(AddCategoryParams addCategoryParams) async {
     try {
-      final result = await fireStore
-          .collection(AppVariableNames.categories)
-          .where('name', isEqualTo: name)
+      final userDoc = await fireStore
+          .collection(AppVariableNames.users)
+          .doc(addCategoryParams.userId)
           .get();
 
-      if (result.docs.isEmpty) {
-        final String categoryId = const Uuid().v1();
+      if (!userDoc.exists) {
+        throw AuthException(
+            errorMessage: rootNavigatorKey.currentContext!.loc.userNotFound);
+      }
 
-        CategoryModel categoryModel = CategoryModel(
-          id: categoryId,
-          name: name,
-          dateCreated: DateTime.now(),
-        );
-        await fireStore
+      final userModel =
+          UserModel.fromMap(userDoc.data() as Map<String, dynamic>);
+
+      if (userModel.userType == UserTypes.admin.name) {
+        final result = await fireStore
             .collection(AppVariableNames.categories)
-            .doc(categoryId)
-            .set(categoryModel.toJson());
+            .where('name', isEqualTo: addCategoryParams.name)
+            .get();
 
-        return ResponseTypes.success.response;
+        if (result.docs.isEmpty) {
+          final String categoryId = const Uuid().v1();
+
+          CategoryModel categoryModel = CategoryModel(
+            id: categoryId,
+            name: addCategoryParams.name,
+            dateCreated: DateTime.now(),
+          );
+          await fireStore
+              .collection(AppVariableNames.categories)
+              .doc(categoryId)
+              .set(categoryModel.toJson());
+
+          return ResponseTypes.success.response;
+        } else {
+          return ResponseTypes.failure.response;
+        }
       } else {
-        return ResponseTypes.failure.response;
+        throw AuthException(
+          errorMessage: rootNavigatorKey.currentContext!.loc.unauthorizedAccess,
+        );
       }
     } on FirebaseAuthException catch (e) {
       throw AuthException(errorMessage: e.toString());
@@ -103,11 +124,34 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
   }
 
   @override
-  Future<String> deleteCategory(String id) async {
+  Future<String> deleteCategory(
+      DeleteCategoryParams deleteCategoryParams) async {
     try {
-      await fireStore.collection(AppVariableNames.categories).doc(id).delete();
+      final userDoc = await fireStore
+          .collection(AppVariableNames.users)
+          .doc(deleteCategoryParams.userId)
+          .get();
 
-      return ResponseTypes.success.response;
+      if (!userDoc.exists) {
+        throw AuthException(
+            errorMessage: rootNavigatorKey.currentContext!.loc.userNotFound);
+      }
+
+      final userModel =
+          UserModel.fromMap(userDoc.data() as Map<String, dynamic>);
+
+      if (userModel.userType == UserTypes.admin.name) {
+        await fireStore
+            .collection(AppVariableNames.categories)
+            .doc(deleteCategoryParams.categoryId)
+            .delete();
+
+        return ResponseTypes.success.response;
+      } else {
+        throw AuthException(
+          errorMessage: rootNavigatorKey.currentContext!.loc.unauthorizedAccess,
+        );
+      }
     } on FirebaseAuthException catch (e) {
       throw AuthException(errorMessage: e.toString());
     } on FirebaseException catch (e) {

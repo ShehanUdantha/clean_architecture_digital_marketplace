@@ -1,4 +1,3 @@
-import 'package:Pixelcart/src/core/usecases/usecase.dart';
 import 'package:Pixelcart/src/data/models/category/category_model.dart';
 import 'package:Pixelcart/src/data/models/notification/notification_model.dart';
 import 'package:Pixelcart/src/data/models/product/product_model.dart';
@@ -12,6 +11,15 @@ import 'package:Pixelcart/src/domain/entities/stripe/stripe_entity.dart';
 import 'package:Pixelcart/src/domain/entities/user/user_entity.dart';
 import 'package:Pixelcart/src/domain/usecases/auth/sign_in_params.dart';
 import 'package:Pixelcart/src/domain/usecases/auth/sign_up_params.dart';
+import 'package:Pixelcart/src/domain/usecases/cart/purchase/year_and_month_params.dart';
+import 'package:Pixelcart/src/domain/usecases/category/add_category_params.dart';
+import 'package:Pixelcart/src/domain/usecases/category/delete_category_params.dart';
+import 'package:Pixelcart/src/domain/usecases/notification/delete_notification_params.dart';
+import 'package:Pixelcart/src/domain/usecases/notification/send_notification_params.dart';
+import 'package:Pixelcart/src/domain/usecases/product/add_product_params.dart';
+import 'package:Pixelcart/src/domain/usecases/product/delete_product_params.dart';
+import 'package:Pixelcart/src/domain/usecases/product/edit_product_params.dart';
+import 'package:Pixelcart/src/domain/usecases/user/get_all_users_params.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 // sign up
@@ -36,6 +44,36 @@ const String forgotPwEmail = 'test@example.com';
 const String userTypeForAll = 'All Account';
 const String userTypeForUser = 'User';
 const String userTypeForAdmin = 'Admin';
+
+const getAllUsersParamsForAllTypes = GetAllUsersParams(
+  userType: userTypeForAll,
+  userId: 'user_02',
+);
+
+const getAllUsersParamsForAllTypesTwo = GetAllUsersParams(
+  userType: userTypeForAll,
+  userId: 'user_-1',
+);
+
+const getAllUsersParamsForUserTypes = GetAllUsersParams(
+  userType: userTypeForUser,
+  userId: 'user_02',
+);
+
+const getAllUsersParamsForUserTypesTwo = GetAllUsersParams(
+  userType: userTypeForUser,
+  userId: 'user_-1',
+);
+
+const getAllUsersParamsForAdminTypes = GetAllUsersParams(
+  userType: userTypeForAdmin,
+  userId: 'user_02',
+);
+
+const getAllUsersParamsForAdminTypesTwo = GetAllUsersParams(
+  userType: userTypeForAdmin,
+  userId: 'user_-1',
+);
 
 const List<UserModel> allTypeOfDummyUsers = [
   UserModel(
@@ -377,18 +415,52 @@ const List<ProductModel> searchQueryDummyResult = [
   ),
 ];
 
-// purchase
-const int fakePurchaseYear = 2025;
-const int fakePurchaseMonth = 1;
+final addProductParams = AddProductParams(
+  productEntity: dummyProductEntity,
+  userId: 'user_06',
+);
 
+final addProductParamsTwo = AddProductParams(
+  productEntity: dummyProductEntity,
+  userId: 'user_-1',
+);
+
+final editProductParams = EditProductParams(
+  productEntity: dummyProductEntityForEdit,
+  userId: 'user_06',
+);
+
+final editProductParamsTwo = EditProductParams(
+  productEntity: dummyProductEntityForEdit,
+  userId: 'user_-1',
+);
+
+final deleteProductParams = DeleteProductParams(
+  productId: fakeProductId,
+  userId: 'user_06',
+);
+
+final deleteProductParamsTwo = DeleteProductParams(
+  productId: fakeProductId,
+  userId: 'user_-1',
+);
+
+// purchase
 const Map<String, int> fakePurchaseHistoryByMonth = {
   '1': 2,
   '5': 10,
 };
 
 final yearAndMonthParams = YearAndMonthParams(
-  year: fakePurchaseYear,
-  month: fakePurchaseMonth,
+  year: 2025,
+  month: 1,
+  userId: 'user_06',
+);
+
+final yearAndMonthParamsTwo = YearAndMonthParams(
+  year: 2025,
+  month: 1,
+  userId: 'user_-1',
 );
 
 final List<PurchaseProductsModel> dummyPurchasedProducts = [
@@ -467,9 +539,27 @@ const List<ProductModel> dummyTopSellingProducts = [
 const String fakeTotalCartedItemsAmount = '8000.00';
 
 // category
-const String dummyProductCategoryType = 'Icons';
-const String fakeProductCategoryId = '189';
 const String dummyFontCategoryType = 'Fonts';
+
+const addCategoryParams = AddCategoryParams(
+  name: 'Icons',
+  userId: 'user_02',
+);
+
+const addCategoryParamsTwo = AddCategoryParams(
+  name: 'Icons',
+  userId: 'user_-1',
+);
+
+const deleteCategoryParams = DeleteCategoryParams(
+  categoryId: '189',
+  userId: 'user_02',
+);
+
+const deleteCategoryParamsTwo = DeleteCategoryParams(
+  categoryId: '189',
+  userId: 'user_-1',
+);
 
 final List<CategoryModel> dummyCategories = [
   CategoryModel(
@@ -552,10 +642,30 @@ const dummyNotificationEntity = NotificationEntity(
   dateCreated: '2025-01-19',
 );
 
+const sendNotificationParams = SendNotificationParams(
+  notification: dummyNotificationEntity,
+  userId: 'user_02',
+);
+
+const sendNotificationParamsTwo = SendNotificationParams(
+  notification: dummyNotificationEntity,
+  userId: 'user_-1',
+);
+
 const dummyNotificationEntityTwo = NotificationEntity(
   id: 'notification_002',
   title: 'Maintenance Scheduled',
   description:
       'We have a scheduled maintenance on January 20th, 2025, from 2 AM to 5 AM.',
   dateCreated: '2025-01-19',
+);
+
+const deleteNotificationParams = DeleteNotificationParams(
+  notificationId: fakeNotificationId,
+  userId: 'user_02',
+);
+
+const deleteNotificationParamsTwo = DeleteNotificationParams(
+  notificationId: fakeNotificationId,
+  userId: 'user_-1',
 );

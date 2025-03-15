@@ -1,5 +1,6 @@
 import '../../../../core/utils/extension.dart';
 
+import '../../../blocs/auth/auth_bloc.dart';
 import '../../../blocs/notification/notification_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -140,10 +141,13 @@ class _NotificationSendPageState extends State<NotificationSendPage> {
   _handleSubmitButton() async {
     if (_notificationTitleController.text.isNotEmpty) {
       if (_notificationDescriptionController.text.isNotEmpty) {
+        final getCurrentUserId = context.read<AuthBloc>().currentUserId;
+
         context.read<NotificationBloc>().add(
               NotificationSendButtonClickedEvent(
                 title: _notificationTitleController.text,
                 description: _notificationDescriptionController.text,
+                userId: getCurrentUserId ?? "-1",
               ),
             );
       } else {

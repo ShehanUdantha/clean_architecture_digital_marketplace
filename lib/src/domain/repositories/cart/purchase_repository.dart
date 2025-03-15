@@ -1,3 +1,5 @@
+import '../../usecases/cart/purchase/year_and_month_params.dart';
+
 import '../../entities/product/purchase_products_entity.dart';
 import 'package:dartz/dartz.dart';
 
@@ -11,19 +13,11 @@ abstract class PurchaseRepository {
       List<String> productIds);
   Future<Either<Failure, String>> downloadProductByProductId(String productId);
   Future<Either<Failure, Map<String, int>>> getAllPurchaseHistoryByMonth(
-    int year,
-    int month,
-  );
+      YearAndMonthParams yearAndMonthParams);
   Future<Either<Failure, double>> getAllPurchasesTotalBalanceByMonth(
-    int year,
-    int month,
-  );
+      YearAndMonthParams yearAndMonthParams);
   Future<Either<Failure, double>> getAllPurchasesTotalBalancePercentageByMonth(
-    int year,
-    int month,
-  );
+      YearAndMonthParams yearAndMonthParams);
   Future<Either<Failure, List<ProductEntity>>> getAllTopSellingProductsByMonth(
-    int year,
-    int month,
-  );
+      YearAndMonthParams yearAndMonthParams);
 }

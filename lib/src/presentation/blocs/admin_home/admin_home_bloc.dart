@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import '../../../domain/usecases/cart/purchase/year_and_month_params.dart';
+
 import '../../../domain/entities/product/product_entity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -110,6 +112,7 @@ class AdminHomeBloc extends Bloc<AdminHomeEvent, AdminHomeState> {
       YearAndMonthParams(
         year: state.year,
         month: state.month,
+        userId: event.userId,
       ),
     );
     emit(state.copyWith(isMonthlyStatusLoading: false));
@@ -132,6 +135,7 @@ class AdminHomeBloc extends Bloc<AdminHomeEvent, AdminHomeState> {
       YearAndMonthParams(
         year: state.year,
         month: state.month,
+        userId: event.userId,
       ),
     );
 
@@ -153,6 +157,7 @@ class AdminHomeBloc extends Bloc<AdminHomeEvent, AdminHomeState> {
       YearAndMonthParams(
         year: state.year,
         month: state.month,
+        userId: event.userId,
       ),
     );
 
@@ -177,6 +182,7 @@ class AdminHomeBloc extends Bloc<AdminHomeEvent, AdminHomeState> {
       YearAndMonthParams(
         year: state.year,
         month: state.month,
+        userId: event.userId,
       ),
     );
 

@@ -4,6 +4,9 @@ import '../../../core/error/exception.dart';
 import '../../../core/error/failure.dart';
 import '../../../domain/entities/product/product_entity.dart';
 import '../../../domain/repositories/product/product_repository.dart';
+import '../../../domain/usecases/product/add_product_params.dart';
+import '../../../domain/usecases/product/delete_product_params.dart';
+import '../../../domain/usecases/product/edit_product_params.dart';
 import '../../data_sources/remote/product/product_remote_data_source.dart';
 import '../../models/product/product_model.dart';
 
@@ -14,9 +17,9 @@ class ProductRepositoryImpl implements ProductRepository {
 
   @override
   Future<Either<Failure, String>> addProduct(
-      ProductEntity productEntity) async {
+      AddProductParams addProductParams) async {
     try {
-      final result = await productRemoteDataSource.addProduct(productEntity);
+      final result = await productRemoteDataSource.addProduct(addProductParams);
       return Right(result);
     } on AuthException catch (e) {
       return Left(
@@ -59,9 +62,11 @@ class ProductRepositoryImpl implements ProductRepository {
   }
 
   @override
-  Future<Either<Failure, String>> deleteProduct(String id) async {
+  Future<Either<Failure, String>> deleteProduct(
+      DeleteProductParams deleteProductParams) async {
     try {
-      final result = await productRemoteDataSource.deleteProduct(id);
+      final result =
+          await productRemoteDataSource.deleteProduct(deleteProductParams);
       return Right(result);
     } on AuthException catch (e) {
       return Left(
@@ -173,9 +178,10 @@ class ProductRepositoryImpl implements ProductRepository {
 
   @override
   Future<Either<Failure, String>> editProduct(
-      ProductEntity productEntity) async {
+      EditProductParams editProductParams) async {
     try {
-      final result = await productRemoteDataSource.editProduct(productEntity);
+      final result =
+          await productRemoteDataSource.editProduct(editProductParams);
       return Right(result);
     } on AuthException catch (e) {
       return Left(

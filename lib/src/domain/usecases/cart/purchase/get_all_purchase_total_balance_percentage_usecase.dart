@@ -1,3 +1,4 @@
+import 'year_and_month_params.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/error/failure.dart';
@@ -13,9 +14,6 @@ class GetAllPurchaseBalancePercentageByMonthUseCase
   @override
   Future<Either<Failure, double>> call(YearAndMonthParams params) async {
     return await purchaseRepository
-        .getAllPurchasesTotalBalancePercentageByMonth(
-      params.year,
-      params.month,
-    );
+        .getAllPurchasesTotalBalancePercentageByMonth(params);
   }
 }

@@ -26,8 +26,8 @@ void main() {
     'should return a Total purchase amount percentage for the provided month when the get all purchase total balance percentage by month process is successful',
     () async {
       // Arrange
-      when(mockPurchaseRepository.getAllPurchasesTotalBalancePercentageByMonth(
-              fakePurchaseYear, fakePurchaseMonth))
+      when(mockPurchaseRepository
+              .getAllPurchasesTotalBalancePercentageByMonth(yearAndMonthParams))
           .thenAnswer((_) async => Right(fakeTotalPurchaseAmountPercentage));
 
       // Act
@@ -40,6 +40,27 @@ void main() {
   );
 
   test(
+    'should return a Failure when the get all purchase total balance percentage by month process fails due to the unauthorized access',
+    () async {
+      // Arrange
+      final failure = FirebaseFailure(
+        errorMessage:
+            'Get all purchase total balance percentage by month failed - due to the unauthorized access',
+      );
+      when(mockPurchaseRepository.getAllPurchasesTotalBalancePercentageByMonth(
+              yearAndMonthParamsTwo))
+          .thenAnswer((_) async => Left(failure));
+
+      // Act
+      final result = await getAllPurchaseBalancePercentageByMonthUseCase
+          .call(yearAndMonthParamsTwo);
+
+      // Assert
+      expect(result, Left(failure));
+    },
+  );
+
+  test(
     'should return a Failure when the get all purchase total balance percentage by month process fails',
     () async {
       // Arrange
@@ -47,8 +68,8 @@ void main() {
         errorMessage:
             'Get all purchase total balance percentage by month failed',
       );
-      when(mockPurchaseRepository.getAllPurchasesTotalBalancePercentageByMonth(
-              fakePurchaseYear, fakePurchaseMonth))
+      when(mockPurchaseRepository
+              .getAllPurchasesTotalBalancePercentageByMonth(yearAndMonthParams))
           .thenAnswer((_) async => Left(failure));
 
       // Act

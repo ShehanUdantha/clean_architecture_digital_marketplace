@@ -1,3 +1,5 @@
+import '../../../blocs/auth/auth_bloc.dart';
+
 import '../../../../core/utils/extension.dart';
 
 import '../../../../core/utils/enum.dart';
@@ -115,7 +117,8 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
             ),
             BlocConsumer<CategoryBloc, CategoryState>(
               listenWhen: (previous, current) =>
-                  previous.status != current.status,
+                  previous.status != current.status ||
+                  previous.isDeleted != current.isDeleted,
               listener: (context, state) {
                 if (state.status == BlocStatus.error) {
                   Helper.showSnackBar(
@@ -161,8 +164,13 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
 
   _handleCategoryAdd() {
     if (_categoryController.text.isNotEmpty) {
+      final getCurrentUserId = context.read<AuthBloc>().currentUserId;
+
       context.read<CategoryBloc>().add(
-            CategoryButtonClickedEvent(category: _categoryController.text),
+            CategoryAddButtonClickedEvent(
+              category: _categoryController.text,
+              userId: getCurrentUserId ?? "-1",
+            ),
           );
     } else {
       Helper.showSnackBar(context, context.loc.requiredCategory);
