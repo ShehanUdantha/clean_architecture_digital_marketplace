@@ -14,8 +14,20 @@ import '../../../../core/utils/helper.dart';
 import '../../../blocs/users/users_bloc.dart';
 import '../../../widgets/admin/tools/user_type_chip_widget.dart';
 
-class UserManagePage extends StatelessWidget {
+class UserManagePage extends StatefulWidget {
   const UserManagePage({super.key});
+
+  @override
+  State<UserManagePage> createState() => _UserManagePageState();
+}
+
+class _UserManagePageState extends State<UserManagePage> {
+  @override
+  void initState() {
+    context.read<UsersBloc>().add(GetAllUsersEvent());
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

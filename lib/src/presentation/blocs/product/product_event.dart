@@ -79,9 +79,11 @@ class CategorySelectEvent extends ProductEvent {
 class GetAllProductsEvent extends ProductEvent {}
 
 class ProductDeleteEvent extends ProductEvent {
-  final String id;
+  final String productId;
 
-  const ProductDeleteEvent({required this.id});
+  const ProductDeleteEvent({
+    required this.productId,
+  });
 }
 
 class ProductEditEvent extends ProductEvent {}

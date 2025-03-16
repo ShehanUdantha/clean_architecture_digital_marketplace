@@ -26,8 +26,8 @@ void main() {
     'should return a Total purchase amount percentage for the provided month when the get all purchase total balance percentage by month process is successful',
     () async {
       // Arrange
-      when(mockPurchaseRepository.getAllPurchasesTotalBalancePercentageByMonth(
-              fakePurchaseYear, fakePurchaseMonth))
+      when(mockPurchaseRepository
+              .getAllPurchasesTotalBalancePercentageByMonth(yearAndMonthParams))
           .thenAnswer((_) async => Right(fakeTotalPurchaseAmountPercentage));
 
       // Act
@@ -47,8 +47,8 @@ void main() {
         errorMessage:
             'Get all purchase total balance percentage by month failed',
       );
-      when(mockPurchaseRepository.getAllPurchasesTotalBalancePercentageByMonth(
-              fakePurchaseYear, fakePurchaseMonth))
+      when(mockPurchaseRepository
+              .getAllPurchasesTotalBalancePercentageByMonth(yearAndMonthParams))
           .thenAnswer((_) async => Left(failure));
 
       // Act

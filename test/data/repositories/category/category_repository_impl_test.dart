@@ -29,13 +29,12 @@ void main() {
         'should return a Success Status when the add category process is successful',
         () async {
           // Arrange
-          when(mockCategoryRemoteDataSource
-                  .addCategory(dummyProductCategoryType))
+          when(mockCategoryRemoteDataSource.addCategory(dummyFontCategoryType))
               .thenAnswer((_) async => ResponseTypes.success.response);
 
           // Act
-          final result = await categoryRepositoryImpl
-              .addCategory(dummyProductCategoryType);
+          final result =
+              await categoryRepositoryImpl.addCategory(dummyFontCategoryType);
 
           // Assert
           result.fold(
@@ -52,13 +51,12 @@ void main() {
           final dbException = DBException(
             errorMessage: 'Add category failed',
           );
-          when(mockCategoryRemoteDataSource
-                  .addCategory(dummyProductCategoryType))
+          when(mockCategoryRemoteDataSource.addCategory(dummyFontCategoryType))
               .thenThrow(dbException);
 
           // Act
-          final result = await categoryRepositoryImpl
-              .addCategory(dummyProductCategoryType);
+          final result =
+              await categoryRepositoryImpl.addCategory(dummyFontCategoryType);
 
           // Assert
           final failure = FirebaseFailure(

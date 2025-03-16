@@ -1,13 +1,16 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:Pixelcart/src/config/routes/router.dart';
+import 'package:Pixelcart/src/core/utils/extension.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../../../core/constants/variable_names.dart';
 import '../../../../core/error/exception.dart';
+import '../../../../core/utils/enum.dart';
 import '../../../models/user/user_model.dart';
 
 abstract class UserRemoteDataSource {
-  Future<String> getUserType(String id);
+  Future<String> getUserType(String userId);
   Future<UserModel> getUserDetails();
   Future<List<UserModel>> getAllUsers(String userType);
 }
@@ -22,14 +25,20 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   });
 
   @override
-  Future<String> getUserType(String id) async {
+  Future<String> getUserType(String userId) async {
     try {
-      final result =
-          await fireStore.collection(AppVariableNames.users).doc(id).get().then(
-                (DocumentSnapshot value) =>
-                    UserModel.fromMap(value.data() as Map<String, dynamic>),
-              );
-      return result.userType;
+      final userDoc =
+          await fireStore.collection(AppVariableNames.users).doc(userId).get();
+
+      if (!userDoc.exists) {
+        throw AuthException(
+            errorMessage: rootNavigatorKey.currentContext!.loc.userNotFound);
+      }
+
+      final userModel =
+          UserModel.fromMap(userDoc.data() as Map<String, dynamic>);
+
+      return userModel.userType;
     } on FirebaseAuthException catch (e) {
       throw AuthException(errorMessage: e.toString());
     } on FirebaseException catch (e) {
@@ -88,15 +97,36 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   @override
   Future<List<UserModel>> getAllUsers(String userType) async {
     try {
-      final result = userType != AppVariableNames.allUsersType
-          ? await fireStore
-              .collection(AppVariableNames.users)
-              .where('userType', isEqualTo: userType.toLowerCase())
-              .get()
-          : await fireStore.collection(AppVariableNames.users).get();
+      final currentUser = auth.currentUser;
 
-      return List<UserModel>.from(
-          (result.docs).map((e) => UserModel.fromDocument(e)));
+      final userDoc = await fireStore
+          .collection(AppVariableNames.users)
+          .doc(currentUser!.uid)
+          .get();
+
+      if (!userDoc.exists) {
+        throw AuthException(
+            errorMessage: rootNavigatorKey.currentContext!.loc.userNotFound);
+      }
+
+      final userModel =
+          UserModel.fromMap(userDoc.data() as Map<String, dynamic>);
+
+      if (userModel.userType == UserTypes.admin.name) {
+        final result = userType != AppVariableNames.allUsersType
+            ? await fireStore
+                .collection(AppVariableNames.users)
+                .where('userType', isEqualTo: userType.toLowerCase())
+                .get()
+            : await fireStore.collection(AppVariableNames.users).get();
+
+        return List<UserModel>.from(
+            (result.docs).map((e) => UserModel.fromDocument(e)));
+      } else {
+        throw AuthException(
+          errorMessage: rootNavigatorKey.currentContext!.loc.unauthorizedAccess,
+        );
+      }
     } on FirebaseAuthException catch (e) {
       throw AuthException(errorMessage: e.toString());
     } on FirebaseException catch (e) {

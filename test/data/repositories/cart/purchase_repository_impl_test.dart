@@ -180,17 +180,13 @@ void main() {
         'should return a Map of purchase history for the provided month when the get all purchase history by month process is successful',
         () async {
           // Arrange
-          when(mockPurchaseRemoteDataSource.getAllPurchaseHistoryByMonth(
-            fakePurchaseYear,
-            fakePurchaseMonth,
-          )).thenAnswer((_) async => fakePurchaseHistoryByMonth);
+          when(mockPurchaseRemoteDataSource
+                  .getAllPurchaseHistoryByMonth(yearAndMonthParams))
+              .thenAnswer((_) async => fakePurchaseHistoryByMonth);
 
           // Act
-          final result =
-              await purchaseRepositoryImpl.getAllPurchaseHistoryByMonth(
-            fakePurchaseYear,
-            fakePurchaseMonth,
-          );
+          final result = await purchaseRepositoryImpl
+              .getAllPurchaseHistoryByMonth(yearAndMonthParams);
 
           // Assert
           result.fold(
@@ -207,17 +203,13 @@ void main() {
           final dbException = DBException(
             errorMessage: 'Get all purchase history by month failed',
           );
-          when(mockPurchaseRemoteDataSource.getAllPurchaseHistoryByMonth(
-            fakePurchaseYear,
-            fakePurchaseMonth,
-          )).thenThrow(dbException);
+          when(mockPurchaseRemoteDataSource
+                  .getAllPurchaseHistoryByMonth(yearAndMonthParams))
+              .thenThrow(dbException);
 
           // Act
-          final result =
-              await purchaseRepositoryImpl.getAllPurchaseHistoryByMonth(
-            fakePurchaseYear,
-            fakePurchaseMonth,
-          );
+          final result = await purchaseRepositoryImpl
+              .getAllPurchaseHistoryByMonth(yearAndMonthParams);
 
           // Assert
           final failure = FirebaseFailure(
@@ -239,17 +231,13 @@ void main() {
         'should return a Total purchase amount for the provided month when the get all purchase total balance by month process is successful',
         () async {
           // Arrange
-          when(mockPurchaseRemoteDataSource.getAllPurchasesTotalBalanceByMonth(
-            fakePurchaseYear,
-            fakePurchaseMonth,
-          )).thenAnswer((_) async => fakeTotalPurchaseAmount);
+          when(mockPurchaseRemoteDataSource
+                  .getAllPurchasesTotalBalanceByMonth(yearAndMonthParams))
+              .thenAnswer((_) async => fakeTotalPurchaseAmount);
 
           // Act
-          final result =
-              await purchaseRepositoryImpl.getAllPurchasesTotalBalanceByMonth(
-            fakePurchaseYear,
-            fakePurchaseMonth,
-          );
+          final result = await purchaseRepositoryImpl
+              .getAllPurchasesTotalBalanceByMonth(yearAndMonthParams);
 
           // Assert
           result.fold(
@@ -266,17 +254,13 @@ void main() {
           final dbException = DBException(
             errorMessage: 'Get all purchase total balance by month failed',
           );
-          when(mockPurchaseRemoteDataSource.getAllPurchasesTotalBalanceByMonth(
-            fakePurchaseYear,
-            fakePurchaseMonth,
-          )).thenThrow(dbException);
+          when(mockPurchaseRemoteDataSource
+                  .getAllPurchasesTotalBalanceByMonth(yearAndMonthParams))
+              .thenThrow(dbException);
 
           // Act
-          final result =
-              await purchaseRepositoryImpl.getAllPurchasesTotalBalanceByMonth(
-            fakePurchaseYear,
-            fakePurchaseMonth,
-          );
+          final result = await purchaseRepositoryImpl
+              .getAllPurchasesTotalBalanceByMonth(yearAndMonthParams);
 
           // Assert
           final failure = FirebaseFailure(
@@ -299,17 +283,13 @@ void main() {
         () async {
           // Arrange
           when(mockPurchaseRemoteDataSource
-              .getAllPurchasesTotalBalancePercentageByMonth(
-            fakePurchaseYear,
-            fakePurchaseMonth,
-          )).thenAnswer((_) async => fakeTotalPurchaseAmountPercentage);
+                  .getAllPurchasesTotalBalancePercentageByMonth(
+                      yearAndMonthParams))
+              .thenAnswer((_) async => fakeTotalPurchaseAmountPercentage);
 
           // Act
           final result = await purchaseRepositoryImpl
-              .getAllPurchasesTotalBalancePercentageByMonth(
-            fakePurchaseYear,
-            fakePurchaseMonth,
-          );
+              .getAllPurchasesTotalBalancePercentageByMonth(yearAndMonthParams);
 
           // Assert
           result.fold(
@@ -328,17 +308,13 @@ void main() {
                 'Get all purchase total balance percentage by month failed',
           );
           when(mockPurchaseRemoteDataSource
-              .getAllPurchasesTotalBalancePercentageByMonth(
-            fakePurchaseYear,
-            fakePurchaseMonth,
-          )).thenThrow(dbException);
+                  .getAllPurchasesTotalBalancePercentageByMonth(
+                      yearAndMonthParams))
+              .thenThrow(dbException);
 
           // Act
           final result = await purchaseRepositoryImpl
-              .getAllPurchasesTotalBalancePercentageByMonth(
-            fakePurchaseYear,
-            fakePurchaseMonth,
-          );
+              .getAllPurchasesTotalBalancePercentageByMonth(yearAndMonthParams);
 
           // Assert
           final failure = FirebaseFailure(
@@ -361,17 +337,13 @@ void main() {
         'should return a List of top selling products for the provided month when the get top selling products by month process is successful',
         () async {
           // Arrange
-          when(mockPurchaseRemoteDataSource.getAllTopSellingProductsByMonth(
-            fakePurchaseYear,
-            fakePurchaseMonth,
-          )).thenAnswer((_) async => dummyTopSellingProducts);
+          when(mockPurchaseRemoteDataSource
+                  .getAllTopSellingProductsByMonth(yearAndMonthParams))
+              .thenAnswer((_) async => dummyTopSellingProducts);
 
           // Act
-          final result =
-              await purchaseRepositoryImpl.getAllTopSellingProductsByMonth(
-            fakePurchaseYear,
-            fakePurchaseMonth,
-          );
+          final result = await purchaseRepositoryImpl
+              .getAllTopSellingProductsByMonth(yearAndMonthParams);
 
           // Assert
           result.fold(
@@ -388,17 +360,13 @@ void main() {
           final dbException = DBException(
             errorMessage: 'Get top selling products by month failed',
           );
-          when(mockPurchaseRemoteDataSource.getAllTopSellingProductsByMonth(
-            fakePurchaseYear,
-            fakePurchaseMonth,
-          )).thenThrow(dbException);
+          when(mockPurchaseRemoteDataSource
+                  .getAllTopSellingProductsByMonth(yearAndMonthParams))
+              .thenThrow(dbException);
 
           // Act
-          final result =
-              await purchaseRepositoryImpl.getAllTopSellingProductsByMonth(
-            fakePurchaseYear,
-            fakePurchaseMonth,
-          );
+          final result = await purchaseRepositoryImpl
+              .getAllTopSellingProductsByMonth(yearAndMonthParams);
 
           // Assert
           final failure = FirebaseFailure(

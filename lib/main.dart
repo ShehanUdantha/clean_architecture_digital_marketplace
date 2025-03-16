@@ -99,7 +99,7 @@ class MyApp extends StatelessWidget {
               locator.sl<ProductBloc>()..add(GetAllProductsEvent()),
         ),
         BlocProvider(
-          create: (context) => locator.sl<UsersBloc>()..add(GetAllUsersEvent()),
+          create: (context) => locator.sl<UsersBloc>(),
         ),
         BlocProvider(
           create: (context) => locator.sl<UserHomeBloc>(),

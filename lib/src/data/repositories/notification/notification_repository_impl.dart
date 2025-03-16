@@ -13,10 +13,10 @@ class NotificationRepositoryImpl implements NotificationRepository {
 
   @override
   Future<Either<Failure, String>> sendNotification(
-      NotificationEntity notificationEntity) async {
+      NotificationEntity notification) async {
     try {
-      final result = await notificationRemoteDataSource
-          .sendNotification(notificationEntity);
+      final result =
+          await notificationRemoteDataSource.sendNotification(notification);
       return Right(result);
     } on AuthException catch (e) {
       return Left(
@@ -43,9 +43,11 @@ class NotificationRepositoryImpl implements NotificationRepository {
   }
 
   @override
-  Future<Either<Failure, String>> deleteNotification(String id) async {
+  Future<Either<Failure, String>> deleteNotification(
+      String notificationId) async {
     try {
-      final result = await notificationRemoteDataSource.deleteNotification(id);
+      final result =
+          await notificationRemoteDataSource.deleteNotification(notificationId);
       return Right(result);
     } on AuthException catch (e) {
       return Left(

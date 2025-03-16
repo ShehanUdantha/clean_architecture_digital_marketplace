@@ -126,7 +126,9 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     NotificationDeleteEvent event,
     Emitter<NotificationState> emit,
   ) async {
-    final result = await deleteNotificationUseCase.call(event.id);
+    emit(state.copyWith(status: BlocStatus.loading));
+
+    final result = await deleteNotificationUseCase.call(event.notificationId);
     result.fold(
       (l) => emit(
         state.copyWith(

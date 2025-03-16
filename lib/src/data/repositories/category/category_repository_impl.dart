@@ -12,9 +12,9 @@ class CategoryRepositoryImpl implements CategoryRepository {
   CategoryRepositoryImpl({required this.categoryRemoteDataSource});
 
   @override
-  Future<Either<Failure, String>> addCategory(String name) async {
+  Future<Either<Failure, String>> addCategory(String categoryName) async {
     try {
-      final result = await categoryRemoteDataSource.addCategory(name);
+      final result = await categoryRemoteDataSource.addCategory(categoryName);
       return Right(result);
     } on AuthException catch (e) {
       return Left(
@@ -56,9 +56,9 @@ class CategoryRepositoryImpl implements CategoryRepository {
   }
 
   @override
-  Future<Either<Failure, String>> deleteCategory(String id) async {
+  Future<Either<Failure, String>> deleteCategory(String categoryId) async {
     try {
-      final result = await categoryRemoteDataSource.deleteCategory(id);
+      final result = await categoryRemoteDataSource.deleteCategory(categoryId);
       return Right(result);
     } on AuthException catch (e) {
       return Left(

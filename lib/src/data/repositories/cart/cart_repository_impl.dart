@@ -13,9 +13,9 @@ class CartRepositoryImpl implements CartRepository {
   CartRepositoryImpl({required this.cartRemoteDataSource});
 
   @override
-  Future<Either<Failure, String>> addProductToCart(String id) async {
+  Future<Either<Failure, String>> addProductToCart(String productId) async {
     try {
-      final result = await cartRemoteDataSource.addProductToCart(id);
+      final result = await cartRemoteDataSource.addProductToCart(productId);
       return Right(result);
     } on AuthException catch (e) {
       return Left(
@@ -79,9 +79,11 @@ class CartRepositoryImpl implements CartRepository {
   }
 
   @override
-  Future<Either<Failure, String>> removeProductFromCart(String id) async {
+  Future<Either<Failure, String>> removeProductFromCart(
+      String productId) async {
     try {
-      final result = await cartRemoteDataSource.removeProductFromCart(id);
+      final result =
+          await cartRemoteDataSource.removeProductFromCart(productId);
       return Right(result);
     } on AuthException catch (e) {
       return Left(

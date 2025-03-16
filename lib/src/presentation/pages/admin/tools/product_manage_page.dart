@@ -74,6 +74,9 @@ class ProductManagePage extends StatelessWidget {
               height: 26,
             ),
             BlocConsumer<ProductBloc, ProductState>(
+              listenWhen: (previous, current) =>
+                  previous.status != current.status ||
+                  previous.isDeleted != current.isDeleted,
               listener: (context, state) {
                 if (state.status == BlocStatus.error) {
                   Helper.showSnackBar(
@@ -85,10 +88,13 @@ class ProductManagePage extends StatelessWidget {
                   context
                       .read<ProductBloc>()
                       .add(SetProductDeleteStateToDefault());
+
                   Helper.showSnackBar(
                     context,
                     context.loc.productDeleted,
                   );
+
+                  context.read<ProductBloc>().add(GetAllProductsEvent());
                 }
               },
               builder: (context, state) {

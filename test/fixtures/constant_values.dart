@@ -1,4 +1,3 @@
-import 'package:Pixelcart/src/core/usecases/usecase.dart';
 import 'package:Pixelcart/src/data/models/category/category_model.dart';
 import 'package:Pixelcart/src/data/models/notification/notification_model.dart';
 import 'package:Pixelcart/src/data/models/product/product_model.dart';
@@ -12,27 +11,26 @@ import 'package:Pixelcart/src/domain/entities/stripe/stripe_entity.dart';
 import 'package:Pixelcart/src/domain/entities/user/user_entity.dart';
 import 'package:Pixelcart/src/domain/usecases/auth/sign_in_params.dart';
 import 'package:Pixelcart/src/domain/usecases/auth/sign_up_params.dart';
+import 'package:Pixelcart/src/domain/usecases/cart/purchase/year_and_month_params.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-// sign up
+// * auth
 const signUpParams = SignUpParams(
   userName: 'testUser',
   email: 'test@example.com',
   password: 'password123',
 );
 
-// sign in
-const userId = 'sampleId123';
-
 const signInParams = SignInParams(
   email: 'test@example.com',
   password: 'password123',
 );
 
-// forgot password
 const String forgotPwEmail = 'test@example.com';
 
-// get all users
+const userId = 'sampleId123';
+
+// * users
 const String userTypeForAll = 'All Account';
 const String userTypeForUser = 'User';
 const String userTypeForAdmin = 'Admin';
@@ -94,7 +92,6 @@ const List<UserModel> onlyDummyAdmins = [
   ),
 ];
 
-//  get user details
 const userDetailsDummyModel = UserModel(
   userId: 'user_02',
   userType: 'Admin',
@@ -104,7 +101,6 @@ const userDetailsDummyModel = UserModel(
   deviceToken: 'token456',
 );
 
-// get user type
 const String userTypeAdmin = 'Admin';
 const String dummyUserIdToGetUserType = 'user_02';
 
@@ -126,7 +122,6 @@ const userDetailsDummyJson = {
   'deviceToken': 'token342',
 };
 
-//  user entity
 const userDetailsDummyEntity = UserEntity(
   userId: 'user_06',
   userType: 'User',
@@ -136,7 +131,7 @@ const userDetailsDummyEntity = UserEntity(
   deviceToken: 'token342',
 );
 
-// payments
+// * payments
 const double paymentAmount = 1000.00;
 
 const dummyStripeModel = StripeModel(
@@ -153,7 +148,6 @@ const dummyStripeJson = {
   'currency': 'USD',
 };
 
-// stripe entity
 const dummyStripeEntity = StripeEntity(
   id: 'stripe_12345',
   amount: 1000,
@@ -161,7 +155,7 @@ const dummyStripeEntity = StripeEntity(
   currency: 'USD',
 );
 
-// products
+// * products
 const String fakeProductId = 'product_005';
 
 const List<ProductModel> dummyProducts = [
@@ -377,18 +371,15 @@ const List<ProductModel> searchQueryDummyResult = [
   ),
 ];
 
-// purchase
-const int fakePurchaseYear = 2025;
-const int fakePurchaseMonth = 1;
-
+// * purchase
 const Map<String, int> fakePurchaseHistoryByMonth = {
   '1': 2,
   '5': 10,
 };
 
 final yearAndMonthParams = YearAndMonthParams(
-  year: fakePurchaseYear,
-  month: fakePurchaseMonth,
+  year: 2025,
+  month: 1,
 );
 
 final List<PurchaseProductsModel> dummyPurchasedProducts = [
@@ -414,7 +405,6 @@ final dummyPurchaseProductJson = {
   'ids': ['product_003', 'product_001'],
 };
 
-// purchase product entity
 final dummyPurchaseProductEntity = PurchaseProductsModel(
   purchaseId: '23434',
   price: '2000.00',
@@ -466,7 +456,7 @@ const List<ProductModel> dummyTopSellingProducts = [
 
 const String fakeTotalCartedItemsAmount = '8000.00';
 
-// category
+// * category
 const String dummyProductCategoryType = 'Icons';
 const String fakeProductCategoryId = '189';
 const String dummyFontCategoryType = 'Fonts';
@@ -496,14 +486,13 @@ const dummyCategoryJson = {
   'dateCreated': '2025-01-16',
 };
 
-// category entity
 const dummyCategoryEntity = CategoryEntity(
   id: '34534',
   name: 'Fonts',
   dateCreated: '2025-01-16',
 );
 
-// notifications
+// * notifications
 const String dummyUserIdToGetNotifications = 'user_02';
 
 const int fakeNotificationCount = 5;
@@ -544,7 +533,6 @@ const dummyNotificationJson = {
   'dateCreated': '2025-01-19',
 };
 
-// notification entity
 const dummyNotificationEntity = NotificationEntity(
   title: 'Maintenance Scheduled',
   description:

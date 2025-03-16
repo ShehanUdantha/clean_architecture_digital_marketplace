@@ -59,9 +59,9 @@ class ProductRepositoryImpl implements ProductRepository {
   }
 
   @override
-  Future<Either<Failure, String>> deleteProduct(String id) async {
+  Future<Either<Failure, String>> deleteProduct(String productId) async {
     try {
-      final result = await productRemoteDataSource.deleteProduct(id);
+      final result = await productRemoteDataSource.deleteProduct(productId);
       return Right(result);
     } on AuthException catch (e) {
       return Left(
@@ -128,9 +128,11 @@ class ProductRepositoryImpl implements ProductRepository {
   }
 
   @override
-  Future<Either<Failure, ProductModel>> getProductDetailsById(String id) async {
+  Future<Either<Failure, ProductModel>> getProductDetailsById(
+      String productId) async {
     try {
-      final result = await productRemoteDataSource.getProductDetailsById(id);
+      final result =
+          await productRemoteDataSource.getProductDetailsById(productId);
       return Right(result);
     } on AuthException catch (e) {
       return Left(
@@ -150,9 +152,9 @@ class ProductRepositoryImpl implements ProductRepository {
   }
 
   @override
-  Future<Either<Failure, ProductModel>> addFavorite(String id) async {
+  Future<Either<Failure, ProductModel>> addFavorite(String productId) async {
     try {
-      final result = await productRemoteDataSource.addFavorite(id);
+      final result = await productRemoteDataSource.addFavorite(productId);
       return Right(result);
     } on AuthException catch (e) {
       return Left(

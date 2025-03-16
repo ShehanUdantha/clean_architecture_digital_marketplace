@@ -163,6 +163,7 @@ class MonthlyStatusWidget extends StatelessWidget {
           .read<AdminHomeBloc>()
           .add(UpdateYear(year: adminHomeState.year - 1));
     }
+
     context.read<AdminHomeBloc>().add(GetMonthlyPurchaseStatus());
     context.read<AdminHomeBloc>().add(GetMonthlyTotalBalance());
     context.read<AdminHomeBloc>().add(GetMonthlyTotalBalancePercentage());
@@ -183,6 +184,7 @@ class MonthlyStatusWidget extends StatelessWidget {
           .read<AdminHomeBloc>()
           .add(UpdateYear(year: adminHomeState.year + 1));
     }
+
     context.read<AdminHomeBloc>().add(GetMonthlyPurchaseStatus());
     context.read<AdminHomeBloc>().add(GetMonthlyTotalBalance());
     context.read<AdminHomeBloc>().add(GetMonthlyTotalBalancePercentage());

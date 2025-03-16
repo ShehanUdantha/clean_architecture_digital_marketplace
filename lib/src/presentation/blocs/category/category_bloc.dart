@@ -24,15 +24,15 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     this.getAllCategoriesUseCase,
     this.deleteCategoryUseCase,
   ) : super(const CategoryState()) {
-    on<CategoryButtonClickedEvent>(onCategoryButtonClickedEvent);
+    on<CategoryAddButtonClickedEvent>(onCategoryAddButtonClickedEvent);
     on<SetCategoryAddStatusToDefault>(onSetCategoryAddStatusToDefault);
     on<GetAllCategoriesEvent>(onGetAllCategoriesEvent);
     on<DeleteCategoriesEvent>(onDeleteCategoriesEvent);
     on<SetDeleteStateToDefault>(onSetDeleteStateToDefault);
   }
 
-  FutureOr<void> onCategoryButtonClickedEvent(
-    CategoryButtonClickedEvent event,
+  FutureOr<void> onCategoryAddButtonClickedEvent(
+    CategoryAddButtonClickedEvent event,
     Emitter<CategoryState> emit,
   ) async {
     emit(state.copyWith(categoryAddStatus: BlocStatus.loading));
@@ -105,7 +105,10 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     DeleteCategoriesEvent event,
     Emitter<CategoryState> emit,
   ) async {
-    final result = await deleteCategoryUseCase.call(event.id);
+    emit(state.copyWith(status: BlocStatus.loading));
+
+    final result = await deleteCategoryUseCase.call(event.categoryId);
+
     result.fold(
       (l) => emit(
         state.copyWith(

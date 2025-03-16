@@ -119,4 +119,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     userSubscription.cancel();
     return super.close();
   }
+
+  String? get currentUserId => state.user?.uid;
 }

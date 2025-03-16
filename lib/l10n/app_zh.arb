@@ -137,5 +137,6 @@
   "topSellingProducts": "畅销产品",
   "productsNotFound": "未找到产品",
   "stripPaymentFail":"Stripe支付失败",
-  "authenticationErrorOccurred": "发生身份验证错误。"
+  "authenticationErrorOccurred": "发生身份验证错误。",
+  "unauthorizedAccess":"未经授权的访问"
 }

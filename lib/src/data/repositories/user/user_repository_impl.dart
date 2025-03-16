@@ -35,9 +35,9 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<Either<Failure, String>> getUserType(String id) async {
+  Future<Either<Failure, String>> getUserType(String userId) async {
     try {
-      final result = await userRemoteDataSource.getUserType(id);
+      final result = await userRemoteDataSource.getUserType(userId);
       return Right(result);
     } on AuthException catch (e) {
       return Left(

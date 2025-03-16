@@ -24,8 +24,8 @@ void main() {
     'should return a Total purchase amount for the provided month when the get all purchase total balance by month process is successful',
     () async {
       // Arrange
-      when(mockPurchaseRepository.getAllPurchasesTotalBalanceByMonth(
-              fakePurchaseYear, fakePurchaseMonth))
+      when(mockPurchaseRepository
+              .getAllPurchasesTotalBalanceByMonth(yearAndMonthParams))
           .thenAnswer((_) async => Right(fakeTotalPurchaseAmount));
 
       // Act
@@ -44,8 +44,8 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Get all purchase total balance by month failed',
       );
-      when(mockPurchaseRepository.getAllPurchasesTotalBalanceByMonth(
-              fakePurchaseYear, fakePurchaseMonth))
+      when(mockPurchaseRepository
+              .getAllPurchasesTotalBalanceByMonth(yearAndMonthParams))
           .thenAnswer((_) async => Left(failure));
 
       // Act

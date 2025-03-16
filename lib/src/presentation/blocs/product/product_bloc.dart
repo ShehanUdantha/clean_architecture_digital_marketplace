@@ -203,7 +203,9 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     ProductDeleteEvent event,
     Emitter<ProductState> emit,
   ) async {
-    final result = await deleteProductUseCase.call(event.id);
+    emit(state.copyWith(status: BlocStatus.loading));
+
+    final result = await deleteProductUseCase.call(event.productId);
     result.fold(
       (l) => emit(
         state.copyWith(

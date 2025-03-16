@@ -40,6 +40,9 @@ class NotificationManagePage extends StatelessWidget {
               height: 26,
             ),
             BlocConsumer<NotificationBloc, NotificationState>(
+              listenWhen: (previous, current) =>
+                  previous.status != current.status ||
+                  previous.isDeleted != current.isDeleted,
               listener: (context, state) {
                 if (state.status == BlocStatus.error) {
                   Helper.showSnackBar(
@@ -51,10 +54,15 @@ class NotificationManagePage extends StatelessWidget {
                   context
                       .read<NotificationBloc>()
                       .add(SetNotificationDeleteStateToDefaultEvent());
+
                   Helper.showSnackBar(
                     context,
                     context.loc.notificationDeleted,
                   );
+
+                  context
+                      .read<NotificationBloc>()
+                      .add(GetAllNotificationsEvent());
                 }
               },
               builder: (context, state) {

@@ -7,12 +7,14 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../../config/routes/router.dart';
 import '../../../../core/constants/variable_names.dart';
 import '../../../../core/utils/extension.dart';
 import '../../../../core/error/exception.dart';
 import '../../../../core/utils/enum.dart';
 import '../../../../domain/entities/product/product_entity.dart';
 import '../../../models/product/product_model.dart';
+import '../../../models/user/user_model.dart';
 
 abstract class ProductRemoteDataSource {
   Future<String> addProduct(ProductEntity productEntity);
@@ -39,52 +41,73 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   @override
   Future<String> addProduct(ProductEntity productEntity) async {
     try {
-      final result = await fireStore
-          .collection(AppVariableNames.products)
-          .where('productName', isEqualTo: productEntity.productName)
+      final currentUser = auth.currentUser;
+
+      final userDoc = await fireStore
+          .collection(AppVariableNames.users)
+          .doc(currentUser!.uid)
           .get();
 
-      if (result.docs.isEmpty) {
-        final String productId = const Uuid().v1();
+      if (!userDoc.exists) {
+        throw AuthException(
+            errorMessage: rootNavigatorKey.currentContext!.loc.userNotFound);
+      }
 
-        final String coverImageUrl = await uploadImage(
-          productEntity.coverImage,
-          productId,
-        );
+      final userModel =
+          UserModel.fromMap(userDoc.data() as Map<String, dynamic>);
 
-        final String zipFileUrl = await uploadFile(
-          productEntity.zipFile,
-          productId,
-        );
-
-        final List<String> subImagesUrls = await uploadMultipleImages(
-          productEntity.subImages,
-          productId,
-        );
-
-        ProductModel productModel = ProductModel(
-          id: productId,
-          productName: productEntity.productName,
-          price: productEntity.price,
-          category: productEntity.category,
-          marketingType: productEntity.marketingType,
-          description: productEntity.description,
-          coverImage: coverImageUrl,
-          subImages: subImagesUrls,
-          zipFile: zipFileUrl,
-          dateCreated: DateTime.now(),
-          likes: const [],
-          status: ProductStatus.active.product,
-        );
-
-        await fireStore
+      if (userModel.userType == UserTypes.admin.name) {
+        final result = await fireStore
             .collection(AppVariableNames.products)
-            .doc(productId)
-            .set(productModel.toJson());
+            .where('productName', isEqualTo: productEntity.productName)
+            .get();
 
-        return ResponseTypes.success.response;
+        if (result.docs.isEmpty) {
+          final String productId = const Uuid().v1();
+
+          final String coverImageUrl = await uploadImage(
+            productEntity.coverImage,
+            productId,
+          );
+
+          final String zipFileUrl = await uploadFile(
+            productEntity.zipFile,
+            productId,
+          );
+
+          final List<String> subImagesUrls = await uploadMultipleImages(
+            productEntity.subImages,
+            productId,
+          );
+
+          ProductModel productModel = ProductModel(
+            id: productId,
+            productName: productEntity.productName,
+            price: productEntity.price,
+            category: productEntity.category,
+            marketingType: productEntity.marketingType,
+            description: productEntity.description,
+            coverImage: coverImageUrl,
+            subImages: subImagesUrls,
+            zipFile: zipFileUrl,
+            dateCreated: DateTime.now(),
+            likes: const [],
+            status: ProductStatus.active.product,
+          );
+
+          await fireStore
+              .collection(AppVariableNames.products)
+              .doc(productId)
+              .set(productModel.toJson());
+
+          return ResponseTypes.success.response;
+        } else {
+          return ResponseTypes.failure.response;
+        }
       } else {
-        return ResponseTypes.failure.response;
+        throw AuthException(
+          errorMessage: rootNavigatorKey.currentContext!.loc.unauthorizedAccess,
+        );
       }
     } on FirebaseAuthException catch (e) {
       throw AuthException(errorMessage: e.toString());
@@ -238,14 +261,34 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   @override
   Future<String> deleteProduct(String productId) async {
     try {
-      await fireStore
-          .collection(AppVariableNames.products)
-          .doc(productId)
-          .update({
-        'status': ProductStatus.deActive.product,
-      });
+      final currentUser = auth.currentUser;
 
-      return ResponseTypes.success.response;
+      final userDoc = await fireStore
+          .collection(AppVariableNames.users)
+          .doc(currentUser!.uid)
+          .get();
+      if (!userDoc.exists) {
+        throw AuthException(
+            errorMessage: rootNavigatorKey.currentContext!.loc.userNotFound);
+      }
+
+      final userModel =
+          UserModel.fromMap(userDoc.data() as Map<String, dynamic>);
+
+      if (userModel.userType == UserTypes.admin.name) {
+        await fireStore
+            .collection(AppVariableNames.products)
+            .doc(productId)
+            .update({
+          'status': ProductStatus.deActive.product,
+        });
+
+        return ResponseTypes.success.response;
+      } else {
+        throw AuthException(
+          errorMessage: rootNavigatorKey.currentContext!.loc.unauthorizedAccess,
+        );
+      }
     } on FirebaseAuthException catch (e) {
       throw AuthException(errorMessage: e.toString());
     } on FirebaseException catch (e) {
@@ -439,36 +482,57 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   @override
   Future<String> editProduct(ProductEntity productEntity) async {
     try {
-      final result = await fireStore
-          .collection(AppVariableNames.products)
-          .doc(productEntity.id)
+      final currentUser = auth.currentUser;
+
+      final userDoc = await fireStore
+          .collection(AppVariableNames.users)
+          .doc(currentUser!.uid)
           .get();
 
-      if (result.exists) {
-        final productId = productEntity.id!;
+      if (!userDoc.exists) {
+        throw AuthException(
+            errorMessage: rootNavigatorKey.currentContext!.loc.userNotFound);
+      }
 
-        final String coverImageUrl = await getCoverImageUrl(productEntity);
-        final String zipFileUrl = await getZipFileUrl(productEntity);
-        final List<String> subImagesUrls =
-            await getSubImagesUrls(productEntity);
+      final userModel =
+          UserModel.fromMap(userDoc.data() as Map<String, dynamic>);
 
-        await fireStore
+      if (userModel.userType == UserTypes.admin.name) {
+        final result = await fireStore
             .collection(AppVariableNames.products)
-            .doc(productId)
-            .update({
-          "productName": productEntity.productName,
-          "price": productEntity.price,
-          "category": productEntity.category,
-          "marketingType": productEntity.marketingType,
-          "description": productEntity.description,
-          "coverImage": coverImageUrl,
-          "subImages": subImagesUrls,
-          "zipFile": zipFileUrl,
-        });
+            .doc(productEntity.id)
+            .get();
 
-        return ResponseTypes.success.response;
+        if (result.exists) {
+          final productId = productEntity.id!;
+
+          final String coverImageUrl = await getCoverImageUrl(productEntity);
+          final String zipFileUrl = await getZipFileUrl(productEntity);
+          final List<String> subImagesUrls =
+              await getSubImagesUrls(productEntity);
+
+          await fireStore
+              .collection(AppVariableNames.products)
+              .doc(productId)
+              .update({
+            "productName": productEntity.productName,
+            "price": productEntity.price,
+            "category": productEntity.category,
+            "marketingType": productEntity.marketingType,
+            "description": productEntity.description,
+            "coverImage": coverImageUrl,
+            "subImages": subImagesUrls,
+            "zipFile": zipFileUrl,
+          });
+
+          return ResponseTypes.success.response;
+        } else {
+          return ResponseTypes.failure.response;
+        }
       } else {
-        return ResponseTypes.failure.response;
+        throw AuthException(
+          errorMessage: rootNavigatorKey.currentContext!.loc.unauthorizedAccess,
+        );
       }
     } on FirebaseAuthException catch (e) {
       throw AuthException(errorMessage: e.toString());

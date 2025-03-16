@@ -115,7 +115,8 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
             ),
             BlocConsumer<CategoryBloc, CategoryState>(
               listenWhen: (previous, current) =>
-                  previous.status != current.status,
+                  previous.status != current.status ||
+                  previous.isDeleted != current.isDeleted,
               listener: (context, state) {
                 if (state.status == BlocStatus.error) {
                   Helper.showSnackBar(
@@ -126,10 +127,13 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
 
                 if (state.isDeleted && state.status == BlocStatus.success) {
                   context.read<CategoryBloc>().add(SetDeleteStateToDefault());
+
                   Helper.showSnackBar(
                     context,
                     context.loc.categoryDeleted,
                   );
+
+                  context.read<CategoryBloc>().add(GetAllCategoriesEvent());
                 }
               },
               buildWhen: (previous, current) =>
@@ -162,7 +166,9 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
   _handleCategoryAdd() {
     if (_categoryController.text.isNotEmpty) {
       context.read<CategoryBloc>().add(
-            CategoryButtonClickedEvent(category: _categoryController.text),
+            CategoryAddButtonClickedEvent(
+              category: _categoryController.text,
+            ),
           );
     } else {
       Helper.showSnackBar(context, context.loc.requiredCategory);

@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import '../../../domain/usecases/cart/purchase/year_and_month_params.dart';
+
 import '../../../domain/entities/product/product_entity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

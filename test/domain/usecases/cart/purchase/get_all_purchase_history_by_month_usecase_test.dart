@@ -24,8 +24,8 @@ void main() {
     'should return a Map of purchase history for the provided month when the get all purchase history by month process is successful',
     () async {
       // Arrange
-      when(mockPurchaseRepository.getAllPurchaseHistoryByMonth(
-              fakePurchaseYear, fakePurchaseMonth))
+      when(mockPurchaseRepository
+              .getAllPurchaseHistoryByMonth(yearAndMonthParams))
           .thenAnswer((_) async => Right(fakePurchaseHistoryByMonth));
 
       // Act
@@ -44,8 +44,8 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Get all purchase history by month failed',
       );
-      when(mockPurchaseRepository.getAllPurchaseHistoryByMonth(
-              fakePurchaseYear, fakePurchaseMonth))
+      when(mockPurchaseRepository
+              .getAllPurchaseHistoryByMonth(yearAndMonthParams))
           .thenAnswer((_) async => Left(failure));
 
       // Act

@@ -46,8 +46,11 @@ class ProductListBuilderWidget extends StatelessWidget {
     BuildContext context,
     String id,
   ) {
-    context.read<ProductBloc>().add(ProductDeleteEvent(id: id));
-    context.read<ProductBloc>().add(GetAllProductsEvent());
+    context.read<ProductBloc>().add(
+          ProductDeleteEvent(
+            productId: id,
+          ),
+        );
   }
 
   _handleEditProduct(BuildContext context, ProductEntity product) {

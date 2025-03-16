@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import '../../../../config/routes/router.dart';
 import '../../../../core/constants/urls.dart';
 import '../../../../core/constants/variable_names.dart';
 import '../../../models/notification/notification_model.dart';
@@ -16,11 +17,12 @@ import '../../../../core/constants/firebase_values.dart';
 import '../../../../core/error/exception.dart';
 import '../../../../core/utils/enum.dart';
 import '../../../../core/utils/extension.dart';
+import '../../../models/user/user_model.dart';
 
 abstract class NotificationRemoteDataSource {
   Future<String> sendNotification(NotificationEntity notification);
   Future<List<NotificationEntity>> getAllNotifications();
-  Future<String> deleteNotification(String productId);
+  Future<String> deleteNotification(String notificationId);
 }
 
 class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
@@ -37,21 +39,42 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
   @override
   Future<String> sendNotification(NotificationEntity notification) async {
     try {
-      final notificationId = const Uuid().v1();
+      final currentUser = auth.currentUser;
 
-      await sendNotificationsToAllUsers(notification);
+      final userDoc = await fireStore
+          .collection(AppVariableNames.users)
+          .doc(currentUser!.uid)
+          .get();
 
-      await fireStore
-          .collection(AppVariableNames.notifications)
-          .doc(notificationId)
-          .set({
-        "id": notificationId,
-        "title": notification.title,
-        "description": notification.description,
-        "dateCreated": DateTime.now(),
-      });
+      if (!userDoc.exists) {
+        throw AuthException(
+            errorMessage: rootNavigatorKey.currentContext!.loc.userNotFound);
+      }
 
-      return ResponseTypes.success.response;
+      final userModel =
+          UserModel.fromMap(userDoc.data() as Map<String, dynamic>);
+
+      if (userModel.userType == UserTypes.admin.name) {
+        final notificationId = const Uuid().v1();
+
+        await sendNotificationsToAllUsers(notification);
+
+        await fireStore
+            .collection(AppVariableNames.notifications)
+            .doc(notificationId)
+            .set({
+          "id": notificationId,
+          "title": notification.title,
+          "description": notification.description,
+          "dateCreated": DateTime.now(),
+        });
+
+        return ResponseTypes.success.response;
+      } else {
+        throw AuthException(
+          errorMessage: rootNavigatorKey.currentContext!.loc.unauthorizedAccess,
+        );
+      }
     } on FirebaseAuthException catch (e) {
       throw AuthException(errorMessage: e.toString());
     } on FirebaseException catch (e) {
@@ -82,12 +105,33 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
   @override
   Future<String> deleteNotification(String notificationId) async {
     try {
-      await fireStore
-          .collection(AppVariableNames.notifications)
-          .doc(notificationId)
-          .delete();
+      final currentUser = auth.currentUser;
 
-      return ResponseTypes.success.response;
+      final userDoc = await fireStore
+          .collection(AppVariableNames.users)
+          .doc(currentUser!.uid)
+          .get();
+
+      if (!userDoc.exists) {
+        throw AuthException(
+            errorMessage: rootNavigatorKey.currentContext!.loc.userNotFound);
+      }
+
+      final userModel =
+          UserModel.fromMap(userDoc.data() as Map<String, dynamic>);
+
+      if (userModel.userType == UserTypes.admin.name) {
+        await fireStore
+            .collection(AppVariableNames.notifications)
+            .doc(notificationId)
+            .delete();
+
+        return ResponseTypes.success.response;
+      } else {
+        throw AuthException(
+          errorMessage: rootNavigatorKey.currentContext!.loc.unauthorizedAccess,
+        );
+      }
     } on FirebaseAuthException catch (e) {
       throw AuthException(errorMessage: e.toString());
     } on FirebaseException catch (e) {

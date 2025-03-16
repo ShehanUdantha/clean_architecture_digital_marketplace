@@ -24,8 +24,8 @@ void main() {
     'should return a List of top selling products for the provided month when the get top selling products by month process is successful',
     () async {
       // Arrange
-      when(mockPurchaseRepository.getAllTopSellingProductsByMonth(
-              fakePurchaseYear, fakePurchaseMonth))
+      when(mockPurchaseRepository
+              .getAllTopSellingProductsByMonth(yearAndMonthParams))
           .thenAnswer((_) async => Right(dummyTopSellingProducts));
 
       // Act
@@ -44,8 +44,8 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Get top selling products by month failed',
       );
-      when(mockPurchaseRepository.getAllTopSellingProductsByMonth(
-              fakePurchaseYear, fakePurchaseMonth))
+      when(mockPurchaseRepository
+              .getAllTopSellingProductsByMonth(yearAndMonthParams))
           .thenAnswer((_) async => Left(failure));
 
       // Act

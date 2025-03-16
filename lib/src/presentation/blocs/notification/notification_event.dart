@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'notification_bloc.dart';
 
 sealed class NotificationEvent extends Equatable {
@@ -22,9 +23,11 @@ class SetNotificationSendStatusToDefault extends NotificationEvent {}
 class GetAllNotificationsEvent extends NotificationEvent {}
 
 class NotificationDeleteEvent extends NotificationEvent {
-  final String id;
+  final String notificationId;
 
-  const NotificationDeleteEvent({required this.id});
+  const NotificationDeleteEvent({
+    required this.notificationId,
+  });
 }
 
 class SetNotificationDeleteStateToDefaultEvent extends NotificationEvent {}

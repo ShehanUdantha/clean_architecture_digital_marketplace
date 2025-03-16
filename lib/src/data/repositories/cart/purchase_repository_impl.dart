@@ -1,4 +1,5 @@
 import '../../../core/error/failure.dart';
+import '../../../domain/usecases/cart/purchase/year_and_month_params.dart';
 import '../../data_sources/remote/cart/purchase_remote_data_source.dart';
 import '../../../domain/entities/product/product_entity.dart';
 import '../../../domain/entities/product/purchase_products_entity.dart';
@@ -86,12 +87,10 @@ class PurchaseRepositoryImpl implements PurchaseRepository {
 
   @override
   Future<Either<Failure, Map<String, int>>> getAllPurchaseHistoryByMonth(
-    int year,
-    int month,
-  ) async {
+      YearAndMonthParams yearAndMonthParams) async {
     try {
       final result = await purchaseRemoteDataSource
-          .getAllPurchaseHistoryByMonth(year, month);
+          .getAllPurchaseHistoryByMonth(yearAndMonthParams);
       return Right(result);
     } on AuthException catch (e) {
       return Left(
@@ -112,12 +111,10 @@ class PurchaseRepositoryImpl implements PurchaseRepository {
 
   @override
   Future<Either<Failure, double>> getAllPurchasesTotalBalanceByMonth(
-    int year,
-    int month,
-  ) async {
+      YearAndMonthParams yearAndMonthParams) async {
     try {
       final result = await purchaseRemoteDataSource
-          .getAllPurchasesTotalBalanceByMonth(year, month);
+          .getAllPurchasesTotalBalanceByMonth(yearAndMonthParams);
       return Right(result);
     } on AuthException catch (e) {
       return Left(
@@ -138,12 +135,10 @@ class PurchaseRepositoryImpl implements PurchaseRepository {
 
   @override
   Future<Either<Failure, double>> getAllPurchasesTotalBalancePercentageByMonth(
-    int year,
-    int month,
-  ) async {
+      YearAndMonthParams yearAndMonthParams) async {
     try {
       final result = await purchaseRemoteDataSource
-          .getAllPurchasesTotalBalancePercentageByMonth(year, month);
+          .getAllPurchasesTotalBalancePercentageByMonth(yearAndMonthParams);
       return Right(result);
     } on AuthException catch (e) {
       return Left(
@@ -164,12 +159,10 @@ class PurchaseRepositoryImpl implements PurchaseRepository {
 
   @override
   Future<Either<Failure, List<ProductEntity>>> getAllTopSellingProductsByMonth(
-    int year,
-    int month,
-  ) async {
+      YearAndMonthParams yearAndMonthParams) async {
     try {
       final result = await purchaseRemoteDataSource
-          .getAllTopSellingProductsByMonth(year, month);
+          .getAllTopSellingProductsByMonth(yearAndMonthParams);
       return Right(result);
     } on AuthException catch (e) {
       return Left(

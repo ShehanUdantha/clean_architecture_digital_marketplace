@@ -137,5 +137,6 @@
   "topSellingProducts": "Produits les plus vendus",
   "productsNotFound": "Produits non trouvés",
   "stripPaymentFail": "Échec du paiement Stripe",
-  "authenticationErrorOccurred": "Une erreur d’authentification s’est produite."
+  "authenticationErrorOccurred": "Une erreur d’authentification s’est produite.",
+  "unauthorizedAccess":"Accès non autorisé"
 }
