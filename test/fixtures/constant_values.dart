@@ -12,68 +12,28 @@ import 'package:Pixelcart/src/domain/entities/user/user_entity.dart';
 import 'package:Pixelcart/src/domain/usecases/auth/sign_in_params.dart';
 import 'package:Pixelcart/src/domain/usecases/auth/sign_up_params.dart';
 import 'package:Pixelcart/src/domain/usecases/cart/purchase/year_and_month_params.dart';
-import 'package:Pixelcart/src/domain/usecases/category/add_category_params.dart';
-import 'package:Pixelcart/src/domain/usecases/category/delete_category_params.dart';
-import 'package:Pixelcart/src/domain/usecases/notification/delete_notification_params.dart';
-import 'package:Pixelcart/src/domain/usecases/notification/send_notification_params.dart';
-import 'package:Pixelcart/src/domain/usecases/product/add_product_params.dart';
-import 'package:Pixelcart/src/domain/usecases/product/delete_product_params.dart';
-import 'package:Pixelcart/src/domain/usecases/product/edit_product_params.dart';
-import 'package:Pixelcart/src/domain/usecases/user/get_all_users_params.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-// sign up
+// * auth
 const signUpParams = SignUpParams(
   userName: 'testUser',
   email: 'test@example.com',
   password: 'password123',
 );
 
-// sign in
-const userId = 'sampleId123';
-
 const signInParams = SignInParams(
   email: 'test@example.com',
   password: 'password123',
 );
 
-// forgot password
 const String forgotPwEmail = 'test@example.com';
 
-// get all users
+const userId = 'sampleId123';
+
+// * users
 const String userTypeForAll = 'All Account';
 const String userTypeForUser = 'User';
 const String userTypeForAdmin = 'Admin';
-
-const getAllUsersParamsForAllTypes = GetAllUsersParams(
-  userType: userTypeForAll,
-  userId: 'user_02',
-);
-
-const getAllUsersParamsForAllTypesTwo = GetAllUsersParams(
-  userType: userTypeForAll,
-  userId: 'user_-1',
-);
-
-const getAllUsersParamsForUserTypes = GetAllUsersParams(
-  userType: userTypeForUser,
-  userId: 'user_02',
-);
-
-const getAllUsersParamsForUserTypesTwo = GetAllUsersParams(
-  userType: userTypeForUser,
-  userId: 'user_-1',
-);
-
-const getAllUsersParamsForAdminTypes = GetAllUsersParams(
-  userType: userTypeForAdmin,
-  userId: 'user_02',
-);
-
-const getAllUsersParamsForAdminTypesTwo = GetAllUsersParams(
-  userType: userTypeForAdmin,
-  userId: 'user_-1',
-);
 
 const List<UserModel> allTypeOfDummyUsers = [
   UserModel(
@@ -132,7 +92,6 @@ const List<UserModel> onlyDummyAdmins = [
   ),
 ];
 
-//  get user details
 const userDetailsDummyModel = UserModel(
   userId: 'user_02',
   userType: 'Admin',
@@ -142,7 +101,6 @@ const userDetailsDummyModel = UserModel(
   deviceToken: 'token456',
 );
 
-// get user type
 const String userTypeAdmin = 'Admin';
 const String dummyUserIdToGetUserType = 'user_02';
 
@@ -164,7 +122,6 @@ const userDetailsDummyJson = {
   'deviceToken': 'token342',
 };
 
-//  user entity
 const userDetailsDummyEntity = UserEntity(
   userId: 'user_06',
   userType: 'User',
@@ -174,7 +131,7 @@ const userDetailsDummyEntity = UserEntity(
   deviceToken: 'token342',
 );
 
-// payments
+// * payments
 const double paymentAmount = 1000.00;
 
 const dummyStripeModel = StripeModel(
@@ -191,7 +148,6 @@ const dummyStripeJson = {
   'currency': 'USD',
 };
 
-// stripe entity
 const dummyStripeEntity = StripeEntity(
   id: 'stripe_12345',
   amount: 1000,
@@ -199,7 +155,7 @@ const dummyStripeEntity = StripeEntity(
   currency: 'USD',
 );
 
-// products
+// * products
 const String fakeProductId = 'product_005';
 
 const List<ProductModel> dummyProducts = [
@@ -415,37 +371,7 @@ const List<ProductModel> searchQueryDummyResult = [
   ),
 ];
 
-final addProductParams = AddProductParams(
-  productEntity: dummyProductEntity,
-  userId: 'user_06',
-);
-
-final addProductParamsTwo = AddProductParams(
-  productEntity: dummyProductEntity,
-  userId: 'user_-1',
-);
-
-final editProductParams = EditProductParams(
-  productEntity: dummyProductEntityForEdit,
-  userId: 'user_06',
-);
-
-final editProductParamsTwo = EditProductParams(
-  productEntity: dummyProductEntityForEdit,
-  userId: 'user_-1',
-);
-
-final deleteProductParams = DeleteProductParams(
-  productId: fakeProductId,
-  userId: 'user_06',
-);
-
-final deleteProductParamsTwo = DeleteProductParams(
-  productId: fakeProductId,
-  userId: 'user_-1',
-);
-
-// purchase
+// * purchase
 const Map<String, int> fakePurchaseHistoryByMonth = {
   '1': 2,
   '5': 10,
@@ -454,13 +380,6 @@ const Map<String, int> fakePurchaseHistoryByMonth = {
 final yearAndMonthParams = YearAndMonthParams(
   year: 2025,
   month: 1,
-  userId: 'user_06',
-);
-
-final yearAndMonthParamsTwo = YearAndMonthParams(
-  year: 2025,
-  month: 1,
-  userId: 'user_-1',
 );
 
 final List<PurchaseProductsModel> dummyPurchasedProducts = [
@@ -486,7 +405,6 @@ final dummyPurchaseProductJson = {
   'ids': ['product_003', 'product_001'],
 };
 
-// purchase product entity
 final dummyPurchaseProductEntity = PurchaseProductsModel(
   purchaseId: '23434',
   price: '2000.00',
@@ -538,28 +456,10 @@ const List<ProductModel> dummyTopSellingProducts = [
 
 const String fakeTotalCartedItemsAmount = '8000.00';
 
-// category
+// * category
+const String dummyProductCategoryType = 'Icons';
+const String fakeProductCategoryId = '189';
 const String dummyFontCategoryType = 'Fonts';
-
-const addCategoryParams = AddCategoryParams(
-  name: 'Icons',
-  userId: 'user_02',
-);
-
-const addCategoryParamsTwo = AddCategoryParams(
-  name: 'Icons',
-  userId: 'user_-1',
-);
-
-const deleteCategoryParams = DeleteCategoryParams(
-  categoryId: '189',
-  userId: 'user_02',
-);
-
-const deleteCategoryParamsTwo = DeleteCategoryParams(
-  categoryId: '189',
-  userId: 'user_-1',
-);
 
 final List<CategoryModel> dummyCategories = [
   CategoryModel(
@@ -586,14 +486,13 @@ const dummyCategoryJson = {
   'dateCreated': '2025-01-16',
 };
 
-// category entity
 const dummyCategoryEntity = CategoryEntity(
   id: '34534',
   name: 'Fonts',
   dateCreated: '2025-01-16',
 );
 
-// notifications
+// * notifications
 const String dummyUserIdToGetNotifications = 'user_02';
 
 const int fakeNotificationCount = 5;
@@ -634,22 +533,11 @@ const dummyNotificationJson = {
   'dateCreated': '2025-01-19',
 };
 
-// notification entity
 const dummyNotificationEntity = NotificationEntity(
   title: 'Maintenance Scheduled',
   description:
       'We have a scheduled maintenance on January 20th, 2025, from 2 AM to 5 AM.',
   dateCreated: '2025-01-19',
-);
-
-const sendNotificationParams = SendNotificationParams(
-  notification: dummyNotificationEntity,
-  userId: 'user_02',
-);
-
-const sendNotificationParamsTwo = SendNotificationParams(
-  notification: dummyNotificationEntity,
-  userId: 'user_-1',
 );
 
 const dummyNotificationEntityTwo = NotificationEntity(
@@ -658,14 +546,4 @@ const dummyNotificationEntityTwo = NotificationEntity(
   description:
       'We have a scheduled maintenance on January 20th, 2025, from 2 AM to 5 AM.',
   dateCreated: '2025-01-19',
-);
-
-const deleteNotificationParams = DeleteNotificationParams(
-  notificationId: fakeNotificationId,
-  userId: 'user_02',
-);
-
-const deleteNotificationParamsTwo = DeleteNotificationParams(
-  notificationId: fakeNotificationId,
-  userId: 'user_-1',
 );

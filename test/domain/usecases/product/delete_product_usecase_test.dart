@@ -26,32 +26,14 @@ void main() {
     'should return a Success Status when the delete product process is successful',
     () async {
       // Arrange
-      when(mockProductRepository.deleteProduct(deleteProductParams))
+      when(mockProductRepository.deleteProduct(fakeProductId))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       // Act
-      final result = await deleteProductUseCase.call(deleteProductParams);
+      final result = await deleteProductUseCase.call(fakeProductId);
 
       // Assert
       expect(result, Right(ResponseTypes.success.response));
-    },
-  );
-
-  test(
-    'should return a Failure when the delete product process fails due to the unauthorized access',
-    () async {
-      // Arrange
-      final failure = FirebaseFailure(
-        errorMessage: 'Delete product failed - due to the unauthorized access',
-      );
-      when(mockProductRepository.deleteProduct(deleteProductParamsTwo))
-          .thenAnswer((_) async => Left(failure));
-
-      // Act
-      final result = await deleteProductUseCase.call(deleteProductParamsTwo);
-
-      // Assert
-      expect(result, Left(failure));
     },
   );
 
@@ -62,11 +44,11 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Delete product failed',
       );
-      when(mockProductRepository.deleteProduct(deleteProductParams))
+      when(mockProductRepository.deleteProduct(fakeProductId))
           .thenAnswer((_) async => Left(failure));
 
       // Act
-      final result = await deleteProductUseCase.call(deleteProductParams);
+      final result = await deleteProductUseCase.call(fakeProductId);
 
       // Assert
       expect(result, Left(failure));

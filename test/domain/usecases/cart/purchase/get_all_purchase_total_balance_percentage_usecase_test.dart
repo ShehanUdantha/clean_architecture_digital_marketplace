@@ -40,27 +40,6 @@ void main() {
   );
 
   test(
-    'should return a Failure when the get all purchase total balance percentage by month process fails due to the unauthorized access',
-    () async {
-      // Arrange
-      final failure = FirebaseFailure(
-        errorMessage:
-            'Get all purchase total balance percentage by month failed - due to the unauthorized access',
-      );
-      when(mockPurchaseRepository.getAllPurchasesTotalBalancePercentageByMonth(
-              yearAndMonthParamsTwo))
-          .thenAnswer((_) async => Left(failure));
-
-      // Act
-      final result = await getAllPurchaseBalancePercentageByMonthUseCase
-          .call(yearAndMonthParamsTwo);
-
-      // Assert
-      expect(result, Left(failure));
-    },
-  );
-
-  test(
     'should return a Failure when the get all purchase total balance percentage by month process fails',
     () async {
       // Arrange

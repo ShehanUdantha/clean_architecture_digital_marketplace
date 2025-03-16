@@ -26,37 +26,14 @@ void main() {
     'should return a Success Status when the delete notification process is successful',
     () async {
       // Arrange
-      when(mockNotificationRepository
-              .deleteNotification(deleteNotificationParams))
+      when(mockNotificationRepository.deleteNotification(fakeNotificationId))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       // Act
-      final result =
-          await deleteNotificationUseCase.call(deleteNotificationParams);
+      final result = await deleteNotificationUseCase.call(fakeNotificationId);
 
       // Assert
       expect(result, Right(ResponseTypes.success.response));
-    },
-  );
-
-  test(
-    'should return a Failure when the delete notification process fails due to the unauthorized access',
-    () async {
-      // Arrange
-      final failure = FirebaseFailure(
-        errorMessage:
-            'Delete notification failed - due to the unauthorized access',
-      );
-      when(mockNotificationRepository
-              .deleteNotification(deleteNotificationParamsTwo))
-          .thenAnswer((_) async => Left(failure));
-
-      // Act
-      final result =
-          await deleteNotificationUseCase.call(deleteNotificationParamsTwo);
-
-      // Assert
-      expect(result, Left(failure));
     },
   );
 
@@ -67,13 +44,11 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Delete notification failed',
       );
-      when(mockNotificationRepository
-              .deleteNotification(deleteNotificationParams))
+      when(mockNotificationRepository.deleteNotification(fakeNotificationId))
           .thenAnswer((_) async => Left(failure));
 
       // Act
-      final result =
-          await deleteNotificationUseCase.call(deleteNotificationParams);
+      final result = await deleteNotificationUseCase.call(fakeNotificationId);
 
       // Assert
       expect(result, Left(failure));

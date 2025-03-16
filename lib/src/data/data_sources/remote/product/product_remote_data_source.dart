@@ -13,21 +13,18 @@ import '../../../../core/utils/extension.dart';
 import '../../../../core/error/exception.dart';
 import '../../../../core/utils/enum.dart';
 import '../../../../domain/entities/product/product_entity.dart';
-import '../../../../domain/usecases/product/add_product_params.dart';
-import '../../../../domain/usecases/product/delete_product_params.dart';
-import '../../../../domain/usecases/product/edit_product_params.dart';
 import '../../../models/product/product_model.dart';
 import '../../../models/user/user_model.dart';
 
 abstract class ProductRemoteDataSource {
-  Future<String> addProduct(AddProductParams addProductParams);
+  Future<String> addProduct(ProductEntity productEntity);
   Future<List<ProductModel>> getAllProducts(String category);
-  Future<String> deleteProduct(DeleteProductParams deleteProductParams);
+  Future<String> deleteProduct(String productId);
   Future<List<ProductModel>> getProductByMarketingTypes(String marketingType);
   Future<List<ProductModel>> getProductByQuery(String query);
   Future<ProductModel> getProductDetailsById(String productId);
   Future<ProductModel> addFavorite(String productId);
-  Future<String> editProduct(EditProductParams editProductParams);
+  Future<String> editProduct(ProductEntity productEntity);
 }
 
 class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
@@ -42,11 +39,13 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   });
 
   @override
-  Future<String> addProduct(AddProductParams addProductParams) async {
+  Future<String> addProduct(ProductEntity productEntity) async {
     try {
+      final currentUser = auth.currentUser;
+
       final userDoc = await fireStore
           .collection(AppVariableNames.users)
-          .doc(addProductParams.userId)
+          .doc(currentUser!.uid)
           .get();
 
       if (!userDoc.exists) {
@@ -60,35 +59,34 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
       if (userModel.userType == UserTypes.admin.name) {
         final result = await fireStore
             .collection(AppVariableNames.products)
-            .where('productName',
-                isEqualTo: addProductParams.productEntity.productName)
+            .where('productName', isEqualTo: productEntity.productName)
             .get();
 
         if (result.docs.isEmpty) {
           final String productId = const Uuid().v1();
 
           final String coverImageUrl = await uploadImage(
-            addProductParams.productEntity.coverImage,
+            productEntity.coverImage,
             productId,
           );
 
           final String zipFileUrl = await uploadFile(
-            addProductParams.productEntity.zipFile,
+            productEntity.zipFile,
             productId,
           );
 
           final List<String> subImagesUrls = await uploadMultipleImages(
-            addProductParams.productEntity.subImages,
+            productEntity.subImages,
             productId,
           );
 
           ProductModel productModel = ProductModel(
             id: productId,
-            productName: addProductParams.productEntity.productName,
-            price: addProductParams.productEntity.price,
-            category: addProductParams.productEntity.category,
-            marketingType: addProductParams.productEntity.marketingType,
-            description: addProductParams.productEntity.description,
+            productName: productEntity.productName,
+            price: productEntity.price,
+            category: productEntity.category,
+            marketingType: productEntity.marketingType,
+            description: productEntity.description,
             coverImage: coverImageUrl,
             subImages: subImagesUrls,
             zipFile: zipFileUrl,
@@ -261,13 +259,14 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   }
 
   @override
-  Future<String> deleteProduct(DeleteProductParams deleteProductParams) async {
+  Future<String> deleteProduct(String productId) async {
     try {
+      final currentUser = auth.currentUser;
+
       final userDoc = await fireStore
           .collection(AppVariableNames.users)
-          .doc(deleteProductParams.userId)
+          .doc(currentUser!.uid)
           .get();
-
       if (!userDoc.exists) {
         throw AuthException(
             errorMessage: rootNavigatorKey.currentContext!.loc.userNotFound);
@@ -279,7 +278,7 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
       if (userModel.userType == UserTypes.admin.name) {
         await fireStore
             .collection(AppVariableNames.products)
-            .doc(deleteProductParams.productId)
+            .doc(productId)
             .update({
           'status': ProductStatus.deActive.product,
         });
@@ -481,11 +480,13 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   }
 
   @override
-  Future<String> editProduct(EditProductParams editProductParams) async {
+  Future<String> editProduct(ProductEntity productEntity) async {
     try {
+      final currentUser = auth.currentUser;
+
       final userDoc = await fireStore
           .collection(AppVariableNames.users)
-          .doc(editProductParams.userId)
+          .doc(currentUser!.uid)
           .get();
 
       if (!userDoc.exists) {
@@ -499,28 +500,26 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
       if (userModel.userType == UserTypes.admin.name) {
         final result = await fireStore
             .collection(AppVariableNames.products)
-            .doc(editProductParams.productEntity.id)
+            .doc(productEntity.id)
             .get();
 
         if (result.exists) {
-          final productId = editProductParams.productEntity.id!;
+          final productId = productEntity.id!;
 
-          final String coverImageUrl =
-              await getCoverImageUrl(editProductParams.productEntity);
-          final String zipFileUrl =
-              await getZipFileUrl(editProductParams.productEntity);
+          final String coverImageUrl = await getCoverImageUrl(productEntity);
+          final String zipFileUrl = await getZipFileUrl(productEntity);
           final List<String> subImagesUrls =
-              await getSubImagesUrls(editProductParams.productEntity);
+              await getSubImagesUrls(productEntity);
 
           await fireStore
               .collection(AppVariableNames.products)
               .doc(productId)
               .update({
-            "productName": editProductParams.productEntity.productName,
-            "price": editProductParams.productEntity.price,
-            "category": editProductParams.productEntity.category,
-            "marketingType": editProductParams.productEntity.marketingType,
-            "description": editProductParams.productEntity.description,
+            "productName": productEntity.productName,
+            "price": productEntity.price,
+            "category": productEntity.category,
+            "marketingType": productEntity.marketingType,
+            "description": productEntity.description,
             "coverImage": coverImageUrl,
             "subImages": subImagesUrls,
             "zipFile": zipFileUrl,

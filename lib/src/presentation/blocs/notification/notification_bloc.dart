@@ -1,12 +1,9 @@
 import 'dart:async';
 
-import '../../../domain/usecases/notification/delete_notification_params.dart';
-
 import '../../../core/utils/extension.dart';
 
 import '../../../domain/usecases/notification/get_notification_count_usecase.dart';
 import '../../../domain/usecases/notification/reset_notification_count_usecase.dart';
-import '../../../domain/usecases/notification/send_notification_params.dart';
 import '../../../domain/usecases/notification/send_notification_usecase.dart';
 import '../../../domain/usecases/notification/update_notification_count_usecase.dart';
 import 'package:equatable/equatable.dart';
@@ -62,12 +59,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
       description: event.description,
     );
 
-    final sendNotificationParams = SendNotificationParams(
-      notification: notificationEntity,
-      userId: event.userId,
-    );
-
-    final result = await sendNotificationUseCase.call(sendNotificationParams);
+    final result = await sendNotificationUseCase.call(notificationEntity);
     result.fold(
       (l) {
         emit(
@@ -136,13 +128,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   ) async {
     emit(state.copyWith(status: BlocStatus.loading));
 
-    final deleteNotificationParams = DeleteNotificationParams(
-      notificationId: event.notificationId,
-      userId: event.userId,
-    );
-
-    final result =
-        await deleteNotificationUseCase.call(deleteNotificationParams);
+    final result = await deleteNotificationUseCase.call(event.notificationId);
     result.fold(
       (l) => emit(
         state.copyWith(

@@ -1,5 +1,3 @@
-import '../../../blocs/auth/auth_bloc.dart';
-
 import '../../../../core/utils/extension.dart';
 
 import '../../../../core/utils/enum.dart';
@@ -129,10 +127,13 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
 
                 if (state.isDeleted && state.status == BlocStatus.success) {
                   context.read<CategoryBloc>().add(SetDeleteStateToDefault());
+
                   Helper.showSnackBar(
                     context,
                     context.loc.categoryDeleted,
                   );
+
+                  context.read<CategoryBloc>().add(GetAllCategoriesEvent());
                 }
               },
               buildWhen: (previous, current) =>
@@ -164,12 +165,9 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
 
   _handleCategoryAdd() {
     if (_categoryController.text.isNotEmpty) {
-      final getCurrentUserId = context.read<AuthBloc>().currentUserId;
-
       context.read<CategoryBloc>().add(
             CategoryAddButtonClickedEvent(
               category: _categoryController.text,
-              userId: getCurrentUserId ?? "-1",
             ),
           );
     } else {

@@ -1,17 +1,13 @@
 import 'dart:async';
 import 'dart:io';
 
-import '../../../domain/usecases/product/add_product_params.dart';
-
 import '../../../core/utils/extension.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/entities/product/product_entity.dart';
 import '../../../domain/usecases/product/add_product_usecase.dart';
-import '../../../domain/usecases/product/delete_product_params.dart';
 import '../../../domain/usecases/product/delete_product_usecase.dart';
-import '../../../domain/usecases/product/edit_product_params.dart';
 import '../../../domain/usecases/product/edit_product_usecase.dart';
 import '../../../domain/usecases/product/get_all_products_usecase.dart';
 import 'package:equatable/equatable.dart';
@@ -79,12 +75,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       status: '',
     );
 
-    final addProductParams = AddProductParams(
-      productEntity: productEntity,
-      userId: event.userId,
-    );
-
-    final result = await addProductUseCase.call(addProductParams);
+    final result = await addProductUseCase.call(productEntity);
     result.fold(
       (l) => emit(
         state.copyWith(
@@ -133,12 +124,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       status: event.status,
     );
 
-    final editProductParams = EditProductParams(
-      productEntity: productEntity,
-      userId: event.userId,
-    );
-
-    final result = await editProductUseCase.call(editProductParams);
+    final result = await editProductUseCase.call(productEntity);
     result.fold(
       (l) => emit(
         state.copyWith(
@@ -219,12 +205,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   ) async {
     emit(state.copyWith(status: BlocStatus.loading));
 
-    final deleteProductParams = DeleteProductParams(
-      productId: event.productId,
-      userId: event.userId,
-    );
-
-    final result = await deleteProductUseCase.call(deleteProductParams);
+    final result = await deleteProductUseCase.call(event.productId);
     result.fold(
       (l) => emit(
         state.copyWith(

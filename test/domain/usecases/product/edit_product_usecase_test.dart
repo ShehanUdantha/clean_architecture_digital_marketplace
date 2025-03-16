@@ -26,11 +26,11 @@ void main() {
     'should return a Success Status when the edit product process is successful',
     () async {
       // Arrange
-      when(mockProductRepository.editProduct(editProductParams))
+      when(mockProductRepository.editProduct(dummyProductEntityForEdit))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       // Act
-      final result = await editProductUseCase.call(editProductParams);
+      final result = await editProductUseCase.call(dummyProductEntityForEdit);
 
       // Assert
       expect(result, Right(ResponseTypes.success.response));
@@ -41,32 +41,14 @@ void main() {
     'should return a Failure status when attempting to edit a product that does not exist in firestore',
     () async {
       // Arrange
-      when(mockProductRepository.editProduct(editProductParams))
+      when(mockProductRepository.editProduct(dummyProductEntityForEdit))
           .thenAnswer((_) async => Right(ResponseTypes.failure.response));
 
       // Act
-      final result = await editProductUseCase.call(editProductParams);
+      final result = await editProductUseCase.call(dummyProductEntityForEdit);
 
       // Assert
       expect(result, Right(ResponseTypes.failure.response));
-    },
-  );
-
-  test(
-    'should return a Failure when the edit product process fails due to the unauthorized access',
-    () async {
-      // Arrange
-      final failure = FirebaseFailure(
-        errorMessage: 'Edit product failed - due to the unauthorized access',
-      );
-      when(mockProductRepository.editProduct(editProductParamsTwo))
-          .thenAnswer((_) async => Left(failure));
-
-      // Act
-      final result = await editProductUseCase.call(editProductParamsTwo);
-
-      // Assert
-      expect(result, Left(failure));
     },
   );
 
@@ -77,11 +59,11 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Edit product failed',
       );
-      when(mockProductRepository.editProduct(editProductParams))
+      when(mockProductRepository.editProduct(dummyProductEntityForEdit))
           .thenAnswer((_) async => Left(failure));
 
       // Act
-      final result = await editProductUseCase.call(editProductParams);
+      final result = await editProductUseCase.call(dummyProductEntityForEdit);
 
       // Assert
       expect(result, Left(failure));

@@ -50,12 +50,9 @@ class NotificationListBuilderWidget extends StatelessWidget {
     BuildContext context,
     String id,
   ) {
-    final getCurrentUserId = context.read<AuthBloc>().currentUserId;
-
     context.read<NotificationBloc>().add(
           NotificationDeleteEvent(
             notificationId: id,
-            userId: getCurrentUserId ?? "-1",
           ),
         );
   }

@@ -4,9 +4,6 @@ import '../../../core/error/exception.dart';
 import '../../../core/error/failure.dart';
 import '../../../domain/entities/product/product_entity.dart';
 import '../../../domain/repositories/product/product_repository.dart';
-import '../../../domain/usecases/product/add_product_params.dart';
-import '../../../domain/usecases/product/delete_product_params.dart';
-import '../../../domain/usecases/product/edit_product_params.dart';
 import '../../data_sources/remote/product/product_remote_data_source.dart';
 import '../../models/product/product_model.dart';
 
@@ -17,9 +14,9 @@ class ProductRepositoryImpl implements ProductRepository {
 
   @override
   Future<Either<Failure, String>> addProduct(
-      AddProductParams addProductParams) async {
+      ProductEntity productEntity) async {
     try {
-      final result = await productRemoteDataSource.addProduct(addProductParams);
+      final result = await productRemoteDataSource.addProduct(productEntity);
       return Right(result);
     } on AuthException catch (e) {
       return Left(
@@ -62,11 +59,9 @@ class ProductRepositoryImpl implements ProductRepository {
   }
 
   @override
-  Future<Either<Failure, String>> deleteProduct(
-      DeleteProductParams deleteProductParams) async {
+  Future<Either<Failure, String>> deleteProduct(String productId) async {
     try {
-      final result =
-          await productRemoteDataSource.deleteProduct(deleteProductParams);
+      final result = await productRemoteDataSource.deleteProduct(productId);
       return Right(result);
     } on AuthException catch (e) {
       return Left(
@@ -133,9 +128,11 @@ class ProductRepositoryImpl implements ProductRepository {
   }
 
   @override
-  Future<Either<Failure, ProductModel>> getProductDetailsById(String id) async {
+  Future<Either<Failure, ProductModel>> getProductDetailsById(
+      String productId) async {
     try {
-      final result = await productRemoteDataSource.getProductDetailsById(id);
+      final result =
+          await productRemoteDataSource.getProductDetailsById(productId);
       return Right(result);
     } on AuthException catch (e) {
       return Left(
@@ -155,9 +152,9 @@ class ProductRepositoryImpl implements ProductRepository {
   }
 
   @override
-  Future<Either<Failure, ProductModel>> addFavorite(String id) async {
+  Future<Either<Failure, ProductModel>> addFavorite(String productId) async {
     try {
-      final result = await productRemoteDataSource.addFavorite(id);
+      final result = await productRemoteDataSource.addFavorite(productId);
       return Right(result);
     } on AuthException catch (e) {
       return Left(
@@ -178,10 +175,9 @@ class ProductRepositoryImpl implements ProductRepository {
 
   @override
   Future<Either<Failure, String>> editProduct(
-      EditProductParams editProductParams) async {
+      ProductEntity productEntity) async {
     try {
-      final result =
-          await productRemoteDataSource.editProduct(editProductParams);
+      final result = await productRemoteDataSource.editProduct(productEntity);
       return Right(result);
     } on AuthException catch (e) {
       return Left(

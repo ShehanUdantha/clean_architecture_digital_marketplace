@@ -1,8 +1,5 @@
 import 'dart:async';
 
-import '../../../domain/usecases/category/add_category_params.dart';
-import '../../../domain/usecases/category/delete_category_params.dart';
-
 import '../../../core/utils/extension.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -40,12 +37,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   ) async {
     emit(state.copyWith(categoryAddStatus: BlocStatus.loading));
 
-    final addCategoryParams = AddCategoryParams(
-      name: event.category,
-      userId: event.userId,
-    );
-
-    final result = await addCategoryUseCase.call(addCategoryParams);
+    final result = await addCategoryUseCase.call(event.category);
     result.fold(
       (l) => emit(
         state.copyWith(
@@ -115,11 +107,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   ) async {
     emit(state.copyWith(status: BlocStatus.loading));
 
-    final deleteCategoryParams = DeleteCategoryParams(
-      categoryId: event.categoryId,
-      userId: event.userId,
-    );
-    final result = await deleteCategoryUseCase.call(deleteCategoryParams);
+    final result = await deleteCategoryUseCase.call(event.categoryId);
 
     result.fold(
       (l) => emit(

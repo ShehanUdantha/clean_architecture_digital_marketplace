@@ -26,11 +26,11 @@ void main() {
     'should return a Success status when a new product is successfully added to firestore',
     () async {
       // Arrange
-      when(mockProductRepository.addProduct(addProductParams))
+      when(mockProductRepository.addProduct(dummyProductEntity))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       // Act
-      final result = await addProductUseCase.call(addProductParams);
+      final result = await addProductUseCase.call(dummyProductEntity);
 
       // Assert
       expect(result, Right(ResponseTypes.success.response));
@@ -41,32 +41,14 @@ void main() {
     'should return a Failure status when attempting to add a product that already exists in firestore',
     () async {
       // Arrange
-      when(mockProductRepository.addProduct(addProductParams))
+      when(mockProductRepository.addProduct(dummyProductEntity))
           .thenAnswer((_) async => Right(ResponseTypes.failure.response));
 
       // Act
-      final result = await addProductUseCase.call(addProductParams);
+      final result = await addProductUseCase.call(dummyProductEntity);
 
       // Assert
       expect(result, Right(ResponseTypes.failure.response));
-    },
-  );
-
-  test(
-    'should return a Failure status when adding a new product to firestore fails due to the unauthorized access',
-    () async {
-      // Arrange
-      final failure = FirebaseFailure(
-        errorMessage: 'Add new product failed - due to the unauthorized access',
-      );
-      when(mockProductRepository.addProduct(addProductParamsTwo))
-          .thenAnswer((_) async => Left(failure));
-
-      // Act
-      final result = await addProductUseCase.call(addProductParamsTwo);
-
-      // Assert
-      expect(result, Left(failure));
     },
   );
 
@@ -77,11 +59,11 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Add new product failed',
       );
-      when(mockProductRepository.addProduct(addProductParams))
+      when(mockProductRepository.addProduct(dummyProductEntity))
           .thenAnswer((_) async => Left(failure));
 
       // Act
-      final result = await addProductUseCase.call(addProductParams);
+      final result = await addProductUseCase.call(dummyProductEntity);
 
       // Assert
       expect(result, Left(failure));

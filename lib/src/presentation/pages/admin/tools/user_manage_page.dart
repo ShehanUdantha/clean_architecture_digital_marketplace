@@ -2,7 +2,6 @@ import '../../../../core/constants/lists.dart';
 import '../../../../core/utils/extension.dart';
 
 import '../../../../core/widgets/linear_loading_indicator.dart';
-import '../../../blocs/auth/auth_bloc.dart';
 import '../../../widgets/admin/tools/user_list_builder_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,9 +24,7 @@ class UserManagePage extends StatefulWidget {
 class _UserManagePageState extends State<UserManagePage> {
   @override
   void initState() {
-    final getCurrentUserId = context.read<AuthBloc>().currentUserId ?? "-1";
-
-    context.read<UsersBloc>().add(GetAllUsersEvent(userId: getCurrentUserId));
+    context.read<UsersBloc>().add(GetAllUsersEvent());
 
     super.initState();
   }
@@ -123,8 +120,6 @@ class _UserManagePageState extends State<UserManagePage> {
     int index,
     String userTypeName,
   ) {
-    final getCurrentUserId = context.read<AuthBloc>().currentUserId;
-
     context.read<UsersBloc>().add(
           UserTypeSelectEvent(
             value: index,
@@ -133,7 +128,7 @@ class _UserManagePageState extends State<UserManagePage> {
         );
 
     context.read<UsersBloc>().add(
-          GetAllUsersEvent(userId: getCurrentUserId ?? "-1"),
+          GetAllUsersEvent(),
         );
   }
 }

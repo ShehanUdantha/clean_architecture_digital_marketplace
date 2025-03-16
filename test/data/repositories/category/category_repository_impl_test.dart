@@ -29,44 +29,17 @@ void main() {
         'should return a Success Status when the add category process is successful',
         () async {
           // Arrange
-          when(mockCategoryRemoteDataSource.addCategory(addCategoryParams))
+          when(mockCategoryRemoteDataSource.addCategory(dummyFontCategoryType))
               .thenAnswer((_) async => ResponseTypes.success.response);
 
           // Act
           final result =
-              await categoryRepositoryImpl.addCategory(addCategoryParams);
+              await categoryRepositoryImpl.addCategory(dummyFontCategoryType);
 
           // Assert
           result.fold(
             (l) => fail('test failed'),
             (r) => expect(r, ResponseTypes.success.response),
-          );
-        },
-      );
-
-      test(
-        'should return a Failure when the add category process fails due to the unauthorized access',
-        () async {
-          // Arrange
-          final authException = AuthException(
-            errorMessage:
-                'Add category failed - due to the unauthorized access',
-          );
-          when(mockCategoryRemoteDataSource.addCategory(addCategoryParamsTwo))
-              .thenThrow(authException);
-
-          // Act
-          final result =
-              await categoryRepositoryImpl.addCategory(addCategoryParamsTwo);
-
-          // Assert
-          final failure = FirebaseFailure(
-            errorMessage:
-                'Add category failed - due to the unauthorized access',
-          );
-          result.fold(
-            (l) => expect(l, failure),
-            (r) => fail('test failed'),
           );
         },
       );
@@ -78,12 +51,12 @@ void main() {
           final dbException = DBException(
             errorMessage: 'Add category failed',
           );
-          when(mockCategoryRemoteDataSource.addCategory(addCategoryParams))
+          when(mockCategoryRemoteDataSource.addCategory(dummyFontCategoryType))
               .thenThrow(dbException);
 
           // Act
           final result =
-              await categoryRepositoryImpl.addCategory(addCategoryParams);
+              await categoryRepositoryImpl.addCategory(dummyFontCategoryType);
 
           // Assert
           final failure = FirebaseFailure(
@@ -153,45 +126,17 @@ void main() {
         () async {
           // Arrange
           when(mockCategoryRemoteDataSource
-                  .deleteCategory(deleteCategoryParams))
+                  .deleteCategory(fakeProductCategoryId))
               .thenAnswer((_) async => ResponseTypes.success.response);
 
           // Act
-          final result =
-              await categoryRepositoryImpl.deleteCategory(deleteCategoryParams);
+          final result = await categoryRepositoryImpl
+              .deleteCategory(fakeProductCategoryId);
 
           // Assert
           result.fold(
             (l) => fail('test failed'),
             (r) => expect(r, ResponseTypes.success.response),
-          );
-        },
-      );
-
-      test(
-        'should return a Failure when the delete category process fails due to the unauthorized access',
-        () async {
-          // Arrange
-          final authException = AuthException(
-            errorMessage:
-                'Delete category failed - due to the unauthorized access',
-          );
-          when(mockCategoryRemoteDataSource
-                  .deleteCategory(deleteCategoryParamsTwo))
-              .thenThrow(authException);
-
-          // Act
-          final result = await categoryRepositoryImpl
-              .deleteCategory(deleteCategoryParamsTwo);
-
-          // Assert
-          final failure = FirebaseFailure(
-            errorMessage:
-                'Delete category failed - due to the unauthorized access',
-          );
-          result.fold(
-            (l) => expect(l, failure),
-            (r) => fail('test failed'),
           );
         },
       );
@@ -204,12 +149,12 @@ void main() {
             errorMessage: 'Delete category failed',
           );
           when(mockCategoryRemoteDataSource
-                  .deleteCategory(deleteCategoryParams))
+                  .deleteCategory(fakeProductCategoryId))
               .thenThrow(dbException);
 
           // Act
-          final result =
-              await categoryRepositoryImpl.deleteCategory(deleteCategoryParams);
+          final result = await categoryRepositoryImpl
+              .deleteCategory(fakeProductCategoryId);
 
           // Assert
           final failure = FirebaseFailure(

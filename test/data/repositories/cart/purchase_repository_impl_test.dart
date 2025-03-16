@@ -197,34 +197,6 @@ void main() {
       );
 
       test(
-        'should return a Failure when the get all purchase history by month process fails due to the unauthorized access',
-        () async {
-          // Arrange
-          final dbException = DBException(
-            errorMessage:
-                'Get all purchase history by month failed - due to the unauthorized access',
-          );
-          when(mockPurchaseRemoteDataSource
-                  .getAllPurchaseHistoryByMonth(yearAndMonthParamsTwo))
-              .thenThrow(dbException);
-
-          // Act
-          final result = await purchaseRepositoryImpl
-              .getAllPurchaseHistoryByMonth(yearAndMonthParamsTwo);
-
-          // Assert
-          final failure = FirebaseFailure(
-            errorMessage:
-                'Get all purchase history by month failed - due to the unauthorized access',
-          );
-          result.fold(
-            (l) => expect(l, failure),
-            (r) => fail('test failed'),
-          );
-        },
-      );
-
-      test(
         'should return a Failure when the get all purchase history by month process fails',
         () async {
           // Arrange
@@ -271,34 +243,6 @@ void main() {
           result.fold(
             (l) => fail('test failed'),
             (r) => expect(r, fakeTotalPurchaseAmount),
-          );
-        },
-      );
-
-      test(
-        'should return a Failure when the get all purchase total balance by month process fails due to the unauthorized access',
-        () async {
-          // Arrange
-          final dbException = DBException(
-            errorMessage:
-                'Get all purchase total balance by month failed - due to the unauthorized access',
-          );
-          when(mockPurchaseRemoteDataSource
-                  .getAllPurchasesTotalBalanceByMonth(yearAndMonthParamsTwo))
-              .thenThrow(dbException);
-
-          // Act
-          final result = await purchaseRepositoryImpl
-              .getAllPurchasesTotalBalanceByMonth(yearAndMonthParamsTwo);
-
-          // Assert
-          final failure = FirebaseFailure(
-            errorMessage:
-                'Get all purchase total balance by month failed - due to the unauthorized access',
-          );
-          result.fold(
-            (l) => expect(l, failure),
-            (r) => fail('test failed'),
           );
         },
       );
@@ -356,36 +300,6 @@ void main() {
       );
 
       test(
-        'should return a Failure when the get all purchase total balance percentage by month process fails due to the unauthorized access',
-        () async {
-          // Arrange
-          final dbException = DBException(
-            errorMessage:
-                'Get all purchase total balance percentage by month failed - due to the unauthorized access',
-          );
-          when(mockPurchaseRemoteDataSource
-                  .getAllPurchasesTotalBalancePercentageByMonth(
-                      yearAndMonthParamsTwo))
-              .thenThrow(dbException);
-
-          // Act
-          final result = await purchaseRepositoryImpl
-              .getAllPurchasesTotalBalancePercentageByMonth(
-                  yearAndMonthParamsTwo);
-
-          // Assert
-          final failure = FirebaseFailure(
-            errorMessage:
-                'Get all purchase total balance percentage by month failed - due to the unauthorized access',
-          );
-          result.fold(
-            (l) => expect(l, failure),
-            (r) => fail('test failed'),
-          );
-        },
-      );
-
-      test(
         'should return a Failure when the get all purchase total balance percentage by month process fails',
         () async {
           // Arrange
@@ -435,34 +349,6 @@ void main() {
           result.fold(
             (l) => fail('test failed'),
             (r) => expect(r, dummyTopSellingProducts),
-          );
-        },
-      );
-
-      test(
-        'should return a Failure when the get top selling products by month process fails due to the unauthorized access',
-        () async {
-          // Arrange
-          final dbException = DBException(
-            errorMessage:
-                'Get top selling products by month failed - due to the unauthorized access',
-          );
-          when(mockPurchaseRemoteDataSource
-                  .getAllTopSellingProductsByMonth(yearAndMonthParamsTwo))
-              .thenThrow(dbException);
-
-          // Act
-          final result = await purchaseRepositoryImpl
-              .getAllTopSellingProductsByMonth(yearAndMonthParamsTwo);
-
-          // Assert
-          final failure = FirebaseFailure(
-            errorMessage:
-                'Get top selling products by month failed - due to the unauthorized access',
-          );
-          result.fold(
-            (l) => expect(l, failure),
-            (r) => fail('test failed'),
           );
         },
       );

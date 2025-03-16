@@ -3,15 +3,14 @@ import 'package:dartz/dartz.dart';
 
 import '../../../core/usecases/usecase.dart';
 import '../../../core/error/failure.dart';
-import 'delete_product_params.dart';
 
-class DeleteProductUseCase extends UseCase<String, DeleteProductParams> {
+class DeleteProductUseCase extends UseCase<String, String> {
   final ProductRepository productRepository;
 
   DeleteProductUseCase({required this.productRepository});
 
   @override
-  Future<Either<Failure, String>> call(DeleteProductParams params) async {
+  Future<Either<Failure, String>> call(String params) async {
     return await productRepository.deleteProduct(params);
   }
 }

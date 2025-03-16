@@ -10,11 +10,9 @@ sealed class CategoryEvent extends Equatable {
 
 class CategoryAddButtonClickedEvent extends CategoryEvent {
   final String category;
-  final String userId;
 
   const CategoryAddButtonClickedEvent({
     required this.category,
-    required this.userId,
   });
 }
 
@@ -24,11 +22,9 @@ class GetAllCategoriesEvent extends CategoryEvent {}
 
 class DeleteCategoriesEvent extends CategoryEvent {
   final String categoryId;
-  final String userId;
 
   const DeleteCategoriesEvent({
     required this.categoryId,
-    required this.userId,
   });
 }
 

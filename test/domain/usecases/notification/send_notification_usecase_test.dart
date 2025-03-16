@@ -26,35 +26,15 @@ void main() {
     'should return a Success Status when the send notification process is successful',
     () async {
       // Arrange
-      when(mockNotificationRepository.sendNotification(sendNotificationParams))
+      when(mockNotificationRepository.sendNotification(dummyNotificationEntity))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       // Act
-      final result = await sendNotificationUseCase.call(sendNotificationParams);
+      final result =
+          await sendNotificationUseCase.call(dummyNotificationEntity);
 
       // Assert
       expect(result, Right(ResponseTypes.success.response));
-    },
-  );
-
-  test(
-    'should return a Failure when the send notification process fails due to the unauthorized access',
-    () async {
-      // Arrange
-      final failure = FirebaseFailure(
-        errorMessage:
-            'Send notification failed - due to the unauthorized access',
-      );
-      when(mockNotificationRepository
-              .sendNotification(sendNotificationParamsTwo))
-          .thenAnswer((_) async => Left(failure));
-
-      // Act
-      final result =
-          await sendNotificationUseCase.call(sendNotificationParamsTwo);
-
-      // Assert
-      expect(result, Left(failure));
     },
   );
 
@@ -65,11 +45,12 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Send notification failed - (Firebase)',
       );
-      when(mockNotificationRepository.sendNotification(sendNotificationParams))
+      when(mockNotificationRepository.sendNotification(dummyNotificationEntity))
           .thenAnswer((_) async => Left(failure));
 
       // Act
-      final result = await sendNotificationUseCase.call(sendNotificationParams);
+      final result =
+          await sendNotificationUseCase.call(dummyNotificationEntity);
 
       // Assert
       expect(result, Left(failure));
@@ -83,11 +64,12 @@ void main() {
       final failure = APIFailure(
         errorMessage: 'Send notification failed - (API)',
       );
-      when(mockNotificationRepository.sendNotification(sendNotificationParams))
+      when(mockNotificationRepository.sendNotification(dummyNotificationEntity))
           .thenAnswer((_) async => Left(failure));
 
       // Act
-      final result = await sendNotificationUseCase.call(sendNotificationParams);
+      final result =
+          await sendNotificationUseCase.call(dummyNotificationEntity);
 
       // Assert
       expect(result, Left(failure));

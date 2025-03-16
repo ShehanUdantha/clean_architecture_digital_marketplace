@@ -27,7 +27,6 @@ class ProductUploadButtonClickedEvent extends ProductEvent {
   final String productName;
   final String productPrice;
   final String productDescription;
-  final String userId;
 
   const ProductUploadButtonClickedEvent({
     this.coverImage,
@@ -36,7 +35,6 @@ class ProductUploadButtonClickedEvent extends ProductEvent {
     required this.productName,
     required this.productPrice,
     required this.productDescription,
-    required this.userId,
   });
 }
 
@@ -51,7 +49,6 @@ class ProductEditButtonClickedEvent extends ProductEvent {
   final List<String>? sharedSubImages;
   final List<String> likes;
   final String status;
-  final String userId;
 
   const ProductEditButtonClickedEvent({
     required this.id,
@@ -64,7 +61,6 @@ class ProductEditButtonClickedEvent extends ProductEvent {
     this.sharedSubImages,
     required this.likes,
     required this.status,
-    required this.userId,
   });
 }
 
@@ -84,11 +80,9 @@ class GetAllProductsEvent extends ProductEvent {}
 
 class ProductDeleteEvent extends ProductEvent {
   final String productId;
-  final String userId;
 
   const ProductDeleteEvent({
     required this.productId,
-    required this.userId,
   });
 }
 

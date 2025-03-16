@@ -7,30 +7,32 @@ import '../../../../core/constants/variable_names.dart';
 import '../../../../core/error/exception.dart';
 import '../../../../core/utils/enum.dart';
 import '../../../../core/utils/extension.dart';
-import '../../../../domain/usecases/category/add_category_params.dart';
-import '../../../../domain/usecases/category/delete_category_params.dart';
 import '../../../models/category/category_model.dart';
 import '../../../models/user/user_model.dart';
 
 abstract class CategoryRemoteDataSource {
-  Future<String> addCategory(AddCategoryParams addCategoryParams);
+  Future<String> addCategory(String categoryName);
   Future<List<CategoryModel>> getAllCategories();
-  Future<String> deleteCategory(DeleteCategoryParams deleteCategoryParams);
+  Future<String> deleteCategory(String categoryId);
 }
 
 class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
   final FirebaseFirestore fireStore;
+  final FirebaseAuth auth;
 
   CategoryRemoteDataSourceImpl({
     required this.fireStore,
+    required this.auth,
   });
 
   @override
-  Future<String> addCategory(AddCategoryParams addCategoryParams) async {
+  Future<String> addCategory(String categoryName) async {
     try {
+      final currentUser = auth.currentUser;
+
       final userDoc = await fireStore
           .collection(AppVariableNames.users)
-          .doc(addCategoryParams.userId)
+          .doc(currentUser!.uid)
           .get();
 
       if (!userDoc.exists) {
@@ -44,7 +46,7 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
       if (userModel.userType == UserTypes.admin.name) {
         final result = await fireStore
             .collection(AppVariableNames.categories)
-            .where('name', isEqualTo: addCategoryParams.name)
+            .where('name', isEqualTo: categoryName)
             .get();
 
         if (result.docs.isEmpty) {
@@ -52,7 +54,7 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
 
           CategoryModel categoryModel = CategoryModel(
             id: categoryId,
-            name: addCategoryParams.name,
+            name: categoryName,
             dateCreated: DateTime.now(),
           );
           await fireStore
@@ -124,12 +126,13 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
   }
 
   @override
-  Future<String> deleteCategory(
-      DeleteCategoryParams deleteCategoryParams) async {
+  Future<String> deleteCategory(String categoryId) async {
     try {
+      final currentUser = auth.currentUser;
+
       final userDoc = await fireStore
           .collection(AppVariableNames.users)
-          .doc(deleteCategoryParams.userId)
+          .doc(currentUser!.uid)
           .get();
 
       if (!userDoc.exists) {
@@ -143,7 +146,7 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
       if (userModel.userType == UserTypes.admin.name) {
         await fireStore
             .collection(AppVariableNames.categories)
-            .doc(deleteCategoryParams.categoryId)
+            .doc(categoryId)
             .delete();
 
         return ResponseTypes.success.response;

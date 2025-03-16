@@ -7,13 +7,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../core/constants/variable_names.dart';
 import '../../../../core/error/exception.dart';
 import '../../../../core/utils/enum.dart';
-import '../../../../domain/usecases/user/get_all_users_params.dart';
 import '../../../models/user/user_model.dart';
 
 abstract class UserRemoteDataSource {
-  Future<String> getUserType(String id);
+  Future<String> getUserType(String userId);
   Future<UserModel> getUserDetails();
-  Future<List<UserModel>> getAllUsers(GetAllUsersParams getAllUsersParams);
+  Future<List<UserModel>> getAllUsers(String userType);
 }
 
 class UserRemoteDataSourceImpl implements UserRemoteDataSource {
@@ -26,10 +25,10 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   });
 
   @override
-  Future<String> getUserType(String id) async {
+  Future<String> getUserType(String userId) async {
     try {
       final userDoc =
-          await fireStore.collection(AppVariableNames.users).doc(id).get();
+          await fireStore.collection(AppVariableNames.users).doc(userId).get();
 
       if (!userDoc.exists) {
         throw AuthException(
@@ -96,12 +95,13 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   }
 
   @override
-  Future<List<UserModel>> getAllUsers(
-      GetAllUsersParams getAllUsersParams) async {
+  Future<List<UserModel>> getAllUsers(String userType) async {
     try {
+      final currentUser = auth.currentUser;
+
       final userDoc = await fireStore
           .collection(AppVariableNames.users)
-          .doc(getAllUsersParams.userId)
+          .doc(currentUser!.uid)
           .get();
 
       if (!userDoc.exists) {
@@ -113,14 +113,12 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
           UserModel.fromMap(userDoc.data() as Map<String, dynamic>);
 
       if (userModel.userType == UserTypes.admin.name) {
-        final result =
-            getAllUsersParams.userType != AppVariableNames.allUsersType
-                ? await fireStore
-                    .collection(AppVariableNames.users)
-                    .where('userType',
-                        isEqualTo: getAllUsersParams.userType.toLowerCase())
-                    .get()
-                : await fireStore.collection(AppVariableNames.users).get();
+        final result = userType != AppVariableNames.allUsersType
+            ? await fireStore
+                .collection(AppVariableNames.users)
+                .where('userType', isEqualTo: userType.toLowerCase())
+                .get()
+            : await fireStore.collection(AppVariableNames.users).get();
 
         return List<UserModel>.from(
             (result.docs).map((e) => UserModel.fromDocument(e)));

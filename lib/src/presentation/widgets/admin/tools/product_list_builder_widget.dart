@@ -9,7 +9,6 @@ import '../../../../core/widgets/item_not_found_text.dart';
 import '../../../../domain/entities/product/product_entity.dart';
 import '../../../../core/constants/routes_name.dart';
 import '../../../../core/widgets/product_linear_card_widget.dart';
-import '../../../blocs/auth/auth_bloc.dart';
 import '../../../blocs/product/product_bloc.dart';
 
 class ProductListBuilderWidget extends StatelessWidget {
@@ -47,12 +46,9 @@ class ProductListBuilderWidget extends StatelessWidget {
     BuildContext context,
     String id,
   ) {
-    final getCurrentUserId = context.read<AuthBloc>().currentUserId;
-
     context.read<ProductBloc>().add(
           ProductDeleteEvent(
             productId: id,
-            userId: getCurrentUserId ?? "-1",
           ),
         );
   }

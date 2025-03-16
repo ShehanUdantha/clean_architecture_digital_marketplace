@@ -112,7 +112,6 @@ class AdminHomeBloc extends Bloc<AdminHomeEvent, AdminHomeState> {
       YearAndMonthParams(
         year: state.year,
         month: state.month,
-        userId: event.userId,
       ),
     );
     emit(state.copyWith(isMonthlyStatusLoading: false));
@@ -135,7 +134,6 @@ class AdminHomeBloc extends Bloc<AdminHomeEvent, AdminHomeState> {
       YearAndMonthParams(
         year: state.year,
         month: state.month,
-        userId: event.userId,
       ),
     );
 
@@ -157,7 +155,6 @@ class AdminHomeBloc extends Bloc<AdminHomeEvent, AdminHomeState> {
       YearAndMonthParams(
         year: state.year,
         month: state.month,
-        userId: event.userId,
       ),
     );
 
@@ -182,7 +179,6 @@ class AdminHomeBloc extends Bloc<AdminHomeEvent, AdminHomeState> {
       YearAndMonthParams(
         year: state.year,
         month: state.month,
-        userId: event.userId,
       ),
     );
 

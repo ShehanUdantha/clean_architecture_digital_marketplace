@@ -38,26 +38,6 @@ void main() {
   );
 
   test(
-    'should return a Failure when the get top selling products by month process fails due to the unauthorized access',
-    () async {
-      // Arrange
-      final failure = FirebaseFailure(
-        errorMessage: 'Get top selling products by month failed',
-      );
-      when(mockPurchaseRepository
-              .getAllTopSellingProductsByMonth(yearAndMonthParamsTwo))
-          .thenAnswer((_) async => Left(failure));
-
-      // Act
-      final result =
-          await getTopSellingProductsByMonthUseCase.call(yearAndMonthParamsTwo);
-
-      // Assert
-      expect(result, Left(failure));
-    },
-  );
-
-  test(
     'should return a Failure when the get top selling products by month process fails',
     () async {
       // Arrange

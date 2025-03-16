@@ -7,11 +7,7 @@ sealed class UsersEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class GetAllUsersEvent extends UsersEvent {
-  final String userId;
-
-  const GetAllUsersEvent({required this.userId});
-}
+class GetAllUsersEvent extends UsersEvent {}
 
 class UserTypeSelectEvent extends UsersEvent {
   final int value;

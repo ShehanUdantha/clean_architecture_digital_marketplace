@@ -26,32 +26,14 @@ void main() {
     'should return a Success Status when the add category process is successful',
     () async {
       // Arrange
-      when(mockCategoryRepository.addCategory(addCategoryParams))
+      when(mockCategoryRepository.addCategory(dummyProductCategoryType))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       // Act
-      final result = await addCategoryUseCase.call(addCategoryParams);
+      final result = await addCategoryUseCase.call(dummyProductCategoryType);
 
       // Assert
       expect(result, Right(ResponseTypes.success.response));
-    },
-  );
-
-  test(
-    'should return a Failure when the add category process fails due to the unauthorized access',
-    () async {
-      // Arrange
-      final failure = FirebaseFailure(
-        errorMessage: 'Add category failed - due to the unauthorized access',
-      );
-      when(mockCategoryRepository.addCategory(addCategoryParamsTwo))
-          .thenAnswer((_) async => Left(failure));
-
-      // Act
-      final result = await addCategoryUseCase.call(addCategoryParamsTwo);
-
-      // Assert
-      expect(result, Left(failure));
     },
   );
 
@@ -62,11 +44,11 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Add category failed',
       );
-      when(mockCategoryRepository.addCategory(addCategoryParams))
+      when(mockCategoryRepository.addCategory(dummyProductCategoryType))
           .thenAnswer((_) async => Left(failure));
 
       // Act
-      final result = await addCategoryUseCase.call(addCategoryParams);
+      final result = await addCategoryUseCase.call(dummyProductCategoryType);
 
       // Assert
       expect(result, Left(failure));

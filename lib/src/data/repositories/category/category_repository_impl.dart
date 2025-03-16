@@ -1,7 +1,4 @@
-import '../../../domain/usecases/category/add_category_params.dart';
-
 import '../../../core/error/failure.dart';
-import '../../../domain/usecases/category/delete_category_params.dart';
 import '../../data_sources/remote/category/category_remote_data_source.dart';
 import '../../../domain/entities/category/category_entity.dart';
 import '../../../domain/repositories/category/category_repository.dart';
@@ -15,11 +12,9 @@ class CategoryRepositoryImpl implements CategoryRepository {
   CategoryRepositoryImpl({required this.categoryRemoteDataSource});
 
   @override
-  Future<Either<Failure, String>> addCategory(
-      AddCategoryParams addCategoryParams) async {
+  Future<Either<Failure, String>> addCategory(String categoryName) async {
     try {
-      final result =
-          await categoryRemoteDataSource.addCategory(addCategoryParams);
+      final result = await categoryRemoteDataSource.addCategory(categoryName);
       return Right(result);
     } on AuthException catch (e) {
       return Left(
@@ -61,11 +56,9 @@ class CategoryRepositoryImpl implements CategoryRepository {
   }
 
   @override
-  Future<Either<Failure, String>> deleteCategory(
-      DeleteCategoryParams deleteCategoryParams) async {
+  Future<Either<Failure, String>> deleteCategory(String categoryId) async {
     try {
-      final result =
-          await categoryRemoteDataSource.deleteCategory(deleteCategoryParams);
+      final result = await categoryRemoteDataSource.deleteCategory(categoryId);
       return Right(result);
     } on AuthException catch (e) {
       return Left(

@@ -24,34 +24,10 @@ class UpdateMonth extends AdminHomeEvent {
   const UpdateMonth({required this.month});
 }
 
-class GetMonthlyPurchaseStatus extends AdminHomeEvent {
-  final String userId;
+class GetMonthlyPurchaseStatus extends AdminHomeEvent {}
 
-  const GetMonthlyPurchaseStatus({
-    required this.userId,
-  });
-}
+class GetMonthlyTotalBalance extends AdminHomeEvent {}
 
-class GetMonthlyTotalBalance extends AdminHomeEvent {
-  final String userId;
+class GetMonthlyTotalBalancePercentage extends AdminHomeEvent {}
 
-  const GetMonthlyTotalBalance({
-    required this.userId,
-  });
-}
-
-class GetMonthlyTotalBalancePercentage extends AdminHomeEvent {
-  final String userId;
-
-  const GetMonthlyTotalBalancePercentage({
-    required this.userId,
-  });
-}
-
-class GetMonthlyTopSellingProducts extends AdminHomeEvent {
-  final String userId;
-
-  const GetMonthlyTopSellingProducts({
-    required this.userId,
-  });
-}
+class GetMonthlyTopSellingProducts extends AdminHomeEvent {}

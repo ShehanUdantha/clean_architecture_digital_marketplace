@@ -150,9 +150,11 @@ class PurchaseRemoteDataSourceImpl implements PurchaseRemoteDataSource {
   Future<Map<String, int>> getAllPurchaseHistoryByMonth(
       YearAndMonthParams yearAndMonthParams) async {
     try {
+      final currentUser = auth.currentUser;
+
       final userDoc = await fireStore
           .collection(AppVariableNames.users)
-          .doc(yearAndMonthParams.userId)
+          .doc(currentUser!.uid)
           .get();
 
       if (!userDoc.exists) {
@@ -233,9 +235,11 @@ class PurchaseRemoteDataSourceImpl implements PurchaseRemoteDataSource {
   Future<double> getAllPurchasesTotalBalanceByMonth(
       YearAndMonthParams yearAndMonthParams) async {
     try {
+      final currentUser = auth.currentUser;
+
       final userDoc = await fireStore
           .collection(AppVariableNames.users)
-          .doc(yearAndMonthParams.userId)
+          .doc(currentUser!.uid)
           .get();
 
       if (!userDoc.exists) {
@@ -307,9 +311,11 @@ class PurchaseRemoteDataSourceImpl implements PurchaseRemoteDataSource {
   Future<double> getAllPurchasesTotalBalancePercentageByMonth(
       YearAndMonthParams yearAndMonthParams) async {
     try {
+      final currentUser = auth.currentUser;
+
       final userDoc = await fireStore
           .collection(AppVariableNames.users)
-          .doc(yearAndMonthParams.userId)
+          .doc(currentUser!.uid)
           .get();
 
       if (!userDoc.exists) {
@@ -332,7 +338,6 @@ class PurchaseRemoteDataSourceImpl implements PurchaseRemoteDataSource {
               : yearAndMonthParams.year,
           month:
               yearAndMonthParams.month == 1 ? 12 : yearAndMonthParams.month - 1,
-          userId: yearAndMonthParams.userId,
         );
 
         final double lastMonthBalance =
@@ -380,9 +385,11 @@ class PurchaseRemoteDataSourceImpl implements PurchaseRemoteDataSource {
   Future<List<ProductModel>> getAllTopSellingProductsByMonth(
       YearAndMonthParams yearAndMonthParams) async {
     try {
+      final currentUser = auth.currentUser;
+
       final userDoc = await fireStore
           .collection(AppVariableNames.users)
-          .doc(yearAndMonthParams.userId)
+          .doc(currentUser!.uid)
           .get();
 
       if (!userDoc.exists) {

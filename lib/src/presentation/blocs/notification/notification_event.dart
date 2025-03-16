@@ -11,12 +11,10 @@ sealed class NotificationEvent extends Equatable {
 class NotificationSendButtonClickedEvent extends NotificationEvent {
   final String title;
   final String description;
-  final String userId;
 
   const NotificationSendButtonClickedEvent({
     required this.title,
     required this.description,
-    required this.userId,
   });
 }
 
@@ -26,11 +24,9 @@ class GetAllNotificationsEvent extends NotificationEvent {}
 
 class NotificationDeleteEvent extends NotificationEvent {
   final String notificationId;
-  final String userId;
 
   const NotificationDeleteEvent({
     required this.notificationId,
-    required this.userId,
   });
 }
 

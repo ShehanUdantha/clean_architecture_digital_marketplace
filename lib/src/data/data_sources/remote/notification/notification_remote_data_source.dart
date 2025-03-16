@@ -4,8 +4,6 @@ import 'dart:convert';
 import '../../../../config/routes/router.dart';
 import '../../../../core/constants/urls.dart';
 import '../../../../core/constants/variable_names.dart';
-import '../../../../domain/usecases/notification/delete_notification_params.dart';
-import '../../../../domain/usecases/notification/send_notification_params.dart';
 import '../../../models/notification/notification_model.dart';
 import '../../../../domain/entities/notification/notification_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -22,11 +20,9 @@ import '../../../../core/utils/extension.dart';
 import '../../../models/user/user_model.dart';
 
 abstract class NotificationRemoteDataSource {
-  Future<String> sendNotification(
-      SendNotificationParams sendNotificationParams);
+  Future<String> sendNotification(NotificationEntity notification);
   Future<List<NotificationEntity>> getAllNotifications();
-  Future<String> deleteNotification(
-      DeleteNotificationParams deleteNotificationParams);
+  Future<String> deleteNotification(String notificationId);
 }
 
 class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
@@ -41,12 +37,13 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
   });
 
   @override
-  Future<String> sendNotification(
-      SendNotificationParams sendNotificationParams) async {
+  Future<String> sendNotification(NotificationEntity notification) async {
     try {
+      final currentUser = auth.currentUser;
+
       final userDoc = await fireStore
           .collection(AppVariableNames.users)
-          .doc(sendNotificationParams.userId)
+          .doc(currentUser!.uid)
           .get();
 
       if (!userDoc.exists) {
@@ -60,15 +57,15 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
       if (userModel.userType == UserTypes.admin.name) {
         final notificationId = const Uuid().v1();
 
-        await sendNotificationsToAllUsers(sendNotificationParams);
+        await sendNotificationsToAllUsers(notification);
 
         await fireStore
             .collection(AppVariableNames.notifications)
             .doc(notificationId)
             .set({
           "id": notificationId,
-          "title": sendNotificationParams.notification.title,
-          "description": sendNotificationParams.notification.description,
+          "title": notification.title,
+          "description": notification.description,
           "dateCreated": DateTime.now(),
         });
 
@@ -106,12 +103,13 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
   }
 
   @override
-  Future<String> deleteNotification(
-      DeleteNotificationParams deleteNotificationParams) async {
+  Future<String> deleteNotification(String notificationId) async {
     try {
+      final currentUser = auth.currentUser;
+
       final userDoc = await fireStore
           .collection(AppVariableNames.users)
-          .doc(deleteNotificationParams.userId)
+          .doc(currentUser!.uid)
           .get();
 
       if (!userDoc.exists) {
@@ -125,7 +123,7 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
       if (userModel.userType == UserTypes.admin.name) {
         await fireStore
             .collection(AppVariableNames.notifications)
-            .doc(deleteNotificationParams.notificationId)
+            .doc(notificationId)
             .delete();
 
         return ResponseTypes.success.response;
@@ -250,7 +248,7 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
   }
 
   Future<void> sendNotificationsToAllUsers(
-      SendNotificationParams sendNotificationParams) async {
+      NotificationEntity notification) async {
     try {
       final Set<String> allDeviceTokens = await getAllDeviceTokens();
       final String serviceAccessToken = await getFirebaseServiceAccessToken();
@@ -260,8 +258,8 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
           'message': {
             'token': tokenId,
             'notification': {
-              'title': sendNotificationParams.notification.title,
-              'body': sendNotificationParams.notification.description,
+              'title': notification.title,
+              'body': notification.description,
             },
           },
         };

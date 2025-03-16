@@ -128,6 +128,7 @@ Future<void> serviceLocator() async {
   sl.registerSingleton<CategoryRemoteDataSource>(
     CategoryRemoteDataSourceImpl(
       fireStore: sl(),
+      auth: sl(),
     ),
   );
   sl.registerSingleton<ProductRemoteDataSource>(

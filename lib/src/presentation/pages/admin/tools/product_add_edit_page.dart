@@ -19,7 +19,6 @@ import '../../../../core/constants/colors.dart';
 import '../../../../core/constants/lists.dart';
 import '../../../../core/constants/routes_name.dart';
 import '../../../../core/utils/enum.dart';
-import '../../../blocs/auth/auth_bloc.dart';
 import '../../../blocs/category/category_bloc.dart';
 import '../../../blocs/product/product_bloc.dart';
 import '../../../widgets/admin/tools/drop_down_widget.dart';
@@ -497,9 +496,6 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
               if (state.marketingType.isNotEmpty) {
                 if (_productDescriptionController.text.isNotEmpty) {
                   if (asset != null || isUploadAssetsAvailableInSharedProduct) {
-                    final getCurrentUserId =
-                        context.read<AuthBloc>().currentUserId;
-
                     if (widget.product != null &&
                         widget.title == CURDTypes.update.name) {
                       final product = widget.product!;
@@ -525,7 +521,6 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
                               sharedSubImages: sharedSubImages ?? [],
                               likes: product.likes,
                               status: product.status,
-                              userId: getCurrentUserId ?? "-1",
                             ),
                           );
                     } else {
@@ -538,7 +533,6 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
                               productPrice: _productPriceController.text,
                               productDescription:
                                   _productDescriptionController.text,
-                              userId: getCurrentUserId ?? "-1",
                             ),
                           );
                     }
