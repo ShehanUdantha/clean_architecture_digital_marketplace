@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:Pixelcart/src/config/routes/router.dart';
+import 'package:Pixelcart/src/core/constants/error_messages.dart';
+
 import '../../../core/utils/extension.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -49,14 +52,15 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
         if (r == ResponseTypes.success.response) {
           emit(
             state.copyWith(
-              categoryAddMessage: r,
               categoryAddStatus: BlocStatus.success,
             ),
           );
         } else {
           emit(
             state.copyWith(
-              categoryAddMessage: r,
+              categoryAddMessage:
+                  rootNavigatorKey.currentContext?.loc.categoryAlreadyAdded ??
+                      AppErrorMessages.categoryAlreadyAdded,
               categoryAddStatus: BlocStatus.error,
             ),
           );
@@ -118,7 +122,6 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
       ),
       (r) => emit(
         state.copyWith(
-          message: r,
           status: BlocStatus.success,
           isDeleted: true,
         ),

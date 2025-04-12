@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:Pixelcart/src/config/routes/router.dart';
+import 'package:Pixelcart/src/core/constants/error_messages.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/utils/extension.dart';
@@ -37,11 +39,16 @@ class ForgotPasswordBloc
       (r) {
         if (r == ResponseTypes.success.response) {
           emit(
-            state.copyWith(authMessage: r, status: BlocStatus.success),
+            state.copyWith(status: BlocStatus.success),
           );
         } else {
           emit(
-            state.copyWith(authMessage: r, status: BlocStatus.error),
+            state.copyWith(
+              authMessage:
+                  rootNavigatorKey.currentContext?.loc.invalidForgotEmail ??
+                      AppErrorMessages.invalidForgotEmail,
+              status: BlocStatus.error,
+            ),
           );
         }
       },

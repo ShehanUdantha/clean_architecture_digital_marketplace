@@ -15,8 +15,8 @@ abstract class AuthState extends Equatable {
   });
 
   @override
-  List<Object> get props => [
-        user!,
+  List<Object?> get props => [
+        user,
         status,
         userType,
         signOutStatus,

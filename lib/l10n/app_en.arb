@@ -138,5 +138,8 @@
   "productsNotFound": "Products Not Found",
   "stripPaymentFail":"Strip payment fail",
   "authenticationErrorOccurred":"An authentication error occurred.",
-  "unauthorizedAccess":"Unauthorized Access"
+  "unauthorizedAccess":"Unauthorized Access",
+  "failedToSendEmailVerification":"Failed to send email verification. Please try again later.",
+  "emailNotVerifiedYet":"Email not verified yet!",
+  "productIdNotFound": "Product Id Not Found!"
 }

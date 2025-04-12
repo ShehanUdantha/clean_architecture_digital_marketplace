@@ -72,6 +72,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   envied_generator: ^1.0.1
+  bloc_test: ^10.0.0
 
 flutter:
   # The following line ensures that the Material Icons font is

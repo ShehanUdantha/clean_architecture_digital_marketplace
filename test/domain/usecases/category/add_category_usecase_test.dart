@@ -26,11 +26,11 @@ void main() {
     'should return a Success Status when the add category process is successful',
     () async {
       // Arrange
-      when(mockCategoryRepository.addCategory(dummyProductCategoryType))
+      when(mockCategoryRepository.addCategory(dummyFontCategoryType))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       // Act
-      final result = await addCategoryUseCase.call(dummyProductCategoryType);
+      final result = await addCategoryUseCase.call(dummyFontCategoryType);
 
       // Assert
       expect(result, Right(ResponseTypes.success.response));
@@ -44,11 +44,11 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Add category failed',
       );
-      when(mockCategoryRepository.addCategory(dummyProductCategoryType))
+      when(mockCategoryRepository.addCategory(dummyFontCategoryType))
           .thenAnswer((_) async => Left(failure));
 
       // Act
-      final result = await addCategoryUseCase.call(dummyProductCategoryType);
+      final result = await addCategoryUseCase.call(dummyFontCategoryType);
 
       // Assert
       expect(result, Left(failure));

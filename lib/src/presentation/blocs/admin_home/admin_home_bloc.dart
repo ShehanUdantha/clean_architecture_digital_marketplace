@@ -114,12 +114,14 @@ class AdminHomeBloc extends Bloc<AdminHomeEvent, AdminHomeState> {
         month: state.month,
       ),
     );
-    emit(state.copyWith(isMonthlyStatusLoading: false));
 
     result.fold(
-      (l) => null,
+      (l) => emit(
+        state.copyWith(isMonthlyStatusLoading: false),
+      ),
       (r) => emit(
         state.copyWith(
+          isMonthlyStatusLoading: false,
           monthlyStatus: r,
         ),
       ),

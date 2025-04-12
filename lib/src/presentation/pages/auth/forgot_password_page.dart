@@ -56,9 +56,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     .add(SetForgotStatusToDefault());
                 Helper.showSnackBar(
                   context,
-                  state.authMessage == ResponseTypes.failure.response
-                      ? context.loc.invalidForgotEmail
-                      : state.authMessage,
+                  state.authMessage,
                 );
               }
               if (state.status == BlocStatus.success) {

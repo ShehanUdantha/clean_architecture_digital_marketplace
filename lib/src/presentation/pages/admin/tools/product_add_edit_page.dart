@@ -97,10 +97,7 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
                     .add(SetProductAddAndEditStatusToDefault());
                 Helper.showSnackBar(
                   context,
-                  state.productAddAndEditMessage ==
-                          ResponseTypes.failure.response
-                      ? context.loc.productAlreadyAdded
-                      : state.productAddAndEditMessage,
+                  state.productAddAndEditMessage,
                 );
               }
               if (state.productAddAndEditStatus == BlocStatus.success) {

@@ -138,5 +138,8 @@
   "productsNotFound": "未找到产品",
   "stripPaymentFail":"Stripe支付失败",
   "authenticationErrorOccurred": "发生身份验证错误。",
-  "unauthorizedAccess":"未经授权的访问"
+  "unauthorizedAccess":"未经授权的访问",
+  "failedToSendEmailVerification":"发送验证邮件失败。请稍后再试。",
+  "emailNotVerifiedYet":"邮箱尚未验证！",
+  "productIdNotFound": "未找到产品ID！"
 }

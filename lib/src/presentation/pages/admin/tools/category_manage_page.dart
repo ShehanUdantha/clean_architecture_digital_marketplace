@@ -61,9 +61,7 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
                       .add(SetCategoryAddStatusToDefault());
                   Helper.showSnackBar(
                     context,
-                    state.categoryAddMessage == ResponseTypes.failure.response
-                        ? context.loc.categoryAlreadyAdded
-                        : state.categoryAddMessage,
+                    state.categoryAddMessage,
                   );
                 }
                 if (state.categoryAddStatus == BlocStatus.success) {

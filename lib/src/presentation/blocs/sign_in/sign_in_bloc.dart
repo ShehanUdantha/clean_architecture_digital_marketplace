@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:Pixelcart/src/config/routes/router.dart';
+import 'package:Pixelcart/src/core/constants/error_messages.dart';
+import 'package:Pixelcart/src/core/utils/extension.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/usecases/auth/sign_in_params.dart';
@@ -66,7 +69,12 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
           add(GetUserTypeEvent());
         } else {
           emit(
-            state.copyWith(status: BlocStatus.error),
+            state.copyWith(
+              authMessage:
+                  rootNavigatorKey.currentContext?.loc.emailNotVerifiedYet ??
+                      AppErrorMessages.emailNotVerifiedYet,
+              status: BlocStatus.error,
+            ),
           );
         }
       },
