@@ -88,7 +88,7 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
 
       if (result.exists) {
         return List<String>.from(
-          (result['ids'] as List).map((e) => e),
+          (result.data()?['ids'] as List).map((e) => e),
         ).toList();
       } else {
         return [];
@@ -160,19 +160,26 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
           .doc(currentUser!.uid)
           .get();
 
+      final cartedData = cartedIdsDocuments.data();
+      if (cartedData == null || cartedData['ids'] == null) return [];
+
       List<ProductModel> cartedItemsDetailsList = [];
 
-      if (cartedIdsDocuments.exists) {
-        for (final id in (cartedIdsDocuments['ids'] as List)) {
-          final result = await fireStore.collection('products').doc(id).get();
-          ProductModel product = ProductModel.fromDocument(result);
+      for (final id in (cartedData['ids'] as List)) {
+        final result =
+            await fireStore.collection(AppVariableNames.products).doc(id).get();
 
-          if (product.status == ProductStatus.active.product) {
-            cartedItemsDetailsList.add(
-              ProductModel.fromDocument(result),
-            );
-          } else {
-            removeProductFromCart(id);
+        if (result.data() == null) continue;
+
+        ProductModel product = ProductModel.fromDocument(result);
+
+        if (product.status == ProductStatus.active.product) {
+          cartedItemsDetailsList.add(product);
+        } else {
+          try {
+            await removeProductFromCart(id);
+          } catch (e) {
+            throw DBException(errorMessage: e.toString());
           }
         }
       }
@@ -258,6 +265,8 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
         stackTrace: e.stackTrace,
       );
     } catch (e, stackTrace) {
+      print(e);
+      print(stackTrace.toString());
       throw DBException(
         errorMessage: e.toString(),
         stackTrace: stackTrace,

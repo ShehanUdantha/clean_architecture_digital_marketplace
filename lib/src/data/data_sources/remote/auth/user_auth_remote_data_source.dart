@@ -44,8 +44,9 @@ class UserAuthRemoteDataSourceImpl implements UserAuthRemoteDataSource {
       final user = userCredential.user;
       if (user == null) {
         throw AuthException(
-          errorMessage:
-              rootNavigatorKey.currentContext!.loc.authenticationErrorOccurred,
+          errorMessage: rootNavigatorKey
+                  .currentContext?.loc.authenticationErrorOccurred ??
+              'An authentication error occurred.',
         );
       }
 
@@ -67,22 +68,27 @@ class UserAuthRemoteDataSourceImpl implements UserAuthRemoteDataSource {
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-email') {
         throw AuthException(
-          errorMessage: rootNavigatorKey.currentContext!.loc.invalidEmail,
+          errorMessage: rootNavigatorKey.currentContext?.loc.invalidEmail ??
+              'Your email is not a valid email',
         );
       }
       if (e.code == 'user-not-found') {
         throw AuthException(
-          errorMessage: rootNavigatorKey.currentContext!.loc.userNotFound,
+          errorMessage: rootNavigatorKey.currentContext?.loc.userNotFound ??
+              'This email not registered yet',
         );
       }
       if (e.code == 'wrong-password') {
         throw AuthException(
-          errorMessage: rootNavigatorKey.currentContext!.loc.wrongPassword,
+          errorMessage: rootNavigatorKey.currentContext?.loc.wrongPassword ??
+              'Your password is incorrect',
         );
       }
       if (e.code == 'invalid-credential') {
         throw AuthException(
-          errorMessage: rootNavigatorKey.currentContext!.loc.invalidCredential,
+          errorMessage:
+              rootNavigatorKey.currentContext?.loc.invalidCredential ??
+                  'Please check your email and password again',
         );
       } else {
         throw AuthException(errorMessage: e.toString());
@@ -135,15 +141,18 @@ class UserAuthRemoteDataSourceImpl implements UserAuthRemoteDataSource {
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         throw AuthException(
-          errorMessage: rootNavigatorKey.currentContext!.loc.weekPassword,
+          errorMessage: rootNavigatorKey.currentContext?.loc.weekPassword ??
+              'your password is too weak',
         );
       } else if (e.code == 'email-already-in-use') {
         throw AuthException(
-          errorMessage: rootNavigatorKey.currentContext!.loc.emailAlreadyUsed,
+          errorMessage: rootNavigatorKey.currentContext?.loc.emailAlreadyUsed ??
+              'This email already registered',
         );
       } else if (e.code == 'invalid-email') {
         throw AuthException(
-          errorMessage: rootNavigatorKey.currentContext!.loc.invalidEmail,
+          errorMessage: rootNavigatorKey.currentContext?.loc.invalidEmail ??
+              'Your email is not a valid email',
         );
       } else {
         throw AuthException(errorMessage: e.toString());
