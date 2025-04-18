@@ -27,7 +27,7 @@ class ProductManagePage extends StatelessWidget {
     );
   }
 
-  _bodyWidget(BuildContext context) {
+  Widget _bodyWidget(BuildContext context) {
     final categoryState = context.watch<CategoryBloc>().state;
     final productState = context.watch<ProductBloc>().state;
 
@@ -118,18 +118,18 @@ class ProductManagePage extends StatelessWidget {
     );
   }
 
-  _handleBackButton(BuildContext context) {
+  void _handleBackButton(BuildContext context) {
     context.goNamed(AppRoutes.toolsPageName);
   }
 
-  _handleFloatingButton(BuildContext context) {
+  void _handleFloatingButton(BuildContext context) {
     context.goNamed(
       AppRoutes.productsAddPageName,
       queryParameters: {'title': CURDTypes.add.name},
     );
   }
 
-  _handleCategoryChipButton(
+  void _handleCategoryChipButton(
     BuildContext context,
     int index,
     List<String> list,

@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:Pixelcart/src/config/routes/router.dart';
+import 'package:Pixelcart/src/core/constants/error_messages.dart';
 import 'package:Pixelcart/src/data/models/user/user_model.dart';
 
 import '../../../../core/constants/variable_names.dart';
@@ -159,7 +160,8 @@ class PurchaseRemoteDataSourceImpl implements PurchaseRemoteDataSource {
 
       if (!userDoc.exists) {
         throw AuthException(
-            errorMessage: rootNavigatorKey.currentContext!.loc.userNotFound);
+            errorMessage: rootNavigatorKey.currentContext?.loc.userNotFound ??
+                AppErrorMessages.userNotFound);
       }
 
       final userModel =
@@ -206,7 +208,9 @@ class PurchaseRemoteDataSourceImpl implements PurchaseRemoteDataSource {
         return purchaseHistoryByMonth;
       } else {
         throw AuthException(
-          errorMessage: rootNavigatorKey.currentContext!.loc.unauthorizedAccess,
+          errorMessage:
+              rootNavigatorKey.currentContext?.loc.unauthorizedAccess ??
+                  AppErrorMessages.unauthorizedAccess,
         );
       }
     } on FirebaseAuthException catch (e) {
@@ -244,7 +248,8 @@ class PurchaseRemoteDataSourceImpl implements PurchaseRemoteDataSource {
 
       if (!userDoc.exists) {
         throw AuthException(
-            errorMessage: rootNavigatorKey.currentContext!.loc.userNotFound);
+            errorMessage: rootNavigatorKey.currentContext?.loc.userNotFound ??
+                AppErrorMessages.userNotFound);
       }
 
       final userModel =
@@ -282,7 +287,9 @@ class PurchaseRemoteDataSourceImpl implements PurchaseRemoteDataSource {
         return balance;
       } else {
         throw AuthException(
-          errorMessage: rootNavigatorKey.currentContext!.loc.unauthorizedAccess,
+          errorMessage:
+              rootNavigatorKey.currentContext?.loc.unauthorizedAccess ??
+                  AppErrorMessages.unauthorizedAccess,
         );
       }
     } on FirebaseAuthException catch (e) {
@@ -320,7 +327,8 @@ class PurchaseRemoteDataSourceImpl implements PurchaseRemoteDataSource {
 
       if (!userDoc.exists) {
         throw AuthException(
-            errorMessage: rootNavigatorKey.currentContext!.loc.userNotFound);
+            errorMessage: rootNavigatorKey.currentContext?.loc.userNotFound ??
+                AppErrorMessages.userNotFound);
       }
 
       final userModel =
@@ -356,7 +364,9 @@ class PurchaseRemoteDataSourceImpl implements PurchaseRemoteDataSource {
         return percentage;
       } else {
         throw AuthException(
-          errorMessage: rootNavigatorKey.currentContext!.loc.unauthorizedAccess,
+          errorMessage:
+              rootNavigatorKey.currentContext?.loc.unauthorizedAccess ??
+                  AppErrorMessages.unauthorizedAccess,
         );
       }
     } on FirebaseAuthException catch (e) {
@@ -394,7 +404,8 @@ class PurchaseRemoteDataSourceImpl implements PurchaseRemoteDataSource {
 
       if (!userDoc.exists) {
         throw AuthException(
-            errorMessage: rootNavigatorKey.currentContext!.loc.userNotFound);
+            errorMessage: rootNavigatorKey.currentContext?.loc.userNotFound ??
+                AppErrorMessages.userNotFound);
       }
 
       final userModel =
@@ -457,7 +468,9 @@ class PurchaseRemoteDataSourceImpl implements PurchaseRemoteDataSource {
         return topSellingProducts;
       } else {
         throw AuthException(
-          errorMessage: rootNavigatorKey.currentContext!.loc.unauthorizedAccess,
+          errorMessage:
+              rootNavigatorKey.currentContext?.loc.unauthorizedAccess ??
+                  AppErrorMessages.unauthorizedAccess,
         );
       }
     } on FirebaseAuthException catch (e) {

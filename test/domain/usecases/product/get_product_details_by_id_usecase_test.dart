@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/product_values.dart';
 import 'get_product_details_by_id_usecase_test.mocks.dart';
 
 @GenerateMocks([ProductRepository])
@@ -24,14 +24,14 @@ void main() {
     'should return a Product when the get product details by id process is successful',
     () async {
       // Arrange
-      when(mockProductRepository.getProductDetailsById(fakeProductId))
-          .thenAnswer((_) async => Right(dummyProduct));
+      when(mockProductRepository.getProductDetailsById(productId))
+          .thenAnswer((_) async => Right(productIdThreeEntity));
 
       // Act
-      final result = await getProductDetailsByIdUseCase.call(fakeProductId);
+      final result = await getProductDetailsByIdUseCase.call(productId);
 
       // Assert
-      expect(result, Right(dummyProduct));
+      expect(result, Right(productIdThreeEntity));
     },
   );
 
@@ -42,11 +42,11 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Get product details by id failed',
       );
-      when(mockProductRepository.getProductDetailsById(fakeProductId))
+      when(mockProductRepository.getProductDetailsById(productId))
           .thenAnswer((_) async => Left(failure));
 
       // Act
-      final result = await getProductDetailsByIdUseCase.call(fakeProductId);
+      final result = await getProductDetailsByIdUseCase.call(productId);
 
       // Assert
       expect(result, Left(failure));

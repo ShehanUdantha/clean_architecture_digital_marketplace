@@ -34,7 +34,7 @@ class PurchaseProductsBuilderWidget extends StatelessWidget {
     );
   }
 
-  _handleProductDownload(BuildContext context, String productId) async {
+  void _handleProductDownload(BuildContext context, String productId) async {
     bool result = await Helper.storagePermissionRequest();
     if (result) {
       context

@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../../fixtures/constant_values.dart';
+import '../../../../fixtures/purchase_values.dart';
 import 'download_product_by_product_id_usecase_test.mocks.dart';
 
 @GenerateMocks([PurchaseRepository])
@@ -26,12 +26,13 @@ void main() {
     'should return a Success Status when the download product by product id process is successful',
     () async {
       // Arrange
-      when(mockPurchaseRepository.downloadProductByProductId(fakeProductId))
+      when(mockPurchaseRepository
+              .downloadProductByProductId(purchasedProductId))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       // Act
       final result =
-          await downloadProductByProductIdUsecase.call(fakeProductId);
+          await downloadProductByProductIdUsecase.call(purchasedProductId);
 
       // Assert
       expect(result, Right(ResponseTypes.success.response));
@@ -45,12 +46,13 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Download product by product id failed',
       );
-      when(mockPurchaseRepository.downloadProductByProductId(fakeProductId))
+      when(mockPurchaseRepository
+              .downloadProductByProductId(purchasedProductId))
           .thenAnswer((_) async => Left(failure));
 
       // Act
       final result =
-          await downloadProductByProductIdUsecase.call(fakeProductId);
+          await downloadProductByProductIdUsecase.call(purchasedProductId);
 
       // Assert
       expect(result, Left(failure));

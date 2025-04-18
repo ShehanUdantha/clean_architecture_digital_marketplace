@@ -10,7 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/auth_values.dart';
 import 'forgot_password_bloc_test.mocks.dart';
 
 @GenerateMocks([
@@ -36,21 +36,21 @@ void main() {
   blocTest<ForgotPasswordBloc, ForgotPasswordState>(
     'emits [loading, email, success] when SendResetLinkButtonClickedEvent is added and use case return success',
     build: () {
-      when(mockForgotPasswordUseCase.call(forgotPwEmail))
+      when(mockForgotPasswordUseCase.call(userUserEmail))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       return forgotPasswordBloc;
     },
     act: (bloc) =>
-        bloc.add(SendResetLinkButtonClickedEvent(email: forgotPwEmail)),
+        bloc.add(SendResetLinkButtonClickedEvent(email: userUserEmail)),
     expect: () => [
       ForgotPasswordState().copyWith(
         status: BlocStatus.loading,
-        email: forgotPwEmail,
+        email: userUserEmail,
       ),
       ForgotPasswordState().copyWith(
         status: BlocStatus.success,
-        email: forgotPwEmail,
+        email: userUserEmail,
       ),
     ],
   );
@@ -58,21 +58,21 @@ void main() {
   blocTest<ForgotPasswordBloc, ForgotPasswordState>(
     'emits [loading, email, error] when SendResetLinkButtonClickedEvent is added and use case return failure',
     build: () {
-      when(mockForgotPasswordUseCase.call(forgotPwEmail))
+      when(mockForgotPasswordUseCase.call(userUserEmail))
           .thenAnswer((_) async => Right(ResponseTypes.failure.response));
 
       return forgotPasswordBloc;
     },
     act: (bloc) =>
-        bloc.add(SendResetLinkButtonClickedEvent(email: forgotPwEmail)),
+        bloc.add(SendResetLinkButtonClickedEvent(email: userUserEmail)),
     expect: () => [
       ForgotPasswordState().copyWith(
         status: BlocStatus.loading,
-        email: forgotPwEmail,
+        email: userUserEmail,
       ),
       ForgotPasswordState().copyWith(
         status: BlocStatus.error,
-        email: forgotPwEmail,
+        email: userUserEmail,
         authMessage: AppErrorMessages.invalidForgotEmail,
       ),
     ],
@@ -84,21 +84,21 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Password reset email send failed',
       );
-      when(mockForgotPasswordUseCase.call(forgotPwEmail))
+      when(mockForgotPasswordUseCase.call(userUserEmail))
           .thenAnswer((_) async => Left(failure));
 
       return forgotPasswordBloc;
     },
     act: (bloc) =>
-        bloc.add(SendResetLinkButtonClickedEvent(email: forgotPwEmail)),
+        bloc.add(SendResetLinkButtonClickedEvent(email: userUserEmail)),
     expect: () => [
       ForgotPasswordState().copyWith(
         status: BlocStatus.loading,
-        email: forgotPwEmail,
+        email: userUserEmail,
       ),
       ForgotPasswordState().copyWith(
         status: BlocStatus.error,
-        email: forgotPwEmail,
+        email: userUserEmail,
         authMessage: 'Password reset email send failed',
       ),
     ],

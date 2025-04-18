@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/auth_values.dart';
 import 'get_user_type_usecase_test.mocks.dart';
 
 @GenerateMocks([UserRepository])
@@ -23,14 +23,14 @@ void main() {
     'should return a user type according to the user id when the get user type process is successful',
     () async {
       // Arrange
-      when(mockUserRepository.getUserType(dummyUserIdToGetUserType))
-          .thenAnswer((_) async => Right(userTypeAdmin));
+      when(mockUserRepository.getUserType(userUserId))
+          .thenAnswer((_) async => Right(userUserType));
 
       // Act
-      final result = await getUserTypeUseCase.call(dummyUserIdToGetUserType);
+      final result = await getUserTypeUseCase.call(userUserId);
 
       // Assert
-      expect(result, Right(userTypeAdmin));
+      expect(result, Right(userUserType));
     },
   );
 
@@ -41,11 +41,11 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Get user type failed',
       );
-      when(mockUserRepository.getUserType(dummyUserIdToGetUserType))
+      when(mockUserRepository.getUserType(userUserId))
           .thenAnswer((_) async => Left(failure));
 
       // Act
-      final result = await getUserTypeUseCase.call(dummyUserIdToGetUserType);
+      final result = await getUserTypeUseCase.call(userUserId);
 
       // Assert
       expect(result, Left(failure));

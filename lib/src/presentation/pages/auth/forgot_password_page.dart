@@ -39,7 +39,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     );
   }
 
-  _bodyWidget() {
+  Widget _bodyWidget() {
     final networkState = context.watch<NetworkBloc>().state;
 
     return SafeArea(
@@ -51,18 +51,15 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 previous.status != current.status,
             listener: (context, state) {
               if (state.status == BlocStatus.error) {
-                context
-                    .read<ForgotPasswordBloc>()
-                    .add(SetForgotStatusToDefault());
                 Helper.showSnackBar(
                   context,
                   state.authMessage,
                 );
-              }
-              if (state.status == BlocStatus.success) {
                 context
                     .read<ForgotPasswordBloc>()
                     .add(SetForgotStatusToDefault());
+              }
+              if (state.status == BlocStatus.success) {
                 context.goNamed(
                   AppRoutes.emailVerificationAndForgotPasswordPageName,
                   queryParameters: {
@@ -71,6 +68,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     'isForgot': 'true',
                   },
                 );
+                context
+                    .read<ForgotPasswordBloc>()
+                    .add(SetForgotStatusToDefault());
               }
             },
             buildWhen: (previous, current) => previous.status != current.status,
@@ -125,11 +125,11 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     );
   }
 
-  _handleBackButton() {
+  void _handleBackButton() {
     context.goNamed(AppRoutes.signInPageName);
   }
 
-  _handleForgotPassword(NetworkState networkState) {
+  void _handleForgotPassword(NetworkState networkState) {
     String? emailValidity = AppValidator.validateEmail(_emailController.text);
 
     if (networkState.networkTypes == NetworkTypes.connected) {

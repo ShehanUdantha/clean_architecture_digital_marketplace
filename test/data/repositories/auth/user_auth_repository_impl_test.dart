@@ -11,7 +11,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/auth_values.dart';
 import 'user_auth_repository_impl_test.mocks.dart';
 
 @GenerateMocks([UserAuthRemoteDataSource, User])
@@ -34,16 +34,17 @@ void main() {
         'should return a User Id when the sign-in process is successful',
         () async {
           // Arrange
-          when(mockUserAuthRemoteDataSource.signInUser(signInParams))
-              .thenAnswer((_) async => userId);
+          when(mockUserAuthRemoteDataSource.signInUser(userSignInParams))
+              .thenAnswer((_) async => userUserId);
 
           // Act
-          final result = await userAuthRepositoryImpl.signInUser(signInParams);
+          final result =
+              await userAuthRepositoryImpl.signInUser(userSignInParams);
 
           // Assert
           result.fold(
             (l) => fail('test failed'),
-            (r) => expect(r, userId),
+            (r) => expect(r, userUserId),
           );
         },
       );
@@ -55,14 +56,15 @@ void main() {
           final authException = AuthException(
             errorMessage: 'Sign-in failed',
           );
-          when(mockUserAuthRemoteDataSource.signInUser(signInParams))
+          when(mockUserAuthRemoteDataSource.signInUser(userSignInParams))
               .thenThrow(authException);
 
           // Act
           final failure = FirebaseFailure(
             errorMessage: 'Sign-in failed',
           );
-          final result = await userAuthRepositoryImpl.signInUser(signInParams);
+          final result =
+              await userAuthRepositoryImpl.signInUser(userSignInParams);
 
           // Assert
           result.fold(
@@ -81,11 +83,12 @@ void main() {
         'should return a Success Status when the sign-up process is successful',
         () async {
           // Arrange
-          when(mockUserAuthRemoteDataSource.signUpUser(signUpParams))
+          when(mockUserAuthRemoteDataSource.signUpUser(userSignUpParams))
               .thenAnswer((_) async => ResponseTypes.success.response);
 
           // Act
-          final result = await userAuthRepositoryImpl.signUpUser(signUpParams);
+          final result =
+              await userAuthRepositoryImpl.signUpUser(userSignUpParams);
 
           // Assert
           result.fold(
@@ -102,14 +105,15 @@ void main() {
           final authException = AuthException(
             errorMessage: 'Sign-up failed',
           );
-          when(mockUserAuthRemoteDataSource.signUpUser(signUpParams))
+          when(mockUserAuthRemoteDataSource.signUpUser(userSignUpParams))
               .thenThrow(authException);
 
           // Act
           final failure = FirebaseFailure(
             errorMessage: 'Sign-up failed',
           );
-          final result = await userAuthRepositoryImpl.signUpUser(signUpParams);
+          final result =
+              await userAuthRepositoryImpl.signUpUser(userSignUpParams);
 
           // Assert
           result.fold(
@@ -404,12 +408,12 @@ void main() {
         'should return a Success Status when the forgot password process is successful',
         () async {
           // Arrange
-          when(mockUserAuthRemoteDataSource.forgotPassword(forgotPwEmail))
+          when(mockUserAuthRemoteDataSource.forgotPassword(userUserEmail))
               .thenAnswer((_) async => ResponseTypes.success.response);
 
           // Act
           final result =
-              await userAuthRepositoryImpl.forgotPassword(forgotPwEmail);
+              await userAuthRepositoryImpl.forgotPassword(userUserEmail);
 
           // Assert
           result.fold(
@@ -423,12 +427,12 @@ void main() {
         'should return a Failure when the email is not stored in firestore',
         () async {
           // Arrange
-          when(mockUserAuthRemoteDataSource.forgotPassword(forgotPwEmail))
+          when(mockUserAuthRemoteDataSource.forgotPassword(userUserEmail))
               .thenAnswer((_) async => ResponseTypes.failure.response);
 
           // Act
           final result =
-              await userAuthRepositoryImpl.forgotPassword(forgotPwEmail);
+              await userAuthRepositoryImpl.forgotPassword(userUserEmail);
 
           // Assert
           result.fold(
@@ -445,12 +449,12 @@ void main() {
           final authException = AuthException(
             errorMessage: 'forgot password failed',
           );
-          when(mockUserAuthRemoteDataSource.forgotPassword(forgotPwEmail))
+          when(mockUserAuthRemoteDataSource.forgotPassword(userUserEmail))
               .thenThrow(authException);
 
           // Act
           final result =
-              await userAuthRepositoryImpl.forgotPassword(forgotPwEmail);
+              await userAuthRepositoryImpl.forgotPassword(userUserEmail);
 
           // Assert
           final failure = FirebaseFailure(

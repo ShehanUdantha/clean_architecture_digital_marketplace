@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/stripe_values.dart';
 import 'make_payments_usecase_test.mocks.dart';
 
 @GenerateMocks([StripeRepository])
@@ -25,13 +25,13 @@ void main() {
     () async {
       // Arrange
       when(mockStripeRepository.makePayments(paymentAmount))
-          .thenAnswer((_) async => Right(dummyStripeModel));
+          .thenAnswer((_) async => Right(stripeModel));
 
       // Act
       final result = await makePaymentsUseCase.call(paymentAmount);
 
       // Assert
-      expect(result, Right(dummyStripeModel));
+      expect(result, Right(stripeModel));
     },
   );
 

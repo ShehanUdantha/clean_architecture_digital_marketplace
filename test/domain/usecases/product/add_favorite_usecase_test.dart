@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/product_values.dart';
 import 'add_favorite_usecase_test.mocks.dart';
 
 @GenerateMocks([ProductRepository])
@@ -24,14 +24,14 @@ void main() {
     'should return a Product when the add favorite to product process is successful',
     () async {
       // Arrange
-      when(mockProductRepository.addFavorite(fakeProductId))
-          .thenAnswer((_) async => Right(dummyProduct));
+      when(mockProductRepository.addFavorite(productId))
+          .thenAnswer((_) async => Right(productIdThreeNewEntity));
 
       // Act
-      final result = await addFavoriteUseCase.call(fakeProductId);
+      final result = await addFavoriteUseCase.call(productId);
 
       // Assert
-      expect(result, Right(dummyProduct));
+      expect(result, Right(productIdThreeNewEntity));
     },
   );
 
@@ -42,11 +42,11 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Add favorite to product failed',
       );
-      when(mockProductRepository.addFavorite(fakeProductId))
+      when(mockProductRepository.addFavorite(productId))
           .thenAnswer((_) async => Left(failure));
 
       // Act
-      final result = await addFavoriteUseCase.call(fakeProductId);
+      final result = await addFavoriteUseCase.call(productId);
 
       // Assert
       expect(result, Left(failure));

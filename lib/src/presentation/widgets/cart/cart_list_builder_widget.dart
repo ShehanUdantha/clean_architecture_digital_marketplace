@@ -57,7 +57,7 @@ class CartListBuilderWidget extends StatelessWidget {
     );
   }
 
-  _handleDeleteProduct(BuildContext context, String id, int count) {
+  void _handleDeleteProduct(BuildContext context, String id, int count) {
     context.read<CartBloc>().add(DeleteCartedProductEvent(id: id));
   }
 }

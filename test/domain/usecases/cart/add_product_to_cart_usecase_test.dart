@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/cart_values.dart';
 import 'add_product_to_cart_usecase_test.mocks.dart';
 
 @GenerateMocks([CartRepository])
@@ -26,11 +26,11 @@ void main() {
     'should return a Success Status when the add product to cart process is successful',
     () async {
       // Arrange
-      when(mockCartRepository.addProductToCart(fakeProductId))
+      when(mockCartRepository.addProductToCart(cartedProductId))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       // Act
-      final result = await addProductToCartUseCase.call(fakeProductId);
+      final result = await addProductToCartUseCase.call(cartedProductId);
 
       // Assert
       expect(result, Right(ResponseTypes.success.response));
@@ -44,11 +44,11 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Add product to cart failed',
       );
-      when(mockCartRepository.addProductToCart(fakeProductId))
+      when(mockCartRepository.addProductToCart(cartedProductId))
           .thenAnswer((_) async => Left(failure));
 
       // Act
-      final result = await addProductToCartUseCase.call(fakeProductId);
+      final result = await addProductToCartUseCase.call(cartedProductId);
 
       // Assert
       expect(result, Left(failure));

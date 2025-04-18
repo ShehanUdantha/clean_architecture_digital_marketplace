@@ -13,7 +13,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/cart_values.dart';
+import '../../../fixtures/product_values.dart';
 import 'product_details_bloc_test.mocks.dart';
 
 @GenerateMocks([
@@ -53,17 +54,17 @@ void main() {
   blocTest<ProductDetailsBloc, ProductDetailsState>(
     'emits [loading, success, productEntity] when GetProductDetailsEvent is added and use case return productEntity',
     build: () {
-      when(mockGetProductDetailsByIdUseCase.call(fakeProductId))
-          .thenAnswer((_) async => Right(dummyProductEntityTwo));
+      when(mockGetProductDetailsByIdUseCase.call(productId))
+          .thenAnswer((_) async => Right(productIdThreeEntity));
 
       return productDetailsBloc;
     },
-    act: (bloc) => bloc.add(GetProductDetailsEvent(id: fakeProductId)),
+    act: (bloc) => bloc.add(GetProductDetailsEvent(id: productId)),
     expect: () => [
       ProductDetailsState().copyWith(status: BlocStatus.loading),
       ProductDetailsState().copyWith(
         status: BlocStatus.success,
-        productEntity: dummyProductEntityTwo,
+        productEntity: productIdThreeEntity,
       ),
     ],
   );
@@ -74,12 +75,12 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Get product details by id failed',
       );
-      when(mockGetProductDetailsByIdUseCase.call(fakeProductId))
+      when(mockGetProductDetailsByIdUseCase.call(productId))
           .thenAnswer((_) async => Left(failure));
 
       return productDetailsBloc;
     },
-    act: (bloc) => bloc.add(GetProductDetailsEvent(id: fakeProductId)),
+    act: (bloc) => bloc.add(GetProductDetailsEvent(id: productId)),
     expect: () => [
       ProductDetailsState().copyWith(status: BlocStatus.loading),
       ProductDetailsState().copyWith(
@@ -104,12 +105,12 @@ void main() {
   blocTest<ProductDetailsBloc, ProductDetailsState>(
     'emits [loading, success, cartedMessage] when AddProductToCartEvent is added and use case return success',
     build: () {
-      when(mockAddProductToCartUseCase.call(fakeProductId))
+      when(mockAddProductToCartUseCase.call(productId))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       return productDetailsBloc;
     },
-    act: (bloc) => bloc.add(AddProductToCartEvent(id: fakeProductId)),
+    act: (bloc) => bloc.add(AddProductToCartEvent(id: productId)),
     expect: () => [
       ProductDetailsState().copyWith(cartedStatus: BlocStatus.loading),
       ProductDetailsState().copyWith(
@@ -125,12 +126,12 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Add product to cart failed',
       );
-      when(mockAddProductToCartUseCase.call(fakeProductId))
+      when(mockAddProductToCartUseCase.call(productId))
           .thenAnswer((_) async => Left(failure));
 
       return productDetailsBloc;
     },
-    act: (bloc) => bloc.add(AddProductToCartEvent(id: fakeProductId)),
+    act: (bloc) => bloc.add(AddProductToCartEvent(id: productId)),
     expect: () => [
       ProductDetailsState().copyWith(cartedStatus: BlocStatus.loading),
       ProductDetailsState().copyWith(
@@ -144,14 +145,14 @@ void main() {
     'emits [loading, success, cartedMessage] when GetCartedItemsEvent is added and use case return success',
     build: () {
       when(mockGetCartedItemsUseCase.call(any))
-          .thenAnswer((_) async => Right(cartedDummyItemsIds));
+          .thenAnswer((_) async => Right(cartedProductsIds));
 
       return productDetailsBloc;
     },
     act: (bloc) => bloc.add(GetCartedItemsEvent()),
     expect: () => [
       ProductDetailsState().copyWith(
-        cartedItems: cartedDummyItemsIds,
+        cartedItems: cartedProductsIds,
       ),
     ],
   );
@@ -174,12 +175,12 @@ void main() {
   blocTest<ProductDetailsBloc, ProductDetailsState>(
     'emits [loading, success, cartedMessage] when RemoveProductFromCartEvent is added and use case return success',
     build: () {
-      when(mockRemoveProductFromCartUseCase.call(fakeProductId))
+      when(mockRemoveProductFromCartUseCase.call(productId))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       return productDetailsBloc;
     },
-    act: (bloc) => bloc.add(RemoveProductFromCartEvent(id: fakeProductId)),
+    act: (bloc) => bloc.add(RemoveProductFromCartEvent(id: productId)),
     expect: () => [
       ProductDetailsState().copyWith(cartedStatus: BlocStatus.loading),
       ProductDetailsState().copyWith(
@@ -195,12 +196,12 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Remove product to cart failed',
       );
-      when(mockRemoveProductFromCartUseCase.call(fakeProductId))
+      when(mockRemoveProductFromCartUseCase.call(productId))
           .thenAnswer((_) async => Left(failure));
 
       return productDetailsBloc;
     },
-    act: (bloc) => bloc.add(RemoveProductFromCartEvent(id: fakeProductId)),
+    act: (bloc) => bloc.add(RemoveProductFromCartEvent(id: productId)),
     expect: () => [
       ProductDetailsState().copyWith(cartedStatus: BlocStatus.loading),
       ProductDetailsState().copyWith(
@@ -225,16 +226,16 @@ void main() {
   blocTest<ProductDetailsBloc, ProductDetailsState>(
     'emits [loading, success, favorite success] when GetProductDetailsEvent and AddFavoriteToProductEvent are added sequentially and use cases return success',
     build: () {
-      when(mockGetProductDetailsByIdUseCase.call(fakeProductId))
-          .thenAnswer((_) async => Right(dummyProductEntityTwo));
+      when(mockGetProductDetailsByIdUseCase.call(productId))
+          .thenAnswer((_) async => Right(productIdThreeEntity));
 
       when(mockAddFavoriteUseCase.call(any))
-          .thenAnswer((_) async => Right(dummyProductEntityTwo));
+          .thenAnswer((_) async => Right(productIdThreeNewEntity));
 
       return productDetailsBloc;
     },
     act: (bloc) async {
-      bloc.add(GetProductDetailsEvent(id: fakeProductId));
+      bloc.add(GetProductDetailsEvent(id: productId));
       await Future.delayed(Duration.zero);
       bloc.add(AddFavoriteToProductEvent());
     },
@@ -242,11 +243,11 @@ void main() {
       ProductDetailsState().copyWith(status: BlocStatus.loading),
       ProductDetailsState().copyWith(
         status: BlocStatus.success,
-        productEntity: dummyProductEntityTwo,
+        productEntity: productIdThreeEntity,
       ),
       ProductDetailsState().copyWith(
         status: BlocStatus.success,
-        productEntity: dummyProductEntityTwo,
+        productEntity: productIdThreeNewEntity,
         favoriteStatus: BlocStatus.success,
       ),
     ],
@@ -259,8 +260,8 @@ void main() {
         errorMessage: 'Add favorite to product failed',
       );
 
-      when(mockGetProductDetailsByIdUseCase.call(fakeProductId))
-          .thenAnswer((_) async => Right(dummyProductEntityTwo));
+      when(mockGetProductDetailsByIdUseCase.call(productId))
+          .thenAnswer((_) async => Right(productIdThreeEntity));
 
       when(mockAddFavoriteUseCase.call(any))
           .thenAnswer((_) async => Left(failure));
@@ -268,7 +269,7 @@ void main() {
       return productDetailsBloc;
     },
     act: (bloc) async {
-      bloc.add(GetProductDetailsEvent(id: fakeProductId));
+      bloc.add(GetProductDetailsEvent(id: productId));
       await Future.delayed(Duration.zero);
       bloc.add(AddFavoriteToProductEvent());
     },
@@ -276,11 +277,11 @@ void main() {
       ProductDetailsState().copyWith(status: BlocStatus.loading),
       ProductDetailsState().copyWith(
         status: BlocStatus.success,
-        productEntity: dummyProductEntityTwo,
+        productEntity: productIdThreeEntity,
       ),
       ProductDetailsState().copyWith(
         status: BlocStatus.success,
-        productEntity: dummyProductEntityTwo,
+        productEntity: productIdThreeEntity,
         favoriteStatus: BlocStatus.error,
         favoriteMessage: 'Add favorite to product failed',
       ),

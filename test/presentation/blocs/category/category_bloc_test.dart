@@ -12,7 +12,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/category_values.dart';
 import 'category_bloc_test.mocks.dart';
 
 @GenerateMocks([
@@ -46,13 +46,13 @@ void main() {
   blocTest<CategoryBloc, CategoryState>(
     'emits [loading, success] when CategoryAddButtonClickedEvent is added and use case return success',
     build: () {
-      when(mockAddCategoryUseCase.call(dummyFontCategoryType))
+      when(mockAddCategoryUseCase.call(categoryTypeFont))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       return categoryBloc;
     },
-    act: (bloc) => bloc
-        .add(CategoryAddButtonClickedEvent(category: dummyFontCategoryType)),
+    act: (bloc) =>
+        bloc.add(CategoryAddButtonClickedEvent(category: categoryTypeFont)),
     expect: () => [
       CategoryState().copyWith(categoryAddStatus: BlocStatus.loading),
       CategoryState().copyWith(categoryAddStatus: BlocStatus.success),
@@ -62,13 +62,13 @@ void main() {
   blocTest<CategoryBloc, CategoryState>(
     'emits [loading, error, categoryAddMessage] when CategoryAddButtonClickedEvent is added and use case return failure',
     build: () {
-      when(mockAddCategoryUseCase.call(dummyFontCategoryType))
+      when(mockAddCategoryUseCase.call(categoryTypeFont))
           .thenAnswer((_) async => Right(ResponseTypes.failure.response));
 
       return categoryBloc;
     },
-    act: (bloc) => bloc
-        .add(CategoryAddButtonClickedEvent(category: dummyFontCategoryType)),
+    act: (bloc) =>
+        bloc.add(CategoryAddButtonClickedEvent(category: categoryTypeFont)),
     expect: () => [
       CategoryState().copyWith(categoryAddStatus: BlocStatus.loading),
       CategoryState().copyWith(
@@ -84,13 +84,13 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Add category failed',
       );
-      when(mockAddCategoryUseCase.call(dummyFontCategoryType))
+      when(mockAddCategoryUseCase.call(categoryTypeFont))
           .thenAnswer((_) async => Left(failure));
 
       return categoryBloc;
     },
-    act: (bloc) => bloc
-        .add(CategoryAddButtonClickedEvent(category: dummyFontCategoryType)),
+    act: (bloc) =>
+        bloc.add(CategoryAddButtonClickedEvent(category: categoryTypeFont)),
     expect: () => [
       CategoryState().copyWith(categoryAddStatus: BlocStatus.loading),
       CategoryState().copyWith(
@@ -117,7 +117,7 @@ void main() {
     'emits [loading, success, listOfCategories] when GetAllCategoriesEvent is added and use case return list of categories',
     build: () {
       when(mockGetAllCategoriesUseCase.call(any))
-          .thenAnswer((_) async => Right(dummyCategoryEntities));
+          .thenAnswer((_) async => Right(categoryEntities));
 
       return categoryBloc;
     },
@@ -126,7 +126,7 @@ void main() {
       CategoryState().copyWith(status: BlocStatus.loading),
       CategoryState().copyWith(
         status: BlocStatus.success,
-        listOfCategories: dummyCategoryEntities,
+        listOfCategories: categoryEntities,
       ),
     ],
   );
@@ -155,13 +155,13 @@ void main() {
   blocTest<CategoryBloc, CategoryState>(
     'emits [loading, success] when DeleteCategoriesEvent is added and use case success',
     build: () {
-      when(mockDeleteCategoryUseCase.call(fakeProductCategoryId))
+      when(mockDeleteCategoryUseCase.call(fontCategoryId.toString()))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       return categoryBloc;
     },
     act: (bloc) =>
-        bloc.add(DeleteCategoriesEvent(categoryId: fakeProductCategoryId)),
+        bloc.add(DeleteCategoriesEvent(categoryId: fontCategoryId.toString())),
     expect: () => [
       CategoryState().copyWith(status: BlocStatus.loading),
       CategoryState().copyWith(
@@ -177,13 +177,13 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Delete category failed',
       );
-      when(mockDeleteCategoryUseCase.call(fakeProductCategoryId))
+      when(mockDeleteCategoryUseCase.call(fontCategoryId.toString()))
           .thenAnswer((_) async => Left(failure));
 
       return categoryBloc;
     },
     act: (bloc) =>
-        bloc.add(DeleteCategoriesEvent(categoryId: fakeProductCategoryId)),
+        bloc.add(DeleteCategoriesEvent(categoryId: fontCategoryId.toString())),
     expect: () => [
       CategoryState().copyWith(status: BlocStatus.loading),
       CategoryState().copyWith(

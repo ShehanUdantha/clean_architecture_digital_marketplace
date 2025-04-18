@@ -12,7 +12,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/auth_values.dart';
 import 'sign_in_bloc_test.mocks.dart';
 
 @GenerateMocks([
@@ -46,29 +46,29 @@ void main() {
   blocTest<SignInBloc, SignInState>(
     'emits [loading, userId, success, isVerify, userType] when SignInButtonClickedEvent is added and all use cases return success',
     build: () {
-      when(mockUserSignInUseCase.call(signInParams))
-          .thenAnswer((_) async => Right(userId));
+      when(mockUserSignInUseCase.call(userSignInParams))
+          .thenAnswer((_) async => Right(userUserId));
 
       when(mockCheckEmailVerificationUseCase.call(any))
           .thenAnswer((_) async => Right(true));
 
-      when(mockGetUserTypeUseCase.call(userId))
-          .thenAnswer((_) async => Right(userType));
+      when(mockGetUserTypeUseCase.call(userUserId))
+          .thenAnswer((_) async => Right(userUserType));
 
       return signInBloc;
     },
     act: (bloc) =>
-        bloc.add(SignInButtonClickedEvent(signInParams: signInParams)),
+        bloc.add(SignInButtonClickedEvent(signInParams: userSignInParams)),
     expect: () => [
       SignInState().copyWith(status: BlocStatus.loading),
-      SignInState().copyWith(status: BlocStatus.loading, userId: userId),
-      SignInState()
-          .copyWith(status: BlocStatus.success, isVerify: true, userId: userId),
+      SignInState().copyWith(status: BlocStatus.loading, userId: userUserId),
+      SignInState().copyWith(
+          status: BlocStatus.success, isVerify: true, userId: userUserId),
       SignInState().copyWith(
         status: BlocStatus.success,
         isVerify: true,
-        userId: userId,
-        userType: userType,
+        userId: userUserId,
+        userType: userUserType,
       ),
     ],
   );
@@ -76,8 +76,8 @@ void main() {
   blocTest<SignInBloc, SignInState>(
     'emits [loading, userId, false] when SignInButtonClickedEvent is added and email verification check returns false',
     build: () {
-      when(mockUserSignInUseCase.call(signInParams))
-          .thenAnswer((_) async => Right(userId));
+      when(mockUserSignInUseCase.call(userSignInParams))
+          .thenAnswer((_) async => Right(userUserId));
 
       when(mockCheckEmailVerificationUseCase.call(any))
           .thenAnswer((_) async => Right(false));
@@ -85,13 +85,13 @@ void main() {
       return signInBloc;
     },
     act: (bloc) =>
-        bloc.add(SignInButtonClickedEvent(signInParams: signInParams)),
+        bloc.add(SignInButtonClickedEvent(signInParams: userSignInParams)),
     expect: () => [
       SignInState().copyWith(status: BlocStatus.loading),
-      SignInState().copyWith(status: BlocStatus.loading, userId: userId),
+      SignInState().copyWith(status: BlocStatus.loading, userId: userUserId),
       SignInState().copyWith(
         status: BlocStatus.error,
-        userId: userId,
+        userId: userUserId,
         authMessage: AppErrorMessages.emailNotVerifiedYet,
       ),
     ],
@@ -100,8 +100,8 @@ void main() {
   blocTest<SignInBloc, SignInState>(
     'emits [loading, userId, error] when SignInButtonClickedEvent is added and email verification check returns failure',
     build: () {
-      when(mockUserSignInUseCase.call(signInParams))
-          .thenAnswer((_) async => Right(userId));
+      when(mockUserSignInUseCase.call(userSignInParams))
+          .thenAnswer((_) async => Right(userUserId));
 
       final failure = FirebaseFailure(
         errorMessage: 'Email verification check failed',
@@ -113,13 +113,13 @@ void main() {
       return signInBloc;
     },
     act: (bloc) =>
-        bloc.add(SignInButtonClickedEvent(signInParams: signInParams)),
+        bloc.add(SignInButtonClickedEvent(signInParams: userSignInParams)),
     expect: () => [
       SignInState().copyWith(status: BlocStatus.loading),
-      SignInState().copyWith(status: BlocStatus.loading, userId: userId),
+      SignInState().copyWith(status: BlocStatus.loading, userId: userUserId),
       SignInState().copyWith(
         status: BlocStatus.error,
-        userId: userId,
+        userId: userUserId,
         authMessage: 'Email verification check failed',
       ),
     ],
@@ -128,8 +128,8 @@ void main() {
   blocTest<SignInBloc, SignInState>(
     'emits [loading, userId, success, isVerify, error] when SignInButtonClickedEvent is added and get user type returns failure',
     build: () {
-      when(mockUserSignInUseCase.call(signInParams))
-          .thenAnswer((_) async => Right(userId));
+      when(mockUserSignInUseCase.call(userSignInParams))
+          .thenAnswer((_) async => Right(userUserId));
 
       when(mockCheckEmailVerificationUseCase.call(any))
           .thenAnswer((_) async => Right(true));
@@ -138,21 +138,21 @@ void main() {
         errorMessage: 'Get user type failed',
       );
 
-      when(mockGetUserTypeUseCase.call(userId))
+      when(mockGetUserTypeUseCase.call(userUserId))
           .thenAnswer((_) async => Left(failure));
 
       return signInBloc;
     },
     act: (bloc) =>
-        bloc.add(SignInButtonClickedEvent(signInParams: signInParams)),
+        bloc.add(SignInButtonClickedEvent(signInParams: userSignInParams)),
     expect: () => [
       SignInState().copyWith(status: BlocStatus.loading),
-      SignInState().copyWith(status: BlocStatus.loading, userId: userId),
-      SignInState()
-          .copyWith(status: BlocStatus.success, isVerify: true, userId: userId),
+      SignInState().copyWith(status: BlocStatus.loading, userId: userUserId),
+      SignInState().copyWith(
+          status: BlocStatus.success, isVerify: true, userId: userUserId),
       SignInState().copyWith(
         status: BlocStatus.success,
-        userId: userId,
+        userId: userUserId,
         isVerify: true,
         authMessage: 'Get user type failed',
       ),

@@ -7,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/cart_values.dart';
 import 'get_all_carted_items_details_by_id_usecase_test.mocks.dart';
 
 @GenerateMocks([CartRepository])
@@ -26,13 +26,13 @@ void main() {
     () async {
       // Arrange
       when(mockCartRepository.getAllCartedItemsDetails())
-          .thenAnswer((_) async => Right(dummyProducts));
+          .thenAnswer((_) async => Right(cartedProductEntities));
 
       // Act
       final result = await getAllCartedItemsDetailsByIdUseCase.call(NoParams());
 
       // Assert
-      expect(result, Right(dummyProducts));
+      expect(result, Right(cartedProductEntities));
     },
   );
 

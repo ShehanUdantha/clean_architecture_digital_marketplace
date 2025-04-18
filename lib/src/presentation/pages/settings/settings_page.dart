@@ -30,7 +30,7 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  _bodyWidget(BuildContext context) {
+  Widget _bodyWidget(BuildContext context) {
     final authState = context.watch<AuthBloc>().state;
 
     return SafeArea(
@@ -75,7 +75,7 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  _handleBackButton(BuildContext context, AuthState authState) {
+  void _handleBackButton(BuildContext context, AuthState authState) {
     context.goNamed(
       fromAuth
           ? AppRoutes.signInPageName
@@ -85,11 +85,11 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  _showThemeBottomSheet() {
+  void _showThemeBottomSheet() {
     Helper.displayBottomSheet(const ThemeListView());
   }
 
-  _showLanguagesBottomSheet() {
+  void _showLanguagesBottomSheet() {
     Helper.displayBottomSheet(const LanguageListView());
   }
 }

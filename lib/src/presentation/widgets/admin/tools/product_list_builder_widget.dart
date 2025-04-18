@@ -42,7 +42,7 @@ class ProductListBuilderWidget extends StatelessWidget {
     );
   }
 
-  _handleDeleteProduct(
+  void _handleDeleteProduct(
     BuildContext context,
     String id,
   ) {
@@ -53,7 +53,7 @@ class ProductListBuilderWidget extends StatelessWidget {
         );
   }
 
-  _handleEditProduct(BuildContext context, ProductEntity product) {
+  void _handleEditProduct(BuildContext context, ProductEntity product) {
     context.goNamed(
       AppRoutes.productsAddPageName,
       queryParameters: {'title': CURDTypes.update.name},

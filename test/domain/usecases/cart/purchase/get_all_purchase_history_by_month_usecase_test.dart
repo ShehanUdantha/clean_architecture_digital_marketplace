@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../../fixtures/constant_values.dart';
+import '../../../../fixtures/purchase_values.dart';
 import 'get_all_purchase_history_by_month_usecase_test.mocks.dart';
 
 @GenerateMocks([PurchaseRepository])
@@ -24,16 +24,16 @@ void main() {
     'should return a Map of purchase history for the provided month when the get all purchase history by month process is successful',
     () async {
       // Arrange
-      when(mockPurchaseRepository
-              .getAllPurchaseHistoryByMonth(yearAndMonthParams))
-          .thenAnswer((_) async => Right(fakePurchaseHistoryByMonth));
+      when(mockPurchaseRepository.getAllPurchaseHistoryByMonth(
+              yearAndMonthParamsToGetPurchaseHistory))
+          .thenAnswer((_) async => Right(purchaseHistoryByYearAndMonth));
 
       // Act
-      final result =
-          await getAllPurchaseHistoryByMonthUseCase.call(yearAndMonthParams);
+      final result = await getAllPurchaseHistoryByMonthUseCase
+          .call(yearAndMonthParamsToGetPurchaseHistory);
 
       // Assert
-      expect(result, Right(fakePurchaseHistoryByMonth));
+      expect(result, Right(purchaseHistoryByYearAndMonth));
     },
   );
 
@@ -44,13 +44,13 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Get all purchase history by month failed',
       );
-      when(mockPurchaseRepository
-              .getAllPurchaseHistoryByMonth(yearAndMonthParams))
+      when(mockPurchaseRepository.getAllPurchaseHistoryByMonth(
+              yearAndMonthParamsToGetPurchaseHistory))
           .thenAnswer((_) async => Left(failure));
 
       // Act
-      final result =
-          await getAllPurchaseHistoryByMonthUseCase.call(yearAndMonthParams);
+      final result = await getAllPurchaseHistoryByMonthUseCase
+          .call(yearAndMonthParamsToGetPurchaseHistory);
 
       // Assert
       expect(result, Left(failure));

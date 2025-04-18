@@ -156,7 +156,7 @@ class CollectionProductCardWidget extends StatelessWidget {
     );
   }
 
-  _handleMoveProductViewPage(BuildContext context, String id) {
+  void _handleMoveProductViewPage(BuildContext context, String id) {
     context.goNamed(
       AppRoutes.productViewPageName,
       queryParameters: {

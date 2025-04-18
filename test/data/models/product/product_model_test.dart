@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/product_values.dart';
 import 'product_model_test.mocks.dart';
 
 @GenerateMocks([QueryDocumentSnapshot, DocumentSnapshot])
@@ -23,10 +23,10 @@ void main() {
     'should correctly convert ProductModel to JSON',
     () {
       // Act
-      final json = dummyProduct.toJson();
+      final json = productModel.toJson();
 
       // Assert
-      expect(json, dummyProductJson);
+      expect(json, productJson);
     },
   );
 
@@ -34,10 +34,10 @@ void main() {
     'should correctly create ProductModel from Entity',
     () {
       // Act
-      final productFromEntity = ProductModel.fromEntity(dummyProductEntity);
+      final productFromEntity = ProductModel.fromEntity(productEntity);
 
       // Assert
-      expect(productFromEntity, equals(dummyProductTwo));
+      expect(productFromEntity, equals(productModel));
     },
   );
 
@@ -45,36 +45,34 @@ void main() {
     'should correctly create ProductModel from Firestore Query Snapshot',
     () {
       // Arrange
-      when(mockQueryDocumentSnapshot.data()).thenReturn(dummyProductJson);
-      when(mockQueryDocumentSnapshot['id']).thenReturn(dummyProductJson['id']);
+      when(mockQueryDocumentSnapshot.data()).thenReturn(productJson);
+      when(mockQueryDocumentSnapshot['id']).thenReturn(productJson['id']);
       when(mockQueryDocumentSnapshot['productName'])
-          .thenReturn(dummyProductJson['productName']);
-      when(mockQueryDocumentSnapshot['price'])
-          .thenReturn(dummyProductJson['price']);
+          .thenReturn(productJson['productName']);
+      when(mockQueryDocumentSnapshot['price']).thenReturn(productJson['price']);
       when(mockQueryDocumentSnapshot['category'])
-          .thenReturn(dummyProductJson['category']);
+          .thenReturn(productJson['category']);
       when(mockQueryDocumentSnapshot['marketingType'])
-          .thenReturn(dummyProductJson['marketingType']);
+          .thenReturn(productJson['marketingType']);
       when(mockQueryDocumentSnapshot['description'])
-          .thenReturn(dummyProductJson['description']);
+          .thenReturn(productJson['description']);
       when(mockQueryDocumentSnapshot['coverImage'])
-          .thenReturn(dummyProductJson['coverImage']);
+          .thenReturn(productJson['coverImage']);
       when(mockQueryDocumentSnapshot['subImages'])
-          .thenReturn(dummyProductJson['subImages']);
+          .thenReturn(productJson['subImages']);
       when(mockQueryDocumentSnapshot['zipFile'])
-          .thenReturn(dummyProductJson['zipFile']);
+          .thenReturn(productJson['zipFile']);
       when(mockQueryDocumentSnapshot['dateCreated'])
-          .thenReturn(dummyProductJson['dateCreated']);
-      when(mockQueryDocumentSnapshot['likes'])
-          .thenReturn(dummyProductJson['likes']);
+          .thenReturn(productJson['dateCreated']);
+      when(mockQueryDocumentSnapshot['likes']).thenReturn(productJson['likes']);
       when(mockQueryDocumentSnapshot['status'])
-          .thenReturn(dummyProductJson['status']);
+          .thenReturn(productJson['status']);
 
       // Act
       final model = ProductModel.fromMap(mockQueryDocumentSnapshot);
 
       // Assert
-      expect(model, equals(dummyProduct));
+      expect(model, equals(productModel));
     },
   );
 
@@ -82,34 +80,32 @@ void main() {
     'should correctly create ProductModel from Firestore Document',
     () {
       // Arrange
-      when(mockDocumentSnapshot.data()).thenReturn(dummyProductJson);
-      when(mockDocumentSnapshot['id']).thenReturn(dummyProductJson['id']);
+      when(mockDocumentSnapshot.data()).thenReturn(productJson);
+      when(mockDocumentSnapshot['id']).thenReturn(productJson['id']);
       when(mockDocumentSnapshot['productName'])
-          .thenReturn(dummyProductJson['productName']);
-      when(mockDocumentSnapshot['price']).thenReturn(dummyProductJson['price']);
+          .thenReturn(productJson['productName']);
+      when(mockDocumentSnapshot['price']).thenReturn(productJson['price']);
       when(mockDocumentSnapshot['category'])
-          .thenReturn(dummyProductJson['category']);
+          .thenReturn(productJson['category']);
       when(mockDocumentSnapshot['marketingType'])
-          .thenReturn(dummyProductJson['marketingType']);
+          .thenReturn(productJson['marketingType']);
       when(mockDocumentSnapshot['description'])
-          .thenReturn(dummyProductJson['description']);
+          .thenReturn(productJson['description']);
       when(mockDocumentSnapshot['coverImage'])
-          .thenReturn(dummyProductJson['coverImage']);
+          .thenReturn(productJson['coverImage']);
       when(mockDocumentSnapshot['subImages'])
-          .thenReturn(dummyProductJson['subImages']);
-      when(mockDocumentSnapshot['zipFile'])
-          .thenReturn(dummyProductJson['zipFile']);
+          .thenReturn(productJson['subImages']);
+      when(mockDocumentSnapshot['zipFile']).thenReturn(productJson['zipFile']);
       when(mockDocumentSnapshot['dateCreated'])
-          .thenReturn(dummyProductJson['dateCreated']);
-      when(mockDocumentSnapshot['likes']).thenReturn(dummyProductJson['likes']);
-      when(mockDocumentSnapshot['status'])
-          .thenReturn(dummyProductJson['status']);
+          .thenReturn(productJson['dateCreated']);
+      when(mockDocumentSnapshot['likes']).thenReturn(productJson['likes']);
+      when(mockDocumentSnapshot['status']).thenReturn(productJson['status']);
 
       // Act
       final model = ProductModel.fromDocument(mockDocumentSnapshot);
 
       // Assert
-      expect(model, equals(dummyProduct));
+      expect(model, equals(productModel));
     },
   );
 }

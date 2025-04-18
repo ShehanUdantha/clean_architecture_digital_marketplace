@@ -6,7 +6,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/language_values.dart';
 import 'language_bloc_test.mocks.dart';
 
 @GenerateMocks([SharedPreferences])
@@ -28,21 +28,21 @@ void main() {
     build: () {
       when(mockSharedPreferences.setString(
         AppVariableNames.currentLanguage,
-        fakeUserSelectLanguageName,
+        userSelectLanguageName,
       )).thenAnswer((_) async => true);
 
       return languageBloc;
     },
     act: (bloc) => bloc.add(
       UpdateLanguage(
-        languageName: fakeUserSelectLanguageName,
-        languageLocale: fakeUserSelectLanguageLocale,
+        languageName: userSelectLanguageName,
+        languageLocale: userSelectLanguageLocale,
       ),
     ),
     expect: () => [
       const LanguageState().copyWith(
-        languageName: fakeUserSelectLanguageName,
-        languageLocale: fakeUserSelectLanguageLocale,
+        languageName: userSelectLanguageName,
+        languageLocale: userSelectLanguageLocale,
       ),
     ],
   );
@@ -51,15 +51,15 @@ void main() {
     'emits updated state with languageName, languageLocale when GetCurrentLanguage is added',
     build: () {
       when(mockSharedPreferences.getString(AppVariableNames.currentLanguage))
-          .thenReturn(fakeUserSelectLanguageName);
+          .thenReturn(userSelectLanguageName);
 
       return languageBloc;
     },
     act: (bloc) => bloc.add(GetCurrentLanguage()),
     expect: () => [
       const LanguageState().copyWith(
-        languageName: fakeUserSelectLanguageName,
-        languageLocale: fakeUserSelectLanguageLocale,
+        languageName: userSelectLanguageName,
+        languageLocale: userSelectLanguageLocale,
       ),
     ],
   );

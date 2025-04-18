@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:Pixelcart/src/config/routes/router.dart';
-import 'package:Pixelcart/src/core/constants/error_messages.dart';
+import '../../../config/routes/router.dart';
+import '../../../core/constants/error_messages.dart';
 
 import '../../../core/utils/extension.dart';
 import 'package:flutter/foundation.dart';

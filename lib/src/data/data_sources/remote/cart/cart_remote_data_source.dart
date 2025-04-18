@@ -265,8 +265,6 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
         stackTrace: e.stackTrace,
       );
     } catch (e, stackTrace) {
-      print(e);
-      print(stackTrace.toString());
       throw DBException(
         errorMessage: e.toString(),
         stackTrace: stackTrace,

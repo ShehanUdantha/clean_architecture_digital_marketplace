@@ -6,7 +6,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/theme_values.dart';
 import 'theme_bloc_test.mocks.dart';
 
 @GenerateMocks([SharedPreferences])
@@ -28,21 +28,21 @@ void main() {
     build: () {
       when(mockSharedPreferences.setString(
         AppVariableNames.currentTheme,
-        fakeUserSelectThemeKey,
+        userSelectThemeKey,
       )).thenAnswer((_) async => true);
 
       return themeBloc;
     },
     act: (bloc) => bloc.add(
       const UpdateThemeMode(
-        themeName: fakeUserSelectThemeKey,
-        themeMode: fakeUserSelectThemeValue,
+        themeName: userSelectThemeKey,
+        themeMode: userSelectThemeValue,
       ),
     ),
     expect: () => [
       const ThemeState().copyWith(
-        themeName: fakeUserSelectThemeKey,
-        themeMode: fakeUserSelectThemeValue,
+        themeName: userSelectThemeKey,
+        themeMode: userSelectThemeValue,
       ),
     ],
   );
@@ -51,15 +51,15 @@ void main() {
     'emits updated state with themeName, themeMode when GetCurrentThemeMode is added',
     build: () {
       when(mockSharedPreferences.getString(AppVariableNames.currentTheme))
-          .thenReturn(fakeCurrentThemeKey);
+          .thenReturn(currentThemeKey);
 
       return themeBloc;
     },
     act: (bloc) => bloc.add(GetCurrentThemeMode()),
     expect: () => [
       const ThemeState().copyWith(
-        themeName: fakeCurrentThemeKey,
-        themeMode: fakeCurrentThemeValue,
+        themeName: currentThemeKey,
+        themeMode: currentThemeValue,
       ),
     ],
   );

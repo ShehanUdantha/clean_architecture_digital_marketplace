@@ -6,7 +6,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:dartz/dartz.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/auth_values.dart';
 import 'user_sign_in_usecase_test.mocks.dart';
 
 // dart run build_runner build
@@ -26,14 +26,14 @@ void main() {
     'should return a User Id when the sign-in process is successful',
     () async {
       // Arrange
-      when(mockUserAuthRepository.signInUser(signInParams))
-          .thenAnswer((_) async => const Right(userId));
+      when(mockUserAuthRepository.signInUser(userSignInParams))
+          .thenAnswer((_) async => const Right(userUserId));
 
       // Act
-      final result = await userSignInUseCase(signInParams);
+      final result = await userSignInUseCase(userSignInParams);
 
       // Assert
-      expect(result, const Right(userId));
+      expect(result, const Right(userUserId));
     },
   );
 
@@ -44,11 +44,11 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Sign-in failed',
       );
-      when(mockUserAuthRepository.signInUser(signInParams))
+      when(mockUserAuthRepository.signInUser(userSignInParams))
           .thenAnswer((_) async => Left(failure));
 
       // Act
-      final result = await userSignInUseCase(signInParams);
+      final result = await userSignInUseCase(userSignInParams);
 
       // Assert
       expect(result, Left(failure));

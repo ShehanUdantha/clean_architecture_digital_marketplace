@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/auth_values.dart';
 import 'reset_notification_count_usecase_test.mocks.dart';
 
 @GenerateMocks([NotificationCountRepository])
@@ -26,13 +26,11 @@ void main() {
     'should return a Success Status when the reset notification count process is successful',
     () async {
       // Arrange
-      when(mockNotificationCountRepository
-              .resetNotificationCount(dummyUserIdToGetNotifications))
+      when(mockNotificationCountRepository.resetNotificationCount(userUserId))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       // Act
-      final result = await resetNotificationCountUseCase
-          .call(dummyUserIdToGetNotifications);
+      final result = await resetNotificationCountUseCase.call(userUserId);
 
       // Assert
       expect(result, Right(ResponseTypes.success.response));
@@ -46,13 +44,11 @@ void main() {
       final failure = LocalDBFailure(
         errorMessage: 'Reset notification count failed',
       );
-      when(mockNotificationCountRepository
-              .resetNotificationCount(dummyUserIdToGetNotifications))
+      when(mockNotificationCountRepository.resetNotificationCount(userUserId))
           .thenAnswer((_) async => Left(failure));
 
       // Act
-      final result = await resetNotificationCountUseCase
-          .call(dummyUserIdToGetNotifications);
+      final result = await resetNotificationCountUseCase.call(userUserId);
 
       // Assert
       expect(result, Left(failure));

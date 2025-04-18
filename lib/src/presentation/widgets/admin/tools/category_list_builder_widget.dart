@@ -33,7 +33,7 @@ class CategoryListBuilderWidget extends StatelessWidget {
     );
   }
 
-  _handleDeleteButton(BuildContext context, String id) {
+  void _handleDeleteButton(BuildContext context, String id) {
     context.read<CategoryBloc>().add(
           DeleteCategoriesEvent(
             categoryId: id,

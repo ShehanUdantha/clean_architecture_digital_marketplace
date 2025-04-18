@@ -7,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../../fixtures/constant_values.dart';
+import '../../../../fixtures/purchase_values.dart';
 import 'get_all_purchase_history_by_user_id_usecase_test.mocks.dart';
 
 @GenerateMocks([PurchaseRepository])
@@ -27,14 +27,14 @@ void main() {
     () async {
       // Arrange
       when(mockPurchaseRepository.getAllPurchaseHistoryByUserId())
-          .thenAnswer((_) async => Right(dummyPurchasedProducts));
+          .thenAnswer((_) async => Right(purchaseEntities));
 
       // Act
       final result =
           await getAllPurchaseHistoryByUserIdUseCase.call(NoParams());
 
       // Assert
-      expect(result, Right(dummyPurchasedProducts));
+      expect(result, Right(purchaseEntities));
     },
   );
 

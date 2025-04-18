@@ -17,7 +17,7 @@ class ToolsPage extends StatelessWidget {
     );
   }
 
-  _bodyWidget(BuildContext context) {
+  Widget _bodyWidget(BuildContext context) {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(16.0).copyWith(bottom: 0),
@@ -62,19 +62,19 @@ class ToolsPage extends StatelessWidget {
     );
   }
 
-  _handleProductPage(BuildContext context) {
+  void _handleProductPage(BuildContext context) {
     context.goNamed(AppRoutes.productsManagePageName);
   }
 
-  _handleCategoryPage(BuildContext context) {
+  void _handleCategoryPage(BuildContext context) {
     context.goNamed(AppRoutes.categoriesManagePageName);
   }
 
-  _handleUserPage(BuildContext context) {
+  void _handleUserPage(BuildContext context) {
     context.goNamed(AppRoutes.usersManagePageName);
   }
 
-  _handleNotificationPage(BuildContext context) {
+  void _handleNotificationPage(BuildContext context) {
     context.goNamed(AppRoutes.notificationManagePageName);
   }
 }

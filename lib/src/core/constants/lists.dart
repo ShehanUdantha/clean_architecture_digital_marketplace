@@ -37,14 +37,14 @@ class AppLists {
         ),
       ];
 
-  static List<String> listOfMarketingType = [
+  static const List<String> listOfMarketingType = [
     'Normal',
     'Featured',
     'Trending',
     'Latest',
   ];
 
-  static List<String> listOfUserType = [
+  static const List<String> listOfUserType = [
     'All Account',
     'User',
     'Admin',
@@ -56,11 +56,11 @@ class AppLists {
     'System': ThemeMode.system,
   };
 
-  static Map<String, Locale> languages = {
-    'English': const Locale('en', 'US'),
-    "Spanish": const Locale('es', 'ES'),
-    "Chinese": const Locale('zh', 'CN'),
-    "French": const Locale('fr', 'FR'),
+  static const Map<String, Locale> languages = {
+    'English': Locale('en', 'US'),
+    "Spanish": Locale('es', 'ES'),
+    "Chinese": Locale('zh', 'CN'),
+    "French": Locale('fr', 'FR'),
   };
 
   static Map<int, String> months(BuildContext context) => {

@@ -269,11 +269,11 @@ class ProductDetailsWidget extends StatelessWidget {
     );
   }
 
-  _handleAddToCartButton(BuildContext context, String id) {
+  void _handleAddToCartButton(BuildContext context, String id) {
     context.read<ProductDetailsBloc>().add(AddProductToCartEvent(id: id));
   }
 
-  _handleRemoveFromCartButton(BuildContext context, String id) {
+  void _handleRemoveFromCartButton(BuildContext context, String id) {
     context.read<ProductDetailsBloc>().add(RemoveProductFromCartEvent(id: id));
   }
 

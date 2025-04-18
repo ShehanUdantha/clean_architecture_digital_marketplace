@@ -37,7 +37,7 @@ class _NotificationViewPageState extends State<NotificationViewPage> {
     );
   }
 
-  _bodyWidget() {
+  Widget _bodyWidget() {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(16.0).copyWith(bottom: 0),
@@ -91,7 +91,7 @@ class _NotificationViewPageState extends State<NotificationViewPage> {
     );
   }
 
-  _handleBackButton() {
+  void _handleBackButton() {
     final authState = context.read<AuthBloc>().state;
     context.goNamed(authState.userType == UserTypes.user.name
         ? AppRoutes.homePageName

@@ -45,14 +45,11 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  _bodyWidget() {
+  Widget _bodyWidget() {
     final networkState = context.watch<NetworkBloc>().state;
 
     return WillPopScope(
-      onWillPop: () async {
-        context.goNamed(AppRoutes.signInPageName);
-        return Future.value(false);
-      },
+      onWillPop: () => _handleWillPop(context),
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -62,14 +59,13 @@ class _SignUpPageState extends State<SignUpPage> {
                   previous.status != current.status,
               listener: (context, state) {
                 if (state.status == BlocStatus.error) {
-                  context.read<SignUpBloc>().add(SetSignUpStatusToDefault());
                   Helper.showSnackBar(
                     context,
                     state.authMessage,
                   );
+                  context.read<SignUpBloc>().add(SetSignUpStatusToDefault());
                 }
                 if (state.status == BlocStatus.success) {
-                  context.read<SignUpBloc>().add(SetSignUpStatusToDefault());
                   context.goNamed(
                     AppRoutes.emailVerificationAndForgotPasswordPageName,
                     queryParameters: {
@@ -78,6 +74,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       'isForgot': 'false',
                     },
                   );
+                  context.read<SignUpBloc>().add(SetSignUpStatusToDefault());
                   context.read<AuthBloc>().add(RefreshUserEvent());
                 }
               },
@@ -161,11 +158,16 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  _handleBackButton() {
+  Future<bool> _handleWillPop(BuildContext context) async {
+    context.goNamed(AppRoutes.signInPageName);
+    return Future.value(false);
+  }
+
+  void _handleBackButton() {
     context.goNamed(AppRoutes.signInPageName);
   }
 
-  _handleSignUp(NetworkState networkState) {
+  void _handleSignUp(NetworkState networkState) {
     String? emailValidity = AppValidator.validateEmail(_emailController.text);
     String? passwordValidity =
         AppValidator.validatePassword(_passwordController.text);

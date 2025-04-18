@@ -33,7 +33,7 @@ class EmailVerificationPage extends StatelessWidget {
     );
   }
 
-  _bodyWidget(BuildContext context) {
+  Widget _bodyWidget(BuildContext context) {
     final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
 
     return WillPopScope(
@@ -131,12 +131,12 @@ class EmailVerificationPage extends StatelessWidget {
     );
   }
 
-  _handleWillPop(BuildContext context) async {
+  Future<bool> _handleWillPop(BuildContext context) async {
     context.goNamed(AppRoutes.signUpPageName);
     return Future.value(false);
   }
 
-  _handleBackButton(BuildContext context, String page) {
+  void _handleBackButton(BuildContext context, String page) {
     if (page == AuthTypes.signIn.auth) {
       context.goNamed(AppRoutes.signInPageName);
     }
@@ -148,7 +148,7 @@ class EmailVerificationPage extends StatelessWidget {
     }
   }
 
-  _handleContinueButton(BuildContext context) {
+  void _handleContinueButton(BuildContext context) {
     context.goNamed(AppRoutes.signInPageName);
   }
 }

@@ -12,7 +12,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/cart_values.dart';
 import 'cart_bloc_test.mocks.dart';
 
 @GenerateMocks([
@@ -53,7 +53,7 @@ void main() {
     'emits [loading, success, listOfCartedItems, listStatus success, totalPrice, subTotal, transactionFee] when GetAllCartedProductsDetailsByIdEvent is added and use case return list of product entities and added CountTotalPriceEvent',
     build: () {
       when(mockGetAllCartedItemsDetailsByIdUseCase.call(any))
-          .thenAnswer((_) async => Right(dummyProductEntities));
+          .thenAnswer((_) async => Right(cartedProductEntities));
       return cartBloc;
     },
     act: (bloc) => bloc.add(GetAllCartedProductsDetailsByIdEvent()),
@@ -62,15 +62,15 @@ void main() {
       CartState(
         status: BlocStatus.success,
         listStatus: BlocStatus.success,
-        listOfCartedItems: dummyProductEntities,
+        listOfCartedItems: cartedProductEntities,
       ),
       CartState(
         status: BlocStatus.success,
         listStatus: BlocStatus.success,
-        listOfCartedItems: dummyProductEntities,
-        subTotal: fakeProductEntitiesListSubTotal,
-        transactionFee: fakeProductEntitiesListTransactionFee,
-        totalPrice: fakeProductEntitiesListTotalPrice,
+        listOfCartedItems: cartedProductEntities,
+        subTotal: cartedProductEntitiesListSubTotal,
+        transactionFee: cartedProductEntitiesListTransactionFee,
+        totalPrice: cartedProductEntitiesListTotalPrice,
       ),
     ],
   );
@@ -99,11 +99,11 @@ void main() {
   blocTest<CartBloc, CartState>(
     'emits [success, message] when DeleteCartedProductEvent is added and use case return success',
     build: () {
-      when(mockRemoveProductFromCartUseCase.call(fakeProductId))
+      when(mockRemoveProductFromCartUseCase.call(cartedProductId))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
       return cartBloc;
     },
-    act: (bloc) => bloc.add(DeleteCartedProductEvent(id: fakeProductId)),
+    act: (bloc) => bloc.add(DeleteCartedProductEvent(id: cartedProductId)),
     expect: () => [
       CartState(
         listStatus: BlocStatus.success,
@@ -119,11 +119,11 @@ void main() {
         errorMessage: 'Delete carted item failed',
       );
 
-      when(mockRemoveProductFromCartUseCase.call(fakeProductId))
+      when(mockRemoveProductFromCartUseCase.call(cartedProductId))
           .thenAnswer((_) async => Left(failure));
       return cartBloc;
     },
-    act: (bloc) => bloc.add(DeleteCartedProductEvent(id: fakeProductId)),
+    act: (bloc) => bloc.add(DeleteCartedProductEvent(id: cartedProductId)),
     expect: () => [
       CartState(
         listStatus: BlocStatus.error,
@@ -147,21 +147,21 @@ void main() {
     'emits [success, listOfCartedItems, totalPrice, subTotal, transactionFee] when UpdateCartedProductsDetailsByIdEvent is added and use case return list of product entities and added CountTotalPriceEvent',
     build: () {
       when(mockGetAllCartedItemsDetailsByIdUseCase.call(any))
-          .thenAnswer((_) async => Right(dummyProductEntities));
+          .thenAnswer((_) async => Right(cartedProductEntities));
       return cartBloc;
     },
     act: (bloc) => bloc.add(UpdateCartedProductsDetailsByIdEvent()),
     expect: () => [
       CartState(
         listStatus: BlocStatus.success,
-        listOfCartedItems: dummyProductEntities,
+        listOfCartedItems: cartedProductEntities,
       ),
       CartState(
         listStatus: BlocStatus.success,
-        listOfCartedItems: dummyProductEntities,
-        subTotal: fakeProductEntitiesListSubTotal,
-        transactionFee: fakeProductEntitiesListTransactionFee,
-        totalPrice: fakeProductEntitiesListTotalPrice,
+        listOfCartedItems: cartedProductEntities,
+        subTotal: cartedProductEntitiesListSubTotal,
+        transactionFee: cartedProductEntitiesListTransactionFee,
+        totalPrice: cartedProductEntitiesListTotalPrice,
       ),
     ],
   );
@@ -190,10 +190,10 @@ void main() {
     'emits [success] when SetCartDetailsToPurchaseHistoryAndDeleteCartDetailsEvent is added and use case return success',
     build: () {
       cartBloc.emit(cartBloc.state
-          .copyWith(totalPrice: fakeProductEntitiesListTotalPrice));
+          .copyWith(totalPrice: cartedProductEntitiesListTotalPrice));
 
       when(mockSetCartDetailsToPurchaseHistoryAndDeleteCartUseCase
-              .call(fakeProductEntitiesListTotalPrice.toString()))
+              .call(cartedProductEntitiesListTotalPrice.toString()))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
       return cartBloc;
     },
@@ -201,17 +201,17 @@ void main() {
         bloc.add(SetCartDetailsToPurchaseHistoryAndDeleteCartDetailsEvent()),
     expect: () => [
       CartState(
-        totalPrice: fakeProductEntitiesListTotalPrice,
+        totalPrice: cartedProductEntitiesListTotalPrice,
         addToPurchaseStatus: BlocStatus.success,
       ),
     ],
   );
 
   blocTest<CartBloc, CartState>(
-    'emits [error, message] when DeleteCartedProductEvent fails',
+    'emits [error, message] when SetCartDetailsToPurchaseHistoryAndDeleteCartDetailsEvent fails',
     build: () {
       cartBloc.emit(cartBloc.state
-          .copyWith(totalPrice: fakeProductEntitiesListTotalPrice));
+          .copyWith(totalPrice: cartedProductEntitiesListTotalPrice));
 
       final failure = FirebaseFailure(
         errorMessage:
@@ -219,7 +219,7 @@ void main() {
       );
 
       when(mockSetCartDetailsToPurchaseHistoryAndDeleteCartUseCase
-              .call(fakeProductEntitiesListTotalPrice.toString()))
+              .call(cartedProductEntitiesListTotalPrice.toString()))
           .thenAnswer((_) async => Left(failure));
       return cartBloc;
     },
@@ -227,7 +227,7 @@ void main() {
         bloc.add(SetCartDetailsToPurchaseHistoryAndDeleteCartDetailsEvent()),
     expect: () => [
       CartState(
-        totalPrice: fakeProductEntitiesListTotalPrice,
+        totalPrice: cartedProductEntitiesListTotalPrice,
         addToPurchaseStatus: BlocStatus.error,
         addToPurchaseMessage:
             'Set cart details to purchase history and delete cart failed',

@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/stripe_values.dart';
 import 'stripe_repository_impl_test.mocks.dart';
 
 @GenerateMocks([StripeRemoteDataSource])
@@ -28,7 +28,7 @@ void main() {
         () async {
           // Arrange
           when(mockStripeRemoteDataSource.makePayments(paymentAmount))
-              .thenAnswer((_) async => dummyStripeModel);
+              .thenAnswer((_) async => stripeModel);
 
           // Act
           final result = await stripeRepositoryImpl.makePayments(paymentAmount);
@@ -36,7 +36,7 @@ void main() {
           // Assert
           result.fold(
             (l) => fail('test failed'),
-            (r) => expect(r, dummyStripeModel),
+            (r) => expect(r, stripeModel),
           );
         },
       );

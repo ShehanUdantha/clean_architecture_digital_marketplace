@@ -11,7 +11,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/purchase_values.dart';
 import 'purchase_bloc_test.mocks.dart';
 
 @GenerateMocks([
@@ -50,7 +50,7 @@ void main() {
     'emits [loading, success, listOfPurchase] when GetAllPurchaseHistory is added and use case return list of purchases',
     build: () {
       when(mockGetAllPurchaseHistoryByUserIdUseCase.call(any))
-          .thenAnswer((_) async => Right(dummyPurchasedProductEntities));
+          .thenAnswer((_) async => Right(purchaseEntities));
 
       return purchaseBloc;
     },
@@ -59,7 +59,7 @@ void main() {
       PurchaseState().copyWith(status: BlocStatus.loading),
       PurchaseState().copyWith(
         status: BlocStatus.success,
-        listOfPurchase: dummyPurchasedProductEntities,
+        listOfPurchase: purchaseEntities,
       ),
     ],
   );
@@ -89,18 +89,18 @@ void main() {
     'emits [loading, success, listOfPurchaseProducts] when GetAllPurchaseItemsByItsProductIds is added and use case return list of purchased products',
     build: () {
       when(mockGetAllPurchaseItemsByItsProductIdsUseCase
-              .call(fakeProductIdList))
-          .thenAnswer((_) async => Right(dummyProductEntities));
+              .call(purchasedProductIdList))
+          .thenAnswer((_) async => Right(purchasedProductEntities));
 
       return purchaseBloc;
     },
-    act: (bloc) => bloc
-        .add(GetAllPurchaseItemsByItsProductIds(productIds: fakeProductIdList)),
+    act: (bloc) => bloc.add(
+        GetAllPurchaseItemsByItsProductIds(productIds: purchasedProductIdList)),
     expect: () => [
       PurchaseState().copyWith(productStatus: BlocStatus.loading),
       PurchaseState().copyWith(
         productStatus: BlocStatus.success,
-        listOfPurchaseProducts: dummyProductEntities,
+        listOfPurchaseProducts: purchasedProductEntities,
       ),
     ],
   );
@@ -112,13 +112,13 @@ void main() {
         errorMessage: 'Get all purchased products by ids failed',
       );
       when(mockGetAllPurchaseItemsByItsProductIdsUseCase
-              .call(fakeProductIdList))
+              .call(purchasedProductIdList))
           .thenAnswer((_) async => Left(failure));
 
       return purchaseBloc;
     },
-    act: (bloc) => bloc
-        .add(GetAllPurchaseItemsByItsProductIds(productIds: fakeProductIdList)),
+    act: (bloc) => bloc.add(
+        GetAllPurchaseItemsByItsProductIds(productIds: purchasedProductIdList)),
     expect: () => [
       PurchaseState().copyWith(productStatus: BlocStatus.loading),
       PurchaseState().copyWith(
@@ -155,12 +155,13 @@ void main() {
   blocTest<PurchaseBloc, PurchaseState>(
     'emits [loading, success] when ProductDownloadEvent is added and use case return success',
     build: () {
-      when(mockDownloadProductByProductIdUsecase.call(fakeProductId))
+      when(mockDownloadProductByProductIdUsecase.call(purchasedProductId))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       return purchaseBloc;
     },
-    act: (bloc) => bloc.add(ProductDownloadEvent(productId: fakeProductId)),
+    act: (bloc) =>
+        bloc.add(ProductDownloadEvent(productId: purchasedProductId)),
     expect: () => [
       PurchaseState().copyWith(downloadStatus: BlocStatus.success),
     ],
@@ -172,12 +173,13 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Product download failed',
       );
-      when(mockDownloadProductByProductIdUsecase.call(fakeProductId))
+      when(mockDownloadProductByProductIdUsecase.call(purchasedProductId))
           .thenAnswer((_) async => Left(failure));
 
       return purchaseBloc;
     },
-    act: (bloc) => bloc.add(ProductDownloadEvent(productId: fakeProductId)),
+    act: (bloc) =>
+        bloc.add(ProductDownloadEvent(productId: purchasedProductId)),
     expect: () => [
       PurchaseState().copyWith(
         downloadStatus: BlocStatus.error,

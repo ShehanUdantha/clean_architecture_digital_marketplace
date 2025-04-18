@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/users_values.dart';
 import 'users_bloc_test.mocks.dart';
 
 @GenerateMocks([GetAllUsersUseCase])
@@ -29,7 +29,7 @@ void main() {
     'emits [loading, success, listOfUsers] when GetAllUsersEvent is added and usecase returns all type of users (userType - "All Account")',
     build: () {
       when(mockGetAllUsersUseCase.call(userTypeForAll))
-          .thenAnswer((_) async => Right(allTypeOfDummyEntityUsers));
+          .thenAnswer((_) async => Right(allTypeOfUserEntities));
 
       return usersBloc;
     },
@@ -38,7 +38,7 @@ void main() {
       const UsersState().copyWith(status: BlocStatus.loading),
       UsersState().copyWith(
         status: BlocStatus.success,
-        listOfUsers: allTypeOfDummyEntityUsers,
+        listOfUsers: allTypeOfUserEntities,
       ),
     ],
   );
@@ -67,14 +67,14 @@ void main() {
     'emits [loading, success, listOfUsers] when GetAllUsersEvent is added and usecase returns all users (userType - "User")',
     build: () {
       when(mockGetAllUsersUseCase.call(userTypeForUser))
-          .thenAnswer((_) async => Right(onlyDummyEntityUsers));
+          .thenAnswer((_) async => Right(onlyUserEntities));
       return usersBloc;
     },
     act: (bloc) async {
       bloc.add(
         const UserTypeSelectEvent(
           value: userTypeIndexForUser,
-          name: userTypeUser,
+          name: userTypeForUser,
         ),
       );
 
@@ -83,18 +83,18 @@ void main() {
     expect: () => [
       UsersState().copyWith(
         currentUserType: userTypeIndexForUser,
-        currentUserTypeName: userTypeUser,
+        currentUserTypeName: userTypeForUser,
       ),
       const UsersState().copyWith(
         status: BlocStatus.loading,
         currentUserType: userTypeIndexForUser,
-        currentUserTypeName: userTypeUser,
+        currentUserTypeName: userTypeForUser,
       ),
       UsersState().copyWith(
         status: BlocStatus.success,
-        listOfUsers: onlyDummyEntityUsers,
+        listOfUsers: onlyUserEntities,
         currentUserType: userTypeIndexForUser,
-        currentUserTypeName: userTypeUser,
+        currentUserTypeName: userTypeForUser,
       ),
     ],
   );
@@ -113,7 +113,7 @@ void main() {
       bloc.add(
         const UserTypeSelectEvent(
           value: userTypeIndexForUser,
-          name: userTypeUser,
+          name: userTypeForUser,
         ),
       );
 
@@ -122,18 +122,18 @@ void main() {
     expect: () => [
       UsersState().copyWith(
         currentUserType: userTypeIndexForUser,
-        currentUserTypeName: userTypeUser,
+        currentUserTypeName: userTypeForUser,
       ),
       const UsersState().copyWith(
         status: BlocStatus.loading,
         currentUserType: userTypeIndexForUser,
-        currentUserTypeName: userTypeUser,
+        currentUserTypeName: userTypeForUser,
       ),
       UsersState().copyWith(
         status: BlocStatus.error,
         message: 'Get all users (userType - "User") failed',
         currentUserType: userTypeIndexForUser,
-        currentUserTypeName: userTypeUser,
+        currentUserTypeName: userTypeForUser,
       ),
     ],
   );
@@ -142,7 +142,7 @@ void main() {
     'emits [loading, success, listOfUsers] when GetAllUsersEvent is added and usecase returns all admins (userType - "Admin")',
     build: () {
       when(mockGetAllUsersUseCase.call(userTypeForAdmin))
-          .thenAnswer((_) async => Right(onlyDummyEntityAdmins));
+          .thenAnswer((_) async => Right(onlyAdminEntities));
 
       return usersBloc;
     },
@@ -150,7 +150,7 @@ void main() {
       bloc.add(
         const UserTypeSelectEvent(
           value: userTypeIndexForAdmin,
-          name: userTypeAdmin,
+          name: userTypeForAdmin,
         ),
       );
 
@@ -159,18 +159,18 @@ void main() {
     expect: () => [
       UsersState().copyWith(
         currentUserType: userTypeIndexForAdmin,
-        currentUserTypeName: userTypeAdmin,
+        currentUserTypeName: userTypeForAdmin,
       ),
       const UsersState().copyWith(
         status: BlocStatus.loading,
         currentUserType: userTypeIndexForAdmin,
-        currentUserTypeName: userTypeAdmin,
+        currentUserTypeName: userTypeForAdmin,
       ),
       UsersState().copyWith(
         status: BlocStatus.success,
-        listOfUsers: onlyDummyEntityAdmins,
+        listOfUsers: onlyAdminEntities,
         currentUserType: userTypeIndexForAdmin,
-        currentUserTypeName: userTypeAdmin,
+        currentUserTypeName: userTypeForAdmin,
       ),
     ],
   );
@@ -189,7 +189,7 @@ void main() {
       bloc.add(
         const UserTypeSelectEvent(
           value: userTypeIndexForAdmin,
-          name: userTypeAdmin,
+          name: userTypeForAdmin,
         ),
       );
 
@@ -198,18 +198,18 @@ void main() {
     expect: () => [
       UsersState().copyWith(
         currentUserType: userTypeIndexForAdmin,
-        currentUserTypeName: userTypeAdmin,
+        currentUserTypeName: userTypeForAdmin,
       ),
       const UsersState().copyWith(
         status: BlocStatus.loading,
         currentUserType: userTypeIndexForAdmin,
-        currentUserTypeName: userTypeAdmin,
+        currentUserTypeName: userTypeForAdmin,
       ),
       UsersState().copyWith(
         status: BlocStatus.error,
         message: 'Get all users (userType - "Admin") failed',
         currentUserType: userTypeIndexForAdmin,
-        currentUserTypeName: userTypeAdmin,
+        currentUserTypeName: userTypeForAdmin,
       ),
     ],
   );
@@ -220,13 +220,13 @@ void main() {
     act: (bloc) => bloc.add(
       const UserTypeSelectEvent(
         value: userTypeIndexForUser,
-        name: userTypeUser,
+        name: userTypeForUser,
       ),
     ),
     expect: () => [
       const UsersState().copyWith(
         currentUserType: userTypeIndexForUser,
-        currentUserTypeName: userTypeUser,
+        currentUserTypeName: userTypeForUser,
       ),
     ],
   );

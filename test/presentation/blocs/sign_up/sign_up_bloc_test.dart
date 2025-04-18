@@ -12,7 +12,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/auth_values.dart';
 import 'sign_up_bloc_test.mocks.dart';
 
 @GenerateMocks([
@@ -42,7 +42,7 @@ void main() {
   blocTest<SignUpBloc, SignUpState>(
     'emits [loading, success, success] when SignUpButtonClickedEvent is added and both use cases return success',
     build: () {
-      when(mockUserSignUpUseCase.call(signUpParams))
+      when(mockUserSignUpUseCase.call(userSignUpParams))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       when(mockSendEmailVerificationUseCase.call(any))
@@ -51,7 +51,7 @@ void main() {
       return signUpBloc;
     },
     act: (bloc) =>
-        bloc.add(SignUpButtonClickedEvent(signUpParams: signUpParams)),
+        bloc.add(SignUpButtonClickedEvent(signUpParams: userSignUpParams)),
     expect: () => [
       SignUpState().copyWith(status: BlocStatus.loading),
       SignUpState().copyWith(status: BlocStatus.success),
@@ -61,7 +61,7 @@ void main() {
   blocTest<SignUpBloc, SignUpState>(
     'emits [loading, success, error, authMessage] when SignUpButtonClickedEvent is added and use cases return success and email verification send process return failure',
     build: () {
-      when(mockUserSignUpUseCase.call(signUpParams))
+      when(mockUserSignUpUseCase.call(userSignUpParams))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       when(mockSendEmailVerificationUseCase.call(any))
@@ -70,7 +70,7 @@ void main() {
       return signUpBloc;
     },
     act: (bloc) =>
-        bloc.add(SignUpButtonClickedEvent(signUpParams: signUpParams)),
+        bloc.add(SignUpButtonClickedEvent(signUpParams: userSignUpParams)),
     expect: () => [
       SignUpState().copyWith(status: BlocStatus.loading),
       SignUpState().copyWith(status: BlocStatus.success),
@@ -87,13 +87,13 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'User SignUp failed',
       );
-      when(mockUserSignUpUseCase.call(signUpParams))
+      when(mockUserSignUpUseCase.call(userSignUpParams))
           .thenAnswer((_) async => Left(failure));
 
       return signUpBloc;
     },
     act: (bloc) =>
-        bloc.add(SignUpButtonClickedEvent(signUpParams: signUpParams)),
+        bloc.add(SignUpButtonClickedEvent(signUpParams: userSignUpParams)),
     expect: () => [
       SignUpState().copyWith(status: BlocStatus.loading),
       SignUpState().copyWith(

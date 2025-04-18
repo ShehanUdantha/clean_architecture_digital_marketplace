@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../../fixtures/constant_values.dart';
+import '../../../../fixtures/cart_values.dart';
 import 'set_cart_details_to_purchase_history_and_delete_cart_usecase_test.mocks.dart';
 
 @GenerateMocks([CartRepository])
@@ -29,12 +29,12 @@ void main() {
     () async {
       // Arrange
       when(mockCartRepository.setCartDetailsToPurchaseHistoryAndDeleteCart(
-              fakeTotalCartedItemsAmount))
+              cartedProductEntitiesListSubTotal.toString()))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       // Act
       final result = await setCartDetailsToPurchaseHistoryAndDeleteCartUseCase
-          .call(fakeTotalCartedItemsAmount);
+          .call(cartedProductEntitiesListSubTotal.toString());
 
       // Assert
       expect(result, Right(ResponseTypes.success.response));
@@ -50,12 +50,12 @@ void main() {
             'Set cart details to purchase history and delete cart failed',
       );
       when(mockCartRepository.setCartDetailsToPurchaseHistoryAndDeleteCart(
-              fakeTotalCartedItemsAmount))
+              cartedProductEntitiesListSubTotal.toString()))
           .thenAnswer((_) async => Left(failure));
 
       // Act
       final result = await setCartDetailsToPurchaseHistoryAndDeleteCartUseCase
-          .call(fakeTotalCartedItemsAmount);
+          .call(cartedProductEntitiesListSubTotal.toString());
 
       // Assert
       expect(result, Left(failure));

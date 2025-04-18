@@ -14,7 +14,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/auth_values.dart';
+import '../../../fixtures/category_values.dart';
+import '../../../fixtures/product_values.dart';
 import 'user_home_bloc_test.mocks.dart';
 
 @GenerateMocks([
@@ -55,14 +57,14 @@ void main() {
     'emits [userEntity] when GetUserDetailsEvent is added and usecase return current user details',
     build: () {
       when(mockGetUserDetailsUseCase.call(any))
-          .thenAnswer((_) async => Right(userDetailsDummyEntityModel));
+          .thenAnswer((_) async => Right(userUserEntity));
 
       return userHomeBloc;
     },
     act: (bloc) => bloc.add(GetUserDetailsEvent()),
     expect: () => [
       UserHomeState().copyWith(
-        userEntity: userDetailsDummyEntityModel,
+        userEntity: userUserEntity,
       ),
     ],
   );
@@ -86,14 +88,14 @@ void main() {
     'emits [listOfCategories] when GetCategoriesEvent is added and usecase return a list of categories',
     build: () {
       when(mockGetAllCategoriesUseCase.call(any))
-          .thenAnswer((_) async => Right(dummyCategoryEntities));
+          .thenAnswer((_) async => Right(categoryEntities));
 
       return userHomeBloc;
     },
     act: (bloc) => bloc.add(GetCategoriesEvent()),
     expect: () => [
       UserHomeState().copyWith(
-        listOfCategories: dummyCategoryEntities,
+        listOfCategories: categoryEntities,
       ),
     ],
   );
@@ -118,14 +120,14 @@ void main() {
     build: () => userHomeBloc,
     act: (bloc) => bloc.add(
       const CategoryClickedEvent(
-        value: categoryTypeIdForFonts,
-        name: categoryTypeFonts,
+        value: fontCategoryId,
+        name: categoryTypeFont,
       ),
     ),
     expect: () => [
       const UserHomeState().copyWith(
-        currentCategory: categoryTypeIdForFonts,
-        currentCategoryName: categoryTypeFonts,
+        currentCategory: fontCategoryId,
+        currentCategoryName: categoryTypeFont,
       ),
     ],
   );
@@ -134,8 +136,7 @@ void main() {
     'emits [loading, success, listOfFeatured] when GetFeaturedListEvent is added and usecase return a list of featured products',
     build: () {
       when(mockGetProductsByMarketingTypes.call(MarketingTypes.featured.types))
-          .thenAnswer(
-              (_) async => Right(dummyFeaturedMarketingTypeProductEntities));
+          .thenAnswer((_) async => Right(featuredMarketingTypeProductEntities));
 
       return userHomeBloc;
     },
@@ -144,7 +145,7 @@ void main() {
       const UserHomeState().copyWith(featuredStatus: BlocStatus.loading),
       UserHomeState().copyWith(
         featuredStatus: BlocStatus.success,
-        listOfFeatured: dummyFeaturedMarketingTypeProductEntities,
+        listOfFeatured: featuredMarketingTypeProductEntities,
       ),
     ],
   );
@@ -173,8 +174,7 @@ void main() {
     'emits [loading, success, listOfTrending] when GetTrendingListEvent is added and usecase return a list of trending products',
     build: () {
       when(mockGetProductsByMarketingTypes.call(MarketingTypes.trending.types))
-          .thenAnswer(
-              (_) async => Right(dummyTrendingMarketingTypeProductEntities));
+          .thenAnswer((_) async => Right(trendingMarketingTypeProductEntities));
 
       return userHomeBloc;
     },
@@ -183,7 +183,7 @@ void main() {
       const UserHomeState().copyWith(trendingStatus: BlocStatus.loading),
       UserHomeState().copyWith(
         trendingStatus: BlocStatus.success,
-        listOfTrending: dummyTrendingMarketingTypeProductEntities,
+        listOfTrending: trendingMarketingTypeProductEntities,
       ),
     ],
   );
@@ -212,8 +212,7 @@ void main() {
     'emits [loading, success, listOfLatest] when GetLatestListEvent is added and usecase return a list of latest products',
     build: () {
       when(mockGetProductsByMarketingTypes.call(MarketingTypes.latest.types))
-          .thenAnswer(
-              (_) async => Right(dummyLatestMarketingTypeProductEntities));
+          .thenAnswer((_) async => Right(latestMarketingTypeProductEntities));
 
       return userHomeBloc;
     },
@@ -222,7 +221,7 @@ void main() {
       const UserHomeState().copyWith(latestStatus: BlocStatus.loading),
       UserHomeState().copyWith(
         latestStatus: BlocStatus.success,
-        listOfLatest: dummyLatestMarketingTypeProductEntities,
+        listOfLatest: latestMarketingTypeProductEntities,
       ),
     ],
   );
@@ -250,15 +249,15 @@ void main() {
   blocTest<UserHomeBloc, UserHomeState>(
     'emits [loading, success, listOfUsers] when GetProductsListByCategoryEvent is added and usecase returns filtered products list according to the category',
     build: () {
-      when(mockGetAllProductsUseCase.call(categoryTypeFonts))
-          .thenAnswer((_) async => Right(dummyFontsCategoryProductEntities));
+      when(mockGetAllProductsUseCase.call(categoryTypeFont))
+          .thenAnswer((_) async => Right(fontsCategoryProductModels));
       return userHomeBloc;
     },
     act: (bloc) async {
       bloc.add(
         const CategoryClickedEvent(
-          value: categoryTypeIdForFonts,
-          name: categoryTypeFonts,
+          value: fontCategoryId,
+          name: categoryTypeFont,
         ),
       );
 
@@ -266,19 +265,19 @@ void main() {
     },
     expect: () => [
       UserHomeState().copyWith(
-        currentCategory: categoryTypeIdForFonts,
-        currentCategoryName: categoryTypeFonts,
+        currentCategory: fontCategoryId,
+        currentCategoryName: categoryTypeFont,
       ),
       const UserHomeState().copyWith(
         productsStatus: BlocStatus.loading,
-        currentCategory: categoryTypeIdForFonts,
-        currentCategoryName: categoryTypeFonts,
+        currentCategory: fontCategoryId,
+        currentCategoryName: categoryTypeFont,
       ),
       UserHomeState().copyWith(
         productsStatus: BlocStatus.success,
-        listOfProductsByCategory: dummyFontsCategoryProductEntities,
-        currentCategory: categoryTypeIdForFonts,
-        currentCategoryName: categoryTypeFonts,
+        listOfProductsByCategory: fontsCategoryProductModels,
+        currentCategory: fontCategoryId,
+        currentCategoryName: categoryTypeFont,
       ),
     ],
   );
@@ -289,15 +288,15 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Get products list by category failed',
       );
-      when(mockGetAllProductsUseCase.call(categoryTypeFonts))
+      when(mockGetAllProductsUseCase.call(categoryTypeFont))
           .thenAnswer((_) async => Left(failure));
       return userHomeBloc;
     },
     act: (bloc) async {
       bloc.add(
         const CategoryClickedEvent(
-          value: categoryTypeIdForFonts,
-          name: categoryTypeFonts,
+          value: fontCategoryId,
+          name: categoryTypeFont,
         ),
       );
 
@@ -305,19 +304,19 @@ void main() {
     },
     expect: () => [
       UserHomeState().copyWith(
-        currentCategory: categoryTypeIdForFonts,
-        currentCategoryName: categoryTypeFonts,
+        currentCategory: fontCategoryId,
+        currentCategoryName: categoryTypeFont,
       ),
       const UserHomeState().copyWith(
         productsStatus: BlocStatus.loading,
-        currentCategory: categoryTypeIdForFonts,
-        currentCategoryName: categoryTypeFonts,
+        currentCategory: fontCategoryId,
+        currentCategoryName: categoryTypeFont,
       ),
       UserHomeState().copyWith(
         productsStatus: BlocStatus.error,
         productsMessage: 'Get products list by category failed',
-        currentCategory: categoryTypeIdForFonts,
-        currentCategoryName: categoryTypeFonts,
+        currentCategory: fontCategoryId,
+        currentCategoryName: categoryTypeFont,
       ),
     ],
   );
@@ -327,12 +326,12 @@ void main() {
     build: () => userHomeBloc,
     act: (bloc) => bloc.add(
       const SearchFieldChangeEvent(
-        query: fakeProductSearchQuery,
+        query: productSearchQuery,
       ),
     ),
     expect: () => [
       const UserHomeState().copyWith(
-        searchQuery: fakeProductSearchQuery,
+        searchQuery: productSearchQuery,
       ),
     ],
   );
@@ -340,14 +339,14 @@ void main() {
   blocTest<UserHomeBloc, UserHomeState>(
     'emits [loading, success, listOfSearchProducts] when GetProductsListByQueryEvent is added and usecase returns filtered products list according to the search query',
     build: () {
-      when(mockGetProductsByQueryUseCase.call(fakeProductSearchQuery))
-          .thenAnswer((_) async => Right(searchQueryDummyProductEntityResult));
+      when(mockGetProductsByQueryUseCase.call(productSearchQuery))
+          .thenAnswer((_) async => Right(searchQueryResultProductEntities));
       return userHomeBloc;
     },
     act: (bloc) async {
       bloc.add(
         const SearchFieldChangeEvent(
-          query: fakeProductSearchQuery,
+          query: productSearchQuery,
         ),
       );
 
@@ -355,16 +354,16 @@ void main() {
     },
     expect: () => [
       const UserHomeState().copyWith(
-        searchQuery: fakeProductSearchQuery,
+        searchQuery: productSearchQuery,
       ),
       const UserHomeState().copyWith(
         searchProductsStatus: BlocStatus.loading,
-        searchQuery: fakeProductSearchQuery,
+        searchQuery: productSearchQuery,
       ),
       UserHomeState().copyWith(
         searchProductsStatus: BlocStatus.success,
-        listOfSearchProducts: searchQueryDummyProductEntityResult,
-        searchQuery: fakeProductSearchQuery,
+        listOfSearchProducts: searchQueryResultProductEntities,
+        searchQuery: productSearchQuery,
       ),
     ],
   );
@@ -375,14 +374,14 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Get products list by search query failed',
       );
-      when(mockGetProductsByQueryUseCase.call(fakeProductSearchQuery))
+      when(mockGetProductsByQueryUseCase.call(productSearchQuery))
           .thenAnswer((_) async => Left(failure));
       return userHomeBloc;
     },
     act: (bloc) async {
       bloc.add(
         const SearchFieldChangeEvent(
-          query: fakeProductSearchQuery,
+          query: productSearchQuery,
         ),
       );
 
@@ -390,16 +389,16 @@ void main() {
     },
     expect: () => [
       const UserHomeState().copyWith(
-        searchQuery: fakeProductSearchQuery,
+        searchQuery: productSearchQuery,
       ),
       const UserHomeState().copyWith(
         searchProductsStatus: BlocStatus.loading,
-        searchQuery: fakeProductSearchQuery,
+        searchQuery: productSearchQuery,
       ),
       UserHomeState().copyWith(
         searchProductsStatus: BlocStatus.error,
         searchProductsMessage: 'Get products list by search query failed',
-        searchQuery: fakeProductSearchQuery,
+        searchQuery: productSearchQuery,
       ),
     ],
   );

@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../../fixtures/constant_values.dart';
+import '../../../../fixtures/purchase_values.dart';
 import 'get_top_sellings_products_by_month_usecase_test.mocks.dart';
 
 @GenerateMocks([PurchaseRepository])
@@ -24,16 +24,17 @@ void main() {
     'should return a List of top selling products for the provided month when the get top selling products by month process is successful',
     () async {
       // Arrange
-      when(mockPurchaseRepository
-              .getAllTopSellingProductsByMonth(yearAndMonthParams))
-          .thenAnswer((_) async => Right(dummyTopSellingProducts));
+      when(mockPurchaseRepository.getAllTopSellingProductsByMonth(
+              yearAndMonthParamsToGetPurchaseHistory))
+          .thenAnswer(
+              (_) async => Right(topSellingProductEntitiesByYearAndMonth));
 
       // Act
-      final result =
-          await getTopSellingProductsByMonthUseCase.call(yearAndMonthParams);
+      final result = await getTopSellingProductsByMonthUseCase
+          .call(yearAndMonthParamsToGetPurchaseHistory);
 
       // Assert
-      expect(result, Right(dummyTopSellingProducts));
+      expect(result, Right(topSellingProductEntitiesByYearAndMonth));
     },
   );
 
@@ -44,13 +45,13 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Get top selling products by month failed',
       );
-      when(mockPurchaseRepository
-              .getAllTopSellingProductsByMonth(yearAndMonthParams))
+      when(mockPurchaseRepository.getAllTopSellingProductsByMonth(
+              yearAndMonthParamsToGetPurchaseHistory))
           .thenAnswer((_) async => Left(failure));
 
       // Act
-      final result =
-          await getTopSellingProductsByMonthUseCase.call(yearAndMonthParams);
+      final result = await getTopSellingProductsByMonthUseCase
+          .call(yearAndMonthParamsToGetPurchaseHistory);
 
       // Assert
       expect(result, Left(failure));

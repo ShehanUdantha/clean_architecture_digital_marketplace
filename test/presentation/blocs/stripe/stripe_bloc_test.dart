@@ -9,7 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/stripe_values.dart';
 import 'stripe_bloc_test.mocks.dart';
 
 @GenerateMocks([
@@ -39,11 +39,11 @@ void main() {
   //   'emits [loading, success] when MakePaymentRequestEvent is added and payment is successful',
   //   build: () {
   //     when(mockMakePaymentsUseCase.call(paymentAmount))
-  //         .thenAnswer((_) async => Right(dummyStripeModel));
+  //         .thenAnswer((_) async => Right(stripeModel));
 
   //     when(mockStripe.initPaymentSheet(
   //       paymentSheetParameters: SetupPaymentSheetParameters(
-  //         paymentIntentClientSecret: dummyStripeModel.client_secret,
+  //         paymentIntentClientSecret: stripeModel.client_secret,
   //         merchantDisplayName: 'Pixelcart',
   //       ),
   //     )).thenAnswer((_) async => null);

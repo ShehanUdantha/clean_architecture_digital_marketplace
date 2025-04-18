@@ -41,7 +41,7 @@ class _NotificationSendPageState extends State<NotificationSendPage> {
     );
   }
 
-  _bodyWidget() {
+  Widget _bodyWidget() {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(16.0).copyWith(bottom: 0),
@@ -133,11 +133,11 @@ class _NotificationSendPageState extends State<NotificationSendPage> {
     );
   }
 
-  _handleBackButton() {
+  void _handleBackButton() {
     context.goNamed(AppRoutes.notificationManagePageName);
   }
 
-  _handleSubmitButton() async {
+  void _handleSubmitButton() async {
     if (_notificationTitleController.text.isNotEmpty) {
       if (_notificationDescriptionController.text.isNotEmpty) {
         context.read<NotificationBloc>().add(

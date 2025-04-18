@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/notification_values.dart';
 import 'delete_notification_usecase_test.mocks.dart';
 
 @GenerateMocks([NotificationRepository])
@@ -26,11 +26,11 @@ void main() {
     'should return a Success Status when the delete notification process is successful',
     () async {
       // Arrange
-      when(mockNotificationRepository.deleteNotification(fakeNotificationId))
+      when(mockNotificationRepository.deleteNotification(notificationId))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       // Act
-      final result = await deleteNotificationUseCase.call(fakeNotificationId);
+      final result = await deleteNotificationUseCase.call(notificationId);
 
       // Assert
       expect(result, Right(ResponseTypes.success.response));
@@ -44,11 +44,11 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Delete notification failed',
       );
-      when(mockNotificationRepository.deleteNotification(fakeNotificationId))
+      when(mockNotificationRepository.deleteNotification(notificationId))
           .thenAnswer((_) async => Left(failure));
 
       // Act
-      final result = await deleteNotificationUseCase.call(fakeNotificationId);
+      final result = await deleteNotificationUseCase.call(notificationId);
 
       // Assert
       expect(result, Left(failure));

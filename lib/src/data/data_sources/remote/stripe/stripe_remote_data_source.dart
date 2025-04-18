@@ -1,4 +1,6 @@
 import 'dart:convert';
+import '../../../../core/constants/error_messages.dart';
+
 import '../../../../config/routes/router.dart';
 import '../../../../core/services/env.dart';
 import '../../../../core/utils/extension.dart';
@@ -38,8 +40,9 @@ class StripRemoteDataSourceImpl implements StripeRemoteDataSource {
         return StripeModel.fromMap(jsonDecode(response.body));
       } else {
         throw StripeException(
-          errorMessage: jsonDecode(response.body)['error'] ??
-              rootNavigatorKey.currentContext!.loc.stripPaymentFail,
+          errorMessage: jsonDecode(response.body)['error']['message'] ??
+              (rootNavigatorKey.currentContext?.loc.stripPaymentFail ??
+                  AppErrorMessages.stripPaymentFail),
         );
       }
     } on StripeException catch (e) {

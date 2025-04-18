@@ -23,7 +23,7 @@ class UserInfoPage extends StatelessWidget {
     );
   }
 
-  _bodyWidget(BuildContext context) {
+  Widget _bodyWidget(BuildContext context) {
     final authState = context.watch<AuthBloc>().state;
     final userEntity = authState.userType == UserTypes.user.name
         ? context.watch<UserHomeBloc>().state.userEntity
@@ -75,7 +75,7 @@ class UserInfoPage extends StatelessWidget {
     );
   }
 
-  _handleBackButton(BuildContext context, AuthState authState) {
+  void _handleBackButton(BuildContext context, AuthState authState) {
     context.goNamed(
       authState.userType == UserTypes.user.name
           ? AppRoutes.profilePageName

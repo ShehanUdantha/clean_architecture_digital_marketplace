@@ -109,7 +109,7 @@ class PurchaseItemsCardWidget extends StatelessWidget {
     );
   }
 
-  _moveToProductsView(BuildContext context, List<String> productsId) {
+  void _moveToProductsView(BuildContext context, List<String> productsId) {
     context.goNamed(
       AppRoutes.purchaseProductViewPageName,
       extra: productsId,

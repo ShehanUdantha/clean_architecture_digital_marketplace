@@ -13,7 +13,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/auth_values.dart';
+import '../../../fixtures/purchase_values.dart';
 import 'admin_home_bloc_test.mocks.dart';
 
 @GenerateMocks([
@@ -62,7 +63,7 @@ void main() {
     'emits [userEntity] when GetAdminDetailsEvent is added and use case return userEntity',
     build: () {
       when(mockGetUserDetailsUseCase.call(any))
-          .thenAnswer((_) async => Right(userDetailsDummyEntityModel));
+          .thenAnswer((_) async => Right(userAdminEntity));
 
       return adminHomeBloc;
     },
@@ -72,7 +73,7 @@ void main() {
         year: DateTime.now().year,
         month: DateTime.now().month,
       ).copyWith(
-        userEntity: userDetailsDummyEntityModel,
+        userEntity: userAdminEntity,
       ),
     ],
   );
@@ -153,7 +154,7 @@ void main() {
     'emits [isMonthlyStatusLoading true, isMonthlyStatusLoading false, monthlyStatus] when GetMonthlyPurchaseStatus is added and use case return monthly status',
     build: () {
       when(mockGetAllPurchaseHistoryByMonthUseCase.call(any))
-          .thenAnswer((_) async => Right(fakePurchaseHistoryByMonth));
+          .thenAnswer((_) async => Right(purchaseHistoryByYearAndMonth));
 
       return adminHomeBloc;
     },
@@ -168,7 +169,7 @@ void main() {
         month: DateTime.now().month,
       ).copyWith(
         isMonthlyStatusLoading: false,
-        monthlyStatus: fakePurchaseHistoryByMonth,
+        monthlyStatus: purchaseHistoryByYearAndMonth,
       ),
     ],
   );
@@ -201,7 +202,7 @@ void main() {
     'emits [totalBalance] when GetMonthlyTotalBalance is added and use case return monthly total balance',
     build: () {
       when(mockMockGetAllPurchaseBalanceByMonthUseCase.call(any))
-          .thenAnswer((_) async => Right(fakeTotalPurchaseAmount));
+          .thenAnswer((_) async => Right(totalPurchaseAmountByYearAndMonth));
 
       return adminHomeBloc;
     },
@@ -211,7 +212,7 @@ void main() {
         year: DateTime.now().year,
         month: DateTime.now().month,
       ).copyWith(
-        totalBalance: fakeTotalPurchaseAmount,
+        totalBalance: totalPurchaseAmountByYearAndMonth,
       ),
     ],
   );
@@ -235,7 +236,8 @@ void main() {
     'emits [totalBalancePercentage] when GetMonthlyTotalBalancePercentage is added and use case return monthly total balance percentage',
     build: () {
       when(mockGetAllPurchaseBalancePercentageByMonthUseCase.call(any))
-          .thenAnswer((_) async => Right(fakeTotalPurchaseAmountPercentage));
+          .thenAnswer(
+              (_) async => Right(totalPurchaseAmountPercentageByYearAndMonth));
 
       return adminHomeBloc;
     },
@@ -245,7 +247,7 @@ void main() {
         year: DateTime.now().year,
         month: DateTime.now().month,
       ).copyWith(
-        totalBalancePercentage: fakeTotalPurchaseAmountPercentage,
+        totalBalancePercentage: totalPurchaseAmountPercentageByYearAndMonth,
       ),
     ],
   );
@@ -268,8 +270,8 @@ void main() {
   blocTest<AdminHomeBloc, AdminHomeState>(
     'emits [loading, success, listOfTopSellingProduct] when GetMonthlyTopSellingProducts is added and use case return list of top selling products',
     build: () {
-      when(mockGetTopSellingProductsByMonthUseCase.call(any))
-          .thenAnswer((_) async => Right(dummyTopSellingProducts));
+      when(mockGetTopSellingProductsByMonthUseCase.call(any)).thenAnswer(
+          (_) async => Right(topSellingProductEntitiesByYearAndMonth));
 
       return adminHomeBloc;
     },
@@ -284,7 +286,7 @@ void main() {
         month: DateTime.now().month,
       ).copyWith(
         monthlyTopSellingProductsListStatus: BlocStatus.success,
-        listOfTopSellingProduct: dummyTopSellingProducts,
+        listOfTopSellingProduct: topSellingProductEntitiesByYearAndMonth,
       ),
     ],
   );

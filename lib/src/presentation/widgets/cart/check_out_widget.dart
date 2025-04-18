@@ -131,11 +131,11 @@ class CheckOutWidget extends StatelessWidget {
           BlocListener<CartBloc, CartState>(
             listener: (context, state) {
               if (state.addToPurchaseStatus == BlocStatus.error) {
-                context.read<CartBloc>().add(SetAddToPurchaseStatusToDefault());
                 Helper.showSnackBar(
                   context,
                   state.addToPurchaseMessage,
                 );
+                context.read<CartBloc>().add(SetAddToPurchaseStatusToDefault());
               }
               if (state.addToPurchaseStatus == BlocStatus.success) {
                 context
@@ -196,7 +196,7 @@ class CheckOutWidget extends StatelessWidget {
     );
   }
 
-  _handleCheckOutButtonClick(BuildContext context, double totalPrice) {
+  void _handleCheckOutButtonClick(BuildContext context, double totalPrice) {
     context.read<StripeBloc>().add(
           MakePaymentRequestEvent(amount: totalPrice),
         );

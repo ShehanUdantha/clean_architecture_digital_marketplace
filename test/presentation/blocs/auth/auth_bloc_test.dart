@@ -15,7 +15,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/auth_values.dart';
 import 'auth_bloc_test.mocks.dart';
 
 @GenerateMocks([
@@ -60,17 +60,17 @@ void main() {
   blocTest<AuthBloc, AuthState>(
     'emits AuthSuccessState when CheckUserAuthEvent is added and use case return user type',
     build: () {
-      when(mockUser.uid).thenReturn(dummyUserIdToGetUserType);
+      when(mockUser.uid).thenReturn(userUserId);
 
-      when(mockGetUserTypeUseCase.call(dummyUserIdToGetUserType))
-          .thenAnswer((_) async => Right(userTypeAdmin));
+      when(mockGetUserTypeUseCase.call(userUserId))
+          .thenAnswer((_) async => Right(userUserType));
       return authBloc;
     },
     act: (bloc) => bloc.add(CheckUserAuthEvent(user: mockUser)),
     expect: () => [
       AuthSuccessState(
         userValue: mockUser,
-        userTypeValue: userTypeAdmin,
+        userTypeValue: userUserType,
         statusValue: BlocStatus.success,
       ),
     ],
@@ -83,9 +83,9 @@ void main() {
         errorMessage: 'Get user type by id failed',
       );
 
-      when(mockUser.uid).thenReturn(dummyUserIdToGetUserType);
+      when(mockUser.uid).thenReturn(userUserType);
 
-      when(mockGetUserTypeUseCase.call(dummyUserIdToGetUserType))
+      when(mockGetUserTypeUseCase.call(userUserType))
           .thenAnswer((_) async => Left(failure));
       return authBloc;
     },

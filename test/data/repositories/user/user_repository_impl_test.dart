@@ -6,7 +6,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/auth_values.dart';
+import '../../../fixtures/users_values.dart';
 import 'user_repository_impl_test.mocks.dart';
 
 @GenerateMocks([UserRemoteDataSource])
@@ -28,7 +29,7 @@ void main() {
         () async {
           // Arrange
           when(mockUserRemoteDataSource.getUserDetails())
-              .thenAnswer((_) async => userDetailsDummyModel);
+              .thenAnswer((_) async => userUserModel);
 
           // Act
           final result = await userRepositoryImpl.getUserDetails();
@@ -36,7 +37,7 @@ void main() {
           // Assert
           result.fold(
             (l) => fail('test failed'),
-            (r) => expect(r, userDetailsDummyModel),
+            (r) => expect(r, userUserModel),
           );
         },
       );
@@ -74,17 +75,16 @@ void main() {
         'should return a user type according to the user id when the get user type process is successful',
         () async {
           // Arrange
-          when(mockUserRemoteDataSource.getUserType(dummyUserIdToGetUserType))
-              .thenAnswer((_) async => userTypeAdmin);
+          when(mockUserRemoteDataSource.getUserType(userUserId))
+              .thenAnswer((_) async => userTypeForUser);
 
           // Act
-          final result =
-              await userRepositoryImpl.getUserType(dummyUserIdToGetUserType);
+          final result = await userRepositoryImpl.getUserType(userUserId);
 
           // Assert
           result.fold(
             (l) => fail('test failed'),
-            (r) => expect(r, userTypeAdmin),
+            (r) => expect(r, userTypeForUser),
           );
         },
       );
@@ -96,12 +96,11 @@ void main() {
           final dbException = DBException(
             errorMessage: 'Get user type failed',
           );
-          when(mockUserRemoteDataSource.getUserType(dummyUserIdToGetUserType))
+          when(mockUserRemoteDataSource.getUserType(userUserId))
               .thenThrow(dbException);
 
           // Act
-          final result =
-              await userRepositoryImpl.getUserType(dummyUserIdToGetUserType);
+          final result = await userRepositoryImpl.getUserType(userUserId);
 
           // Assert
           final failure = FirebaseFailure(
@@ -124,7 +123,7 @@ void main() {
         () async {
           // Arrange
           when(mockUserRemoteDataSource.getAllUsers(userTypeForAll))
-              .thenAnswer((_) async => allTypeOfDummyUsers);
+              .thenAnswer((_) async => allTypeOfUserModels);
 
           // Act
           final result = await userRepositoryImpl.getAllUsers(userTypeForAll);
@@ -132,7 +131,7 @@ void main() {
           // Assert
           result.fold(
             (l) => fail('test failed'),
-            (r) => expect(r, allTypeOfDummyUsers),
+            (r) => expect(r, allTypeOfUserModels),
           );
         },
       );
@@ -142,7 +141,7 @@ void main() {
         () async {
           // Arrange
           when(mockUserRemoteDataSource.getAllUsers(userTypeForUser))
-              .thenAnswer((_) async => onlyDummyUsers);
+              .thenAnswer((_) async => onlyUserModels);
 
           // Act
           final result = await userRepositoryImpl.getAllUsers(userTypeForUser);
@@ -150,7 +149,7 @@ void main() {
           // Assert
           result.fold(
             (l) => fail('test failed'),
-            (r) => expect(r, onlyDummyUsers),
+            (r) => expect(r, onlyUserModels),
           );
         },
       );
@@ -160,7 +159,7 @@ void main() {
         () async {
           // Arrange
           when(mockUserRemoteDataSource.getAllUsers(userTypeForAdmin))
-              .thenAnswer((_) async => onlyDummyAdmins);
+              .thenAnswer((_) async => onlyAdminModels);
 
           // Act
           final result = await userRepositoryImpl.getAllUsers(userTypeForAdmin);
@@ -168,7 +167,7 @@ void main() {
           // Assert
           result.fold(
             (l) => fail('test failed'),
-            (r) => expect(r, onlyDummyAdmins),
+            (r) => expect(r, onlyAdminModels),
           );
         },
       );

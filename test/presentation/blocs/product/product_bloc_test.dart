@@ -13,7 +13,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/category_values.dart';
+import '../../../fixtures/product_values.dart';
 import 'product_bloc_test.mocks.dart';
 
 @GenerateMocks([
@@ -52,10 +53,10 @@ void main() {
     'emits updated state with category when CategoryNameFieldChangeEvent is added',
     build: () => productBloc,
     act: (bloc) =>
-        bloc.add(CategoryNameFieldChangeEvent(category: dummyFontCategoryType)),
+        bloc.add(CategoryNameFieldChangeEvent(category: categoryTypeFont)),
     expect: () => [
       ProductState().copyWith(
-        category: dummyFontCategoryType,
+        category: categoryTypeFont,
       ),
     ],
   );
@@ -64,10 +65,10 @@ void main() {
     'emits updated state with marketingType when MarketingTypeFieldChangeEvent is added',
     build: () => productBloc,
     act: (bloc) =>
-        bloc.add(MarketingTypeFieldChangeEvent(type: dummyMarketingType)),
+        bloc.add(MarketingTypeFieldChangeEvent(type: marketingTypeFeatured)),
     expect: () => [
       ProductState().copyWith(
-        marketingType: dummyMarketingType,
+        marketingType: marketingTypeFeatured,
       ),
     ],
   );
@@ -75,14 +76,14 @@ void main() {
   blocTest<ProductBloc, ProductState>(
     'emits [category, marketingType, loading, success] when ProductUploadButtonClickedEvent is added and use case return success',
     build: () {
-      when(mockAddProductUseCase.call(dummyNewProductEntity))
+      when(mockAddProductUseCase.call(newProductEntity))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       return productBloc;
     },
     act: (bloc) {
-      bloc.add(CategoryNameFieldChangeEvent(category: dummyFontCategoryType));
-      bloc.add(MarketingTypeFieldChangeEvent(type: dummyMarketingType));
+      bloc.add(CategoryNameFieldChangeEvent(category: categoryTypeFont));
+      bloc.add(MarketingTypeFieldChangeEvent(type: marketingTypeFeatured));
       bloc.add(
         ProductUploadButtonClickedEvent(
           coverImage: null,
@@ -96,21 +97,21 @@ void main() {
     },
     expect: () => [
       ProductState().copyWith(
-        category: dummyFontCategoryType,
+        category: categoryTypeFont,
       ),
       ProductState().copyWith(
-        category: dummyFontCategoryType,
-        marketingType: dummyMarketingType,
+        category: categoryTypeFont,
+        marketingType: marketingTypeFeatured,
       ),
       ProductState().copyWith(
         productAddAndEditStatus: BlocStatus.loading,
-        category: dummyFontCategoryType,
-        marketingType: dummyMarketingType,
+        category: categoryTypeFont,
+        marketingType: marketingTypeFeatured,
       ),
       ProductState().copyWith(
         productAddAndEditStatus: BlocStatus.success,
-        category: dummyFontCategoryType,
-        marketingType: dummyMarketingType,
+        category: categoryTypeFont,
+        marketingType: marketingTypeFeatured,
       ),
     ],
   );
@@ -118,14 +119,14 @@ void main() {
   blocTest<ProductBloc, ProductState>(
     'emits [category, marketingType, loading, error, productAddAndEditMessage] when ProductUploadButtonClickedEvent is added and use case return failure',
     build: () {
-      when(mockAddProductUseCase.call(dummyNewProductEntity))
+      when(mockAddProductUseCase.call(newProductEntity))
           .thenAnswer((_) async => Right(ResponseTypes.failure.response));
 
       return productBloc;
     },
     act: (bloc) {
-      bloc.add(CategoryNameFieldChangeEvent(category: dummyFontCategoryType));
-      bloc.add(MarketingTypeFieldChangeEvent(type: dummyMarketingType));
+      bloc.add(CategoryNameFieldChangeEvent(category: categoryTypeFont));
+      bloc.add(MarketingTypeFieldChangeEvent(type: marketingTypeFeatured));
       bloc.add(
         ProductUploadButtonClickedEvent(
           coverImage: null,
@@ -139,22 +140,22 @@ void main() {
     },
     expect: () => [
       ProductState().copyWith(
-        category: dummyFontCategoryType,
+        category: categoryTypeFont,
       ),
       ProductState().copyWith(
-        category: dummyFontCategoryType,
-        marketingType: dummyMarketingType,
+        category: categoryTypeFont,
+        marketingType: marketingTypeFeatured,
       ),
       ProductState().copyWith(
         productAddAndEditStatus: BlocStatus.loading,
-        category: dummyFontCategoryType,
-        marketingType: dummyMarketingType,
+        category: categoryTypeFont,
+        marketingType: marketingTypeFeatured,
       ),
       ProductState().copyWith(
         productAddAndEditMessage: AppErrorMessages.productAlreadyAdded,
         productAddAndEditStatus: BlocStatus.error,
-        category: dummyFontCategoryType,
-        marketingType: dummyMarketingType,
+        category: categoryTypeFont,
+        marketingType: marketingTypeFeatured,
       ),
     ],
   );
@@ -165,14 +166,14 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Add product to DB failed',
       );
-      when(mockAddProductUseCase.call(dummyNewProductEntity))
+      when(mockAddProductUseCase.call(newProductEntity))
           .thenAnswer((_) async => Left(failure));
 
       return productBloc;
     },
     act: (bloc) {
-      bloc.add(CategoryNameFieldChangeEvent(category: dummyFontCategoryType));
-      bloc.add(MarketingTypeFieldChangeEvent(type: dummyMarketingType));
+      bloc.add(CategoryNameFieldChangeEvent(category: categoryTypeFont));
+      bloc.add(MarketingTypeFieldChangeEvent(type: marketingTypeFeatured));
       bloc.add(
         ProductUploadButtonClickedEvent(
           coverImage: null,
@@ -186,22 +187,22 @@ void main() {
     },
     expect: () => [
       ProductState().copyWith(
-        category: dummyFontCategoryType,
+        category: categoryTypeFont,
       ),
       ProductState().copyWith(
-        category: dummyFontCategoryType,
-        marketingType: dummyMarketingType,
+        category: categoryTypeFont,
+        marketingType: marketingTypeFeatured,
       ),
       ProductState().copyWith(
         productAddAndEditStatus: BlocStatus.loading,
-        category: dummyFontCategoryType,
-        marketingType: dummyMarketingType,
+        category: categoryTypeFont,
+        marketingType: marketingTypeFeatured,
       ),
       ProductState().copyWith(
         productAddAndEditMessage: 'Add product to DB failed',
         productAddAndEditStatus: BlocStatus.error,
-        category: dummyFontCategoryType,
-        marketingType: dummyMarketingType,
+        category: categoryTypeFont,
+        marketingType: marketingTypeFeatured,
       ),
     ],
   );
@@ -209,14 +210,14 @@ void main() {
   blocTest<ProductBloc, ProductState>(
     'emits [category, marketingType, loading, success] when ProductEditButtonClickedEvent is added and use case return success',
     build: () {
-      when(mockEditProductUseCase.call(dummyEditProductEntity))
+      when(mockEditProductUseCase.call(editProductEntity))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       return productBloc;
     },
     act: (bloc) {
-      bloc.add(CategoryNameFieldChangeEvent(category: dummyFontCategoryType));
-      bloc.add(MarketingTypeFieldChangeEvent(type: dummyMarketingType));
+      bloc.add(CategoryNameFieldChangeEvent(category: categoryTypeFont));
+      bloc.add(MarketingTypeFieldChangeEvent(type: marketingTypeFeatured));
       bloc.add(
         ProductEditButtonClickedEvent(
           coverImage: null,
@@ -233,21 +234,21 @@ void main() {
     },
     expect: () => [
       ProductState().copyWith(
-        category: dummyFontCategoryType,
+        category: categoryTypeFont,
       ),
       ProductState().copyWith(
-        category: dummyFontCategoryType,
-        marketingType: dummyMarketingType,
+        category: categoryTypeFont,
+        marketingType: marketingTypeFeatured,
       ),
       ProductState().copyWith(
         productAddAndEditStatus: BlocStatus.loading,
-        category: dummyFontCategoryType,
-        marketingType: dummyMarketingType,
+        category: categoryTypeFont,
+        marketingType: marketingTypeFeatured,
       ),
       ProductState().copyWith(
         productAddAndEditStatus: BlocStatus.success,
-        category: dummyFontCategoryType,
-        marketingType: dummyMarketingType,
+        category: categoryTypeFont,
+        marketingType: marketingTypeFeatured,
       ),
     ],
   );
@@ -255,14 +256,14 @@ void main() {
   blocTest<ProductBloc, ProductState>(
     'emits [category, marketingType, loading, error, productAddAndEditMessage] when ProductEditButtonClickedEvent is added and use case return failure',
     build: () {
-      when(mockEditProductUseCase.call(dummyEditProductEntity))
+      when(mockEditProductUseCase.call(editProductEntity))
           .thenAnswer((_) async => Right(ResponseTypes.failure.response));
 
       return productBloc;
     },
     act: (bloc) {
-      bloc.add(CategoryNameFieldChangeEvent(category: dummyFontCategoryType));
-      bloc.add(MarketingTypeFieldChangeEvent(type: dummyMarketingType));
+      bloc.add(CategoryNameFieldChangeEvent(category: categoryTypeFont));
+      bloc.add(MarketingTypeFieldChangeEvent(type: marketingTypeFeatured));
       bloc.add(
         ProductEditButtonClickedEvent(
           coverImage: null,
@@ -279,22 +280,22 @@ void main() {
     },
     expect: () => [
       ProductState().copyWith(
-        category: dummyFontCategoryType,
+        category: categoryTypeFont,
       ),
       ProductState().copyWith(
-        category: dummyFontCategoryType,
-        marketingType: dummyMarketingType,
+        category: categoryTypeFont,
+        marketingType: marketingTypeFeatured,
       ),
       ProductState().copyWith(
         productAddAndEditStatus: BlocStatus.loading,
-        category: dummyFontCategoryType,
-        marketingType: dummyMarketingType,
+        category: categoryTypeFont,
+        marketingType: marketingTypeFeatured,
       ),
       ProductState().copyWith(
         productAddAndEditMessage: AppErrorMessages.productIdNotFound,
         productAddAndEditStatus: BlocStatus.error,
-        category: dummyFontCategoryType,
-        marketingType: dummyMarketingType,
+        category: categoryTypeFont,
+        marketingType: marketingTypeFeatured,
       ),
     ],
   );
@@ -305,14 +306,14 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Product edit failed',
       );
-      when(mockEditProductUseCase.call(dummyEditProductEntity))
+      when(mockEditProductUseCase.call(editProductEntity))
           .thenAnswer((_) async => Left(failure));
 
       return productBloc;
     },
     act: (bloc) {
-      bloc.add(CategoryNameFieldChangeEvent(category: dummyFontCategoryType));
-      bloc.add(MarketingTypeFieldChangeEvent(type: dummyMarketingType));
+      bloc.add(CategoryNameFieldChangeEvent(category: categoryTypeFont));
+      bloc.add(MarketingTypeFieldChangeEvent(type: marketingTypeFeatured));
       bloc.add(
         ProductEditButtonClickedEvent(
           coverImage: null,
@@ -329,22 +330,22 @@ void main() {
     },
     expect: () => [
       ProductState().copyWith(
-        category: dummyFontCategoryType,
+        category: categoryTypeFont,
       ),
       ProductState().copyWith(
-        category: dummyFontCategoryType,
-        marketingType: dummyMarketingType,
+        category: categoryTypeFont,
+        marketingType: marketingTypeFeatured,
       ),
       ProductState().copyWith(
         productAddAndEditStatus: BlocStatus.loading,
-        category: dummyFontCategoryType,
-        marketingType: dummyMarketingType,
+        category: categoryTypeFont,
+        marketingType: marketingTypeFeatured,
       ),
       ProductState().copyWith(
         productAddAndEditMessage: 'Product edit failed',
         productAddAndEditStatus: BlocStatus.error,
-        category: dummyFontCategoryType,
-        marketingType: dummyMarketingType,
+        category: categoryTypeFont,
+        marketingType: marketingTypeFeatured,
       ),
     ],
   );
@@ -366,14 +367,14 @@ void main() {
     build: () => productBloc,
     act: (bloc) => bloc.add(
       CategorySelectEvent(
-        value: categoryTypeIdForFonts,
-        name: categoryTypeFonts,
+        value: fontCategoryId,
+        name: categoryTypeFont,
       ),
     ),
     expect: () => [
       ProductState().copyWith(
-        currentCategory: categoryTypeIdForFonts,
-        currentCategoryName: categoryTypeFonts,
+        currentCategory: fontCategoryId,
+        currentCategoryName: categoryTypeFont,
       ),
     ],
   );
@@ -381,35 +382,35 @@ void main() {
   blocTest<ProductBloc, ProductState>(
     'emits [currentCategory, currentCategoryName, loading, success, listOfProducts] when GetAllProductsEvent is added and use case return list of products',
     build: () {
-      when(mockGetAllProductsUseCase.call(categoryTypeFonts))
-          .thenAnswer((_) async => Right(dummyFontsCategoryProductEntities));
+      when(mockGetAllProductsUseCase.call(categoryTypeFont))
+          .thenAnswer((_) async => Right(fontsCategoryProductEntities));
 
       return productBloc;
     },
     act: (bloc) {
       bloc.add(
         CategorySelectEvent(
-          value: categoryTypeIdForFonts,
-          name: categoryTypeFonts,
+          value: fontCategoryId,
+          name: categoryTypeFont,
         ),
       );
       bloc.add(GetAllProductsEvent());
     },
     expect: () => [
       ProductState().copyWith(
-        currentCategory: categoryTypeIdForFonts,
-        currentCategoryName: categoryTypeFonts,
+        currentCategory: fontCategoryId,
+        currentCategoryName: categoryTypeFont,
       ),
       ProductState().copyWith(
         status: BlocStatus.loading,
-        currentCategory: categoryTypeIdForFonts,
-        currentCategoryName: categoryTypeFonts,
+        currentCategory: fontCategoryId,
+        currentCategoryName: categoryTypeFont,
       ),
       ProductState().copyWith(
         status: BlocStatus.success,
-        currentCategory: categoryTypeIdForFonts,
-        currentCategoryName: categoryTypeFonts,
-        listOfProducts: dummyFontsCategoryProductEntities,
+        currentCategory: fontCategoryId,
+        currentCategoryName: categoryTypeFont,
+        listOfProducts: fontsCategoryProductEntities,
       ),
     ],
   );
@@ -420,7 +421,7 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Get all products by category name failed',
       );
-      when(mockGetAllProductsUseCase.call(categoryTypeFonts))
+      when(mockGetAllProductsUseCase.call(categoryTypeFont))
           .thenAnswer((_) async => Left(failure));
 
       return productBloc;
@@ -428,26 +429,26 @@ void main() {
     act: (bloc) {
       bloc.add(
         CategorySelectEvent(
-          value: categoryTypeIdForFonts,
-          name: categoryTypeFonts,
+          value: fontCategoryId,
+          name: categoryTypeFont,
         ),
       );
       bloc.add(GetAllProductsEvent());
     },
     expect: () => [
       ProductState().copyWith(
-        currentCategory: categoryTypeIdForFonts,
-        currentCategoryName: categoryTypeFonts,
+        currentCategory: fontCategoryId,
+        currentCategoryName: categoryTypeFont,
       ),
       ProductState().copyWith(
         status: BlocStatus.loading,
-        currentCategory: categoryTypeIdForFonts,
-        currentCategoryName: categoryTypeFonts,
+        currentCategory: fontCategoryId,
+        currentCategoryName: categoryTypeFont,
       ),
       ProductState().copyWith(
         status: BlocStatus.error,
-        currentCategory: categoryTypeIdForFonts,
-        currentCategoryName: categoryTypeFonts,
+        currentCategory: fontCategoryId,
+        currentCategoryName: categoryTypeFont,
         message: 'Get all products by category name failed',
       ),
     ],
@@ -456,12 +457,12 @@ void main() {
   blocTest<ProductBloc, ProductState>(
     'emits [loading, success, isDeleted] when ProductDeleteEvent is added and use case return success',
     build: () {
-      when(mockDeleteProductUseCase.call(fakeProductId))
+      when(mockDeleteProductUseCase.call(productId))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       return productBloc;
     },
-    act: (bloc) => bloc.add(ProductDeleteEvent(productId: fakeProductId)),
+    act: (bloc) => bloc.add(ProductDeleteEvent(productId: productId)),
     expect: () => [
       ProductState().copyWith(status: BlocStatus.loading),
       ProductState().copyWith(
@@ -477,12 +478,12 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Product delete failed',
       );
-      when(mockDeleteProductUseCase.call(fakeProductId))
+      when(mockDeleteProductUseCase.call(productId))
           .thenAnswer((_) async => Left(failure));
 
       return productBloc;
     },
-    act: (bloc) => bloc.add(ProductDeleteEvent(productId: fakeProductId)),
+    act: (bloc) => bloc.add(ProductDeleteEvent(productId: productId)),
     expect: () => [
       ProductState().copyWith(status: BlocStatus.loading),
       ProductState().copyWith(

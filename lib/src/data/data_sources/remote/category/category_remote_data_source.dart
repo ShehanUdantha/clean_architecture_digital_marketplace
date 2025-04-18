@@ -1,3 +1,4 @@
+import '../../../../core/constants/error_messages.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uuid/uuid.dart';
@@ -37,7 +38,8 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
 
       if (!userDoc.exists) {
         throw AuthException(
-            errorMessage: rootNavigatorKey.currentContext!.loc.userNotFound);
+            errorMessage: rootNavigatorKey.currentContext?.loc.userNotFound ??
+                AppErrorMessages.userNotFound);
       }
 
       final userModel =
@@ -68,7 +70,9 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
         }
       } else {
         throw AuthException(
-          errorMessage: rootNavigatorKey.currentContext!.loc.unauthorizedAccess,
+          errorMessage:
+              rootNavigatorKey.currentContext?.loc.unauthorizedAccess ??
+                  AppErrorMessages.unauthorizedAccess,
         );
       }
     } on FirebaseAuthException catch (e) {
@@ -137,7 +141,8 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
 
       if (!userDoc.exists) {
         throw AuthException(
-            errorMessage: rootNavigatorKey.currentContext!.loc.userNotFound);
+            errorMessage: rootNavigatorKey.currentContext?.loc.userNotFound ??
+                AppErrorMessages.userNotFound);
       }
 
       final userModel =
@@ -152,7 +157,9 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
         return ResponseTypes.success.response;
       } else {
         throw AuthException(
-          errorMessage: rootNavigatorKey.currentContext!.loc.unauthorizedAccess,
+          errorMessage:
+              rootNavigatorKey.currentContext?.loc.unauthorizedAccess ??
+                  AppErrorMessages.unauthorizedAccess,
         );
       }
     } on FirebaseAuthException catch (e) {

@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../../fixtures/constant_values.dart';
+import '../../../../fixtures/purchase_values.dart';
 import 'get_all_purchase_total_balance_by_month_usecase_test.mocks.dart';
 
 @GenerateMocks([PurchaseRepository])
@@ -24,16 +24,16 @@ void main() {
     'should return a Total purchase amount for the provided month when the get all purchase total balance by month process is successful',
     () async {
       // Arrange
-      when(mockPurchaseRepository
-              .getAllPurchasesTotalBalanceByMonth(yearAndMonthParams))
-          .thenAnswer((_) async => Right(fakeTotalPurchaseAmount));
+      when(mockPurchaseRepository.getAllPurchasesTotalBalanceByMonth(
+              yearAndMonthParamsToGetPurchaseHistory))
+          .thenAnswer((_) async => Right(totalPurchaseAmountByYearAndMonth));
 
       // Act
-      final result =
-          await getAllPurchaseBalanceByMonthUseCase.call(yearAndMonthParams);
+      final result = await getAllPurchaseBalanceByMonthUseCase
+          .call(yearAndMonthParamsToGetPurchaseHistory);
 
       // Assert
-      expect(result, Right(fakeTotalPurchaseAmount));
+      expect(result, Right(totalPurchaseAmountByYearAndMonth));
     },
   );
 
@@ -44,13 +44,13 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Get all purchase total balance by month failed',
       );
-      when(mockPurchaseRepository
-              .getAllPurchasesTotalBalanceByMonth(yearAndMonthParams))
+      when(mockPurchaseRepository.getAllPurchasesTotalBalanceByMonth(
+              yearAndMonthParamsToGetPurchaseHistory))
           .thenAnswer((_) async => Left(failure));
 
       // Act
-      final result =
-          await getAllPurchaseBalanceByMonthUseCase.call(yearAndMonthParams);
+      final result = await getAllPurchaseBalanceByMonthUseCase
+          .call(yearAndMonthParamsToGetPurchaseHistory);
 
       // Assert
       expect(result, Left(failure));

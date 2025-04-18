@@ -26,7 +26,7 @@ class NotificationManagePage extends StatelessWidget {
     );
   }
 
-  _bodyWidget(BuildContext context) {
+  Widget _bodyWidget(BuildContext context) {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(16.0).copyWith(bottom: 0),
@@ -86,11 +86,11 @@ class NotificationManagePage extends StatelessWidget {
     );
   }
 
-  _handleBackButton(BuildContext context) {
+  void _handleBackButton(BuildContext context) {
     context.goNamed(AppRoutes.toolsPageName);
   }
 
-  _handleFloatingButton(BuildContext context) {
+  void _handleFloatingButton(BuildContext context) {
     context.goNamed(AppRoutes.notificationSendPageName);
   }
 }

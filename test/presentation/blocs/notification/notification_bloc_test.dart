@@ -14,7 +14,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/auth_values.dart';
+import '../../../fixtures/notification_values.dart';
 import 'notification_bloc_test.mocks.dart';
 
 @GenerateMocks([
@@ -58,15 +59,15 @@ void main() {
   blocTest<NotificationBloc, NotificationState>(
     'emits [loading, success] when NotificationSendButtonClickedEvent is added and use case return success',
     build: () {
-      when(mockSendNotificationUseCase.call(dummyNotificationEntityThree))
+      when(mockSendNotificationUseCase.call(notificationEntityToSend))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       return notificationBloc;
     },
     act: (bloc) => bloc.add(
       NotificationSendButtonClickedEvent(
-        title: fakeNotificationTitle,
-        description: fakeNotificationDescription,
+        title: notificationTitleToSend,
+        description: notificationDescriptionToSend,
       ),
     ),
     expect: () => [
@@ -81,15 +82,15 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Send notification failed',
       );
-      when(mockSendNotificationUseCase.call(dummyNotificationEntityThree))
+      when(mockSendNotificationUseCase.call(notificationEntityToSend))
           .thenAnswer((_) async => Left(failure));
 
       return notificationBloc;
     },
     act: (bloc) => bloc.add(
       NotificationSendButtonClickedEvent(
-        title: fakeNotificationTitle,
-        description: fakeNotificationDescription,
+        title: notificationTitleToSend,
+        description: notificationDescriptionToSend,
       ),
     ),
     expect: () => [
@@ -117,7 +118,7 @@ void main() {
     'emits [loading, success, listOfNotification] when NotificationSendButtonClickedEvent is added and use case return listOfNotification',
     build: () {
       when(mockGetAllNotificationsUseCase.call(any))
-          .thenAnswer((_) async => Right(dummyNotificationEntities));
+          .thenAnswer((_) async => Right(notificationEntities));
 
       return notificationBloc;
     },
@@ -126,7 +127,7 @@ void main() {
       NotificationState().copyWith(status: BlocStatus.loading),
       NotificationState().copyWith(
         status: BlocStatus.success,
-        listOfNotification: dummyNotificationEntities,
+        listOfNotification: notificationEntities,
       ),
     ],
   );
@@ -155,13 +156,13 @@ void main() {
   blocTest<NotificationBloc, NotificationState>(
     'emits [loading, success, isDeleted] when NotificationDeleteEvent is added and use case return success',
     build: () {
-      when(mockDeleteNotificationUseCase.call(fakeNotificationId))
+      when(mockDeleteNotificationUseCase.call(notificationId))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       return notificationBloc;
     },
     act: (bloc) =>
-        bloc.add(NotificationDeleteEvent(notificationId: fakeNotificationId)),
+        bloc.add(NotificationDeleteEvent(notificationId: notificationId)),
     expect: () => [
       NotificationState().copyWith(status: BlocStatus.loading),
       NotificationState().copyWith(
@@ -177,13 +178,13 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Delete notification failed',
       );
-      when(mockDeleteNotificationUseCase.call(fakeNotificationId))
+      when(mockDeleteNotificationUseCase.call(notificationId))
           .thenAnswer((_) async => Left(failure));
 
       return notificationBloc;
     },
     act: (bloc) =>
-        bloc.add(NotificationDeleteEvent(notificationId: fakeNotificationId)),
+        bloc.add(NotificationDeleteEvent(notificationId: notificationId)),
     expect: () => [
       NotificationState().copyWith(status: BlocStatus.loading),
       NotificationState().copyWith(
@@ -205,15 +206,15 @@ void main() {
   blocTest<NotificationBloc, NotificationState>(
     'emits [notificationCount] when UpdateNotificationCountEvent is added and use case return new notification count',
     build: () {
-      when(mockUpdateNotificationCountUseCase.call(userId))
-          .thenAnswer((_) async => Right(fakeNotificationNewCount));
+      when(mockUpdateNotificationCountUseCase.call(userUserId))
+          .thenAnswer((_) async => Right(currentUserNotificationNewCount));
 
       return notificationBloc;
     },
-    act: (bloc) => bloc.add(UpdateNotificationCountEvent(userId: userId)),
+    act: (bloc) => bloc.add(UpdateNotificationCountEvent(userId: userUserId)),
     expect: () => [
       NotificationState().copyWith(
-        notificationCount: fakeNotificationNewCount,
+        notificationCount: currentUserNotificationNewCount,
       ),
     ],
   );
@@ -224,27 +225,27 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Update notification count failed',
       );
-      when(mockUpdateNotificationCountUseCase.call(userId))
+      when(mockUpdateNotificationCountUseCase.call(userUserId))
           .thenAnswer((_) async => Left(failure));
 
       return notificationBloc;
     },
-    act: (bloc) => bloc.add(UpdateNotificationCountEvent(userId: userId)),
+    act: (bloc) => bloc.add(UpdateNotificationCountEvent(userId: userUserId)),
     expect: () => [],
   );
 
   blocTest<NotificationBloc, NotificationState>(
     'emits [notificationCount] when GetNotificationCountEvent is added and use case return notification count',
     build: () {
-      when(mockGetNotificationCountUseCase.call(userId))
-          .thenAnswer((_) async => Right(fakeNotificationCount));
+      when(mockGetNotificationCountUseCase.call(userUserId))
+          .thenAnswer((_) async => Right(currentUserNotificationCount));
 
       return notificationBloc;
     },
-    act: (bloc) => bloc.add(GetNotificationCountEvent(userId: userId)),
+    act: (bloc) => bloc.add(GetNotificationCountEvent(userId: userUserId)),
     expect: () => [
       NotificationState().copyWith(
-        notificationCount: fakeNotificationCount,
+        notificationCount: currentUserNotificationCount,
       ),
     ],
   );
@@ -255,24 +256,24 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Get notification count failed',
       );
-      when(mockGetNotificationCountUseCase.call(userId))
+      when(mockGetNotificationCountUseCase.call(userUserId))
           .thenAnswer((_) async => Left(failure));
 
       return notificationBloc;
     },
-    act: (bloc) => bloc.add(GetNotificationCountEvent(userId: userId)),
+    act: (bloc) => bloc.add(GetNotificationCountEvent(userId: userUserId)),
     expect: () => [],
   );
 
   blocTest<NotificationBloc, NotificationState>(
     'emits [notificationCount] when ResetNotificationCountEvent is added and use case return success',
     build: () {
-      when(mockResetNotificationCountUseCase.call(userId))
+      when(mockResetNotificationCountUseCase.call(userUserId))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       return notificationBloc;
     },
-    act: (bloc) => bloc.add(ResetNotificationCountEvent(userId: userId)),
+    act: (bloc) => bloc.add(ResetNotificationCountEvent(userId: userUserId)),
     expect: () => [
       NotificationState().copyWith(
         notificationCount: 0,
@@ -286,12 +287,12 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Reset notification count failed',
       );
-      when(mockResetNotificationCountUseCase.call(userId))
+      when(mockResetNotificationCountUseCase.call(userUserId))
           .thenAnswer((_) async => Left(failure));
 
       return notificationBloc;
     },
-    act: (bloc) => bloc.add(ResetNotificationCountEvent(userId: userId)),
+    act: (bloc) => bloc.add(ResetNotificationCountEvent(userId: userUserId)),
     expect: () => [],
   );
 }

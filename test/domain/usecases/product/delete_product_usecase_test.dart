@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/product_values.dart';
 import 'delete_product_usecase_test.mocks.dart';
 
 @GenerateMocks([ProductRepository])
@@ -26,11 +26,11 @@ void main() {
     'should return a Success Status when the delete product process is successful',
     () async {
       // Arrange
-      when(mockProductRepository.deleteProduct(fakeProductId))
+      when(mockProductRepository.deleteProduct(productId))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       // Act
-      final result = await deleteProductUseCase.call(fakeProductId);
+      final result = await deleteProductUseCase.call(productId);
 
       // Assert
       expect(result, Right(ResponseTypes.success.response));
@@ -44,11 +44,11 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Delete product failed',
       );
-      when(mockProductRepository.deleteProduct(fakeProductId))
+      when(mockProductRepository.deleteProduct(productId))
           .thenAnswer((_) async => Left(failure));
 
       // Act
-      final result = await deleteProductUseCase.call(fakeProductId);
+      final result = await deleteProductUseCase.call(productId);
 
       // Assert
       expect(result, Left(failure));

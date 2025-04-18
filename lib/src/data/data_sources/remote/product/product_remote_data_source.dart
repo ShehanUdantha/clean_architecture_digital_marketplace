@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
 
+import 'package:Pixelcart/src/core/constants/error_messages.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -50,7 +51,8 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
 
       if (!userDoc.exists) {
         throw AuthException(
-            errorMessage: rootNavigatorKey.currentContext!.loc.userNotFound);
+            errorMessage: rootNavigatorKey.currentContext?.loc.userNotFound ??
+                AppErrorMessages.userNotFound);
       }
 
       final userModel =
@@ -106,7 +108,9 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
         }
       } else {
         throw AuthException(
-          errorMessage: rootNavigatorKey.currentContext!.loc.unauthorizedAccess,
+          errorMessage:
+              rootNavigatorKey.currentContext?.loc.unauthorizedAccess ??
+                  AppErrorMessages.unauthorizedAccess,
         );
       }
     } on FirebaseAuthException catch (e) {
@@ -269,7 +273,8 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
           .get();
       if (!userDoc.exists) {
         throw AuthException(
-            errorMessage: rootNavigatorKey.currentContext!.loc.userNotFound);
+            errorMessage: rootNavigatorKey.currentContext?.loc.userNotFound ??
+                AppErrorMessages.userNotFound);
       }
 
       final userModel =
@@ -286,7 +291,9 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
         return ResponseTypes.success.response;
       } else {
         throw AuthException(
-          errorMessage: rootNavigatorKey.currentContext!.loc.unauthorizedAccess,
+          errorMessage:
+              rootNavigatorKey.currentContext?.loc.unauthorizedAccess ??
+                  AppErrorMessages.unauthorizedAccess,
         );
       }
     } on FirebaseAuthException catch (e) {
@@ -491,7 +498,8 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
 
       if (!userDoc.exists) {
         throw AuthException(
-            errorMessage: rootNavigatorKey.currentContext!.loc.userNotFound);
+            errorMessage: rootNavigatorKey.currentContext?.loc.userNotFound ??
+                AppErrorMessages.userNotFound);
       }
 
       final userModel =
@@ -531,7 +539,9 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
         }
       } else {
         throw AuthException(
-          errorMessage: rootNavigatorKey.currentContext!.loc.unauthorizedAccess,
+          errorMessage:
+              rootNavigatorKey.currentContext?.loc.unauthorizedAccess ??
+                  AppErrorMessages.unauthorizedAccess,
         );
       }
     } on FirebaseAuthException catch (e) {

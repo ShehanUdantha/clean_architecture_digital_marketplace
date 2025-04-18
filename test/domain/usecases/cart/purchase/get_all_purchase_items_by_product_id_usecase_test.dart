@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../../fixtures/constant_values.dart';
+import '../../../../fixtures/purchase_values.dart';
 import 'get_all_purchase_items_by_product_id_usecase_test.mocks.dart';
 
 @GenerateMocks([PurchaseRepository])
@@ -27,15 +27,15 @@ void main() {
     () async {
       // Arrange
       when(mockPurchaseRepository
-              .getAllPurchaseItemsByProductId(fakeProductIdList))
-          .thenAnswer((_) async => Right(dummyProducts));
+              .getAllPurchaseItemsByProductId(purchasedProductIdList))
+          .thenAnswer((_) async => Right(purchasedProductEntities));
 
       // Act
       final result = await getAllPurchaseItemsByItsProductIdsUseCase
-          .call(fakeProductIdList);
+          .call(purchasedProductIdList);
 
       // Assert
-      expect(result, Right(dummyProducts));
+      expect(result, Right(purchasedProductEntities));
     },
   );
 
@@ -47,12 +47,12 @@ void main() {
         errorMessage: 'Get all purchase items by product id failed',
       );
       when(mockPurchaseRepository
-              .getAllPurchaseItemsByProductId(fakeProductIdList))
+              .getAllPurchaseItemsByProductId(purchasedProductIdList))
           .thenAnswer((_) async => Left(failure));
 
       // Act
       final result = await getAllPurchaseItemsByItsProductIdsUseCase
-          .call(fakeProductIdList);
+          .call(purchasedProductIdList);
 
       // Assert
       expect(result, Left(failure));

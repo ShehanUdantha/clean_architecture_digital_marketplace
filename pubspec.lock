@@ -527,10 +527,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_file_downloader
-      sha256: "813f4a31c0a15fbb67209c8e6c80fa332465b9e57a1ca043a9fce30994a7b7c6"
+      sha256: "7c568f944e8806878a84d9951f326d4f0d27aa9db61c52b2a3f54f035dae05b2"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.0"
+    version: "2.1.0"
   flutter_lints:
     dependency: "direct dev"
     description:

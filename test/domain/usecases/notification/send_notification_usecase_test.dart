@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/notification_values.dart';
 import 'send_notification_usecase_test.mocks.dart';
 
 @GenerateMocks([NotificationRepository])
@@ -26,12 +26,13 @@ void main() {
     'should return a Success Status when the send notification process is successful',
     () async {
       // Arrange
-      when(mockNotificationRepository.sendNotification(dummyNotificationEntity))
+      when(mockNotificationRepository
+              .sendNotification(notificationEntityToSend))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       // Act
       final result =
-          await sendNotificationUseCase.call(dummyNotificationEntity);
+          await sendNotificationUseCase.call(notificationEntityToSend);
 
       // Assert
       expect(result, Right(ResponseTypes.success.response));
@@ -45,12 +46,13 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Send notification failed - (Firebase)',
       );
-      when(mockNotificationRepository.sendNotification(dummyNotificationEntity))
+      when(mockNotificationRepository
+              .sendNotification(notificationEntityToSend))
           .thenAnswer((_) async => Left(failure));
 
       // Act
       final result =
-          await sendNotificationUseCase.call(dummyNotificationEntity);
+          await sendNotificationUseCase.call(notificationEntityToSend);
 
       // Assert
       expect(result, Left(failure));
@@ -64,12 +66,13 @@ void main() {
       final failure = APIFailure(
         errorMessage: 'Send notification failed - (API)',
       );
-      when(mockNotificationRepository.sendNotification(dummyNotificationEntity))
+      when(mockNotificationRepository
+              .sendNotification(notificationEntityToSend))
           .thenAnswer((_) async => Left(failure));
 
       // Act
       final result =
-          await sendNotificationUseCase.call(dummyNotificationEntity);
+          await sendNotificationUseCase.call(notificationEntityToSend);
 
       // Assert
       expect(result, Left(failure));

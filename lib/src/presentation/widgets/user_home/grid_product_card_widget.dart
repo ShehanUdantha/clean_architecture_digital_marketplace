@@ -155,7 +155,7 @@ class GridProductCard extends StatelessWidget {
     );
   }
 
-  _handleMoveProductViewPage(
+  void _handleMoveProductViewPage(
     BuildContext context,
     String id,
     String name,
