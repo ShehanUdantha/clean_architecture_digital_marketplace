@@ -10,14 +10,14 @@ part 'network_event.dart';
 part 'network_state.dart';
 
 class NetworkBloc extends Bloc<NetworkEvent, NetworkState> {
-  Connectivity connectivity = Connectivity();
+  final Connectivity connectivity;
   StreamSubscription? connectivitySubscription;
 
-  NetworkBloc() : super(const NetworkState()) {
+  NetworkBloc(this.connectivity) : super(const NetworkState()) {
     on<CheckNetworkConnectivity>(onCheckNetworkConnectivity);
 
     connectivitySubscription = connectivity.onConnectivityChanged.listen(
-      (result) {
+      (List<ConnectivityResult> result) {
         add(CheckNetworkConnectivity(result: result));
       },
     );

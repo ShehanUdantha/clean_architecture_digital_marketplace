@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/product_values.dart';
 import 'add_product_usecase_test.mocks.dart';
 
 @GenerateMocks([ProductRepository])
@@ -26,11 +26,11 @@ void main() {
     'should return a Success status when a new product is successfully added to firestore',
     () async {
       // Arrange
-      when(mockProductRepository.addProduct(dummyProductEntity))
+      when(mockProductRepository.addProduct(newProductEntity))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       // Act
-      final result = await addProductUseCase.call(dummyProductEntity);
+      final result = await addProductUseCase.call(newProductEntity);
 
       // Assert
       expect(result, Right(ResponseTypes.success.response));
@@ -41,11 +41,11 @@ void main() {
     'should return a Failure status when attempting to add a product that already exists in firestore',
     () async {
       // Arrange
-      when(mockProductRepository.addProduct(dummyProductEntity))
+      when(mockProductRepository.addProduct(newProductEntity))
           .thenAnswer((_) async => Right(ResponseTypes.failure.response));
 
       // Act
-      final result = await addProductUseCase.call(dummyProductEntity);
+      final result = await addProductUseCase.call(newProductEntity);
 
       // Assert
       expect(result, Right(ResponseTypes.failure.response));
@@ -59,11 +59,11 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Add new product failed',
       );
-      when(mockProductRepository.addProduct(dummyProductEntity))
+      when(mockProductRepository.addProduct(newProductEntity))
           .thenAnswer((_) async => Left(failure));
 
       // Act
-      final result = await addProductUseCase.call(dummyProductEntity);
+      final result = await addProductUseCase.call(newProductEntity);
 
       // Assert
       expect(result, Left(failure));

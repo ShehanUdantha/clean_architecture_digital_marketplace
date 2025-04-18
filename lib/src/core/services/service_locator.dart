@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -482,8 +483,12 @@ Future<void> serviceLocator() async {
   );
 
   // network
+  sl.registerSingleton<Connectivity>(Connectivity());
+
   sl.registerFactory<NetworkBloc>(
-    () => NetworkBloc(),
+    () => NetworkBloc(
+      sl(),
+    ),
   );
 
   // theme

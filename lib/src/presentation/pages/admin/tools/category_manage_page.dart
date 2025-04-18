@@ -38,7 +38,7 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
     );
   }
 
-  _bodyWidget() {
+  Widget _bodyWidget() {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(16.0).copyWith(bottom: 0),
@@ -61,9 +61,7 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
                       .add(SetCategoryAddStatusToDefault());
                   Helper.showSnackBar(
                     context,
-                    state.categoryAddMessage == ResponseTypes.failure.response
-                        ? context.loc.categoryAlreadyAdded
-                        : state.categoryAddMessage,
+                    state.categoryAddMessage,
                   );
                 }
                 if (state.categoryAddStatus == BlocStatus.success) {
@@ -159,11 +157,11 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
     );
   }
 
-  _handleBackButton() {
+  void _handleBackButton() {
     context.goNamed(AppRoutes.toolsPageName);
   }
 
-  _handleCategoryAdd() {
+  void _handleCategoryAdd() {
     if (_categoryController.text.isNotEmpty) {
       context.read<CategoryBloc>().add(
             CategoryAddButtonClickedEvent(

@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/notification_values.dart';
 import 'notification_model_test.mocks.dart';
 
 @GenerateMocks([QueryDocumentSnapshot, DocumentSnapshot])
@@ -23,10 +23,10 @@ void main() {
     'should correctly convert NotificationModel to JSON',
     () {
       // Act
-      final json = dummyNotification.toJson();
+      final json = notificationModel.toJson();
 
       // Assert
-      expect(json, dummyNotificationJson);
+      expect(json, notificationJson);
     },
   );
 
@@ -35,10 +35,10 @@ void main() {
     () {
       // Act
       final notificationFromEntity =
-          NotificationModel.fromEntity(dummyNotificationEntityTwo);
+          NotificationModel.fromEntity(notificationEntity);
 
       // Assert
-      expect(notificationFromEntity, equals(dummyNotification));
+      expect(notificationFromEntity, equals(notificationModel));
     },
   );
 
@@ -46,21 +46,20 @@ void main() {
     'should correctly create NotificationModel from Firestore Query Snapshot',
     () {
       // Arrange
-      when(mockQueryDocumentSnapshot.data()).thenReturn(dummyNotificationJson);
-      when(mockQueryDocumentSnapshot['id'])
-          .thenReturn(dummyNotificationJson['id']);
+      when(mockQueryDocumentSnapshot.data()).thenReturn(notificationJson);
+      when(mockQueryDocumentSnapshot['id']).thenReturn(notificationJson['id']);
       when(mockQueryDocumentSnapshot['title'])
-          .thenReturn(dummyNotificationJson['title']);
+          .thenReturn(notificationJson['title']);
       when(mockQueryDocumentSnapshot['description'])
-          .thenReturn(dummyNotificationJson['description']);
+          .thenReturn(notificationJson['description']);
       when(mockQueryDocumentSnapshot['dateCreated'])
-          .thenReturn(dummyNotificationJson['dateCreated']);
+          .thenReturn(notificationJson['dateCreated']);
 
       // Act
       final model = NotificationModel.fromMap(mockQueryDocumentSnapshot);
 
       // Assert
-      expect(model, equals(dummyNotification));
+      expect(model, equals(notificationModel));
     },
   );
 
@@ -68,20 +67,19 @@ void main() {
     'should correctly create NotificationModel from Firestore Document',
     () {
       // Arrange
-      when(mockDocumentSnapshot.data()).thenReturn(dummyNotificationJson);
-      when(mockDocumentSnapshot['id']).thenReturn(dummyNotificationJson['id']);
-      when(mockDocumentSnapshot['title'])
-          .thenReturn(dummyNotificationJson['title']);
+      when(mockDocumentSnapshot.data()).thenReturn(notificationJson);
+      when(mockDocumentSnapshot['id']).thenReturn(notificationJson['id']);
+      when(mockDocumentSnapshot['title']).thenReturn(notificationJson['title']);
       when(mockDocumentSnapshot['description'])
-          .thenReturn(dummyNotificationJson['description']);
+          .thenReturn(notificationJson['description']);
       when(mockDocumentSnapshot['dateCreated'])
-          .thenReturn(dummyNotificationJson['dateCreated']);
+          .thenReturn(notificationJson['dateCreated']);
 
       // Act
       final model = NotificationModel.fromDocument(mockDocumentSnapshot);
 
       // Assert
-      expect(model, equals(dummyNotification));
+      expect(model, equals(notificationModel));
     },
   );
 }

@@ -32,7 +32,7 @@ class ProductSubImageListBuilderWidget extends StatelessWidget {
     );
   }
 
-  _handleSubImageClick(BuildContext context, int index) {
+  void _handleSubImageClick(BuildContext context, int index) {
     context
         .read<ProductDetailsBloc>()
         .add(ChangeCurrentSubImageNumberEvent(index: index));

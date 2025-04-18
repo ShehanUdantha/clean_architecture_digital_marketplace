@@ -1,27 +1,28 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/product_values.dart';
 
 void main() {
   test(
     'should create a valid Product Entity instance',
     () async {
-      expect(dummyProductEntity.id, null);
-      expect(dummyProductEntity.productName, 'Product Four');
-      expect(dummyProductEntity.price, '200.00');
-      expect(dummyProductEntity.category, 'Mockups');
-      expect(dummyProductEntity.marketingType, 'Trending');
-      expect(dummyProductEntity.description, 'Product Four description');
-      expect(dummyProductEntity.coverImage, 'document/y_1.jpg');
-      expect(dummyProductEntity.subImages, [
-        'document/y_2.jpg',
-        'document/y_3.jpg',
+      expect(productEntity.id, 'product_001');
+      expect(productEntity.productName, 'Product One');
+      expect(productEntity.price, '999.99');
+      expect(productEntity.category, 'Mockups');
+      expect(productEntity.marketingType, 'Trending');
+      expect(productEntity.description, 'Product One description');
+      expect(
+          productEntity.coverImage, 'https://example.com/images/cover/x_1.jpg');
+      expect(productEntity.subImages, [
+        'https://example.com/images/sub/x_1.jpg',
+        'https://example.com/images/sub/x_2.jpg',
       ]);
-      expect(dummyProductEntity.zipFile, 'document/y_4.zip');
-      expect(dummyProductEntity.dateCreated, '2025-01-19');
-      expect(dummyProductEntity.likes, []);
-      expect(dummyProductEntity.status, '');
-      expect(dummyProductEntity.sharedSubImages, null);
+      expect(productEntity.zipFile, 'https://example.com/files/x_1.zip');
+      expect(productEntity.dateCreated, '2025-01-18');
+      expect(productEntity.likes, ['user_01', 'user_02']);
+      expect(productEntity.status, 'active');
+      expect(productEntity.sharedSubImages, null);
     },
   );
 }

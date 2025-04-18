@@ -24,7 +24,7 @@ class BasePage extends StatelessWidget {
     );
   }
 
-  _bodyWidget(
+  Widget _bodyWidget(
     BuildContext context,
     StatefulNavigationShell statefulNavigationShell,
   ) {
@@ -36,7 +36,7 @@ class BasePage extends StatelessWidget {
     return statefulNavigationShell;
   }
 
-  SafeArea _bottomBarWidget(BuildContext context) {
+  Widget _bottomBarWidget(BuildContext context) {
     return SafeArea(
       child: BottomNavigationBar(
         items: context.read<AuthBloc>().state.userType == UserTypes.admin.name
@@ -48,7 +48,7 @@ class BasePage extends StatelessWidget {
     );
   }
 
-  _goBranch(int index) {
+  void _goBranch(int index) {
     statefulNavigationShell.goBranch(
       index,
       initialLocation: index == statefulNavigationShell.currentIndex,

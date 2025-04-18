@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/cart_values.dart';
 import 'cart_repository_impl_test.mocks.dart';
 
 @GenerateMocks([CartRemoteDataSource])
@@ -29,12 +29,12 @@ void main() {
         'should return a Success Status when the add product to cart process is successful',
         () async {
           // Arrange
-          when(mockCartRemoteDataSource.addProductToCart(fakeProductId))
+          when(mockCartRemoteDataSource.addProductToCart(cartedProductId))
               .thenAnswer((_) async => ResponseTypes.success.response);
 
           // Act
           final result =
-              await cartRepositoryImpl.addProductToCart(fakeProductId);
+              await cartRepositoryImpl.addProductToCart(cartedProductId);
 
           // Assert
           result.fold(
@@ -51,12 +51,12 @@ void main() {
           final dbException = DBException(
             errorMessage: 'Add product to cart failed',
           );
-          when(mockCartRemoteDataSource.addProductToCart(fakeProductId))
+          when(mockCartRemoteDataSource.addProductToCart(cartedProductId))
               .thenThrow(dbException);
 
           // Act
           final result =
-              await cartRepositoryImpl.addProductToCart(fakeProductId);
+              await cartRepositoryImpl.addProductToCart(cartedProductId);
 
           // Assert
           final failure = FirebaseFailure(
@@ -79,7 +79,7 @@ void main() {
         () async {
           // Arrange
           when(mockCartRemoteDataSource.getAllCartedItemsDetailsById())
-              .thenAnswer((_) async => dummyProducts);
+              .thenAnswer((_) async => cartedProductModels);
 
           // Act
           final result = await cartRepositoryImpl.getAllCartedItemsDetails();
@@ -87,7 +87,7 @@ void main() {
           // Assert
           result.fold(
             (l) => fail('test failed'),
-            (r) => expect(r, dummyProducts),
+            (r) => expect(r, cartedProductModels),
           );
         },
       );
@@ -126,7 +126,7 @@ void main() {
         () async {
           // Arrange
           when(mockCartRemoteDataSource.getCartedItems())
-              .thenAnswer((_) async => cartedDummyItemsIds);
+              .thenAnswer((_) async => cartedProductsIds);
 
           // Act
           final result = await cartRepositoryImpl.getCartedItems();
@@ -134,7 +134,7 @@ void main() {
           // Assert
           result.fold(
             (l) => fail('test failed'),
-            (r) => expect(r, cartedDummyItemsIds),
+            (r) => expect(r, cartedProductsIds),
           );
         },
       );
@@ -172,12 +172,12 @@ void main() {
         'should return a Success Status when the remove product from cart process is successful',
         () async {
           // Arrange
-          when(mockCartRemoteDataSource.removeProductFromCart(fakeProductId))
+          when(mockCartRemoteDataSource.removeProductFromCart(cartedProductId))
               .thenAnswer((_) async => ResponseTypes.success.response);
 
           // Act
           final result =
-              await cartRepositoryImpl.removeProductFromCart(fakeProductId);
+              await cartRepositoryImpl.removeProductFromCart(cartedProductId);
 
           // Assert
           result.fold(
@@ -194,12 +194,12 @@ void main() {
           final dbException = DBException(
             errorMessage: 'Remove product from cart failed',
           );
-          when(mockCartRemoteDataSource.removeProductFromCart(fakeProductId))
+          when(mockCartRemoteDataSource.removeProductFromCart(cartedProductId))
               .thenThrow(dbException);
 
           // Act
           final result =
-              await cartRepositoryImpl.removeProductFromCart(fakeProductId);
+              await cartRepositoryImpl.removeProductFromCart(cartedProductId);
 
           // Assert
           final failure = FirebaseFailure(
@@ -223,13 +223,13 @@ void main() {
           // Arrange
           when(mockCartRemoteDataSource
                   .setCartDetailsToPurchaseHistoryAndDeleteCart(
-                      fakeTotalCartedItemsAmount))
+                      cartedProductEntitiesListSubTotal.toString()))
               .thenAnswer((_) async => ResponseTypes.success.response);
 
           // Act
           final result = await cartRepositoryImpl
               .setCartDetailsToPurchaseHistoryAndDeleteCart(
-                  fakeTotalCartedItemsAmount);
+                  cartedProductEntitiesListSubTotal.toString());
 
           // Assert
           result.fold(
@@ -249,13 +249,13 @@ void main() {
           );
           when(mockCartRemoteDataSource
                   .setCartDetailsToPurchaseHistoryAndDeleteCart(
-                      fakeTotalCartedItemsAmount))
+                      cartedProductEntitiesListSubTotal.toString()))
               .thenThrow(dbException);
 
           // Act
           final result = await cartRepositoryImpl
               .setCartDetailsToPurchaseHistoryAndDeleteCart(
-                  fakeTotalCartedItemsAmount);
+                  cartedProductEntitiesListSubTotal.toString());
 
           // Assert
           final failure = FirebaseFailure(

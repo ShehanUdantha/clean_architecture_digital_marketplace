@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/cart_values.dart';
 import 'remove_product_from_cart_usecase_test.mocks.dart';
 
 @GenerateMocks([CartRepository])
@@ -26,11 +26,11 @@ void main() {
     'should return a Success Status when the remove product from cart process is successful',
     () async {
       // Arrange
-      when(mockCartRepository.removeProductFromCart(fakeProductId))
+      when(mockCartRepository.removeProductFromCart(cartedProductId))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       // Act
-      final result = await removeProductFromCartUseCase.call(fakeProductId);
+      final result = await removeProductFromCartUseCase.call(cartedProductId);
 
       // Assert
       expect(result, Right(ResponseTypes.success.response));
@@ -44,11 +44,11 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Remove product from cart failed',
       );
-      when(mockCartRepository.removeProductFromCart(fakeProductId))
+      when(mockCartRepository.removeProductFromCart(cartedProductId))
           .thenAnswer((_) async => Left(failure));
 
       // Act
-      final result = await removeProductFromCartUseCase.call(fakeProductId);
+      final result = await removeProductFromCartUseCase.call(cartedProductId);
 
       // Assert
       expect(result, Left(failure));

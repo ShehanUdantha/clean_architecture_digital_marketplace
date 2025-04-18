@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 
+import '../../../config/routes/router.dart';
+import '../../../core/constants/error_messages.dart';
+
 import '../../../core/utils/extension.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -87,14 +90,15 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         if (r == ResponseTypes.success.response) {
           emit(
             state.copyWith(
-              productAddAndEditMessage: r,
               productAddAndEditStatus: BlocStatus.success,
             ),
           );
         } else {
           emit(
             state.copyWith(
-              productAddAndEditMessage: r,
+              productAddAndEditMessage:
+                  rootNavigatorKey.currentContext?.loc.productAlreadyAdded ??
+                      AppErrorMessages.productAlreadyAdded,
               productAddAndEditStatus: BlocStatus.error,
             ),
           );
@@ -136,14 +140,15 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         if (r == ResponseTypes.success.response) {
           emit(
             state.copyWith(
-              productAddAndEditMessage: r,
               productAddAndEditStatus: BlocStatus.success,
             ),
           );
         } else {
           emit(
             state.copyWith(
-              productAddAndEditMessage: r,
+              productAddAndEditMessage:
+                  rootNavigatorKey.currentContext?.loc.productIdNotFound ??
+                      AppErrorMessages.productIdNotFound,
               productAddAndEditStatus: BlocStatus.error,
             ),
           );
@@ -215,7 +220,6 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       ),
       (r) => emit(
         state.copyWith(
-          message: r,
           status: BlocStatus.success,
           isDeleted: true,
         ),

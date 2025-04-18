@@ -29,22 +29,22 @@ class ForgotPasswordListenerWidget extends StatelessWidget {
         BlocListener<ForgotPasswordBloc, ForgotPasswordState>(
           listener: (context, state) {
             if (state.status == BlocStatus.error) {
-              context
-                  .read<ForgotPasswordBloc>()
-                  .add(SetForgotStatusToDefault());
               Helper.showSnackBar(
                 context,
                 state.authMessage,
               );
-            }
-            if (state.status == BlocStatus.success) {
               context
                   .read<ForgotPasswordBloc>()
                   .add(SetForgotStatusToDefault());
+            }
+            if (state.status == BlocStatus.success) {
               Helper.showSnackBar(
                 context,
                 context.loc.forgotPasswordLinkSendSuccess,
               );
+              context
+                  .read<ForgotPasswordBloc>()
+                  .add(SetForgotStatusToDefault());
             }
           },
           child: TextButton(
@@ -65,7 +65,7 @@ class ForgotPasswordListenerWidget extends StatelessWidget {
     );
   }
 
-  _handleResetEmailSendButton(
+  void _handleResetEmailSendButton(
     BuildContext context,
     String email,
     NetworkState networkState,

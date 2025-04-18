@@ -6,7 +6,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/auth_values.dart';
+import '../../../fixtures/notification_values.dart';
 import 'get_notification_count_usecase_test.mocks.dart';
 
 @GenerateMocks([NotificationCountRepository])
@@ -24,16 +25,14 @@ void main() {
     'should return a Notification count when the get notification count process is successful',
     () async {
       // Arrange
-      when(mockNotificationCountRepository
-              .getNotificationCount(dummyUserIdToGetNotifications))
-          .thenAnswer((_) async => Right(fakeNotificationCount));
+      when(mockNotificationCountRepository.getNotificationCount(userUserId))
+          .thenAnswer((_) async => Right(currentUserNotificationCount));
 
       // Act
-      final result =
-          await getNotificationCountUseCase.call(dummyUserIdToGetNotifications);
+      final result = await getNotificationCountUseCase.call(userUserId);
 
       // Assert
-      expect(result, Right(fakeNotificationCount));
+      expect(result, Right(currentUserNotificationCount));
     },
   );
 
@@ -44,13 +43,11 @@ void main() {
       final failure = LocalDBFailure(
         errorMessage: 'Get notification count failed',
       );
-      when(mockNotificationCountRepository
-              .getNotificationCount(dummyUserIdToGetNotifications))
+      when(mockNotificationCountRepository.getNotificationCount(userUserId))
           .thenAnswer((_) async => Left(failure));
 
       // Act
-      final result =
-          await getNotificationCountUseCase.call(dummyUserIdToGetNotifications);
+      final result = await getNotificationCountUseCase.call(userUserId);
 
       // Assert
       expect(result, Left(failure));

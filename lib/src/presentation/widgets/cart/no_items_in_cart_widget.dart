@@ -70,7 +70,7 @@ class NoItemsInCartWidget extends StatelessWidget {
     );
   }
 
-  _handleExploreButton(BuildContext context) {
+  void _handleExploreButton(BuildContext context) {
     context.goNamed(AppRoutes.homePageName);
   }
 }

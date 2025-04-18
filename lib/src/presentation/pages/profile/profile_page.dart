@@ -24,7 +24,7 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  _bodyWidget(BuildContext context) {
+  Widget _bodyWidget(BuildContext context) {
     final authState = context.watch<AuthBloc>().state;
 
     return SafeArea(
@@ -99,11 +99,11 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  _handleSignOut(BuildContext context) {
+  void _handleSignOut(BuildContext context) {
     context.read<AuthBloc>().add(SignOutEvent());
   }
 
-  _moveToPage(BuildContext context, String pathName) {
+  void _moveToPage(BuildContext context, String pathName) {
     context.goNamed(pathName);
   }
 }

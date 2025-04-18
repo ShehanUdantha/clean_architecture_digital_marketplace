@@ -66,7 +66,7 @@ class BaseCollectionWidget extends StatelessWidget {
     );
   }
 
-  _handleViewAllPage(BuildContext context, String type, String title) {
+  void _handleViewAllPage(BuildContext context, String type, String title) {
     context.goNamed(
       AppRoutes.viewAllProductsPageName,
       queryParameters: {

@@ -36,7 +36,7 @@ class _UserManagePageState extends State<UserManagePage> {
     );
   }
 
-  _bodyWidget(BuildContext context) {
+  Widget _bodyWidget(BuildContext context) {
     final usersState = context.watch<UsersBloc>().state;
 
     return SafeArea(
@@ -111,11 +111,11 @@ class _UserManagePageState extends State<UserManagePage> {
     );
   }
 
-  _handleBackButton(BuildContext context) {
+  void _handleBackButton(BuildContext context) {
     context.goNamed(AppRoutes.toolsPageName);
   }
 
-  _handleUserTypeChipButton(
+  void _handleUserTypeChipButton(
     BuildContext context,
     int index,
     String userTypeName,

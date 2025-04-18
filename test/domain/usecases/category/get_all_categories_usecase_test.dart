@@ -7,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/category_values.dart';
 import 'get_all_categories_usecase_test.mocks.dart';
 
 @GenerateMocks([CategoryRepository])
@@ -26,13 +26,13 @@ void main() {
     () async {
       // Arrange
       when(mockCategoryRepository.getAllCategories())
-          .thenAnswer((_) async => Right(dummyCategories));
+          .thenAnswer((_) async => Right(categoryEntities));
 
       // Act
       final result = await getAllCategoriesUseCase.call(NoParams());
 
       // Assert
-      expect(result, Right(dummyCategories));
+      expect(result, Right(categoryEntities));
     },
   );
 

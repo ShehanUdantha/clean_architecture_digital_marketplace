@@ -6,7 +6,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/category_values.dart';
+import '../../../fixtures/product_values.dart';
 import 'get_all_products_usecase_test.mocks.dart';
 
 @GenerateMocks([ProductRepository])
@@ -24,14 +25,14 @@ void main() {
     'should return a List of Products when the get all products by category process is successful',
     () async {
       // Arrange
-      when(mockProductRepository.getAllProducts(dummyFontCategoryType))
-          .thenAnswer((_) async => Right(dummyFontsCategoryProducts));
+      when(mockProductRepository.getAllProducts(categoryTypeFont))
+          .thenAnswer((_) async => Right(fontsCategoryProductEntities));
 
       // Act
-      final result = await getAllProductsUseCase.call(dummyFontCategoryType);
+      final result = await getAllProductsUseCase.call(categoryTypeFont);
 
       // Assert
-      expect(result, Right(dummyFontsCategoryProducts));
+      expect(result, Right(fontsCategoryProductEntities));
     },
   );
 
@@ -42,11 +43,11 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Get all products by category failed',
       );
-      when(mockProductRepository.getAllProducts(dummyFontCategoryType))
+      when(mockProductRepository.getAllProducts(categoryTypeFont))
           .thenAnswer((_) async => Left(failure));
 
       // Act
-      final result = await getAllProductsUseCase.call(dummyFontCategoryType);
+      final result = await getAllProductsUseCase.call(categoryTypeFont);
 
       // Assert
       expect(result, Left(failure));

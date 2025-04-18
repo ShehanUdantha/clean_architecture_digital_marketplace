@@ -7,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/notification_values.dart';
 import 'get_all_notifications_usecase_test.mocks.dart';
 
 @GenerateMocks([NotificationRepository])
@@ -26,13 +26,13 @@ void main() {
     () async {
       // Arrange
       when(mockNotificationRepository.getAllNotifications())
-          .thenAnswer((_) async => Right(dummyNotifications));
+          .thenAnswer((_) async => Right(notificationEntities));
 
       // Act
       final result = await getAllNotificationsUseCase.call(NoParams());
 
       // Assert
-      expect(result, Right(dummyNotifications));
+      expect(result, Right(notificationEntities));
     },
   );
 

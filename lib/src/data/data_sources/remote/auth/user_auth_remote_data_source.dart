@@ -1,3 +1,5 @@
+import '../../../../core/constants/error_messages.dart';
+
 import '../../../../config/routes/router.dart';
 import '../../../../core/constants/variable_names.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -44,8 +46,9 @@ class UserAuthRemoteDataSourceImpl implements UserAuthRemoteDataSource {
       final user = userCredential.user;
       if (user == null) {
         throw AuthException(
-          errorMessage:
-              rootNavigatorKey.currentContext!.loc.authenticationErrorOccurred,
+          errorMessage: rootNavigatorKey
+                  .currentContext?.loc.authenticationErrorOccurred ??
+              AppErrorMessages.authenticationErrorOccurred,
         );
       }
 
@@ -67,22 +70,27 @@ class UserAuthRemoteDataSourceImpl implements UserAuthRemoteDataSource {
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-email') {
         throw AuthException(
-          errorMessage: rootNavigatorKey.currentContext!.loc.invalidEmail,
+          errorMessage: rootNavigatorKey.currentContext?.loc.invalidEmail ??
+              AppErrorMessages.invalidEmail,
         );
       }
       if (e.code == 'user-not-found') {
         throw AuthException(
-          errorMessage: rootNavigatorKey.currentContext!.loc.userNotFound,
+          errorMessage: rootNavigatorKey.currentContext?.loc.userNotFound ??
+              AppErrorMessages.userNotFound,
         );
       }
       if (e.code == 'wrong-password') {
         throw AuthException(
-          errorMessage: rootNavigatorKey.currentContext!.loc.wrongPassword,
+          errorMessage: rootNavigatorKey.currentContext?.loc.wrongPassword ??
+              AppErrorMessages.wrongPassword,
         );
       }
       if (e.code == 'invalid-credential') {
         throw AuthException(
-          errorMessage: rootNavigatorKey.currentContext!.loc.invalidCredential,
+          errorMessage:
+              rootNavigatorKey.currentContext?.loc.invalidCredential ??
+                  AppErrorMessages.invalidCredential,
         );
       } else {
         throw AuthException(errorMessage: e.toString());
@@ -135,15 +143,18 @@ class UserAuthRemoteDataSourceImpl implements UserAuthRemoteDataSource {
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         throw AuthException(
-          errorMessage: rootNavigatorKey.currentContext!.loc.weekPassword,
+          errorMessage: rootNavigatorKey.currentContext?.loc.weekPassword ??
+              AppErrorMessages.weekPassword,
         );
       } else if (e.code == 'email-already-in-use') {
         throw AuthException(
-          errorMessage: rootNavigatorKey.currentContext!.loc.emailAlreadyUsed,
+          errorMessage: rootNavigatorKey.currentContext?.loc.emailAlreadyUsed ??
+              AppErrorMessages.emailAlreadyUsed,
         );
       } else if (e.code == 'invalid-email') {
         throw AuthException(
-          errorMessage: rootNavigatorKey.currentContext!.loc.invalidEmail,
+          errorMessage: rootNavigatorKey.currentContext?.loc.invalidEmail ??
+              AppErrorMessages.invalidEmail,
         );
       } else {
         throw AuthException(errorMessage: e.toString());

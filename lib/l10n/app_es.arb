@@ -138,5 +138,8 @@
   "productsNotFound": "Productos no encontrados",
   "stripPaymentFail": "Fallo en el pago de Stripe",
   "authenticationErrorOccurred": "Ocurrió un error de autenticación.",
-  "unauthorizedAccess":"Acceso no autorizado"
+  "unauthorizedAccess":"Acceso no autorizado",
+  "failedToSendEmailVerification":"No se pudo enviar el correo de verificación. Por favor, inténtalo de nuevo más tarde.",
+  "emailNotVerifiedYet":"¡El correo electrónico aún no ha sido verificado!",
+  "productIdNotFound": "¡ID de producto no encontrado!"
 }

@@ -50,7 +50,7 @@ class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
       (l) => emit(
         state.copyWith(
           status: BlocStatus.error,
-          message: l.toString(),
+          message: l.errorMessage,
         ),
       ),
       (r) => emit(
@@ -75,7 +75,7 @@ class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
       (l) => emit(
         state.copyWith(
           productStatus: BlocStatus.error,
-          productMessage: l.toString(),
+          productMessage: l.errorMessage,
         ),
       ),
       (r) => emit(
@@ -122,7 +122,7 @@ class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
       (l) => emit(
         state.copyWith(
           downloadStatus: BlocStatus.error,
-          downloadMessage: l.toString(),
+          downloadMessage: l.errorMessage,
         ),
       ),
       (r) => emit(

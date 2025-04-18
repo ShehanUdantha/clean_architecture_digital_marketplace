@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/notification_values.dart';
 import 'notification_repository_impl_test.mocks.dart';
 
 @GenerateMocks([NotificationRemoteDataSource])
@@ -30,12 +30,12 @@ void main() {
         () async {
           // Arrange
           when(mockNotificationRemoteDataSource
-                  .sendNotification(dummyNotificationEntity))
+                  .sendNotification(notificationEntityToSend))
               .thenAnswer((_) async => ResponseTypes.success.response);
 
           // Act
           final result = await notificationRepositoryImpl
-              .sendNotification(dummyNotificationEntity);
+              .sendNotification(notificationEntityToSend);
 
           // Assert
           result.fold(
@@ -53,12 +53,12 @@ void main() {
             errorMessage: 'Send notification failed - (Firebase)',
           );
           when(mockNotificationRemoteDataSource
-                  .sendNotification(dummyNotificationEntity))
+                  .sendNotification(notificationEntityToSend))
               .thenThrow(dBException);
 
           // Act
           final result = await notificationRepositoryImpl
-              .sendNotification(dummyNotificationEntity);
+              .sendNotification(notificationEntityToSend);
 
           // Assert
           final failure = FirebaseFailure(
@@ -79,12 +79,12 @@ void main() {
             errorMessage: 'Send notification failed - (API)',
           );
           when(mockNotificationRemoteDataSource
-                  .sendNotification(dummyNotificationEntity))
+                  .sendNotification(notificationEntityToSend))
               .thenThrow(apiException);
 
           // Act
           final result = await notificationRepositoryImpl
-              .sendNotification(dummyNotificationEntity);
+              .sendNotification(notificationEntityToSend);
 
           // Assert
           final failure = APIFailure(
@@ -107,12 +107,12 @@ void main() {
         () async {
           // Arrange
           when(mockNotificationRemoteDataSource
-                  .deleteNotification(fakeNotificationId))
+                  .deleteNotification(notificationId))
               .thenAnswer((_) async => ResponseTypes.success.response);
 
           // Act
           final result = await notificationRepositoryImpl
-              .deleteNotification(fakeNotificationId);
+              .deleteNotification(notificationId);
 
           // Assert
           result.fold(
@@ -130,12 +130,12 @@ void main() {
             errorMessage: 'Delete notification failed',
           );
           when(mockNotificationRemoteDataSource
-                  .deleteNotification(fakeNotificationId))
+                  .deleteNotification(notificationId))
               .thenThrow(dBException);
 
           // Act
           final result = await notificationRepositoryImpl
-              .deleteNotification(fakeNotificationId);
+              .deleteNotification(notificationId);
 
           // Assert
           final failure = FirebaseFailure(
@@ -158,7 +158,7 @@ void main() {
         () async {
           // Arrange
           when(mockNotificationRemoteDataSource.getAllNotifications())
-              .thenAnswer((_) async => dummyNotifications);
+              .thenAnswer((_) async => notificationEntities);
 
           // Act
           final result = await notificationRepositoryImpl.getAllNotifications();
@@ -166,7 +166,7 @@ void main() {
           // Assert
           result.fold(
             (l) => fail('test failed'),
-            (r) => expect(r, dummyNotifications),
+            (r) => expect(r, notificationEntities),
           );
         },
       );

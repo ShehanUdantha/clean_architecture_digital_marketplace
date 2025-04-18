@@ -1,16 +1,16 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/notification_values.dart';
 
 void main() {
   test(
     'should create a valid Notification Entity instance',
     () async {
-      expect(dummyNotificationEntity.id, null);
-      expect(dummyNotificationEntity.title, 'Maintenance Scheduled');
-      expect(dummyNotificationEntity.description,
-          'We have a scheduled maintenance on January 20th, 2025, from 2 AM to 5 AM.');
-      expect(dummyNotificationEntity.dateCreated, '2025-01-19');
+      expect(notificationEntity.id, 'notification_002');
+      expect(notificationEntity.title, 'Update Available');
+      expect(notificationEntity.description,
+          'A new version of the app is now available. Update to enjoy the latest features.');
+      expect(notificationEntity.dateCreated, '2025-01-18');
     },
   );
 }

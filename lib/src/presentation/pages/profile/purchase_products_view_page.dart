@@ -43,7 +43,7 @@ class _PurchaseProductViewPageState extends State<PurchaseProductViewPage> {
     );
   }
 
-  _bodyWidget(BuildContext context) {
+  Widget _bodyWidget(BuildContext context) {
     return WillPopScope(
       onWillPop: () => _handleBackButton(context),
       child: SafeArea(
@@ -112,7 +112,8 @@ class _PurchaseProductViewPageState extends State<PurchaseProductViewPage> {
     );
   }
 
-  _handleBackButton(BuildContext context) {
+  Future<bool> _handleBackButton(BuildContext context) async {
     context.goNamed(AppRoutes.purchaseHistoryPageName);
+    return Future.value(true);
   }
 }

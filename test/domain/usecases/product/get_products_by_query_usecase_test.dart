@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/product_values.dart';
 import 'get_products_by_query_usecase_test.mocks.dart';
 
 @GenerateMocks([ProductRepository])
@@ -24,15 +24,14 @@ void main() {
     'should return a List of products when the get products by search query process is successful',
     () async {
       // Arrange
-      when(mockProductRepository.getProductsByQuery(fakeProductSearchQuery))
-          .thenAnswer((_) async => Right(searchQueryDummyResult));
+      when(mockProductRepository.getProductsByQuery(productSearchQuery))
+          .thenAnswer((_) async => Right(searchQueryResultProductModels));
 
       // Act
-      final result =
-          await getProductsByQueryUseCase.call(fakeProductSearchQuery);
+      final result = await getProductsByQueryUseCase.call(productSearchQuery);
 
       // Assert
-      expect(result, Right(searchQueryDummyResult));
+      expect(result, Right(searchQueryResultProductModels));
     },
   );
 
@@ -43,12 +42,11 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Get products by search query failed',
       );
-      when(mockProductRepository.getProductsByQuery(fakeProductSearchQuery))
+      when(mockProductRepository.getProductsByQuery(productSearchQuery))
           .thenAnswer((_) async => Left(failure));
 
       // Act
-      final result =
-          await getProductsByQueryUseCase.call(fakeProductSearchQuery);
+      final result = await getProductsByQueryUseCase.call(productSearchQuery);
 
       // Assert
       expect(result, Left(failure));

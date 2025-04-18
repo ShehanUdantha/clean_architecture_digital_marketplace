@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/auth_values.dart';
 import 'forgot_password_usecase_test.mocks.dart';
 
 @GenerateMocks([UserAuthRepository])
@@ -26,11 +26,11 @@ void main() {
     'should return a Success Status when the forgot password process is successful',
     () async {
       // Arrange
-      when(mockUserAuthRepository.forgotPassword(forgotPwEmail))
+      when(mockUserAuthRepository.forgotPassword(userUserEmail))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       // Act
-      final result = await forgotPasswordUseCase.call(forgotPwEmail);
+      final result = await forgotPasswordUseCase.call(userUserEmail);
 
       // Assert
       expect(result, Right(ResponseTypes.success.response));
@@ -41,11 +41,11 @@ void main() {
     'should return a Failure when the email is not stored in firestore',
     () async {
       // Arrange
-      when(mockUserAuthRepository.forgotPassword(forgotPwEmail))
+      when(mockUserAuthRepository.forgotPassword(userUserEmail))
           .thenAnswer((_) async => Right(ResponseTypes.failure.response));
 
       // Act
-      final result = await forgotPasswordUseCase.call(forgotPwEmail);
+      final result = await forgotPasswordUseCase.call(userUserEmail);
 
       // Assert
       expect(result, Right(ResponseTypes.failure.response));
@@ -59,11 +59,11 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'forgot password failed',
       );
-      when(mockUserAuthRepository.forgotPassword(forgotPwEmail))
+      when(mockUserAuthRepository.forgotPassword(userUserEmail))
           .thenAnswer((_) async => Left(failure));
 
       // Act
-      final result = await forgotPasswordUseCase.call(forgotPwEmail);
+      final result = await forgotPasswordUseCase.call(userUserEmail);
 
       // Assert
       expect(result, Left(failure));

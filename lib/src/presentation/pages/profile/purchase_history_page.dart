@@ -33,7 +33,7 @@ class _PurchaseHistoryPageState extends State<PurchaseHistoryPage> {
     );
   }
 
-  _bodyWidget(BuildContext context) {
+  Widget _bodyWidget(BuildContext context) {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(16.0).copyWith(bottom: 0),
@@ -79,7 +79,7 @@ class _PurchaseHistoryPageState extends State<PurchaseHistoryPage> {
     );
   }
 
-  _handleBackButton(BuildContext context) {
+  void _handleBackButton(BuildContext context) {
     context.goNamed(AppRoutes.profilePageName);
   }
 }

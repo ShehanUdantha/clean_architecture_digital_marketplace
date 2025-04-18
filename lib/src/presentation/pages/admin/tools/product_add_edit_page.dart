@@ -77,7 +77,7 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
     );
   }
 
-  _bodyWidget() {
+  Widget _bodyWidget() {
     final headerName = widget.title == CURDTypes.add.name
         ? context.loc.add
         : context.loc.update;
@@ -97,10 +97,7 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
                     .add(SetProductAddAndEditStatusToDefault());
                 Helper.showSnackBar(
                   context,
-                  state.productAddAndEditMessage ==
-                          ResponseTypes.failure.response
-                      ? context.loc.productAlreadyAdded
-                      : state.productAddAndEditMessage,
+                  state.productAddAndEditMessage,
                 );
               }
               if (state.productAddAndEditStatus == BlocStatus.success) {
@@ -381,17 +378,12 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
     );
   }
 
-  _initProductAddAndEditPage() {
+  void _initProductAddAndEditPage() {
     if (widget.product != null && widget.title == CURDTypes.update.name) {
       final product = widget.product!;
       _productNameController.text = product.productName;
       _productPriceController.text = product.price;
       _productDescriptionController.text = product.description;
-
-      sharedCategoryDropDownValue =
-          _getSharedCategoryIndexFromList(context, product.category);
-      sharedMarketingTypeDropDownValue =
-          _getSharedMarketingIndexFromList(context, product.marketingType);
 
       context.read<ProductBloc>().add(
             CategoryNameFieldChangeEvent(
@@ -405,21 +397,26 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
             ),
           );
 
-      isUploadAssetsAvailableInSharedProduct = product.zipFile != "";
-      sharedCoverImage = product.coverImage;
-      final List<String>? formattedSharedList =
-          product.subImages?.map((e) => e.toString()).cast<String>().toList();
-      sharedSubImages = formattedSharedList;
+      setState(() {
+        sharedCategoryDropDownValue =
+            _getSharedCategoryIndexFromList(context, product.category);
+        sharedMarketingTypeDropDownValue =
+            _getSharedMarketingIndexFromList(context, product.marketingType);
 
-      setState(() {});
+        isUploadAssetsAvailableInSharedProduct = product.zipFile != "";
+        sharedCoverImage = product.coverImage;
+        final List<String>? formattedSharedList =
+            product.subImages?.map((e) => e.toString()).cast<String>().toList();
+        sharedSubImages = formattedSharedList;
+      });
     }
   }
 
-  _handleBackButton() {
+  void _handleBackButton() {
     context.goNamed(AppRoutes.productsManagePageName);
   }
 
-  _handleSelectCoverImage() async {
+  void _handleSelectCoverImage() async {
     final result = await Helper.imagePick();
 
     if (result != null) {
@@ -429,7 +426,7 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
     }
   }
 
-  _handleSelectSubImages() async {
+  void _handleSelectSubImages() async {
     final result = await Helper.multipleImagePick();
 
     if (result != null) {
@@ -439,7 +436,7 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
     }
   }
 
-  _handleSelectedSubImageRemove(PlatformFile? selectedFile) async {
+  void _handleSelectedSubImageRemove(PlatformFile? selectedFile) async {
     if (selectedFile == null) return;
 
     setState(() {
@@ -448,7 +445,7 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
     });
   }
 
-  _handleSharedSubImageRemove(String? selectedImageUrl) async {
+  void _handleSharedSubImageRemove(String? selectedImageUrl) async {
     if (selectedImageUrl == null) return;
 
     setState(() {
@@ -456,7 +453,7 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
     });
   }
 
-  _handleCategoryDropDown(String value) {
+  void _handleCategoryDropDown(String value) {
     context.read<ProductBloc>().add(
           CategoryNameFieldChangeEvent(
             category: context
@@ -468,7 +465,7 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
         );
   }
 
-  _handleMarketingDropDown(String value) {
+  void _handleMarketingDropDown(String value) {
     context.read<ProductBloc>().add(
           MarketingTypeFieldChangeEvent(
             type: AppLists.listOfMarketingType[int.parse(value) - 1],
@@ -476,7 +473,7 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
         );
   }
 
-  _handleUploadAsset() async {
+  void _handleUploadAsset() async {
     final result = await Helper.zipFilePick();
 
     if (result != null) {
@@ -486,7 +483,7 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
     }
   }
 
-  _handleSubmitButton() {
+  void _handleSubmitButton() {
     final state = context.read<ProductBloc>().state;
     if (coverImage != null || sharedCoverImage != null) {
       if (subImages != null || sharedSubImages != null) {

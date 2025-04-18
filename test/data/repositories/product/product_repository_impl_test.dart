@@ -8,7 +8,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/category_values.dart';
+import '../../../fixtures/product_values.dart';
 import 'product_repository_impl_test.mocks.dart';
 
 @GenerateMocks([ProductRemoteDataSource])
@@ -29,12 +30,12 @@ void main() {
         'should return a Success status when a new product is successfully added to firestore',
         () async {
           // Arrange
-          when(mockProductRemoteDataSource.addProduct(dummyProductEntity))
+          when(mockProductRemoteDataSource.addProduct(newProductEntity))
               .thenAnswer((_) async => ResponseTypes.success.response);
 
           // Act
           final result =
-              await productRepositoryImpl.addProduct(dummyProductEntity);
+              await productRepositoryImpl.addProduct(newProductEntity);
 
           // Assert
           result.fold(
@@ -48,12 +49,12 @@ void main() {
         'should return a Failure status when attempting to add a product that already exists in firestore',
         () async {
           // Arrange
-          when(mockProductRemoteDataSource.addProduct(dummyProductEntity))
+          when(mockProductRemoteDataSource.addProduct(newProductEntity))
               .thenAnswer((_) async => ResponseTypes.failure.response);
 
           // Act
           final result =
-              await productRepositoryImpl.addProduct(dummyProductEntity);
+              await productRepositoryImpl.addProduct(newProductEntity);
 
           // Assert
           result.fold(
@@ -70,12 +71,12 @@ void main() {
           final dbException = DBException(
             errorMessage: 'Add new product failed',
           );
-          when(mockProductRemoteDataSource.addProduct(dummyProductEntity))
+          when(mockProductRemoteDataSource.addProduct(newProductEntity))
               .thenThrow(dbException);
 
           // Act
           final result =
-              await productRepositoryImpl.addProduct(dummyProductEntity);
+              await productRepositoryImpl.addProduct(newProductEntity);
 
           // Assert
           final failure = FirebaseFailure(
@@ -97,18 +98,17 @@ void main() {
         'should return a List of Products when the get all products by category process is successful',
         () async {
           // Arrange
-          when(mockProductRemoteDataSource
-                  .getAllProducts(dummyFontCategoryType))
-              .thenAnswer((_) async => dummyFontsCategoryProducts);
+          when(mockProductRemoteDataSource.getAllProducts(categoryTypeFont))
+              .thenAnswer((_) async => fontsCategoryProductModels);
 
           // Act
           final result =
-              await productRepositoryImpl.getAllProducts(dummyFontCategoryType);
+              await productRepositoryImpl.getAllProducts(categoryTypeFont);
 
           // Assert
           result.fold(
             (l) => fail('test failed'),
-            (r) => expect(r, dummyFontsCategoryProducts),
+            (r) => expect(r, fontsCategoryProductModels),
           );
         },
       );
@@ -120,13 +120,12 @@ void main() {
           final dbException = DBException(
             errorMessage: 'Get all products by category failed',
           );
-          when(mockProductRemoteDataSource
-                  .getAllProducts(dummyFontCategoryType))
+          when(mockProductRemoteDataSource.getAllProducts(categoryTypeFont))
               .thenThrow(dbException);
 
           // Act
           final result =
-              await productRepositoryImpl.getAllProducts(dummyFontCategoryType);
+              await productRepositoryImpl.getAllProducts(categoryTypeFont);
 
           // Assert
           final failure = FirebaseFailure(
@@ -148,12 +147,11 @@ void main() {
         'should return a Success Status when the delete product process is successful',
         () async {
           // Arrange
-          when(mockProductRemoteDataSource.deleteProduct(fakeProductId))
+          when(mockProductRemoteDataSource.deleteProduct(productId))
               .thenAnswer((_) async => ResponseTypes.success.response);
 
           // Act
-          final result =
-              await productRepositoryImpl.deleteProduct(fakeProductId);
+          final result = await productRepositoryImpl.deleteProduct(productId);
 
           // Assert
           result.fold(
@@ -170,12 +168,11 @@ void main() {
           final dBException = DBException(
             errorMessage: 'Delete product failed',
           );
-          when(mockProductRemoteDataSource.deleteProduct(fakeProductId))
+          when(mockProductRemoteDataSource.deleteProduct(productId))
               .thenThrow(dBException);
 
           // Act
-          final result =
-              await productRepositoryImpl.deleteProduct(fakeProductId);
+          final result = await productRepositoryImpl.deleteProduct(productId);
 
           // Assert
           final failure = FirebaseFailure(
@@ -198,17 +195,17 @@ void main() {
         () async {
           // Arrange
           when(mockProductRemoteDataSource
-                  .getProductByMarketingTypes(dummyMarketingType))
-              .thenAnswer((_) async => dummyFeaturedMarketingTypeProducts);
+                  .getProductByMarketingTypes(marketingTypeFeatured))
+              .thenAnswer((_) async => featuredMarketingTypeProducts);
 
           // Act
           final result = await productRepositoryImpl
-              .getProductByMarketingTypes(dummyMarketingType);
+              .getProductByMarketingTypes(marketingTypeFeatured);
 
           // Assert
           result.fold(
             (l) => fail('test failed'),
-            (r) => expect(r, dummyFeaturedMarketingTypeProducts),
+            (r) => expect(r, featuredMarketingTypeProducts),
           );
         },
       );
@@ -221,12 +218,12 @@ void main() {
             errorMessage: 'Get products by marketing type failed',
           );
           when(mockProductRemoteDataSource
-                  .getProductByMarketingTypes(dummyMarketingType))
+                  .getProductByMarketingTypes(marketingTypeFeatured))
               .thenThrow(dBException);
 
           // Act
           final result = await productRepositoryImpl
-              .getProductByMarketingTypes(dummyMarketingType);
+              .getProductByMarketingTypes(marketingTypeFeatured);
 
           // Assert
           final failure = FirebaseFailure(
@@ -249,17 +246,17 @@ void main() {
         () async {
           // Arrange
           when(mockProductRemoteDataSource
-                  .getProductByQuery(fakeProductSearchQuery))
-              .thenAnswer((_) async => searchQueryDummyResult);
+                  .getProductByQuery(productSearchQuery))
+              .thenAnswer((_) async => searchQueryResultProductModels);
 
           // Act
           final result = await productRepositoryImpl
-              .getProductsByQuery(fakeProductSearchQuery);
+              .getProductsByQuery(productSearchQuery);
 
           // Assert
           result.fold(
             (l) => fail('test failed'),
-            (r) => expect(r, dummyFeaturedMarketingTypeProducts),
+            (r) => expect(r, searchQueryResultProductModels),
           );
         },
       );
@@ -272,12 +269,12 @@ void main() {
             errorMessage: 'Get products by search query failed',
           );
           when(mockProductRemoteDataSource
-                  .getProductByQuery(fakeProductSearchQuery))
+                  .getProductByQuery(productSearchQuery))
               .thenThrow(dBException);
 
           // Act
           final result = await productRepositoryImpl
-              .getProductsByQuery(fakeProductSearchQuery);
+              .getProductsByQuery(productSearchQuery);
 
           // Assert
           final failure = FirebaseFailure(
@@ -299,17 +296,17 @@ void main() {
         'should return a Product when the get product details by id process is successful',
         () async {
           // Arrange
-          when(mockProductRemoteDataSource.getProductDetailsById(fakeProductId))
-              .thenAnswer((_) async => dummyProduct);
+          when(mockProductRemoteDataSource.getProductDetailsById(productId))
+              .thenAnswer((_) async => productIdThreeModel);
 
           // Act
           final result =
-              await productRepositoryImpl.getProductDetailsById(fakeProductId);
+              await productRepositoryImpl.getProductDetailsById(productId);
 
           // Assert
           result.fold(
             (l) => fail('test failed'),
-            (r) => expect(r, dummyProduct),
+            (r) => expect(r, productIdThreeModel),
           );
         },
       );
@@ -321,12 +318,12 @@ void main() {
           final dBException = DBException(
             errorMessage: 'Get product details by id failed',
           );
-          when(mockProductRemoteDataSource.getProductDetailsById(fakeProductId))
+          when(mockProductRemoteDataSource.getProductDetailsById(productId))
               .thenThrow(dBException);
 
           // Act
           final result =
-              await productRepositoryImpl.getProductDetailsById(fakeProductId);
+              await productRepositoryImpl.getProductDetailsById(productId);
 
           // Assert
           final failure = FirebaseFailure(
@@ -348,16 +345,16 @@ void main() {
         'should return a Product when the add favorite to product process is successful',
         () async {
           // Arrange
-          when(mockProductRemoteDataSource.addFavorite(fakeProductId))
-              .thenAnswer((_) async => dummyProduct);
+          when(mockProductRemoteDataSource.addFavorite(productId))
+              .thenAnswer((_) async => productIdThreeNewModel);
 
           // Act
-          final result = await productRepositoryImpl.addFavorite(fakeProductId);
+          final result = await productRepositoryImpl.addFavorite(productId);
 
           // Assert
           result.fold(
             (l) => fail('test failed'),
-            (r) => expect(r, dummyProduct),
+            (r) => expect(r, productIdThreeNewModel),
           );
         },
       );
@@ -369,11 +366,11 @@ void main() {
           final dBException = DBException(
             errorMessage: 'Add favorite to product failed',
           );
-          when(mockProductRemoteDataSource.addFavorite(fakeProductId))
+          when(mockProductRemoteDataSource.addFavorite(productId))
               .thenThrow(dBException);
 
           // Act
-          final result = await productRepositoryImpl.addFavorite(fakeProductId);
+          final result = await productRepositoryImpl.addFavorite(productId);
 
           // Assert
           final failure = FirebaseFailure(
@@ -395,13 +392,12 @@ void main() {
         'should return a Success Status when the edit product process is successful',
         () async {
           // Arrange
-          when(mockProductRemoteDataSource
-                  .editProduct(dummyProductEntityForEdit))
+          when(mockProductRemoteDataSource.editProduct(editProductEntity))
               .thenAnswer((_) async => ResponseTypes.success.response);
 
           // Act
-          final result = await productRepositoryImpl
-              .editProduct(dummyProductEntityForEdit);
+          final result =
+              await productRepositoryImpl.editProduct(editProductEntity);
 
           // Assert
           result.fold(
@@ -415,13 +411,12 @@ void main() {
         'should return a Failure status when attempting to edit a product that does not exist in firestore',
         () async {
           // Arrange
-          when(mockProductRemoteDataSource
-                  .editProduct(dummyProductEntityForEdit))
+          when(mockProductRemoteDataSource.editProduct(editProductEntity))
               .thenAnswer((_) async => ResponseTypes.failure.response);
 
           // Act
-          final result = await productRepositoryImpl
-              .editProduct(dummyProductEntityForEdit);
+          final result =
+              await productRepositoryImpl.editProduct(editProductEntity);
 
           // Assert
           result.fold(
@@ -438,13 +433,12 @@ void main() {
           final dBException = DBException(
             errorMessage: 'Edit product failed',
           );
-          when(mockProductRemoteDataSource
-                  .editProduct(dummyProductEntityForEdit))
+          when(mockProductRemoteDataSource.editProduct(editProductEntity))
               .thenThrow(dBException);
 
           // Act
-          final result = await productRepositoryImpl
-              .editProduct(dummyProductEntityForEdit);
+          final result =
+              await productRepositoryImpl.editProduct(editProductEntity);
 
           // Assert
           final failure = FirebaseFailure(

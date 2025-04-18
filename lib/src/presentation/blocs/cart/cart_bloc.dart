@@ -153,7 +153,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       (l) => emit(
         state.copyWith(
           addToPurchaseStatus: BlocStatus.error,
-          addToPurchaseMessage: l.toString(),
+          addToPurchaseMessage: l.errorMessage,
         ),
       ),
       (r) => emit(

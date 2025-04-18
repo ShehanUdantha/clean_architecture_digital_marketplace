@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/auth_values.dart';
 import 'user_sign_up_usecase_test.mocks.dart';
 
 @GenerateMocks([UserAuthRepository])
@@ -26,11 +26,11 @@ void main() {
     'should return a Success Status when the sign-up process is successful',
     () async {
       // Arrange
-      when(mockUserAuthRepository.signUpUser(signUpParams))
+      when(mockUserAuthRepository.signUpUser(userSignUpParams))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       // Act
-      final result = await userSignUpUseCase.call(signUpParams);
+      final result = await userSignUpUseCase.call(userSignUpParams);
 
       // Assert
       expect(result, Right(ResponseTypes.success.response));
@@ -44,11 +44,11 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Sign-up failed',
       );
-      when(mockUserAuthRepository.signUpUser(signUpParams))
+      when(mockUserAuthRepository.signUpUser(userSignUpParams))
           .thenAnswer((_) async => Left(failure));
 
       // Act
-      final result = await userSignUpUseCase.call(signUpParams);
+      final result = await userSignUpUseCase.call(userSignUpParams);
 
       // Assert
       expect(result, Left(failure));

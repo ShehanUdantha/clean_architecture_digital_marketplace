@@ -31,7 +31,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
-  _bodyWidget(BuildContext context) {
+  Widget _bodyWidget(BuildContext context) {
     final adminHomeState = context.watch<AdminHomeBloc>().state;
 
     return SafeArea(

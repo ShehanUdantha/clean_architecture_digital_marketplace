@@ -54,7 +54,7 @@ class _UserHomePageState extends State<UserHomePage> {
     );
   }
 
-  _bodyWidget() {
+  Widget _bodyWidget() {
     final userHomeState = context.watch<UserHomeBloc>().state;
 
     return SafeArea(
@@ -162,14 +162,14 @@ class _UserHomePageState extends State<UserHomePage> {
     );
   }
 
-  _handleSearchQuery(
+  void _handleSearchQuery(
     String value,
   ) {
     context.read<UserHomeBloc>().add(SearchFieldChangeEvent(query: value));
     context.read<UserHomeBloc>().add(GetProductsListByQueryEvent());
   }
 
-  _handleCategoryChipButton(
+  void _handleCategoryChipButton(
     int index,
     List<String> list,
   ) {
@@ -182,7 +182,7 @@ class _UserHomePageState extends State<UserHomePage> {
     context.read<UserHomeBloc>().add(GetProductsListByCategoryEvent());
   }
 
-  _handleClearFunction() {
+  void _handleClearFunction() {
     context.read<UserHomeBloc>().add(ClearSearchFiledEvent());
     _searchController.clear();
     FocusScope.of(context).unfocus();

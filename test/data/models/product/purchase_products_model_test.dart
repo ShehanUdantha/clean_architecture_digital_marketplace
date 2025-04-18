@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/purchase_values.dart';
 import 'purchase_products_model_test.mocks.dart';
 
 @GenerateMocks([DocumentSnapshot])
@@ -20,10 +20,10 @@ void main() {
     () {
       // Act
       final purchaseProductsFromMap =
-          PurchaseProductsModel.fromMap(dummyPurchaseProductJson);
+          PurchaseProductsModel.fromMap(purchasedProductJson);
 
       // Assert
-      expect(purchaseProductsFromMap, equals(dummyPurchaseProduct));
+      expect(purchaseProductsFromMap, equals(purchasedProductModel));
     },
   );
 
@@ -31,21 +31,20 @@ void main() {
     'should correctly create PurchaseProductsModel from Firestore Document',
     () {
       // Arrange
-      when(mockDocumentSnapshot.data()).thenReturn(dummyPurchaseProductJson);
+      when(mockDocumentSnapshot.data()).thenReturn(purchasedProductJson);
       when(mockDocumentSnapshot['purchaseId'])
-          .thenReturn(dummyPurchaseProductJson['purchaseId']);
+          .thenReturn(purchasedProductJson['purchaseId']);
       when(mockDocumentSnapshot['price'])
-          .thenReturn(dummyPurchaseProductJson['price']);
+          .thenReturn(purchasedProductJson['price']);
       when(mockDocumentSnapshot['date'])
-          .thenReturn(dummyPurchaseProductJson['date']);
-      when(mockDocumentSnapshot['ids'])
-          .thenReturn(dummyPurchaseProductJson['ids']);
+          .thenReturn(purchasedProductJson['date']);
+      when(mockDocumentSnapshot['ids']).thenReturn(purchasedProductJson['ids']);
 
       // Act
       final model = PurchaseProductsModel.fromDocument(mockDocumentSnapshot);
 
       // Assert
-      expect(model, equals(dummyPurchaseProduct));
+      expect(model, equals(purchasedProductModel));
     },
   );
 }

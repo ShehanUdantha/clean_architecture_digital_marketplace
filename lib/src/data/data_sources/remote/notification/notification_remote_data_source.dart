@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:Pixelcart/src/core/constants/error_messages.dart';
+
 import '../../../../config/routes/router.dart';
 import '../../../../core/constants/urls.dart';
 import '../../../../core/constants/variable_names.dart';
@@ -48,7 +50,8 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
 
       if (!userDoc.exists) {
         throw AuthException(
-            errorMessage: rootNavigatorKey.currentContext!.loc.userNotFound);
+            errorMessage: rootNavigatorKey.currentContext?.loc.userNotFound ??
+                AppErrorMessages.userNotFound);
       }
 
       final userModel =
@@ -72,7 +75,9 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
         return ResponseTypes.success.response;
       } else {
         throw AuthException(
-          errorMessage: rootNavigatorKey.currentContext!.loc.unauthorizedAccess,
+          errorMessage:
+              rootNavigatorKey.currentContext?.loc.unauthorizedAccess ??
+                  AppErrorMessages.unauthorizedAccess,
         );
       }
     } on FirebaseAuthException catch (e) {
@@ -114,7 +119,8 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
 
       if (!userDoc.exists) {
         throw AuthException(
-            errorMessage: rootNavigatorKey.currentContext!.loc.userNotFound);
+            errorMessage: rootNavigatorKey.currentContext?.loc.userNotFound ??
+                AppErrorMessages.userNotFound);
       }
 
       final userModel =
@@ -129,7 +135,9 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
         return ResponseTypes.success.response;
       } else {
         throw AuthException(
-          errorMessage: rootNavigatorKey.currentContext!.loc.unauthorizedAccess,
+          errorMessage:
+              rootNavigatorKey.currentContext?.loc.unauthorizedAccess ??
+                  AppErrorMessages.unauthorizedAccess,
         );
       }
     } on FirebaseAuthException catch (e) {

@@ -8,7 +8,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/auth_values.dart';
+import '../../../fixtures/notification_values.dart';
 import 'notification_count_repository_impl_test.mocks.dart';
 
 @GenerateMocks([NotificationLocalDataSource])
@@ -29,18 +30,17 @@ void main() {
         'should return a Notification count when the get notification count process is successful',
         () async {
           // Arrange
-          when(mockNotificationLocalDataSource
-                  .getNotificationCount(dummyUserIdToGetNotifications))
-              .thenAnswer((_) async => fakeNotificationCount);
+          when(mockNotificationLocalDataSource.getNotificationCount(userUserId))
+              .thenAnswer((_) async => currentUserNotificationCount);
 
           // Act
           final result = await notificationCountRepositoryImpl
-              .getNotificationCount(dummyUserIdToGetNotifications);
+              .getNotificationCount(userUserId);
 
           // Assert
           result.fold(
             (l) => fail('test failed'),
-            (r) => expect(r, fakeNotificationCount),
+            (r) => expect(r, currentUserNotificationCount),
           );
         },
       );
@@ -52,13 +52,12 @@ void main() {
           final dbException = DBException(
             errorMessage: 'Get notification count failed',
           );
-          when(mockNotificationLocalDataSource
-                  .getNotificationCount(dummyUserIdToGetNotifications))
+          when(mockNotificationLocalDataSource.getNotificationCount(userUserId))
               .thenThrow(dbException);
 
           // Act
           final result = await notificationCountRepositoryImpl
-              .getNotificationCount(dummyUserIdToGetNotifications);
+              .getNotificationCount(userUserId);
 
           // Assert
           final failure = LocalDBFailure(
@@ -81,12 +80,12 @@ void main() {
         () async {
           // Arrange
           when(mockNotificationLocalDataSource
-                  .resetNotificationCount(dummyUserIdToGetNotifications))
+                  .resetNotificationCount(userUserId))
               .thenAnswer((_) async => ResponseTypes.success.response);
 
           // Act
           final result = await notificationCountRepositoryImpl
-              .resetNotificationCount(dummyUserIdToGetNotifications);
+              .resetNotificationCount(userUserId);
 
           // Assert
           result.fold(
@@ -104,12 +103,12 @@ void main() {
             errorMessage: 'Reset notification count failed',
           );
           when(mockNotificationLocalDataSource
-                  .resetNotificationCount(dummyUserIdToGetNotifications))
+                  .resetNotificationCount(userUserId))
               .thenThrow(dbException);
 
           // Act
           final result = await notificationCountRepositoryImpl
-              .resetNotificationCount(dummyUserIdToGetNotifications);
+              .resetNotificationCount(userUserId);
 
           // Assert
           final failure = LocalDBFailure(
@@ -132,17 +131,17 @@ void main() {
         () async {
           // Arrange
           when(mockNotificationLocalDataSource
-                  .updateNotificationCount(dummyUserIdToGetNotifications))
-              .thenAnswer((_) async => fakeNotificationNewCount);
+                  .updateNotificationCount(userUserId))
+              .thenAnswer((_) async => currentUserNotificationNewCount);
 
           // Act
           final result = await notificationCountRepositoryImpl
-              .updateNotificationCount(dummyUserIdToGetNotifications);
+              .updateNotificationCount(userUserId);
 
           // Assert
           result.fold(
             (l) => fail('test failed'),
-            (r) => expect(r, fakeNotificationNewCount),
+            (r) => expect(r, currentUserNotificationNewCount),
           );
         },
       );
@@ -155,12 +154,12 @@ void main() {
             errorMessage: 'Update notification count failed',
           );
           when(mockNotificationLocalDataSource
-                  .updateNotificationCount(dummyUserIdToGetNotifications))
+                  .updateNotificationCount(userUserId))
               .thenThrow(dbException);
 
           // Act
           final result = await notificationCountRepositoryImpl
-              .updateNotificationCount(dummyUserIdToGetNotifications);
+              .updateNotificationCount(userUserId);
 
           // Assert
           final failure = LocalDBFailure(

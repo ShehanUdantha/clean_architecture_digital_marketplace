@@ -43,7 +43,7 @@ class _ProductViewPageState extends State<ProductViewPage> {
     );
   }
 
-  _bodyWidget(BuildContext context) {
+  Widget _bodyWidget(BuildContext context) {
     return SafeArea(
       child: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
         builder: (context, state) {
@@ -71,7 +71,7 @@ class _ProductViewPageState extends State<ProductViewPage> {
     );
   }
 
-  _handleBackButton(BuildContext context, String routeName, String? type) {
+  void _handleBackButton(BuildContext context, String routeName, String? type) {
     if (routeName == BackPageTypes.home.page) {
       context.goNamed(AppRoutes.homePageName);
     } else if (routeName == BackPageTypes.view.page) {

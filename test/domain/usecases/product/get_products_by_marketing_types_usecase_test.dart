@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/product_values.dart';
 import 'get_products_by_marketing_types_usecase_test.mocks.dart';
 
 @GenerateMocks([ProductRepository])
@@ -24,15 +24,16 @@ void main() {
     'should return a List of products when the get products by marketing type process is successful',
     () async {
       // Arrange
-      when(mockProductRepository.getProductByMarketingTypes(dummyMarketingType))
-          .thenAnswer((_) async => Right(dummyFeaturedMarketingTypeProducts));
+      when(mockProductRepository
+              .getProductByMarketingTypes(marketingTypeFeatured))
+          .thenAnswer((_) async => Right(featuredMarketingTypeProductEntities));
 
       // Act
       final result =
-          await getProductsByMarketingTypeUseCase.call(dummyMarketingType);
+          await getProductsByMarketingTypeUseCase.call(marketingTypeFeatured);
 
       // Assert
-      expect(result, Right(dummyFeaturedMarketingTypeProducts));
+      expect(result, Right(featuredMarketingTypeProductEntities));
     },
   );
 
@@ -43,12 +44,13 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Get products by marketing type failed',
       );
-      when(mockProductRepository.getProductByMarketingTypes(dummyMarketingType))
+      when(mockProductRepository
+              .getProductByMarketingTypes(marketingTypeFeatured))
           .thenAnswer((_) async => Left(failure));
 
       // Act
       final result =
-          await getProductsByMarketingTypeUseCase.call(dummyMarketingType);
+          await getProductsByMarketingTypeUseCase.call(marketingTypeFeatured);
 
       // Assert
       expect(result, Left(failure));

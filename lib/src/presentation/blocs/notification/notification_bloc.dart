@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import '../../../core/utils/extension.dart';
-
 import '../../../domain/usecases/notification/get_notification_count_usecase.dart';
 import '../../../domain/usecases/notification/reset_notification_count_usecase.dart';
 import '../../../domain/usecases/notification/send_notification_usecase.dart';
@@ -70,21 +68,11 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
         );
       },
       (r) {
-        if (r == ResponseTypes.success.response) {
-          emit(
-            state.copyWith(
-              notificationSendMessage: r,
-              notificationSendStatus: BlocStatus.success,
-            ),
-          );
-        } else {
-          emit(
-            state.copyWith(
-              notificationSendMessage: r,
-              notificationSendStatus: BlocStatus.error,
-            ),
-          );
-        }
+        emit(
+          state.copyWith(
+            notificationSendStatus: BlocStatus.success,
+          ),
+        );
       },
     );
   }
@@ -93,10 +81,12 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     SetNotificationSendStatusToDefault event,
     Emitter<NotificationState> emit,
   ) {
-    emit(state.copyWith(
-      notificationSendStatus: BlocStatus.initial,
-      notificationSendMessage: '',
-    ));
+    emit(
+      state.copyWith(
+        notificationSendStatus: BlocStatus.initial,
+        notificationSendMessage: '',
+      ),
+    );
   }
 
   FutureOr<void> onGetAllNotificationsEvent(
@@ -138,7 +128,6 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
       ),
       (r) => emit(
         state.copyWith(
-          message: r,
           status: BlocStatus.success,
           isDeleted: true,
         ),

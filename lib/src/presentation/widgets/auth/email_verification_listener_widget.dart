@@ -25,18 +25,18 @@ class EmailVerificationListenerWidget extends StatelessWidget {
         BlocListener<SignUpBloc, SignUpState>(
           listener: (context, state) {
             if (state.status == BlocStatus.error) {
-              context.read<SignUpBloc>().add(SetSignUpStatusToDefault());
               Helper.showSnackBar(
                 context,
                 state.authMessage,
               );
+              context.read<SignUpBloc>().add(SetSignUpStatusToDefault());
             }
             if (state.status == BlocStatus.success) {
-              context.read<SignUpBloc>().add(SetSignUpStatusToDefault());
               Helper.showSnackBar(
                 context,
                 context.loc.emailVerifySuccess,
               );
+              context.read<SignUpBloc>().add(SetSignUpStatusToDefault());
             }
           },
           child: TextButton(
@@ -56,7 +56,7 @@ class EmailVerificationListenerWidget extends StatelessWidget {
     );
   }
 
-  _handleEmailVerificationSendButton(
+  void _handleEmailVerificationSendButton(
     BuildContext context,
     NetworkState networkState,
   ) {

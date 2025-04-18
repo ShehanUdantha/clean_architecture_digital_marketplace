@@ -46,7 +46,7 @@ class _SignInPageState extends State<SignInPage> {
     );
   }
 
-  _bodyWidget() {
+  Widget _bodyWidget() {
     final networkState = context.watch<NetworkBloc>().state;
     final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
 
@@ -57,11 +57,11 @@ class _SignInPageState extends State<SignInPage> {
           child: BlocConsumer<SignInBloc, SignInState>(
             listener: (context, state) {
               if (state.status == BlocStatus.error) {
-                context.read<SignInBloc>().add(SetSignInStatusToDefault());
                 Helper.showSnackBar(
                   context,
                   state.authMessage,
                 );
+                context.read<SignInBloc>().add(SetSignInStatusToDefault());
               }
               if (state.status == BlocStatus.success) {
                 if (state.isVerify) {
@@ -74,8 +74,6 @@ class _SignInPageState extends State<SignInPage> {
                     context.read<SignInBloc>().add(SetSignInStatusToDefault());
                   }
                 } else {
-                  context.read<SignInBloc>().add(SetSignInStatusToDefault());
-
                   context.goNamed(
                     AppRoutes.emailVerificationAndForgotPasswordPageName,
                     queryParameters: {
@@ -84,6 +82,7 @@ class _SignInPageState extends State<SignInPage> {
                       'isForgot': 'false',
                     },
                   );
+                  context.read<SignInBloc>().add(SetSignInStatusToDefault());
                   context.read<AuthBloc>().add(RefreshUserEvent());
                 }
               }
@@ -188,7 +187,7 @@ class _SignInPageState extends State<SignInPage> {
     );
   }
 
-  _handleSignIn(NetworkState networkState) {
+  void _handleSignIn(NetworkState networkState) {
     String? emailValidity = AppValidator.validateEmail(_emailController.text);
     String? passwordValidity =
         AppValidator.validatePassword(_passwordController.text);
@@ -214,15 +213,15 @@ class _SignInPageState extends State<SignInPage> {
     }
   }
 
-  _handleMoveToForgotPage() {
+  void _handleMoveToForgotPage() {
     context.goNamed(AppRoutes.forgotPasswordPageName);
   }
 
-  _handleMoveToSignUpPage() {
+  void _handleMoveToSignUpPage() {
     context.goNamed(AppRoutes.signUpPageName);
   }
 
-  _handleMoveToSettingsPage() {
+  void _handleMoveToSettingsPage() {
     context.goNamed(AppRoutes.authSettingsPageName);
   }
 }

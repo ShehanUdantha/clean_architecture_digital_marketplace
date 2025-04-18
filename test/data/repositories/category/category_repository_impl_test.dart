@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/category_values.dart';
 import 'category_repository_impl_test.mocks.dart';
 
 @GenerateMocks([CategoryRemoteDataSource])
@@ -29,12 +29,12 @@ void main() {
         'should return a Success Status when the add category process is successful',
         () async {
           // Arrange
-          when(mockCategoryRemoteDataSource.addCategory(dummyFontCategoryType))
+          when(mockCategoryRemoteDataSource.addCategory(categoryTypeFont))
               .thenAnswer((_) async => ResponseTypes.success.response);
 
           // Act
           final result =
-              await categoryRepositoryImpl.addCategory(dummyFontCategoryType);
+              await categoryRepositoryImpl.addCategory(categoryTypeFont);
 
           // Assert
           result.fold(
@@ -51,12 +51,12 @@ void main() {
           final dbException = DBException(
             errorMessage: 'Add category failed',
           );
-          when(mockCategoryRemoteDataSource.addCategory(dummyFontCategoryType))
+          when(mockCategoryRemoteDataSource.addCategory(categoryTypeFont))
               .thenThrow(dbException);
 
           // Act
           final result =
-              await categoryRepositoryImpl.addCategory(dummyFontCategoryType);
+              await categoryRepositoryImpl.addCategory(categoryTypeFont);
 
           // Assert
           final failure = FirebaseFailure(
@@ -79,7 +79,7 @@ void main() {
         () async {
           // Arrange
           when(mockCategoryRemoteDataSource.getAllCategories())
-              .thenAnswer((_) async => dummyCategories);
+              .thenAnswer((_) async => categoryModels);
 
           // Act
           final result = await categoryRepositoryImpl.getAllCategories();
@@ -87,7 +87,7 @@ void main() {
           // Assert
           result.fold(
             (l) => fail('test failed'),
-            (r) => expect(r, dummyCategories),
+            (r) => expect(r, categoryModels),
           );
         },
       );
@@ -126,12 +126,12 @@ void main() {
         () async {
           // Arrange
           when(mockCategoryRemoteDataSource
-                  .deleteCategory(fakeProductCategoryId))
+                  .deleteCategory(fontCategoryId.toString()))
               .thenAnswer((_) async => ResponseTypes.success.response);
 
           // Act
           final result = await categoryRepositoryImpl
-              .deleteCategory(fakeProductCategoryId);
+              .deleteCategory(fontCategoryId.toString());
 
           // Assert
           result.fold(
@@ -149,12 +149,12 @@ void main() {
             errorMessage: 'Delete category failed',
           );
           when(mockCategoryRemoteDataSource
-                  .deleteCategory(fakeProductCategoryId))
+                  .deleteCategory(fontCategoryId.toString()))
               .thenThrow(dbException);
 
           // Act
           final result = await categoryRepositoryImpl
-              .deleteCategory(fakeProductCategoryId);
+              .deleteCategory(fontCategoryId.toString());
 
           // Assert
           final failure = FirebaseFailure(

@@ -7,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/auth_values.dart';
 import 'get_user_details_usecase_test.mocks.dart';
 
 @GenerateMocks([UserRepository])
@@ -26,13 +26,13 @@ void main() {
     () async {
       // Arrange
       when(mockUserRepository.getUserDetails())
-          .thenAnswer((_) async => Right(userDetailsDummyModel));
+          .thenAnswer((_) async => Right(userUserEntity));
 
       // Act
       final result = await getUserDetailsUseCase.call(NoParams());
 
       // Assert
-      expect(result, Right(userDetailsDummyModel));
+      expect(result, Right(userUserEntity));
     },
   );
 

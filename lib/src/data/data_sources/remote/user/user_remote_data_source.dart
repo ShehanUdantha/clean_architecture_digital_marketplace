@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:Pixelcart/src/config/routes/router.dart';
+import 'package:Pixelcart/src/core/constants/error_messages.dart';
 import 'package:Pixelcart/src/core/utils/extension.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -32,7 +33,8 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
 
       if (!userDoc.exists) {
         throw AuthException(
-            errorMessage: rootNavigatorKey.currentContext!.loc.userNotFound);
+            errorMessage: rootNavigatorKey.currentContext?.loc.userNotFound ??
+                AppErrorMessages.userNotFound);
       }
 
       final userModel =
@@ -106,7 +108,8 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
 
       if (!userDoc.exists) {
         throw AuthException(
-            errorMessage: rootNavigatorKey.currentContext!.loc.userNotFound);
+            errorMessage: rootNavigatorKey.currentContext?.loc.userNotFound ??
+                AppErrorMessages.userNotFound);
       }
 
       final userModel =
@@ -124,7 +127,9 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
             (result.docs).map((e) => UserModel.fromDocument(e)));
       } else {
         throw AuthException(
-          errorMessage: rootNavigatorKey.currentContext!.loc.unauthorizedAccess,
+          errorMessage:
+              rootNavigatorKey.currentContext?.loc.unauthorizedAccess ??
+                  AppErrorMessages.unauthorizedAccess,
         );
       }
     } on FirebaseAuthException catch (e) {

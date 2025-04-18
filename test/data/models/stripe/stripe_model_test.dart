@@ -1,17 +1,17 @@
 import 'package:Pixelcart/src/data/models/stripe/stripe_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/stripe_values.dart';
 
 void main() {
   test(
     'should correctly create StripeModel from Map',
     () {
       // Act
-      final stripeFromMap = StripeModel.fromMap(dummyStripeJson);
+      final stripeFromMap = StripeModel.fromMap(stripeJson);
 
       // Assert
-      expect(stripeFromMap, equals(dummyStripeModel));
+      expect(stripeFromMap, equals(stripeModel));
     },
   );
 }

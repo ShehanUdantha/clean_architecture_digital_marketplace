@@ -6,6 +6,7 @@ import '../../../core/constants/routes_name.dart';
 import '../../../core/utils/enum.dart';
 import '../../../core/utils/extension.dart';
 import '../../../core/widgets/page_header_widget.dart';
+import '../../../domain/entities/product/product_entity.dart';
 import '../../blocs/user_home/user_home_bloc.dart';
 import '../../widgets/user_home/product_grid_view_list_builder_widget.dart';
 
@@ -32,7 +33,7 @@ class ViewAllProductsPage extends StatelessWidget {
     );
   }
 
-  _bodyWidget(BuildContext context, String type, String title) {
+  Widget _bodyWidget(BuildContext context, String type, String title) {
     return Padding(
       padding: const EdgeInsets.all(16.0).copyWith(bottom: 0),
       child: SingleChildScrollView(
@@ -59,11 +60,11 @@ class ViewAllProductsPage extends StatelessWidget {
     );
   }
 
-  _handleBackButton(BuildContext context) {
+  void _handleBackButton(BuildContext context) {
     context.goNamed(AppRoutes.homePageName);
   }
 
-  _handleGetClickedType(
+  List<ProductEntity> _handleGetClickedType(
     String type,
     BuildContext context,
   ) {
@@ -75,6 +76,8 @@ class ViewAllProductsPage extends StatelessWidget {
       return userHomeState.listOfTrending;
     } else if (type == MarketingTypes.latest.types) {
       return userHomeState.listOfLatest;
+    } else {
+      return [];
     }
   }
 }

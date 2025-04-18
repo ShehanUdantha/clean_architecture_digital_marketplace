@@ -149,7 +149,7 @@ class MonthlyStatusWidget extends StatelessWidget {
     );
   }
 
-  _handleBackWordMonthSelect(
+  void _handleBackWordMonthSelect(
     BuildContext context,
     AdminHomeState adminHomeState,
   ) {
@@ -170,7 +170,7 @@ class MonthlyStatusWidget extends StatelessWidget {
     context.read<AdminHomeBloc>().add(GetMonthlyTopSellingProducts());
   }
 
-  _handleForWordMonthSelect(
+  void _handleForWordMonthSelect(
     BuildContext context,
     AdminHomeState adminHomeState,
   ) {

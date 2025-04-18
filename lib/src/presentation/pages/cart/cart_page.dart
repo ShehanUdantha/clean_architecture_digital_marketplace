@@ -35,7 +35,7 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
-  _bodyWidget(BuildContext context) {
+  Widget _bodyWidget(BuildContext context) {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(16.0).copyWith(bottom: 0),

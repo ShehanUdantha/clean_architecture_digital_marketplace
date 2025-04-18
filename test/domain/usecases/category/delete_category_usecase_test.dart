@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/category_values.dart';
 import 'delete_category_usecase_test.mocks.dart';
 
 @GenerateMocks([CategoryRepository])
@@ -26,11 +26,12 @@ void main() {
     'should return a Success Status when the delete category process is successful',
     () async {
       // Arrange
-      when(mockCategoryRepository.deleteCategory(fakeProductCategoryId))
+      when(mockCategoryRepository.deleteCategory(fontCategoryId.toString()))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       // Act
-      final result = await deleteCategoryUseCase.call(fakeProductCategoryId);
+      final result =
+          await deleteCategoryUseCase.call(fontCategoryId.toString());
 
       // Assert
       expect(result, Right(ResponseTypes.success.response));
@@ -44,11 +45,12 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Delete category failed',
       );
-      when(mockCategoryRepository.deleteCategory(fakeProductCategoryId))
+      when(mockCategoryRepository.deleteCategory(fontCategoryId.toString()))
           .thenAnswer((_) async => Left(failure));
 
       // Act
-      final result = await deleteCategoryUseCase.call(fakeProductCategoryId);
+      final result =
+          await deleteCategoryUseCase.call(fontCategoryId.toString());
 
       // Assert
       expect(result, Left(failure));

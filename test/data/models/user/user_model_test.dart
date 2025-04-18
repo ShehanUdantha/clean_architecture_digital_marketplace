@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/users_values.dart';
 import 'user_model_test.mocks.dart';
 
 @GenerateMocks([DocumentSnapshot])
@@ -19,10 +19,10 @@ void main() {
     'should correctly convert UserModel to JSON',
     () {
       // Act
-      final json = userDetailsDummy.toJson();
+      final json = userUserTypeModel.toJson();
 
       // Assert
-      expect(json, userDetailsDummyJson);
+      expect(json, userUserTypeJson);
     },
   );
 
@@ -30,10 +30,10 @@ void main() {
     'should correctly create UserModel from Entity',
     () {
       // Act
-      final userFromEntity = UserModel.fromEntity(userDetailsDummyEntity);
+      final userFromEntity = UserModel.fromEntity(userUserTypeEntity);
 
       // Assert
-      expect(userFromEntity, equals(userDetailsDummy));
+      expect(userFromEntity, equals(userUserTypeModel));
     },
   );
 
@@ -41,10 +41,10 @@ void main() {
     'should correctly create UserModel from Map',
     () {
       // Act
-      final userFromMap = UserModel.fromMap(userDetailsDummyJson);
+      final userFromMap = UserModel.fromMap(userUserTypeJson);
 
       // Assert
-      expect(userFromMap, equals(userDetailsDummy));
+      expect(userFromMap, equals(userUserTypeModel));
     },
   );
 
@@ -52,25 +52,24 @@ void main() {
     'should correctly create UserModel from Firestore Document',
     () {
       // Arrange
-      when(mockDocumentSnapshot.data()).thenReturn(userDetailsDummyJson);
+      when(mockDocumentSnapshot.data()).thenReturn(userUserTypeJson);
       when(mockDocumentSnapshot['userId'])
-          .thenReturn(userDetailsDummyJson['userId']);
+          .thenReturn(userUserTypeJson['userId']);
       when(mockDocumentSnapshot['userType'])
-          .thenReturn(userDetailsDummyJson['userType']);
+          .thenReturn(userUserTypeJson['userType']);
       when(mockDocumentSnapshot['userName'])
-          .thenReturn(userDetailsDummyJson['userName']);
-      when(mockDocumentSnapshot['email'])
-          .thenReturn(userDetailsDummyJson['email']);
+          .thenReturn(userUserTypeJson['userName']);
+      when(mockDocumentSnapshot['email']).thenReturn(userUserTypeJson['email']);
       when(mockDocumentSnapshot['password'])
-          .thenReturn(userDetailsDummyJson['password']);
+          .thenReturn(userUserTypeJson['password']);
       when(mockDocumentSnapshot['deviceToken'])
-          .thenReturn(userDetailsDummyJson['deviceToken']);
+          .thenReturn(userUserTypeJson['deviceToken']);
 
       // Act
       final model = UserModel.fromDocument(mockDocumentSnapshot);
 
       // Assert
-      expect(model, equals(userDetailsDummy));
+      expect(model, equals(userUserTypeModel));
     },
   );
 }

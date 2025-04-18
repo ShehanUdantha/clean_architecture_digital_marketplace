@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/constant_values.dart';
+import '../../../fixtures/users_values.dart';
 import 'get_all_users_usecase_test.mocks.dart';
 
 @GenerateMocks([UserRepository])
@@ -24,13 +24,13 @@ void main() {
     () async {
       // Arrange
       when(mockUserRepository.getAllUsers(userTypeForAll))
-          .thenAnswer((_) async => const Right(allTypeOfDummyUsers));
+          .thenAnswer((_) async => const Right(allTypeOfUserEntities));
 
       // Act
       final result = await getAllUsersUseCase.call(userTypeForAll);
 
       // Assert
-      expect(result, const Right(allTypeOfDummyUsers));
+      expect(result, const Right(allTypeOfUserEntities));
     },
   );
 
@@ -39,13 +39,13 @@ void main() {
     () async {
       // Arrange
       when(mockUserRepository.getAllUsers(userTypeForUser))
-          .thenAnswer((_) async => const Right(onlyDummyUsers));
+          .thenAnswer((_) async => const Right(onlyUserEntities));
 
       // Act
       final result = await getAllUsersUseCase.call(userTypeForUser);
 
       // Assert
-      expect(result, const Right(onlyDummyUsers));
+      expect(result, const Right(onlyUserEntities));
     },
   );
 
@@ -54,13 +54,13 @@ void main() {
     () async {
       // Arrange
       when(mockUserRepository.getAllUsers(userTypeForAdmin))
-          .thenAnswer((_) async => const Right(onlyDummyAdmins));
+          .thenAnswer((_) async => const Right(onlyAdminEntities));
 
       // Act
       final result = await getAllUsersUseCase.call(userTypeForAdmin);
 
       // Assert
-      expect(result, const Right(onlyDummyAdmins));
+      expect(result, const Right(onlyAdminEntities));
     },
   );
 

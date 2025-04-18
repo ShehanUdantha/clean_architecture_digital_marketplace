@@ -46,7 +46,7 @@ class NotificationListBuilderWidget extends StatelessWidget {
     );
   }
 
-  _handleDeleteNotification(
+  void _handleDeleteNotification(
     BuildContext context,
     String id,
   ) {
