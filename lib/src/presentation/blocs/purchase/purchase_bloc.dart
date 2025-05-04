@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:Pixelcart/src/core/utils/helper.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/usecases/usecase.dart';
@@ -125,11 +126,16 @@ class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
           downloadMessage: l.errorMessage,
         ),
       ),
-      (r) => emit(
-        state.copyWith(
-          downloadStatus: BlocStatus.success,
-        ),
-      ),
+      (r) async {
+        await Helper.downloadFile(r, event.productName);
+        if (!emit.isDone) {
+          emit(
+            state.copyWith(
+              downloadStatus: BlocStatus.success,
+            ),
+          );
+        }
+      },
     );
   }
 

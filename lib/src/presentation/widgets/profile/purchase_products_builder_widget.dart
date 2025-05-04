@@ -26,6 +26,7 @@ class PurchaseProductsBuilderWidget extends StatelessWidget {
             downloadFunction: () => _handleProductDownload(
               context,
               purchaseState.listOfPurchaseProducts[index].id!,
+              purchaseState.listOfPurchaseProducts[index].productName,
             ),
             product: purchaseState.listOfPurchaseProducts[index],
           );
@@ -34,16 +35,19 @@ class PurchaseProductsBuilderWidget extends StatelessWidget {
     );
   }
 
-  void _handleProductDownload(BuildContext context, String productId) async {
+  void _handleProductDownload(
+    BuildContext context,
+    String productId,
+    String productName,
+  ) async {
     bool result = await Helper.storagePermissionRequest();
     if (result) {
-      context
-          .read<PurchaseBloc>()
-          .add(ProductDownloadEvent(productId: productId));
-      Helper.showSnackBar(
-        context,
-        context.loc.productStartedToDownload,
-      );
+      context.read<PurchaseBloc>().add(
+            ProductDownloadEvent(
+              productId: productId,
+              productName: productName,
+            ),
+          );
     } else {
       Helper.showSnackBar(
         context,

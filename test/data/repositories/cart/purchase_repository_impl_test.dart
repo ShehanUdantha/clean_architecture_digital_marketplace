@@ -1,7 +1,5 @@
 import 'package:Pixelcart/src/core/error/exception.dart';
 import 'package:Pixelcart/src/core/error/failure.dart';
-import 'package:Pixelcart/src/core/utils/enum.dart';
-import 'package:Pixelcart/src/core/utils/extension.dart';
 import 'package:Pixelcart/src/data/data_sources/remote/cart/purchase_remote_data_source.dart';
 import 'package:Pixelcart/src/data/repositories/cart/purchase_repository_impl.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -126,12 +124,12 @@ void main() {
     'downloadProductByProductId',
     () {
       test(
-        'should return a Success Status when the download product by product id process is successful',
+        'should return a Product file URL when the download product by product id process is successful',
         () async {
           // Arrange
           when(mockPurchaseRemoteDataSource
                   .downloadProductByProductId(purchasedProductId))
-              .thenAnswer((_) async => ResponseTypes.success.response);
+              .thenAnswer((_) async => purchasedProductUrl);
 
           // Act
           final result = await purchaseRepositoryImpl
@@ -140,7 +138,7 @@ void main() {
           // Assert
           result.fold(
             (l) => fail('test failed'),
-            (r) => expect(r, ResponseTypes.success.response),
+            (r) => expect(r, purchasedProductUrl),
           );
         },
       );

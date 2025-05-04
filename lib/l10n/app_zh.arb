@@ -141,5 +141,13 @@
   "unauthorizedAccess":"未经授权的访问",
   "failedToSendEmailVerification":"发送验证邮件失败。请稍后再试。",
   "emailNotVerifiedYet":"邮箱尚未验证！",
-  "productIdNotFound": "未找到产品ID！"
+  "productIdNotFound": "未找到产品ID！",
+  "downloading": "正在下载",
+  "downloadComplete": "下载完成",
+  "downloadedSuccessfully": "下载成功",
+  "downloadFailed": "下载失败",
+  "couldNotDownload": "无法下载",
+  "anErrorOccurredWhileDownloading": "下载时发生错误",
+  "downloadFileDirectoryNotFound": "未找到下载文件目录！",
+  "downloadURLNotFound": "未找到下载链接！"
 }

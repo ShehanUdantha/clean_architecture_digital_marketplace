@@ -1,14 +1,23 @@
+import 'dart:io';
+
+import 'package:Pixelcart/src/core/constants/error_messages.dart';
+import 'package:Pixelcart/src/core/constants/variable_names.dart';
+import 'package:Pixelcart/src/core/services/notification_service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:http/http.dart' as http;
+import 'package:Pixelcart/src/core/services/service_locator.dart' as locator;
 
 import '../../config/routes/router.dart';
 import '../../domain/entities/category/category_entity.dart';
 import '../../domain/entities/product/product_entity.dart';
 import '../constants/lists.dart';
+import '../../core/utils/extension.dart';
 
 class Helper {
   static double screeHeight(BuildContext context) =>
@@ -80,8 +89,10 @@ class Helper {
   static Future<PlatformFile?> zipFilePick() async {
     final result = await FilePicker.platform.pickFiles(
       withData: true,
+      type: FileType.custom,
+      allowedExtensions: ['zip'],
     );
-    return result!.files.first;
+    return result?.files.first;
   }
 
   static List<Uint8List> subImagesList(List<PlatformFile> files) {
@@ -159,5 +170,122 @@ class Helper {
 
   static int getWeekFromDay(int day) {
     return ((day - 1) ~/ 7) + 1;
+  }
+
+  static Future<Directory?> createFolder() async {
+    try {
+      Directory baseDir;
+
+      if (Platform.isIOS) {
+        baseDir = await getApplicationDocumentsDirectory();
+      } else {
+        baseDir = Directory('/storage/emulated/0/Download');
+
+        if (!await baseDir.exists()) {
+          final fallbackDir = await getExternalStorageDirectory();
+          if (fallbackDir == null) {
+            return null;
+          }
+          baseDir = fallbackDir;
+        }
+      }
+
+      final Directory targetDir = Directory('${baseDir.path}/Pixelcart');
+
+      if (!await targetDir.exists()) {
+        await targetDir.create(recursive: true);
+      }
+
+      return targetDir;
+    } catch (e) {
+      debugPrint("Error creating folder: $e");
+      return null;
+    }
+  }
+
+  static String modifyTheFileName(String fileName) {
+    return fileName.replaceAll(RegExp(r'[<>:"/\\|?*]'), '_').toLowerCase();
+  }
+
+  static Future<void> downloadFile(String fileUrl, String fileName) async {
+    final fileDirectory = await createFolder();
+    final notificationService = locator.sl<NotificationService>();
+
+    final modifiedFileName = modifyTheFileName(fileName);
+
+    if (fileUrl.isNotEmpty) {
+      if (fileDirectory != null) {
+        final filePath = '${fileDirectory.path}/$modifiedFileName.zip';
+        final file = File(filePath);
+
+        try {
+          final request = http.Request('GET', Uri.parse(fileUrl));
+          final response = await request.send();
+
+          if (response.statusCode == 200) {
+            final contentLength = response.contentLength ?? 0;
+            int downloaded = 0;
+            int lastPercent = 0;
+
+            final sink = file.openWrite();
+
+            await for (var chunk in response.stream) {
+              downloaded += chunk.length;
+              sink.add(chunk);
+
+              final percent = ((downloaded / contentLength) * 100).round();
+              if (percent != lastPercent) {
+                await notificationService.showProgressNotification(
+                  title:
+                      '${rootNavigatorKey.currentContext?.loc.downloading ?? AppErrorMessages.downloading} $fileName',
+                  progress: percent,
+                  fileName: fileName,
+                );
+                lastPercent = percent;
+              }
+            }
+
+            await sink.flush();
+            await sink.close();
+
+            await notificationService.showInstantNotification(
+              title: rootNavigatorKey.currentContext?.loc.downloadComplete ??
+                  AppErrorMessages.downloadComplete,
+              body:
+                  '$fileName ${rootNavigatorKey.currentContext?.loc.downloadedSuccessfully ?? AppErrorMessages.downloadedSuccessfully} $fileName.',
+              payload: AppVariableNames.downloadPayload,
+            );
+          } else {
+            await notificationService.showInstantNotification(
+              title: rootNavigatorKey.currentContext?.loc.downloadFailed ??
+                  AppErrorMessages.downloadFailed,
+              body:
+                  '${rootNavigatorKey.currentContext?.loc.couldNotDownload ?? AppErrorMessages.couldNotDownload} $fileName.',
+              payload: AppVariableNames.downloadPayload,
+            );
+          }
+        } catch (e) {
+          debugPrint("Download error: $e");
+          await notificationService.showInstantNotification(
+            title: rootNavigatorKey.currentContext?.loc.downloadFailed ??
+                AppErrorMessages.downloadFailed,
+            body:
+                '${rootNavigatorKey.currentContext?.loc.anErrorOccurredWhileDownloading ?? AppErrorMessages.anErrorOccurredWhileDownloading} $fileName.',
+            payload: AppVariableNames.downloadPayload,
+          );
+        }
+      } else {
+        showSnackBar(
+            rootNavigatorKey.currentContext!,
+            rootNavigatorKey
+                    .currentContext?.loc.downloadFileDirectoryNotFound ??
+                AppErrorMessages.downloadFileDirectoryNotFound);
+      }
+    } else {
+      showSnackBar(
+          rootNavigatorKey.currentContext!,
+          rootNavigatorKey.currentContext?.loc.downloadURLNotFound ??
+              AppErrorMessages.downloadURLNotFound);
+    }
   }
 }

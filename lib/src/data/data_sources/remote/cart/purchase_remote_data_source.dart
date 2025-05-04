@@ -11,7 +11,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../domain/usecases/cart/purchase/year_and_month_params.dart';
 import '../../../models/product/product_model.dart';
 import '../../../models/product/purchase_products_model.dart';
-import 'package:flutter_file_downloader/flutter_file_downloader.dart';
 
 import '../../../../core/error/exception.dart';
 import '../../../../core/utils/enum.dart';
@@ -123,8 +122,7 @@ class PurchaseRemoteDataSourceImpl implements PurchaseRemoteDataSource {
 
       ProductModel productModel = ProductModel.fromDocument(result);
 
-      FileDownloader.downloadFile(url: productModel.zipFile);
-      return ResponseTypes.success.response;
+      return productModel.zipFile;
     } on FirebaseAuthException catch (e) {
       throw AuthException(errorMessage: e.toString());
     } on FirebaseException catch (e) {
