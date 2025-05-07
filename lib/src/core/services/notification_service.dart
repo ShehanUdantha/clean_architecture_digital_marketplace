@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:Pixelcart/src/core/constants/variable_names.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -15,6 +16,9 @@ Future<void> onDidReceiveNotification(
   NotificationResponse notificationResponse,
 ) async {
   final authState = rootNavigatorKey.currentContext!.read<AuthBloc>().state;
+
+  final payload = notificationResponse.payload;
+  if (payload == AppVariableNames.downloadPayload) return;
 
   goRouter.goNamed(authState.userType == UserTypes.user.name
       ? AppRoutes.notificationViewPageName
@@ -107,6 +111,7 @@ class NotificationService {
   Future<void> showInstantNotification({
     required String title,
     required String body,
+    String payload = 'firebase_messaging',
   }) async {
     const NotificationDetails platformChannelSpecifics = NotificationDetails(
       android: AndroidNotificationDetails(
@@ -123,7 +128,7 @@ class NotificationService {
       title,
       body,
       platformChannelSpecifics,
-      payload: 'instant_notification',
+      payload: payload,
     );
   }
 
@@ -135,5 +140,34 @@ class NotificationService {
     rootNavigatorKey.currentContext!
         .read<NotificationBloc>()
         .add(UpdateNotificationCountEvent(userId: uid));
+  }
+
+  Future<void> showProgressNotification({
+    required String title,
+    required int progress,
+    required String fileName,
+  }) async {
+    final AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      'download_channel',
+      'Downloads',
+      importance: Importance.max,
+      priority: Priority.high,
+      showProgress: true,
+      maxProgress: 100,
+      progress: progress,
+      onlyAlertOnce: true,
+    );
+
+    final NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      title,
+      '$progress% complete',
+      platformChannelSpecifics,
+      payload: AppVariableNames.downloadPayload,
+    );
   }
 }

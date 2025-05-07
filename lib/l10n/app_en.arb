@@ -141,5 +141,13 @@
   "unauthorizedAccess":"Unauthorized Access",
   "failedToSendEmailVerification":"Failed to send email verification. Please try again later.",
   "emailNotVerifiedYet":"Email not verified yet!",
-  "productIdNotFound": "Product Id Not Found!"
+  "productIdNotFound": "Product Id Not Found!",
+  "downloading":"Downloading",
+  "downloadComplete":"Download Complete",
+  "downloadedSuccessfully":"downloaded successfully",
+  "downloadFailed":"Download Failed",
+  "couldNotDownload":"Could not download",
+  "anErrorOccurredWhileDownloading":"An error occurred while downloading",
+  "downloadFileDirectoryNotFound":"Download file directory not found!",
+  "downloadURLNotFound":"Download URL not found!"
 }

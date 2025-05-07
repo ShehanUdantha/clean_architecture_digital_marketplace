@@ -141,5 +141,13 @@
   "unauthorizedAccess":"Accès non autorisé",
   "failedToSendEmailVerification":"Échec de l'envoi de l'e-mail de vérification. Veuillez réessayer plus tard.",
   "emailNotVerifiedYet":"E-mail non encore vérifié !",
-  "productIdNotFound": "ID du produit introuvable !"
+  "productIdNotFound": "ID du produit introuvable !",
+  "downloading": "Téléchargement",
+  "downloadComplete": "Téléchargement terminé",
+  "downloadedSuccessfully": "téléchargé avec succès",
+  "downloadFailed": "Échec du téléchargement",
+  "couldNotDownload": "Impossible de télécharger",
+  "anErrorOccurredWhileDownloading": "Une erreur est survenue lors du téléchargement",
+  "downloadFileDirectoryNotFound": "Répertoire du fichier de téléchargement introuvable !",
+  "downloadURLNotFound": "URL de téléchargement introuvable !"
 }

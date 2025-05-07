@@ -1,6 +1,4 @@
 import 'package:Pixelcart/src/core/error/failure.dart';
-import 'package:Pixelcart/src/core/utils/enum.dart';
-import 'package:Pixelcart/src/core/utils/extension.dart';
 import 'package:Pixelcart/src/domain/repositories/cart/purchase_repository.dart';
 import 'package:Pixelcart/src/domain/usecases/cart/purchase/download_product_by_product_id_usecase.dart';
 import 'package:dartz/dartz.dart';
@@ -23,19 +21,19 @@ void main() {
   });
 
   test(
-    'should return a Success Status when the download product by product id process is successful',
+    'should return a Product file URL when the download product by product id process is successful',
     () async {
       // Arrange
       when(mockPurchaseRepository
               .downloadProductByProductId(purchasedProductId))
-          .thenAnswer((_) async => Right(ResponseTypes.success.response));
+          .thenAnswer((_) async => Right(purchasedProductUrl));
 
       // Act
       final result =
           await downloadProductByProductIdUsecase.call(purchasedProductId);
 
       // Assert
-      expect(result, Right(ResponseTypes.success.response));
+      expect(result, Right(purchasedProductUrl));
     },
   );
 

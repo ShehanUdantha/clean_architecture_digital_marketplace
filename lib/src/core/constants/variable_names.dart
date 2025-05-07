@@ -17,4 +17,7 @@ class AppVariableNames {
   // shared preferences key
   static const String currentTheme = 'currentTheme';
   static const String currentLanguage = 'currentLanguage';
+
+  // notifications
+  static const String downloadPayload = 'download';
 }

@@ -17,4 +17,14 @@ class AppErrorMessages {
   static const String emailAlreadyUsed = 'This email already registered';
   static const String stripPaymentFail = 'Strip payment fail';
   static const String unauthorizedAccess = 'Unauthorized Access';
+  static const String downloading = 'downloading';
+  static const String downloadComplete = 'Download Complete';
+  static const String downloadedSuccessfully = 'downloaded successfully';
+  static const String downloadFailed = 'Download Failed';
+  static const String couldNotDownload = 'Could not download';
+  static const String downloadURLNotFound = 'Download URL not founds!';
+  static const String downloadFileDirectoryNotFound =
+      'Download file directory not found!';
+  static const String anErrorOccurredWhileDownloading =
+      'An error occurred while downloading';
 }

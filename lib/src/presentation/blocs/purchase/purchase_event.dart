@@ -21,8 +21,12 @@ class SetPurchaseProductsStatusToDefault extends PurchaseEvent {}
 
 class ProductDownloadEvent extends PurchaseEvent {
   final String productId;
+  final String productName;
 
-  const ProductDownloadEvent({required this.productId});
+  const ProductDownloadEvent({
+    required this.productId,
+    required this.productName,
+  });
 }
 
 class SetPurchaseDownloadStatusToDefault extends PurchaseEvent {}

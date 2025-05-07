@@ -212,3 +212,8 @@ const List<ProductModel> topSellingProductModelsByYearAndMonth = [
     status: 'active',
   ),
 ];
+
+const String purchasedProductName = 'Product Three';
+
+const String purchasedProductUrl =
+    'https://firebasestorage.googleapis.com/v0/b/digital-marketplace-22733.appspot.com/o/test%2Ftest_product.zip?alt=media&token=1a1554b2-146b-4f26-960b-a1a3db57';

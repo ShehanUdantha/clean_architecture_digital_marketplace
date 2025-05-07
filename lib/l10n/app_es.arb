@@ -141,5 +141,13 @@
   "unauthorizedAccess":"Acceso no autorizado",
   "failedToSendEmailVerification":"No se pudo enviar el correo de verificación. Por favor, inténtalo de nuevo más tarde.",
   "emailNotVerifiedYet":"¡El correo electrónico aún no ha sido verificado!",
-  "productIdNotFound": "¡ID de producto no encontrado!"
+  "productIdNotFound": "¡ID de producto no encontrado!",
+  "downloading": "Descargando",
+  "downloadComplete": "Descarga completa",
+  "downloadedSuccessfully": "descargado exitosamente",
+  "downloadFailed": "Descarga fallida",
+  "couldNotDownload": "No se pudo descargar",
+  "anErrorOccurredWhileDownloading": "Ocurrió un error durante la descarga",
+  "downloadFileDirectoryNotFound": "¡Directorio de archivos de descarga no encontrado!",
+  "downloadURLNotFound": "¡URL de descarga no encontrada!"
 }
