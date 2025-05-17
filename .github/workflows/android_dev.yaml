@@ -1,0 +1,51 @@
+name: "Pixelcart Dev - Android"
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "zulu"
+          java-version: "17"
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.24.0
+
+      - name: Install Dependencies
+        run: flutter pub get
+
+      - name: Create env File
+        run: |
+          touch .env
+          echo STRIPE_TEST_PUBLISHABLE_KEY=${{ secrets.STRIPE_TEST_PUBLISHABLE_KEY }} >> .env
+          echo STRIPE_TEST_SECRET_KEY=${{ secrets.STRIPE_TEST_SECRET_KEY }} >> .env
+
+      - name: Generate Required Files
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Run Test
+        run: flutter test
+
+      - name: Build APK
+        run: flutter build apk --release --split-per-abi
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-dev-apk
+          path: build/app/outputs/flutter-apk/
