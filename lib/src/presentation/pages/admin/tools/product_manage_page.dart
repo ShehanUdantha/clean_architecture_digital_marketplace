@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -45,8 +47,10 @@ class ProductManagePage extends StatelessWidget {
             ),
             SizedBox(
               height: Helper.isLandscape(context)
-                  ? Helper.screeHeight(context) * 0.10
-                  : Helper.screeHeight(context) * 0.05,
+                  ? Helper.screeHeight(context) *
+                      (Platform.isAndroid ? 0.10 : 0.09)
+                  : Helper.screeHeight(context) *
+                      (Platform.isAndroid ? 0.05 : 0.042),
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 physics: const ClampingScrollPhysics(),

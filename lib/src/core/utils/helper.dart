@@ -73,7 +73,7 @@ class Helper {
       type: FileType.custom,
       allowedExtensions: ['jpg', 'png'],
     );
-    return result!.files.first;
+    return result?.files.first;
   }
 
   static Future<List<PlatformFile>?> multipleImagePick() async {
@@ -83,7 +83,7 @@ class Helper {
       type: FileType.custom,
       allowedExtensions: ['jpg', 'png'],
     );
-    return result!.files.map((e) => e).toList();
+    return result?.files.map((e) => e).toList();
   }
 
   static Future<PlatformFile?> zipFilePick() async {

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import '../../../../core/constants/lists.dart';
 import '../../../../core/utils/extension.dart';
 
@@ -54,8 +56,10 @@ class _UserManagePageState extends State<UserManagePage> {
             ),
             SizedBox(
               height: Helper.isLandscape(context)
-                  ? Helper.screeHeight(context) * 0.10
-                  : Helper.screeHeight(context) * 0.05,
+                  ? Helper.screeHeight(context) *
+                      (Platform.isAndroid ? 0.10 : 0.09)
+                  : Helper.screeHeight(context) *
+                      (Platform.isAndroid ? 0.05 : 0.042),
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 physics: const ClampingScrollPhysics(),

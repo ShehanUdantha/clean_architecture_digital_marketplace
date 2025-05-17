@@ -330,7 +330,8 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
                             ),
                             SizedBox(
                               width: Helper.isLandscape(context)
-                                  ? Helper.screeWidth(context) * 0.75
+                                  ? Helper.screeWidth(context) *
+                                      (Platform.isAndroid ? 0.75 : 0.7)
                                   : Helper.screeWidth(context) * 0.55,
                               child: asset != null
                                   ? Text(
