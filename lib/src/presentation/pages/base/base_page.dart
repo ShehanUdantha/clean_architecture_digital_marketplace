@@ -44,6 +44,7 @@ class BasePage extends StatelessWidget {
             : AppLists.listOfUserBottomNavigationBarItems(context),
         currentIndex: statefulNavigationShell.currentIndex,
         onTap: (index) => _goBranch(index),
+        elevation: 0,
       ),
     );
   }

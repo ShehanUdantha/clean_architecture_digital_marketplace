@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import '../utils/extension.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -49,7 +51,8 @@ class ProductLinearCardWidget extends StatelessWidget {
               SizedBox(
                 height: Helper.screeHeight(context),
                 width: Helper.isLandscape(context)
-                    ? Helper.screeWidth(context) * 0.3
+                    ? Helper.screeWidth(context) *
+                        (Platform.isAndroid ? 0.3 : 0.2)
                     : Helper.screeWidth(context) * 0.35,
                 child: CachedNetworkImage(
                   imageUrl: product.coverImage,

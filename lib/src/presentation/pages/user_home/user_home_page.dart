@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import '../../blocs/notification/notification_bloc.dart';
 import '../../blocs/auth/auth_bloc.dart';
 
@@ -67,11 +69,15 @@ class _UserHomePageState extends State<UserHomePage> {
               SizedBox(
                 height: Helper.isLandscape(context)
                     ? _searchController.text.isEmpty
-                        ? Helper.screeHeight(context) * 0.6
-                        : Helper.screeHeight(context) * 0.45
+                        ? Helper.screeHeight(context) *
+                            (Platform.isAndroid ? 0.6 : 0.55)
+                        : Helper.screeHeight(context) *
+                            (Platform.isAndroid ? 0.45 : 0.40)
                     : _searchController.text.isEmpty
-                        ? Helper.screeHeight(context) * 0.3
-                        : Helper.screeHeight(context) * 0.236,
+                        ? Helper.screeHeight(context) *
+                            (Platform.isAndroid ? 0.3 : 0.25)
+                        : Helper.screeHeight(context) *
+                            (Platform.isAndroid ? 0.236 : 0.2),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -96,8 +102,10 @@ class _UserHomePageState extends State<UserHomePage> {
                             children: [
                               SizedBox(
                                 height: Helper.isLandscape(context)
-                                    ? Helper.screeHeight(context) * 0.10
-                                    : Helper.screeHeight(context) * 0.05,
+                                    ? Helper.screeHeight(context) *
+                                        (Platform.isAndroid ? 0.10 : 0.09)
+                                    : Helper.screeHeight(context) *
+                                        (Platform.isAndroid ? 0.05 : 0.042),
                                 child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
                                   physics: const ClampingScrollPhysics(),

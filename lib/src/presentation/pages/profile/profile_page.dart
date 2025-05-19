@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import '../../../core/utils/extension.dart';
 
 import '../../../core/utils/enum.dart';
@@ -36,7 +38,8 @@ class ProfilePage extends StatelessWidget {
             children: [
               AppBarTitleWidget(title: context.loc.profile),
               SizedBox(
-                height: Helper.screeHeight(context) * 0.718,
+                height: Helper.screeHeight(context) *
+                    (Platform.isAndroid ? 0.718 : 0.679),
                 child: ListView(
                   physics: const NeverScrollableScrollPhysics(),
                   children: [
