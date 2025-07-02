@@ -130,7 +130,7 @@ class Helper {
     return subTotal * 0.037;
   }
 
-  static String formatDate(var date) {
+  static String formatDate(DateTime date) {
     return '${DateFormat.yMMMEd('en_US').format(date)} - ${DateFormat.Hms().format(date)}';
   }
 

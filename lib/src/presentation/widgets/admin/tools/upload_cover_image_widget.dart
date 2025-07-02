@@ -70,7 +70,7 @@ class UploadCoverImageWidget extends StatelessWidget {
                     ),
                     Container(
                       decoration: BoxDecoration(
-                        color: AppColors.grey.withOpacity(0.5),
+                        color: AppColors.grey.withValues(alpha: 0.5),
                         borderRadius: const BorderRadius.all(
                           Radius.circular(15.0),
                         ),

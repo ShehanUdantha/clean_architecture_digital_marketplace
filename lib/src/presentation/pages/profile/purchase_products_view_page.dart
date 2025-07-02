@@ -44,8 +44,11 @@ class _PurchaseProductViewPageState extends State<PurchaseProductViewPage> {
   }
 
   Widget _bodyWidget(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () => _handleBackButton(context),
+    return PopScope(
+      canPop: true,
+      onPopInvokedWithResult: (didPop, result) => {
+        if (!didPop) {_handleBackButton(context)},
+      },
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0).copyWith(bottom: 0),
@@ -117,8 +120,7 @@ class _PurchaseProductViewPageState extends State<PurchaseProductViewPage> {
     );
   }
 
-  Future<bool> _handleBackButton(BuildContext context) async {
+  void _handleBackButton(BuildContext context) {
     context.goNamed(AppRoutes.purchaseHistoryPageName);
-    return Future.value(true);
   }
 }

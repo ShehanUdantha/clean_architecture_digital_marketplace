@@ -46,8 +46,11 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Widget _bodyWidget() {
-    return WillPopScope(
-      onWillPop: () => _handleWillPop(context),
+    return PopScope(
+      canPop: true,
+      onPopInvokedWithResult: (didPop, result) => {
+        if (!didPop) {_handleWillPop(context)},
+      },
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -158,9 +161,8 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Future<bool> _handleWillPop(BuildContext context) async {
+  void _handleWillPop(BuildContext context) {
     context.goNamed(AppRoutes.signInPageName);
-    return Future.value(false);
   }
 
   void _handleBackButton() {

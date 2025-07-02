@@ -29,7 +29,7 @@ class InputFieldTitleWidget extends StatelessWidget {
               fontWeight: FontWeight.w600,
               color: isDarkMode
                   ? AppColors.textSecondary
-                  : AppColors.textPrimary.withOpacity(0.8),
+                  : AppColors.textPrimary.withValues(alpha: 0.8),
             ),
           ),
         );

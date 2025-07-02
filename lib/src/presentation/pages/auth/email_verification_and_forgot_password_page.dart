@@ -34,8 +34,11 @@ class EmailVerificationPage extends StatelessWidget {
   }
 
   Widget _bodyWidget(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () => _handleWillPop(context),
+    return PopScope(
+      canPop: true,
+      onPopInvokedWithResult: (didPop, result) => {
+        if (!didPop) {_handleWillPop(context)},
+      },
       child: SafeArea(
         child: BlocBuilder<ThemeCubit, ThemeState>(
           buildWhen: (previous, current) =>
@@ -139,9 +142,8 @@ class EmailVerificationPage extends StatelessWidget {
     );
   }
 
-  Future<bool> _handleWillPop(BuildContext context) async {
+  void _handleWillPop(BuildContext context) {
     context.goNamed(AppRoutes.signUpPageName);
-    return Future.value(false);
   }
 
   void _handleBackButton(BuildContext context, String page) {
