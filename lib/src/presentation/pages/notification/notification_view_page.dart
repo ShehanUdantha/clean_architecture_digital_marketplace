@@ -51,6 +51,9 @@ class _NotificationViewPageState extends State<NotificationViewPage> {
               height: 26,
             ),
             BlocConsumer<NotificationBloc, NotificationState>(
+              listenWhen: (previous, current) =>
+                  previous.status != current.status ||
+                  previous.isDeleted != current.isDeleted,
               listener: (context, state) {
                 if (state.status == BlocStatus.error) {
                   Helper.showSnackBar(
@@ -68,6 +71,8 @@ class _NotificationViewPageState extends State<NotificationViewPage> {
                   );
                 }
               },
+              buildWhen: (previous, current) =>
+                  previous.status != current.status,
               builder: (context, state) {
                 switch (state.status) {
                   case BlocStatus.loading:

@@ -46,8 +46,6 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Widget _bodyWidget() {
-    final networkState = context.watch<NetworkBloc>().state;
-
     return WillPopScope(
       onWillPop: () => _handleWillPop(context),
       child: SafeArea(
@@ -92,7 +90,9 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                         Positioned(
                           child: BaseIconButtonWidget(
-                            function: () => _handleBackButton(),
+                            function: () => state.status == BlocStatus.loading
+                                ? () {}
+                                : _handleBackButton(),
                           ),
                         ),
                       ],
@@ -146,7 +146,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         ? const ElevatedLoadingButtonWidget()
                         : ElevatedButtonWidget(
                             title: context.loc.signUp,
-                            function: () => _handleSignUp(networkState),
+                            function: () => _handleSignUp(),
                           ),
                   ],
                 );
@@ -167,12 +167,14 @@ class _SignUpPageState extends State<SignUpPage> {
     context.goNamed(AppRoutes.signInPageName);
   }
 
-  void _handleSignUp(NetworkState networkState) {
+  void _handleSignUp() {
+    final networkType = context.read<NetworkBloc>().state.networkTypes;
+
     String? emailValidity = AppValidator.validateEmail(_emailController.text);
     String? passwordValidity =
         AppValidator.validatePassword(_passwordController.text);
 
-    if (networkState.networkTypes == NetworkTypes.connected) {
+    if (networkType == NetworkTypes.connected) {
       if (_userNameController.text.isNotEmpty) {
         if (emailValidity == null) {
           if (passwordValidity == null) {

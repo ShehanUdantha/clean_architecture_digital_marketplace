@@ -13,23 +13,29 @@ class CategoryListBuilderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final categoryState = context.watch<CategoryBloc>().state;
-
     return Expanded(
-      child: categoryState.listOfCategories.isNotEmpty
-          ? ListView.builder(
-              itemCount: categoryState.listOfCategories.length,
-              itemBuilder: (context, index) {
-                return CategoryAndUserCardWidget(
-                  title: categoryState.listOfCategories[index].name,
-                  function: () => _handleDeleteButton(
-                    context,
-                    categoryState.listOfCategories[index].id,
-                  ),
-                );
-              },
-            )
-          : ItemNotFoundText(title: context.loc.categoriesNotAddedYet),
+      child: BlocBuilder<CategoryBloc, CategoryState>(
+        buildWhen: (previous, current) =>
+            previous.listOfCategories != current.listOfCategories,
+        builder: (context, categoryState) {
+          if (categoryState.listOfCategories.isEmpty) {
+            return ItemNotFoundText(title: context.loc.categoriesNotAddedYet);
+          }
+
+          return ListView.builder(
+            itemCount: categoryState.listOfCategories.length,
+            itemBuilder: (context, index) {
+              return CategoryAndUserCardWidget(
+                title: categoryState.listOfCategories[index].name,
+                function: () => _handleDeleteButton(
+                  context,
+                  categoryState.listOfCategories[index].id,
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 

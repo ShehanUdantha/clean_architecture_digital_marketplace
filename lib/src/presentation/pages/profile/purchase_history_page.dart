@@ -47,6 +47,8 @@ class _PurchaseHistoryPageState extends State<PurchaseHistoryPage> {
               height: 16,
             ),
             BlocConsumer<PurchaseBloc, PurchaseState>(
+              listenWhen: (previous, current) =>
+                  previous.status != current.status,
               listener: (context, state) {
                 if (state.status == BlocStatus.error) {
                   Helper.showSnackBar(
@@ -58,6 +60,8 @@ class _PurchaseHistoryPageState extends State<PurchaseHistoryPage> {
                       .add(SetPurchaseStatusToDefault());
                 }
               },
+              buildWhen: (previous, current) =>
+                  previous.status != current.status,
               builder: (context, state) {
                 switch (state.status) {
                   case BlocStatus.loading:

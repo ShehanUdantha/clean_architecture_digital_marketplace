@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:Pixelcart/src/core/utils/extension.dart';
+import 'package:Pixelcart/src/presentation/blocs/theme/theme_cubit.dart';
 
 import '../../../core/constants/routes_name.dart';
 import '../../../core/utils/enum.dart';
@@ -17,7 +18,6 @@ import 'package:flutter/material.dart';
 import '../../../core/constants/colors.dart';
 import '../../../core/widgets/elevated_button_widget.dart';
 import '../../blocs/product_details/product_details_bloc.dart';
-import '../../blocs/theme/theme_bloc.dart';
 
 class CheckOutWidget extends StatelessWidget {
   const CheckOutWidget({
@@ -26,109 +26,17 @@ class CheckOutWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cartState = context.watch<CartBloc>().state;
-    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
-
     return SizedBox(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const SizedBox(
-            height: 16,
-          ),
-          Text(
-            context.loc.paymentInformation,
-            style: TextStyle(
-              color: isDarkMode ? AppColors.textFifth : AppColors.textPrimary,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                context.loc.subTotal,
-                style: TextStyle(
-                  color: isDarkMode
-                      ? AppColors.textSecondary
-                      : AppColors.textPrimary,
-                  fontSize: 16,
-                ),
-              ),
-              Text(
-                '\$${cartState.subTotal.toStringAsFixed(2)}',
-                style: TextStyle(
-                  color: isDarkMode
-                      ? AppColors.textSecondary
-                      : AppColors.textPrimary,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                context.loc.transactionFee,
-                style: TextStyle(
-                  color: isDarkMode
-                      ? AppColors.textSecondary
-                      : AppColors.textPrimary,
-                  fontSize: 16,
-                ),
-              ),
-              Text(
-                '\$${cartState.transactionFee.toStringAsFixed(2)}',
-                style: TextStyle(
-                  color: isDarkMode
-                      ? AppColors.textSecondary
-                      : AppColors.textPrimary,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-          const Divider(
-            height: 40,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                context.loc.total,
-                style: TextStyle(
-                  color: isDarkMode
-                      ? AppColors.textSecondary
-                      : AppColors.textPrimary,
-                  fontSize: 16,
-                ),
-              ),
-              Text(
-                '\$${cartState.totalPrice.toStringAsFixed(2)}',
-                style: TextStyle(
-                  color: isDarkMode
-                      ? AppColors.textSecondary
-                      : AppColors.textPrimary,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          BlocListener<CartBloc, CartState>(
+      child: BlocBuilder<ThemeCubit, ThemeState>(
+        buildWhen: (previous, current) =>
+            previous.themeMode != current.themeMode,
+        builder: (context, themeState) {
+          final isDarkMode =
+              Helper.checkIsDarkMode(context, themeState.themeMode);
+
+          return BlocConsumer<CartBloc, CartState>(
+            listenWhen: (previous, current) =>
+                previous.addToPurchaseStatus != current.addToPurchaseStatus,
             listener: (context, state) {
               if (state.addToPurchaseStatus == BlocStatus.error) {
                 Helper.showSnackBar(
@@ -151,47 +59,155 @@ class CheckOutWidget extends StatelessWidget {
                 context.goNamed(AppRoutes.purchaseHistoryPageName);
               }
             },
-            child: BlocConsumer<StripeBloc, StripeState>(
-              listener: (context, state) async {
-                if (state.status == BlocStatus.error) {
-                  Helper.showSnackBar(
-                    context,
-                    state.message,
-                  );
-                }
+            builder: (context, cartState) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  Text(
+                    context.loc.paymentInformation,
+                    style: TextStyle(
+                      color: isDarkMode
+                          ? AppColors.textFifth
+                          : AppColors.textPrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        context.loc.subTotal,
+                        style: TextStyle(
+                          color: isDarkMode
+                              ? AppColors.textSecondary
+                              : AppColors.textPrimary,
+                          fontSize: 16,
+                        ),
+                      ),
+                      Text(
+                        '\$${cartState.subTotal.toStringAsFixed(2)}',
+                        style: TextStyle(
+                          color: isDarkMode
+                              ? AppColors.textSecondary
+                              : AppColors.textPrimary,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        context.loc.transactionFee,
+                        style: TextStyle(
+                          color: isDarkMode
+                              ? AppColors.textSecondary
+                              : AppColors.textPrimary,
+                          fontSize: 16,
+                        ),
+                      ),
+                      Text(
+                        '\$${cartState.transactionFee.toStringAsFixed(2)}',
+                        style: TextStyle(
+                          color: isDarkMode
+                              ? AppColors.textSecondary
+                              : AppColors.textPrimary,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Divider(
+                    height: 40,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        context.loc.total,
+                        style: TextStyle(
+                          color: isDarkMode
+                              ? AppColors.textSecondary
+                              : AppColors.textPrimary,
+                          fontSize: 16,
+                        ),
+                      ),
+                      Text(
+                        '\$${cartState.totalPrice.toStringAsFixed(2)}',
+                        style: TextStyle(
+                          color: isDarkMode
+                              ? AppColors.textSecondary
+                              : AppColors.textPrimary,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  BlocConsumer<StripeBloc, StripeState>(
+                    listenWhen: (previous, current) =>
+                        previous.status != current.status,
+                    listener: (context, state) async {
+                      if (state.status == BlocStatus.error) {
+                        Helper.showSnackBar(
+                          context,
+                          state.message,
+                        );
+                      }
 
-                if (state.status == BlocStatus.success) {
-                  context
-                      .read<StripeBloc>()
-                      .add(SetStripePaymentValuesToDefault());
+                      if (state.status == BlocStatus.success) {
+                        context
+                            .read<StripeBloc>()
+                            .add(SetStripePaymentValuesToDefault());
 
-                  Helper.showSnackBar(
-                    context,
-                    context.loc.paymentSuccessful,
-                  );
+                        Helper.showSnackBar(
+                          context,
+                          context.loc.paymentSuccessful,
+                        );
 
-                  context.read<CartBloc>().add(
-                      SetCartDetailsToPurchaseHistoryAndDeleteCartDetailsEvent());
-                }
-              },
-              builder: (context, state) {
-                if (state.status == BlocStatus.loading) {
-                  return const ElevatedLoadingButtonWidget();
-                }
-                return ElevatedButtonWidget(
-                  title: context.loc.checkOut,
-                  function: () =>
-                      _handleCheckOutButtonClick(context, cartState.totalPrice),
-                );
-              },
-            ),
-          ),
-          Helper.isLandscape(context)
-              ? const SizedBox(
-                  height: 12,
-                )
-              : const SizedBox(),
-        ],
+                        context.read<CartBloc>().add(
+                            SetCartDetailsToPurchaseHistoryAndDeleteCartDetailsEvent());
+                      }
+                    },
+                    buildWhen: (previous, current) =>
+                        previous.status != current.status,
+                    builder: (context, state) {
+                      if (state.status == BlocStatus.loading) {
+                        return const ElevatedLoadingButtonWidget();
+                      }
+                      return ElevatedButtonWidget(
+                        title: context.loc.checkOut,
+                        function: () => _handleCheckOutButtonClick(
+                            context, cartState.totalPrice),
+                      );
+                    },
+                  ),
+                  Helper.isLandscape(context)
+                      ? const SizedBox(
+                          height: 12,
+                        )
+                      : const SizedBox(),
+                ],
+              );
+            },
+          );
+        },
       ),
     );
   }

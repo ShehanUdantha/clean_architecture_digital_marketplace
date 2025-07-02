@@ -14,19 +14,25 @@ class TopSellingProductBuilderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final adminHomeState = context.watch<AdminHomeBloc>().state;
+    return BlocBuilder<AdminHomeBloc, AdminHomeState>(
+      buildWhen: (previous, current) =>
+          previous.listOfTopSellingProduct != current.listOfTopSellingProduct,
+      builder: (context, adminHomeState) {
+        if (adminHomeState.listOfTopSellingProduct.isEmpty) {
+          return ItemNotFoundText(title: context.loc.productsNotFound);
+        }
 
-    return adminHomeState.listOfTopSellingProduct.isNotEmpty
-        ? ListView.builder(
-            itemCount: adminHomeState.listOfTopSellingProduct.length,
-            itemBuilder: (context, index) {
-              return ProductLinearCardWidget(
-                product: adminHomeState.listOfTopSellingProduct[index],
-                isEdit: false,
-                isAction: false,
-              );
-            },
-          )
-        : ItemNotFoundText(title: context.loc.productsNotFound);
+        return ListView.builder(
+          itemCount: adminHomeState.listOfTopSellingProduct.length,
+          itemBuilder: (context, index) {
+            return ProductLinearCardWidget(
+              product: adminHomeState.listOfTopSellingProduct[index],
+              isEdit: false,
+              isAction: false,
+            );
+          },
+        );
+      },
+    );
   }
 }

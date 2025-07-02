@@ -57,115 +57,123 @@ class _UserHomePageState extends State<UserHomePage> {
   }
 
   Widget _bodyWidget() {
-    final userHomeState = context.watch<UserHomeBloc>().state;
-
     return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0).copyWith(bottom: 0),
-        child: SingleChildScrollView(
-          physics: const NeverScrollableScrollPhysics(),
-          child: Column(
-            children: [
-              SizedBox(
-                height: Helper.isLandscape(context)
-                    ? _searchController.text.isEmpty
-                        ? Helper.screeHeight(context) *
-                            (Platform.isAndroid ? 0.6 : 0.55)
-                        : Helper.screeHeight(context) *
-                            (Platform.isAndroid ? 0.45 : 0.40)
-                    : _searchController.text.isEmpty
-                        ? Helper.screeHeight(context) *
-                            (Platform.isAndroid ? 0.3 : 0.25)
-                        : Helper.screeHeight(context) *
-                            (Platform.isAndroid ? 0.236 : 0.2),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    MainHeaderWidget(
-                      userName: userHomeState.userEntity.userName,
+      child: BlocBuilder<UserHomeBloc, UserHomeState>(
+        buildWhen: (previous, current) =>
+            previous.listOfCategories != current.listOfCategories ||
+            previous.currentCategory != current.currentCategory ||
+            previous.userEntity != current.userEntity,
+        builder: (context, userHomeState) {
+          return Padding(
+            padding: const EdgeInsets.all(16.0).copyWith(bottom: 0),
+            child: SingleChildScrollView(
+              physics: const NeverScrollableScrollPhysics(),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: Helper.isLandscape(context)
+                        ? _searchController.text.isEmpty
+                            ? Helper.screeHeight(context) *
+                                (Platform.isAndroid ? 0.6 : 0.55)
+                            : Helper.screeHeight(context) *
+                                (Platform.isAndroid ? 0.45 : 0.40)
+                        : _searchController.text.isEmpty
+                            ? Helper.screeHeight(context) *
+                                (Platform.isAndroid ? 0.3 : 0.25)
+                            : Helper.screeHeight(context) *
+                                (Platform.isAndroid ? 0.236 : 0.2),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        MainHeaderWidget(
+                          userName: userHomeState.userEntity.userName,
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        SearchBarWidget(
+                          controller: _searchController,
+                          function: (value) => _handleSearchQuery(
+                            value,
+                          ),
+                          clearFunction: () => _handleClearFunction(),
+                        ),
+                        const SizedBox(
+                          height: 26,
+                        ),
+                        _searchController.text.isEmpty
+                            ? Column(
+                                children: [
+                                  SizedBox(
+                                    height: Helper.isLandscape(context)
+                                        ? Helper.screeHeight(context) *
+                                            (Platform.isAndroid ? 0.10 : 0.09)
+                                        : Helper.screeHeight(context) *
+                                            (Platform.isAndroid ? 0.05 : 0.042),
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      physics: const ClampingScrollPhysics(),
+                                      itemCount: userHomeState
+                                              .listOfCategories.length +
+                                          1,
+                                      itemBuilder: (context, index) {
+                                        final categoryList =
+                                            Helper.createCategoryHorizontalList(
+                                          userHomeState.listOfCategories,
+                                        );
+                                        return GestureDetector(
+                                          onTap: () =>
+                                              _handleCategoryChipButton(
+                                            index,
+                                            categoryList,
+                                          ),
+                                          child: CategoryChipWidget(
+                                            index: index,
+                                            pickedValue:
+                                                userHomeState.currentCategory,
+                                            categoryList: categoryList,
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : const SizedBox(),
+                      ],
                     ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    SearchBarWidget(
-                      controller: _searchController,
-                      function: (value) => _handleSearchQuery(
-                        value,
-                      ),
-                      clearFunction: () => _handleClearFunction(),
-                    ),
-                    const SizedBox(
-                      height: 26,
-                    ),
-                    _searchController.text.isEmpty
-                        ? Column(
+                  ),
+                  _searchController.text.isEmpty
+                      ? SizedBox(
+                          height: Helper.isLandscape(context)
+                              ? Helper.screeHeight(context) * 0.15
+                              : Helper.screeHeight(context) * 0.58,
+                          child: ListView(
+                            physics: const ClampingScrollPhysics(),
                             children: [
+                              userHomeState.currentCategory == 0
+                                  ? const BaseCollectionWidget()
+                                  : const ProductsListByCategoryBuilderWidget(),
+                            ],
+                          ),
+                        )
+                      : SizedBox(
+                          height: Helper.screeHeight(context),
+                          child: ListView(
+                            physics: const ClampingScrollPhysics(),
+                            children: const [
+                              SearchProductListBuilderWidget(),
                               SizedBox(
-                                height: Helper.isLandscape(context)
-                                    ? Helper.screeHeight(context) *
-                                        (Platform.isAndroid ? 0.10 : 0.09)
-                                    : Helper.screeHeight(context) *
-                                        (Platform.isAndroid ? 0.05 : 0.042),
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  physics: const ClampingScrollPhysics(),
-                                  itemCount:
-                                      userHomeState.listOfCategories.length + 1,
-                                  itemBuilder: (context, index) {
-                                    final categoryList =
-                                        Helper.createCategoryHorizontalList(
-                                      userHomeState.listOfCategories,
-                                    );
-                                    return GestureDetector(
-                                      onTap: () => _handleCategoryChipButton(
-                                        index,
-                                        categoryList,
-                                      ),
-                                      child: CategoryChipWidget(
-                                        index: index,
-                                        pickedValue:
-                                            userHomeState.currentCategory,
-                                        categoryList: categoryList,
-                                      ),
-                                    );
-                                  },
-                                ),
+                                height: 26.0,
                               ),
                             ],
-                          )
-                        : const SizedBox(),
-                  ],
-                ),
-              ),
-              _searchController.text.isEmpty
-                  ? SizedBox(
-                      height: Helper.isLandscape(context)
-                          ? Helper.screeHeight(context) * 0.15
-                          : Helper.screeHeight(context) * 0.58,
-                      child: ListView(
-                        physics: const ClampingScrollPhysics(),
-                        children: [
-                          userHomeState.currentCategory == 0
-                              ? const BaseCollectionWidget()
-                              : const ProductsListByCategoryBuilderWidget(),
-                        ],
-                      ),
-                    )
-                  : SizedBox(
-                      height: Helper.screeHeight(context),
-                      child: ListView(
-                        physics: const ClampingScrollPhysics(),
-                        children: const [
-                          SearchProductListBuilderWidget(),
-                          SizedBox(
-                            height: 26.0,
                           ),
-                        ],
-                      ),
-                    ),
-            ],
-          ),
-        ),
+                        ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }

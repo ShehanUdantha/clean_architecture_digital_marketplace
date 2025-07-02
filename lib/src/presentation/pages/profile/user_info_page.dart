@@ -24,10 +24,11 @@ class UserInfoPage extends StatelessWidget {
   }
 
   Widget _bodyWidget(BuildContext context) {
-    final authState = context.watch<AuthBloc>().state;
-    final userEntity = authState.userType == UserTypes.user.name
-        ? context.watch<UserHomeBloc>().state.userEntity
-        : context.watch<AdminHomeBloc>().state.userEntity;
+    final isUser =
+        context.read<AuthBloc>().state.userType == UserTypes.user.name;
+    final userEntity = isUser
+        ? context.read<UserHomeBloc>().state.userEntity
+        : context.read<AdminHomeBloc>().state.userEntity;
 
     return SafeArea(
       child: Padding(
@@ -38,7 +39,7 @@ class UserInfoPage extends StatelessWidget {
             children: [
               PageHeaderWidget(
                 title: context.loc.userInformation,
-                function: () => _handleBackButton(context, authState),
+                function: () => _handleBackButton(context, isUser),
               ),
               const SizedBox(
                 height: 16,
@@ -75,11 +76,9 @@ class UserInfoPage extends StatelessWidget {
     );
   }
 
-  void _handleBackButton(BuildContext context, AuthState authState) {
+  void _handleBackButton(BuildContext context, bool isUser) {
     context.goNamed(
-      authState.userType == UserTypes.user.name
-          ? AppRoutes.profilePageName
-          : AppRoutes.adminProfilePageName,
+      isUser ? AppRoutes.profilePageName : AppRoutes.adminProfilePageName,
     );
     FocusScope.of(context).unfocus();
   }

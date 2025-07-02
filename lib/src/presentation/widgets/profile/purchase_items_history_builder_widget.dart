@@ -13,19 +13,24 @@ class PurchaseItemsHistoryBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final purchaseState = context.watch<PurchaseBloc>().state;
-
     return Expanded(
-      child: purchaseState.listOfPurchase.isNotEmpty
-          ? ListView.builder(
-              itemCount: purchaseState.listOfPurchase.length,
-              itemBuilder: (context, index) {
-                return PurchaseItemsCardWidget(
-                  purchaseDetails: purchaseState.listOfPurchase[index],
-                );
-              },
-            )
-          : ItemNotFoundText(title: context.loc.purchaseNotHappen),
-    );
+        child: BlocBuilder<PurchaseBloc, PurchaseState>(
+      buildWhen: (previous, current) =>
+          previous.listOfPurchase != current.listOfPurchase,
+      builder: (context, purchaseState) {
+        if (purchaseState.listOfPurchase.isEmpty) {
+          return ItemNotFoundText(title: context.loc.purchaseNotHappen);
+        }
+
+        return ListView.builder(
+          itemCount: purchaseState.listOfPurchase.length,
+          itemBuilder: (context, index) {
+            return PurchaseItemsCardWidget(
+              purchaseDetails: purchaseState.listOfPurchase[index],
+            );
+          },
+        );
+      },
+    ));
   }
 }

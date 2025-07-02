@@ -19,6 +19,8 @@ class LatestListBuilderWidget extends StatelessWidget {
           ? Helper.screeHeight(context) * 0.75
           : Helper.screeHeight(context) * 0.355,
       child: BlocBuilder<UserHomeBloc, UserHomeState>(
+        buildWhen: (previous, current) =>
+            previous.latestStatus != current.latestStatus,
         builder: (context, state) {
           switch (state.latestStatus) {
             case BlocStatus.loading:

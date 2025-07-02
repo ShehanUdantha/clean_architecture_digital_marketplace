@@ -1,9 +1,9 @@
+import 'package:Pixelcart/src/core/utils/helper.dart';
+import 'package:Pixelcart/src/presentation/blocs/theme/theme_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../constants/colors.dart';
 import 'package:flutter/material.dart';
-
-import '../../presentation/blocs/theme/theme_bloc.dart';
 
 class InputFieldTitleWidget extends StatelessWidget {
   final String title;
@@ -15,20 +15,25 @@ class InputFieldTitleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
+    return BlocBuilder<ThemeCubit, ThemeState>(
+      buildWhen: (previous, current) => previous.themeMode != current.themeMode,
+      builder: (context, state) {
+        final isDarkMode = Helper.checkIsDarkMode(context, state.themeMode);
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 5.0),
-      child: Text(
-        title,
-        style: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          color: isDarkMode
-              ? AppColors.textSecondary
-              : AppColors.textPrimary.withOpacity(0.8),
-        ),
-      ),
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 5.0),
+          child: Text(
+            title,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: isDarkMode
+                  ? AppColors.textSecondary
+                  : AppColors.textPrimary.withOpacity(0.8),
+            ),
+          ),
+        );
+      },
     );
   }
 }

@@ -1,45 +1,35 @@
-import 'dart:async';
 import 'dart:ui';
 
+import 'package:Pixelcart/src/core/constants/lists.dart';
+import 'package:Pixelcart/src/core/constants/variable_names.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../core/constants/lists.dart';
-import '../../../core/constants/variable_names.dart';
-
-part 'language_event.dart';
 part 'language_state.dart';
 
-class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
+class LanguageCubit extends Cubit<LanguageState> {
   final SharedPreferences sharedPreferences;
 
-  LanguageBloc(this.sharedPreferences) : super(const LanguageState()) {
-    on<UpdateLanguage>(onUpdateLanguage);
-    on<GetCurrentLanguage>(onGetCurrentLanguage);
+  LanguageCubit(this.sharedPreferences) : super(const LanguageState()) {
+    getCurrentLanguage();
   }
 
-  FutureOr<void> onUpdateLanguage(
-    UpdateLanguage event,
-    Emitter<LanguageState> emit,
-  ) async {
+  void updateLanguage(String languageName, Locale languageLocale) async {
     await sharedPreferences.setString(
       AppVariableNames.currentLanguage,
-      event.languageName,
+      languageName,
     );
 
     emit(
       state.copyWith(
-        languageName: event.languageName,
-        languageLocale: event.languageLocale,
+        languageName: languageName,
+        languageLocale: languageLocale,
       ),
     );
   }
 
-  FutureOr<void> onGetCurrentLanguage(
-    GetCurrentLanguage event,
-    Emitter<LanguageState> emit,
-  ) {
+  void getCurrentLanguage() {
     String? savedLanguageName =
         sharedPreferences.getString(AppVariableNames.currentLanguage);
 

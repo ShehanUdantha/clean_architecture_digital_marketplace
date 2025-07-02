@@ -1,11 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:Pixelcart/src/presentation/blocs/theme/theme_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../../core/constants/colors.dart';
 import '../../../../core/utils/helper.dart';
-import '../../../blocs/theme/theme_bloc.dart';
 
 class CategoryAndUserCardWidget extends StatelessWidget {
   final String title;
@@ -21,69 +21,75 @@ class CategoryAndUserCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
+    return BlocBuilder<ThemeCubit, ThemeState>(
+      buildWhen: (previous, current) => previous.themeMode != current.themeMode,
+      builder: (context, themeState) {
+        final isDarkMode =
+            Helper.checkIsDarkMode(context, themeState.themeMode);
 
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(8.0).copyWith(bottom: 0),
-          height: Helper.isLandscape(context)
-              ? Helper.screeHeight(context) * 0.15
-              : Helper.screeHeight(context) * 0.08,
-          width: Helper.screeWidth(context),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+        return Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8.0).copyWith(bottom: 0),
+              height: Helper.isLandscape(context)
+                  ? Helper.screeHeight(context) * 0.15
+                  : Helper.screeHeight(context) * 0.08,
+              width: Helper.screeWidth(context),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SizedBox(
-                    width: Helper.screeWidth(context) * 0.8,
-                    child: Text(
-                      title,
-                      style: TextStyle(
-                        color: isDarkMode
-                            ? AppColors.textFifth
-                            : AppColors.textPrimary,
-                        fontSize: 14.5,
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: Helper.screeWidth(context) * 0.8,
+                        child: Text(
+                          title,
+                          style: TextStyle(
+                            color: isDarkMode
+                                ? AppColors.textFifth
+                                : AppColors.textPrimary,
+                            fontSize: 14.5,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                      type != null
+                          ? SizedBox(
+                              width: Helper.screeWidth(context) * 0.8,
+                              child: Text(
+                                type!,
+                                style: const TextStyle(
+                                  color: AppColors.textSecondary,
+                                  fontSize: 13.5,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            )
+                          : const SizedBox(),
+                    ],
                   ),
-                  type != null
-                      ? SizedBox(
-                          width: Helper.screeWidth(context) * 0.8,
-                          child: Text(
-                            type!,
-                            style: const TextStyle(
-                              color: AppColors.textSecondary,
-                              fontSize: 13.5,
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
+                  function != null
+                      ? GestureDetector(
+                          onTap: () => function!() ?? () {},
+                          child: const Icon(
+                            Iconsax.bag,
+                            size: 18,
+                            color: AppColors.lightRed,
                           ),
                         )
                       : const SizedBox(),
                 ],
               ),
-              function != null
-                  ? GestureDetector(
-                      onTap: () => function!() ?? () {},
-                      child: const Icon(
-                        Iconsax.bag,
-                        size: 18,
-                        color: AppColors.lightRed,
-                      ),
-                    )
-                  : const SizedBox(),
-            ],
-          ),
-        ),
-        const Divider(
-          color: AppColors.lightGrey,
-        ),
-      ],
+            ),
+            const Divider(
+              color: AppColors.lightGrey,
+            ),
+          ],
+        );
+      },
     );
   }
 }

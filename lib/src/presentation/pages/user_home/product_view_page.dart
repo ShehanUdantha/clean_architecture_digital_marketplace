@@ -46,6 +46,7 @@ class _ProductViewPageState extends State<ProductViewPage> {
   Widget _bodyWidget(BuildContext context) {
     return SafeArea(
       child: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
+        buildWhen: (previous, current) => previous.status != current.status,
         builder: (context, state) {
           switch (state.status) {
             case BlocStatus.loading:

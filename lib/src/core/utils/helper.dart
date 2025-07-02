@@ -288,4 +288,13 @@ class Helper {
               AppErrorMessages.downloadURLNotFound);
     }
   }
+
+  static bool checkIsDarkMode(BuildContext context, ThemeMode themeMode) {
+    if (themeMode == ThemeMode.system) {
+      final brightness = MediaQuery.of(context).platformBrightness;
+      return brightness == Brightness.dark;
+    }
+
+    return themeMode == ThemeMode.dark;
+  }
 }

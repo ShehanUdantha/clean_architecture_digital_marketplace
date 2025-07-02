@@ -19,30 +19,37 @@ class NotificationListBuilderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final notificationState = context.watch<NotificationBloc>().state;
-    final authState = context.watch<AuthBloc>().state;
+    final userType = context.read<AuthBloc>().state.userType;
 
     return Expanded(
-      child: notificationState.listOfNotification.isNotEmpty
-          ? ListView.builder(
-              itemCount: notificationState.listOfNotification.length,
-              itemBuilder: (context, index) {
-                return NotificationLinearCardWidget(
-                  notification: notificationState.listOfNotification[index],
-                  deleteFunction: isHide
-                      ? null
-                      : authState.userType == UserTypes.user.name
-                          ? null
-                          : () => _handleDeleteNotification(
-                                context,
-                                notificationState.listOfNotification[index].id!,
-                              ),
-                );
-              },
-            )
-          : ItemNotFoundText(
+      child: BlocBuilder<NotificationBloc, NotificationState>(
+        buildWhen: (previous, current) =>
+            previous.listOfNotification != current.listOfNotification,
+        builder: (context, notificationState) {
+          if (notificationState.listOfNotification.isEmpty) {
+            return ItemNotFoundText(
               title: context.loc.notificationNotReceivedYet,
-            ),
+            );
+          }
+
+          return ListView.builder(
+            itemCount: notificationState.listOfNotification.length,
+            itemBuilder: (context, index) {
+              return NotificationLinearCardWidget(
+                notification: notificationState.listOfNotification[index],
+                deleteFunction: isHide
+                    ? null
+                    : userType == UserTypes.user.name
+                        ? null
+                        : () => _handleDeleteNotification(
+                              context,
+                              notificationState.listOfNotification[index].id!,
+                            ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 

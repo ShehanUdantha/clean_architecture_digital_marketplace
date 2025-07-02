@@ -59,6 +59,9 @@ class _PurchaseProductViewPageState extends State<PurchaseProductViewPage> {
                 height: 16,
               ),
               BlocConsumer<PurchaseBloc, PurchaseState>(
+                listenWhen: (previous, current) =>
+                    previous.productStatus != current.productStatus ||
+                    previous.downloadStatus != current.downloadStatus,
                 listener: (context, state) {
                   if (state.productStatus == BlocStatus.error) {
                     Helper.showSnackBar(
@@ -90,6 +93,8 @@ class _PurchaseProductViewPageState extends State<PurchaseProductViewPage> {
                         .add(SetPurchaseDownloadStatusToDefault());
                   }
                 },
+                buildWhen: (previous, current) =>
+                    previous.productStatus != current.productStatus,
                 builder: (context, state) {
                   switch (state.productStatus) {
                     case BlocStatus.loading:

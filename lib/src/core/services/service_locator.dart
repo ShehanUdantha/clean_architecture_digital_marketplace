@@ -1,3 +1,5 @@
+import 'package:Pixelcart/src/presentation/blocs/language/language_cubit.dart';
+import 'package:Pixelcart/src/presentation/blocs/theme/theme_cubit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -82,7 +84,6 @@ import '../../presentation/blocs/auth/auth_bloc.dart';
 import '../../presentation/blocs/cart/cart_bloc.dart';
 import '../../presentation/blocs/category/category_bloc.dart';
 import '../../presentation/blocs/forgot_password/forgot_password_bloc.dart';
-import '../../presentation/blocs/language/language_bloc.dart';
 import '../../presentation/blocs/network/network_bloc.dart';
 import '../../presentation/blocs/notification/notification_bloc.dart';
 import '../../presentation/blocs/product/product_bloc.dart';
@@ -91,7 +92,6 @@ import '../../presentation/blocs/purchase/purchase_bloc.dart';
 import '../../presentation/blocs/sign_in/sign_in_bloc.dart';
 import '../../presentation/blocs/sign_up/sign_up_bloc.dart';
 import '../../presentation/blocs/stripe/stripe_bloc.dart';
-import '../../presentation/blocs/theme/theme_bloc.dart';
 import '../../presentation/blocs/user_home/user_home_bloc.dart';
 import '../../presentation/blocs/users/users_bloc.dart';
 import '../constants/variable_names.dart';
@@ -492,15 +492,15 @@ Future<void> serviceLocator() async {
   );
 
   // theme
-  sl.registerFactory<ThemeBloc>(
-    () => ThemeBloc(
+  sl.registerFactory<ThemeCubit>(
+    () => ThemeCubit(
       sl(),
     ),
   );
 
   // language
-  sl.registerFactory<LanguageBloc>(
-    () => LanguageBloc(
+  sl.registerFactory<LanguageCubit>(
+    () => LanguageCubit(
       sl(),
     ),
   );

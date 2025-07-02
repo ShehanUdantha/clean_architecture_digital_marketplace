@@ -126,7 +126,10 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
                 children: [
                   PageHeaderWidget(
                     title: '$headerName ${context.loc.product}',
-                    function: () => _handleBackButton(),
+                    function: () => () =>
+                        state.productAddAndEditStatus == BlocStatus.loading
+                            ? () {}
+                            : _handleBackButton(),
                   ),
                   const SizedBox(
                     height: 16,

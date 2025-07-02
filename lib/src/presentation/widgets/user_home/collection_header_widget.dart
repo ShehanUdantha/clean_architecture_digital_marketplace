@@ -1,9 +1,11 @@
+import 'package:Pixelcart/src/core/utils/helper.dart';
+import 'package:Pixelcart/src/presentation/blocs/theme/theme_cubit.dart';
+
 import '../../../core/utils/extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/constants/colors.dart';
-import '../../blocs/theme/theme_bloc.dart';
 
 class CollectionHeaderWidget extends StatelessWidget {
   final String title;
@@ -17,30 +19,36 @@ class CollectionHeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
+    return BlocBuilder<ThemeCubit, ThemeState>(
+      buildWhen: (previous, current) => previous.themeMode != current.themeMode,
+      builder: (context, themeState) {
+        final isDarkMode =
+            Helper.checkIsDarkMode(context, themeState.themeMode);
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: isDarkMode ? AppColors.textFifth : AppColors.textPrimary,
-          ),
-        ),
-        TextButton(
-          onPressed: () => clickFunction(),
-          child: Text(
-            context.loc.viewAll,
-            style: const TextStyle(
-              fontSize: 12,
-              color: AppColors.textSecondary,
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: isDarkMode ? AppColors.textFifth : AppColors.textPrimary,
+              ),
             ),
-          ),
-        ),
-      ],
+            TextButton(
+              onPressed: () => clickFunction(),
+              child: Text(
+                context.loc.viewAll,
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: AppColors.textSecondary,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

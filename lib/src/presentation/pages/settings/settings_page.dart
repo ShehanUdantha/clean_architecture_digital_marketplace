@@ -1,5 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:Pixelcart/src/core/utils/extension.dart';
+import 'package:Pixelcart/src/presentation/blocs/language/language_cubit.dart';
+import 'package:Pixelcart/src/presentation/blocs/theme/theme_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -8,11 +10,9 @@ import '../../../core/constants/routes_name.dart';
 import '../../../core/utils/enum.dart';
 import '../../../core/utils/helper.dart';
 import '../../../core/widgets/page_header_widget.dart';
-import '../../blocs/language/language_bloc.dart';
 import '../../widgets/settings/language_list_view.dart';
 import '../../widgets/settings/settings_card_widget.dart';
 import '../../blocs/auth/auth_bloc.dart';
-import '../../blocs/theme/theme_bloc.dart';
 import '../../widgets/settings/theme_list_view.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -31,8 +31,6 @@ class SettingsPage extends StatelessWidget {
   }
 
   Widget _bodyWidget(BuildContext context) {
-    final authState = context.watch<AuthBloc>().state;
-
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(16.0).copyWith(bottom: 0),
@@ -42,12 +40,14 @@ class SettingsPage extends StatelessWidget {
             children: [
               PageHeaderWidget(
                 title: context.loc.settings,
-                function: () => _handleBackButton(context, authState),
+                function: () => _handleBackButton(context),
               ),
               const SizedBox(
                 height: 16,
               ),
-              BlocBuilder<ThemeBloc, ThemeState>(
+              BlocBuilder<ThemeCubit, ThemeState>(
+                buildWhen: (previous, current) =>
+                    previous.themeMode != current.themeMode,
                 builder: (context, state) {
                   return SettingsCardWidget(
                     title: context.loc.theme,
@@ -59,7 +59,9 @@ class SettingsPage extends StatelessWidget {
               const SizedBox(
                 height: 16,
               ),
-              BlocBuilder<LanguageBloc, LanguageState>(
+              BlocBuilder<LanguageCubit, LanguageState>(
+                buildWhen: (previous, current) =>
+                    previous.languageLocale != current.languageLocale,
                 builder: (context, state) {
                   return SettingsCardWidget(
                     title: context.loc.language,
@@ -75,11 +77,14 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  void _handleBackButton(BuildContext context, AuthState authState) {
+  void _handleBackButton(BuildContext context) {
+    final isUser =
+        context.read<AuthBloc>().state.userType == UserTypes.user.name;
+
     context.goNamed(
       fromAuth
           ? AppRoutes.signInPageName
-          : authState.userType == UserTypes.user.name
+          : isUser
               ? AppRoutes.profilePageName
               : AppRoutes.adminProfilePageName,
     );

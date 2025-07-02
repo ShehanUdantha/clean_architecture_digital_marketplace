@@ -19,6 +19,8 @@ class FeaturedListBuilderWidget extends StatelessWidget {
           ? Helper.screeHeight(context) * 0.75
           : Helper.screeHeight(context) * 0.355,
       child: BlocBuilder<UserHomeBloc, UserHomeState>(
+        buildWhen: (previous, current) =>
+            previous.featuredStatus != current.featuredStatus,
         builder: (context, state) {
           switch (state.featuredStatus) {
             case BlocStatus.loading:

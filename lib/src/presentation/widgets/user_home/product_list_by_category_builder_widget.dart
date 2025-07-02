@@ -16,6 +16,8 @@ class ProductsListByCategoryBuilderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       child: BlocBuilder<UserHomeBloc, UserHomeState>(
+        buildWhen: (previous, current) =>
+            previous.productsStatus != current.productsStatus,
         builder: (context, state) {
           switch (state.productsStatus) {
             case BlocStatus.loading:

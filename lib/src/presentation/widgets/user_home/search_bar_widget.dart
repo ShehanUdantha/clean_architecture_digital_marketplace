@@ -1,12 +1,14 @@
 import 'dart:async';
 
+import 'package:Pixelcart/src/core/utils/helper.dart';
+import 'package:Pixelcart/src/presentation/blocs/theme/theme_cubit.dart';
+
 import '../../../core/utils/extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../core/constants/colors.dart';
-import '../../blocs/theme/theme_bloc.dart';
 
 class SearchBarWidget extends StatefulWidget {
   final TextEditingController controller;
@@ -35,44 +37,50 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
+    return BlocBuilder<ThemeCubit, ThemeState>(
+      buildWhen: (previous, current) => previous.themeMode != current.themeMode,
+      builder: (context, themeState) {
+        final isDarkMode =
+            Helper.checkIsDarkMode(context, themeState.themeMode);
 
-    return TextField(
-      controller: widget.controller,
-      onChanged: (value) => _searchOnChangeFunction(value),
-      style: TextStyle(
-        color: isDarkMode ? AppColors.textFifth : AppColors.textPrimary,
-        fontWeight: FontWeight.normal,
-      ),
-      decoration: InputDecoration(
-        prefixIcon: const Icon(Iconsax.search_normal),
-        prefixIconColor: AppColors.mediumGrey,
-        suffixIcon: widget.controller.text.isNotEmpty
-            ? IconButton(
-                onPressed: () => widget.clearFunction(),
-                icon: const Icon(Iconsax.close_circle),
-              )
-            : const SizedBox(),
-        suffixIconColor:
-            isDarkMode ? AppColors.secondWhite : AppColors.secondary,
-        hintText: context.loc.searchProducts,
-        hintStyle: const TextStyle(
-          color: AppColors.mediumGrey,
-          fontWeight: FontWeight.normal,
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15.0),
-          borderSide: const BorderSide(color: AppColors.grey),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15.0),
-          borderSide: const BorderSide(color: AppColors.grey),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15.0),
-          borderSide: const BorderSide(color: AppColors.mediumGrey),
-        ),
-      ),
+        return TextField(
+          controller: widget.controller,
+          onChanged: (value) => _searchOnChangeFunction(value),
+          style: TextStyle(
+            color: isDarkMode ? AppColors.textFifth : AppColors.textPrimary,
+            fontWeight: FontWeight.normal,
+          ),
+          decoration: InputDecoration(
+            prefixIcon: const Icon(Iconsax.search_normal),
+            prefixIconColor: AppColors.mediumGrey,
+            suffixIcon: widget.controller.text.isNotEmpty
+                ? IconButton(
+                    onPressed: () => widget.clearFunction(),
+                    icon: const Icon(Iconsax.close_circle),
+                  )
+                : const SizedBox(),
+            suffixIconColor:
+                isDarkMode ? AppColors.secondWhite : AppColors.secondary,
+            hintText: context.loc.searchProducts,
+            hintStyle: const TextStyle(
+              color: AppColors.mediumGrey,
+              fontWeight: FontWeight.normal,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15.0),
+              borderSide: const BorderSide(color: AppColors.grey),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15.0),
+              borderSide: const BorderSide(color: AppColors.grey),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15.0),
+              borderSide: const BorderSide(color: AppColors.mediumGrey),
+            ),
+          ),
+        );
+      },
     );
   }
 

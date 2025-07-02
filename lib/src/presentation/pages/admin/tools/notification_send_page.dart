@@ -84,7 +84,9 @@ class _NotificationSendPageState extends State<NotificationSendPage> {
                 children: [
                   PageHeaderWidget(
                     title: context.loc.sendNotification,
-                    function: () => _handleBackButton(),
+                    function: () => state.status == BlocStatus.loading
+                        ? () {}
+                        : _handleBackButton(),
                   ),
                   const SizedBox(
                     height: 16,

@@ -45,6 +45,8 @@ class _CartPageState extends State<CartPage> {
             children: [
               AppBarTitleWidget(title: context.loc.cart),
               BlocConsumer<CartBloc, CartState>(
+                listenWhen: (previous, current) =>
+                    previous.status != current.status,
                 listener: (context, state) {
                   if (state.status == BlocStatus.error) {
                     Helper.showSnackBar(
@@ -70,6 +72,8 @@ class _CartPageState extends State<CartPage> {
                     }
                   }
                 },
+                buildWhen: (previous, current) =>
+                    previous.status != current.status,
                 builder: (context, state) {
                   switch (state.status) {
                     case BlocStatus.loading:

@@ -40,8 +40,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   }
 
   Widget _bodyWidget() {
-    final networkState = context.watch<NetworkBloc>().state;
-
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -80,7 +78,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 children: [
                   PageHeaderWidget(
                     title: context.loc.forgotPassword,
-                    function: () => _handleBackButton(),
+                    function: () => state.status == BlocStatus.loading
+                        ? () {}
+                        : _handleBackButton(),
                   ),
                   const SizedBox(
                     height: 16.0,
@@ -114,7 +114,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       ? const ElevatedLoadingButtonWidget()
                       : ElevatedButtonWidget(
                           title: context.loc.submit,
-                          function: () => _handleForgotPassword(networkState),
+                          function: () => _handleForgotPassword(),
                         ),
                 ],
               );
@@ -129,10 +129,12 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     context.goNamed(AppRoutes.signInPageName);
   }
 
-  void _handleForgotPassword(NetworkState networkState) {
+  void _handleForgotPassword() {
+    final networkType = context.read<NetworkBloc>().state.networkTypes;
+
     String? emailValidity = AppValidator.validateEmail(_emailController.text);
 
-    if (networkState.networkTypes == NetworkTypes.connected) {
+    if (networkType == NetworkTypes.connected) {
       if (emailValidity == null) {
         context.read<ForgotPasswordBloc>().add(
               SendResetLinkButtonClickedEvent(email: _emailController.text),

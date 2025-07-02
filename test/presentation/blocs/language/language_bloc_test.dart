@@ -1,5 +1,5 @@
 import 'package:Pixelcart/src/core/constants/variable_names.dart';
-import 'package:Pixelcart/src/presentation/blocs/language/language_bloc.dart';
+import 'package:Pixelcart/src/presentation/blocs/language/language_cubit.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -11,19 +11,19 @@ import 'language_bloc_test.mocks.dart';
 
 @GenerateMocks([SharedPreferences])
 void main() {
-  late LanguageBloc languageBloc;
+  late LanguageCubit languageCubit;
   late MockSharedPreferences mockSharedPreferences;
 
   setUp(() {
     mockSharedPreferences = MockSharedPreferences();
-    languageBloc = LanguageBloc(mockSharedPreferences);
+    languageCubit = LanguageCubit(mockSharedPreferences);
   });
 
   tearDown(() {
-    languageBloc.close();
+    languageCubit.close();
   });
 
-  blocTest<LanguageBloc, LanguageState>(
+  blocTest<LanguageCubit, LanguageState>(
     'emits updated state with languageName, languageLocale when UpdateLanguage is added',
     build: () {
       when(mockSharedPreferences.setString(
@@ -31,13 +31,11 @@ void main() {
         userSelectLanguageName,
       )).thenAnswer((_) async => true);
 
-      return languageBloc;
+      return languageCubit;
     },
-    act: (bloc) => bloc.add(
-      UpdateLanguage(
-        languageName: userSelectLanguageName,
-        languageLocale: userSelectLanguageLocale,
-      ),
+    act: (bloc) => bloc.updateLanguage(
+      userSelectLanguageName,
+      userSelectLanguageLocale,
     ),
     expect: () => [
       const LanguageState().copyWith(
@@ -47,15 +45,15 @@ void main() {
     ],
   );
 
-  blocTest<LanguageBloc, LanguageState>(
+  blocTest<LanguageCubit, LanguageState>(
     'emits updated state with languageName, languageLocale when GetCurrentLanguage is added',
     build: () {
       when(mockSharedPreferences.getString(AppVariableNames.currentLanguage))
           .thenReturn(userSelectLanguageName);
 
-      return languageBloc;
+      return languageCubit;
     },
-    act: (bloc) => bloc.add(GetCurrentLanguage()),
+    act: (bloc) => bloc.getCurrentLanguage(),
     expect: () => [
       const LanguageState().copyWith(
         languageName: userSelectLanguageName,
@@ -64,15 +62,15 @@ void main() {
     ],
   );
 
-  blocTest<LanguageBloc, LanguageState>(
+  blocTest<LanguageCubit, LanguageState>(
     'emits no state when no languageName is stored in SharedPreferences on GetCurrentLanguage event',
     build: () {
       when(mockSharedPreferences.getString(AppVariableNames.currentLanguage))
           .thenReturn(null);
 
-      return languageBloc;
+      return languageCubit;
     },
-    act: (bloc) => bloc.add(GetCurrentLanguage()),
+    act: (bloc) => bloc.getCurrentLanguage(),
     expect: () => [],
   );
 }

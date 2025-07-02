@@ -1,7 +1,7 @@
+import 'package:Pixelcart/src/core/utils/helper.dart';
+import 'package:Pixelcart/src/presentation/blocs/theme/theme_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../presentation/blocs/theme/theme_bloc.dart';
 import '../constants/colors.dart';
 
 class ElevatedButtonWidget extends StatelessWidget {
@@ -20,29 +20,38 @@ class ElevatedButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
+    return BlocBuilder<ThemeCubit, ThemeState>(
+      buildWhen: (previous, current) => previous.themeMode != current.themeMode,
+      builder: (context, state) {
+        final isDarkMode = Helper.checkIsDarkMode(context, state.themeMode);
 
-    return ElevatedButton(
-      onPressed: () => function != null ? function!() : () {},
-      style: ElevatedButton.styleFrom(
-        elevation: 0,
-        foregroundColor: isDarkMode ? AppColors.lightDark : AppColors.lightGrey,
-        backgroundColor: isDarkMode ? AppColors.primary : AppColors.secondary,
-        padding: const EdgeInsets.symmetric(vertical: 20.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(radius),
-        ),
-      ),
-      child: title != null
-          ? Text(
-              title!,
-              style: TextStyle(
-                color: isDarkMode ? AppColors.textPrimary : AppColors.textFifth,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-            )
-          : actionChild ?? const SizedBox(),
+        return ElevatedButton(
+          onPressed: () => function != null ? function!() : () {},
+          style: ElevatedButton.styleFrom(
+            elevation: 0,
+            foregroundColor:
+                isDarkMode ? AppColors.lightDark : AppColors.lightGrey,
+            backgroundColor:
+                isDarkMode ? AppColors.primary : AppColors.secondary,
+            padding: const EdgeInsets.symmetric(vertical: 20.0),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(radius),
+            ),
+          ),
+          child: title != null
+              ? Text(
+                  title!,
+                  style: TextStyle(
+                    color: isDarkMode
+                        ? AppColors.textPrimary
+                        : AppColors.textFifth,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                )
+              : actionChild ?? const SizedBox(),
+        );
+      },
     );
   }
 }

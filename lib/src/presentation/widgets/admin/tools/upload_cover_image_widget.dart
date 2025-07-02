@@ -2,6 +2,7 @@
 import 'dart:io';
 
 import 'package:Pixelcart/src/core/utils/extension.dart';
+import 'package:Pixelcart/src/presentation/blocs/theme/theme_cubit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,6 @@ import 'package:iconsax/iconsax.dart';
 import '../../../../core/constants/colors.dart';
 import '../../../../core/utils/helper.dart';
 import '../../../../core/widgets/network_image_placeholder.dart';
-import '../../../blocs/theme/theme_bloc.dart';
 
 class UploadCoverImageWidget extends StatelessWidget {
   final PlatformFile? coverImage;
@@ -96,35 +96,41 @@ class CoverImageUpdateTextWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
+    return BlocBuilder<ThemeCubit, ThemeState>(
+      buildWhen: (previous, current) => previous.themeMode != current.themeMode,
+      builder: (context, themeState) {
+        final isDarkMode =
+            Helper.checkIsDarkMode(context, themeState.themeMode);
 
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Iconsax.document_upload,
-            color: needToChangeColor
-                ? isDarkMode
-                    ? AppColors.textFifth
-                    : AppColors.textPrimary
-                : AppColors.textPrimary,
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Iconsax.document_upload,
+                color: needToChangeColor
+                    ? isDarkMode
+                        ? AppColors.textFifth
+                        : AppColors.textPrimary
+                    : AppColors.textPrimary,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(
+                context.loc.uploadCoverImage,
+                style: TextStyle(
+                  color: needToChangeColor
+                      ? isDarkMode
+                          ? AppColors.textFifth
+                          : AppColors.textPrimary
+                      : AppColors.textPrimary,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(
-            height: 10,
-          ),
-          Text(
-            context.loc.uploadCoverImage,
-            style: TextStyle(
-              color: needToChangeColor
-                  ? isDarkMode
-                      ? AppColors.textFifth
-                      : AppColors.textPrimary
-                  : AppColors.textPrimary,
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

@@ -14,21 +14,25 @@ class PurchaseProductsBuilderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final purchaseState = context.watch<PurchaseBloc>().state;
-
     return Expanded(
-      child: ListView.builder(
-        itemCount: purchaseState.listOfPurchaseProducts.length,
-        itemBuilder: (context, index) {
-          return ProductLinearCardWidget(
-            isAction: false,
-            isEdit: false,
-            downloadFunction: () => _handleProductDownload(
-              context,
-              purchaseState.listOfPurchaseProducts[index].id!,
-              purchaseState.listOfPurchaseProducts[index].productName,
-            ),
-            product: purchaseState.listOfPurchaseProducts[index],
+      child: BlocBuilder<PurchaseBloc, PurchaseState>(
+        buildWhen: (previous, current) =>
+            previous.listOfPurchaseProducts != current.listOfPurchaseProducts,
+        builder: (context, purchaseState) {
+          return ListView.builder(
+            itemCount: purchaseState.listOfPurchaseProducts.length,
+            itemBuilder: (context, index) {
+              return ProductLinearCardWidget(
+                isAction: false,
+                isEdit: false,
+                downloadFunction: () => _handleProductDownload(
+                  context,
+                  purchaseState.listOfPurchaseProducts[index].id!,
+                  purchaseState.listOfPurchaseProducts[index].productName,
+                ),
+                product: purchaseState.listOfPurchaseProducts[index],
+              );
+            },
           );
         },
       ),

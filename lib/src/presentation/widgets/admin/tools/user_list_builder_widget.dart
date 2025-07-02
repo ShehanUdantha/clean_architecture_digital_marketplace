@@ -12,22 +12,28 @@ class UserListBuilderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final usersState = context.watch<UsersBloc>().state;
-
     return Expanded(
-      child: usersState.listOfUsers.isNotEmpty
-          ? ListView.builder(
-              itemCount: usersState.listOfUsers.length,
-              itemBuilder: (context, index) {
-                return CategoryAndUserCardWidget(
-                  title: usersState.listOfUsers[index].userName,
-                  type: usersState.listOfUsers[index].userType,
-                );
-              },
-            )
-          : Center(
+      child: BlocBuilder<UsersBloc, UsersState>(
+        buildWhen: (previous, current) =>
+            previous.listOfUsers != current.listOfUsers,
+        builder: (context, usersState) {
+          if (usersState.listOfUsers.isEmpty) {
+            return Center(
               child: Text(context.loc.usersNotAddedYet),
-            ),
+            );
+          }
+
+          return ListView.builder(
+            itemCount: usersState.listOfUsers.length,
+            itemBuilder: (context, index) {
+              return CategoryAndUserCardWidget(
+                title: usersState.listOfUsers[index].userName,
+                type: usersState.listOfUsers[index].userType,
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

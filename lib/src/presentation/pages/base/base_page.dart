@@ -28,12 +28,17 @@ class BasePage extends StatelessWidget {
     BuildContext context,
     StatefulNavigationShell statefulNavigationShell,
   ) {
-    final networkState = context.watch<NetworkBloc>().state;
+    return BlocBuilder<NetworkBloc, NetworkState>(
+      buildWhen: (previous, current) =>
+          previous.networkTypes != current.networkTypes,
+      builder: (context, state) {
+        if (state.networkTypes == NetworkTypes.notConnected) {
+          return const NetworkViewWidget();
+        }
 
-    if (networkState.networkTypes == NetworkTypes.notConnected) {
-      return const NetworkViewWidget();
-    }
-    return statefulNavigationShell;
+        return statefulNavigationShell;
+      },
+    );
   }
 
   Widget _bottomBarWidget(BuildContext context) {

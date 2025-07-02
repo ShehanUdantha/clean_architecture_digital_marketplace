@@ -1,3 +1,4 @@
+import 'package:Pixelcart/src/presentation/blocs/theme/theme_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -19,7 +20,6 @@ import '../../../domain/usecases/auth/sign_in_params.dart';
 import '../../blocs/auth/auth_bloc.dart';
 import '../../blocs/network/network_bloc.dart';
 import '../../blocs/sign_in/sign_in_bloc.dart';
-import '../../blocs/theme/theme_bloc.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -47,151 +47,170 @@ class _SignInPageState extends State<SignInPage> {
   }
 
   Widget _bodyWidget() {
-    final networkState = context.watch<NetworkBloc>().state;
-    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
-
     return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: BlocConsumer<SignInBloc, SignInState>(
-            listener: (context, state) {
-              if (state.status == BlocStatus.error) {
-                Helper.showSnackBar(
-                  context,
-                  state.authMessage,
-                );
-                context.read<SignInBloc>().add(SetSignInStatusToDefault());
-              }
-              if (state.status == BlocStatus.success) {
-                if (state.isVerify) {
-                  if (state.userType == UserTypes.admin.name) {
-                    context.goNamed(AppRoutes.adminPageName);
+      child: BlocBuilder<ThemeCubit, ThemeState>(
+        buildWhen: (previous, current) =>
+            previous.themeMode != current.themeMode,
+        builder: (context, themeState) {
+          final isDarkMode =
+              Helper.checkIsDarkMode(context, themeState.themeMode);
+
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SingleChildScrollView(
+              child: BlocConsumer<SignInBloc, SignInState>(
+                listener: (context, state) {
+                  if (state.status == BlocStatus.error) {
+                    Helper.showSnackBar(
+                      context,
+                      state.authMessage,
+                    );
                     context.read<SignInBloc>().add(SetSignInStatusToDefault());
                   }
-                  if (state.userType == UserTypes.user.name) {
-                    context.goNamed(AppRoutes.homePageName);
-                    context.read<SignInBloc>().add(SetSignInStatusToDefault());
+                  if (state.status == BlocStatus.success) {
+                    if (state.isVerify) {
+                      if (state.userType == UserTypes.admin.name) {
+                        context.goNamed(AppRoutes.adminPageName);
+                        context
+                            .read<SignInBloc>()
+                            .add(SetSignInStatusToDefault());
+                      }
+                      if (state.userType == UserTypes.user.name) {
+                        context.goNamed(AppRoutes.homePageName);
+                        context
+                            .read<SignInBloc>()
+                            .add(SetSignInStatusToDefault());
+                      }
+                    } else {
+                      context.goNamed(
+                        AppRoutes.emailVerificationAndForgotPasswordPageName,
+                        queryParameters: {
+                          'email': state.signInParams.email,
+                          'page': AuthTypes.signIn.auth,
+                          'isForgot': 'false',
+                        },
+                      );
+                      context
+                          .read<SignInBloc>()
+                          .add(SetSignInStatusToDefault());
+                      context.read<AuthBloc>().add(RefreshUserEvent());
+                    }
                   }
-                } else {
-                  context.goNamed(
-                    AppRoutes.emailVerificationAndForgotPasswordPageName,
-                    queryParameters: {
-                      'email': state.signInParams.email,
-                      'page': AuthTypes.signIn.auth,
-                      'isForgot': 'false',
-                    },
+                },
+                buildWhen: (previous, current) =>
+                    previous.status != current.status,
+                builder: (context, state) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Stack(
+                        children: [
+                          SizedBox(
+                            height: Helper.screeHeight(context) * 0.15,
+                          ),
+                          Positioned(
+                            right: 0,
+                            child: BaseIconButtonWidget(
+                              icon: const Icon(
+                                Icons.settings,
+                                color: AppColors.textFourth,
+                              ),
+                              function: () => state.status == BlocStatus.loading
+                                  ? () {}
+                                  : _handleMoveToSettingsPage(),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Image(
+                        height: Helper.isLandscape(context)
+                            ? Helper.screeHeight(context) * 0.3
+                            : Helper.screeHeight(context) * 0.12,
+                        image: const AssetImage(AppAssetsPaths.signInImage),
+                      ),
+                      const SizedBox(
+                        height: 48.0,
+                      ),
+                      Form(
+                        child: Column(
+                          children: [
+                            InputFieldWidget(
+                              controller: _emailController,
+                              hint: context.loc.emailAddress,
+                              prefix: const Icon(Iconsax.direct_right),
+                              keyBoardType: TextInputType.emailAddress,
+                              isReadOnly: state.status == BlocStatus.loading,
+                            ),
+                            const SizedBox(
+                              height: 16,
+                            ),
+                            InputFieldWidget(
+                              controller: _passwordController,
+                              hint: context.loc.password,
+                              prefix: const Icon(Iconsax.password_check),
+                              suffix: const Icon(Iconsax.eye),
+                              suffixSecondary: const Icon(Iconsax.eye_slash),
+                              isReadOnly: state.status == BlocStatus.loading,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 8.0,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton(
+                            onPressed: () => state.status == BlocStatus.loading
+                                ? () {}
+                                : _handleMoveToForgotPage(),
+                            child: Text(
+                              "${context.loc.forgotPassword}?",
+                              style: TextStyle(
+                                color: isDarkMode
+                                    ? AppColors.textFifth
+                                    : AppColors.textPrimary,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 8.0,
+                      ),
+                      state.status == BlocStatus.loading
+                          ? const ElevatedLoadingButtonWidget()
+                          : ElevatedButtonWidget(
+                              title: context.loc.signIn,
+                              function: () => _handleSignIn(),
+                            ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      OutlineButtonWidget(
+                        title: context.loc.signUp,
+                        function: () => _handleMoveToSignUpPage(),
+                      ),
+                    ],
                   );
-                  context.read<SignInBloc>().add(SetSignInStatusToDefault());
-                  context.read<AuthBloc>().add(RefreshUserEvent());
-                }
-              }
-            },
-            buildWhen: (previous, current) => previous.status != current.status,
-            builder: (context, state) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Stack(
-                    children: [
-                      SizedBox(
-                        height: Helper.screeHeight(context) * 0.15,
-                      ),
-                      Positioned(
-                        right: 0,
-                        child: BaseIconButtonWidget(
-                          icon: const Icon(
-                            Icons.settings,
-                            color: AppColors.textFourth,
-                          ),
-                          function: () => _handleMoveToSettingsPage(),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Image(
-                    height: Helper.isLandscape(context)
-                        ? Helper.screeHeight(context) * 0.3
-                        : Helper.screeHeight(context) * 0.12,
-                    image: const AssetImage(AppAssetsPaths.signInImage),
-                  ),
-                  const SizedBox(
-                    height: 48.0,
-                  ),
-                  Form(
-                    child: Column(
-                      children: [
-                        InputFieldWidget(
-                          controller: _emailController,
-                          hint: context.loc.emailAddress,
-                          prefix: const Icon(Iconsax.direct_right),
-                          keyBoardType: TextInputType.emailAddress,
-                          isReadOnly: state.status == BlocStatus.loading,
-                        ),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        InputFieldWidget(
-                          controller: _passwordController,
-                          hint: context.loc.password,
-                          prefix: const Icon(Iconsax.password_check),
-                          suffix: const Icon(Iconsax.eye),
-                          suffixSecondary: const Icon(Iconsax.eye_slash),
-                          isReadOnly: state.status == BlocStatus.loading,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 8.0,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(
-                        onPressed: () => _handleMoveToForgotPage(),
-                        child: Text(
-                          "${context.loc.forgotPassword}?",
-                          style: TextStyle(
-                            color: isDarkMode
-                                ? AppColors.textFifth
-                                : AppColors.textPrimary,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 8.0,
-                  ),
-                  state.status == BlocStatus.loading
-                      ? const ElevatedLoadingButtonWidget()
-                      : ElevatedButtonWidget(
-                          title: context.loc.signIn,
-                          function: () => _handleSignIn(networkState),
-                        ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  OutlineButtonWidget(
-                    title: context.loc.signUp,
-                    function: () => _handleMoveToSignUpPage(),
-                  ),
-                ],
-              );
-            },
-          ),
-        ),
+                },
+              ),
+            ),
+          );
+        },
       ),
     );
   }
 
-  void _handleSignIn(NetworkState networkState) {
+  void _handleSignIn() {
+    final networkType = context.read<NetworkBloc>().state.networkTypes;
+
     String? emailValidity = AppValidator.validateEmail(_emailController.text);
     String? passwordValidity =
         AppValidator.validatePassword(_passwordController.text);
-    if (networkState.networkTypes == NetworkTypes.connected) {
+    if (networkType == NetworkTypes.connected) {
       if (emailValidity == null) {
         if (passwordValidity == null) {
           context.read<SignInBloc>().add(

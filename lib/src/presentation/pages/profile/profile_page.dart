@@ -27,77 +27,94 @@ class ProfilePage extends StatelessWidget {
   }
 
   Widget _bodyWidget(BuildContext context) {
-    final authState = context.watch<AuthBloc>().state;
-
     return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0).copyWith(bottom: 0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              AppBarTitleWidget(title: context.loc.profile),
-              SizedBox(
-                height: Helper.screeHeight(context) *
-                    (Platform.isAndroid ? 0.718 : 0.679),
-                child: ListView(
-                  physics: const NeverScrollableScrollPhysics(),
-                  children: [
-                    ProfileCardWidget(
-                      title: context.loc.userInformation,
-                      function: () => _moveToPage(
-                        context,
-                        authState.userType == UserTypes.user.name
-                            ? AppRoutes.userInfoPageName
-                            : AppRoutes.adminInfoPageName,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    if (authState.userType == UserTypes.user.name)
-                      ProfileCardWidget(
-                        title: context.loc.purchaseHistory,
-                        function: () => _moveToPage(
-                          context,
-                          AppRoutes.purchaseHistoryPageName,
+      child: BlocConsumer<AuthBloc, AuthState>(
+        listenWhen: (previous, current) =>
+            previous.signOutStatus != current.signOutStatus,
+        listener: (context, state) {
+          if (state.signOutStatus == BlocStatus.success) {
+            context.read<UserHomeBloc>().add(SetUserDetailsToDefault());
+            context.read<AuthBloc>().add(SetAuthStatusToDefault());
+            context.goNamed(AppRoutes.signInPageName);
+          }
+        },
+        buildWhen: (previous, current) =>
+            previous.userType != current.userType ||
+            previous.signOutStatus != current.signOutStatus,
+        builder: (context, authState) {
+          return Padding(
+            padding: const EdgeInsets.all(16.0).copyWith(bottom: 0),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  AppBarTitleWidget(title: context.loc.profile),
+                  SizedBox(
+                    height: Helper.screeHeight(context) *
+                        (Platform.isAndroid ? 0.718 : 0.679),
+                    child: ListView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: [
+                        ProfileCardWidget(
+                          title: context.loc.userInformation,
+                          function: () =>
+                              authState.signOutStatus == BlocStatus.loading
+                                  ? () {}
+                                  : _moveToPage(
+                                      context,
+                                      authState.userType == UserTypes.user.name
+                                          ? AppRoutes.userInfoPageName
+                                          : AppRoutes.adminInfoPageName,
+                                    ),
                         ),
-                      ),
-                    if (authState.userType == UserTypes.user.name)
-                      const SizedBox(
-                        height: 16,
-                      ),
-                    ProfileCardWidget(
-                      title: context.loc.settings,
-                      function: () => _moveToPage(
-                        context,
-                        authState.userType == UserTypes.user.name
-                            ? AppRoutes.settingsPageName
-                            : AppRoutes.adminSettingsPageName,
-                      ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        if (authState.userType == UserTypes.user.name)
+                          ProfileCardWidget(
+                            title: context.loc.purchaseHistory,
+                            function: () =>
+                                authState.signOutStatus == BlocStatus.loading
+                                    ? () {}
+                                    : _moveToPage(
+                                        context,
+                                        AppRoutes.purchaseHistoryPageName,
+                                      ),
+                          ),
+                        if (authState.userType == UserTypes.user.name)
+                          const SizedBox(
+                            height: 16,
+                          ),
+                        ProfileCardWidget(
+                          title: context.loc.settings,
+                          function: () =>
+                              authState.signOutStatus == BlocStatus.loading
+                                  ? () {}
+                                  : _moveToPage(
+                                      context,
+                                      authState.userType == UserTypes.user.name
+                                          ? AppRoutes.settingsPageName
+                                          : AppRoutes.adminSettingsPageName,
+                                    ),
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                      ],
                     ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                  ],
-                ),
+                  ),
+                  ElevatedButtonWidget(
+                    title: context.loc.signOut,
+                    function: () =>
+                        authState.signOutStatus == BlocStatus.loading
+                            ? () {}
+                            : _handleSignOut(context),
+                  ),
+                ],
               ),
-              BlocListener<AuthBloc, AuthState>(
-                listener: (context, state) {
-                  if (state.signOutStatus == BlocStatus.success) {
-                    context.read<UserHomeBloc>().add(SetUserDetailsToDefault());
-                    context.read<AuthBloc>().add(SetAuthStatusToDefault());
-                    context.goNamed(AppRoutes.signInPageName);
-                  }
-                },
-                child: ElevatedButtonWidget(
-                  title: context.loc.signOut,
-                  function: () => _handleSignOut(context),
-                ),
-              ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

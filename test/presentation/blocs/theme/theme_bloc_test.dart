@@ -1,5 +1,5 @@
 import 'package:Pixelcart/src/core/constants/variable_names.dart';
-import 'package:Pixelcart/src/presentation/blocs/theme/theme_bloc.dart';
+import 'package:Pixelcart/src/presentation/blocs/theme/theme_cubit.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -11,19 +11,19 @@ import 'theme_bloc_test.mocks.dart';
 
 @GenerateMocks([SharedPreferences])
 void main() {
-  late ThemeBloc themeBloc;
+  late ThemeCubit themeCubit;
   late MockSharedPreferences mockSharedPreferences;
 
   setUp(() {
     mockSharedPreferences = MockSharedPreferences();
-    themeBloc = ThemeBloc(mockSharedPreferences);
+    themeCubit = ThemeCubit(mockSharedPreferences);
   });
 
   tearDown(() {
-    themeBloc.close();
+    themeCubit.close();
   });
 
-  blocTest<ThemeBloc, ThemeState>(
+  blocTest<ThemeCubit, ThemeState>(
     'emits updated state when UpdateThemeMode is added',
     build: () {
       when(mockSharedPreferences.setString(
@@ -31,13 +31,11 @@ void main() {
         userSelectThemeKey,
       )).thenAnswer((_) async => true);
 
-      return themeBloc;
+      return themeCubit;
     },
-    act: (bloc) => bloc.add(
-      const UpdateThemeMode(
-        themeName: userSelectThemeKey,
-        themeMode: userSelectThemeValue,
-      ),
+    act: (bloc) => bloc.updateThemeMode(
+      userSelectThemeKey,
+      userSelectThemeValue,
     ),
     expect: () => [
       const ThemeState().copyWith(
@@ -47,15 +45,15 @@ void main() {
     ],
   );
 
-  blocTest<ThemeBloc, ThemeState>(
+  blocTest<ThemeCubit, ThemeState>(
     'emits updated state with themeName, themeMode when GetCurrentThemeMode is added',
     build: () {
       when(mockSharedPreferences.getString(AppVariableNames.currentTheme))
           .thenReturn(currentThemeKey);
 
-      return themeBloc;
+      return themeCubit;
     },
-    act: (bloc) => bloc.add(GetCurrentThemeMode()),
+    act: (bloc) => bloc.getCurrentThemeMode(),
     expect: () => [
       const ThemeState().copyWith(
         themeName: currentThemeKey,
@@ -64,15 +62,15 @@ void main() {
     ],
   );
 
-  blocTest<ThemeBloc, ThemeState>(
+  blocTest<ThemeCubit, ThemeState>(
     'emits no state when no theme is stored in SharedPreferences on GetCurrentThemeMode event',
     build: () {
       when(mockSharedPreferences.getString(AppVariableNames.currentTheme))
           .thenReturn(null);
 
-      return themeBloc;
+      return themeCubit;
     },
-    act: (bloc) => bloc.add(GetCurrentThemeMode()),
+    act: (bloc) => bloc.getCurrentThemeMode(),
     expect: () => [],
   );
 }
