@@ -96,7 +96,7 @@ class MainHeaderWidget extends StatelessWidget {
     );
   }
 
-  _handleViewNotificationPage(BuildContext context) {
+  void _handleViewNotificationPage(BuildContext context) {
     final authState = context.read<AuthBloc>().state;
 
     context.goNamed(authState.userType == UserTypes.user.name

@@ -1,3 +1,4 @@
+import 'package:Pixelcart/src/core/utils/extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -14,12 +15,12 @@ import '../../presentation/pages/admin/tools/product_add_edit_page.dart';
 import '../../presentation/pages/admin/tools/product_manage_page.dart';
 import '../../presentation/pages/admin/tools/tools_page.dart';
 import '../../presentation/pages/admin/tools/user_manage_page.dart';
-import '../../presentation/pages/auth/email_verification_and_forgot_password_page.dart';
+import '../../presentation/pages/auth/email_send_page.dart';
 import '../../presentation/pages/auth/forgot_password_page.dart';
 import '../../presentation/pages/auth/sign_in_page.dart';
 import '../../presentation/pages/auth/sign_up_page.dart';
 import '../../presentation/pages/base/base_page.dart';
-import '../../presentation/pages/base/splash_screen.dart';
+import '../../presentation/pages/base/splash_page.dart';
 import '../../presentation/pages/cart/cart_page.dart';
 import '../../presentation/pages/notification/notification_view_page.dart';
 import '../../presentation/pages/profile/profile_page.dart';
@@ -59,20 +60,17 @@ GoRouter goRouter = GoRouter(
       pageBuilder: (context, state) {
         return MaterialPage(
           key: state.pageKey,
-          child: const SplashScreen(),
+          child: const SplashPage(),
         );
       },
       redirect: (context, state) {
         final authState = context.watch<AuthBloc>().state;
 
         if (authState.status == BlocStatus.success) {
-          if (authState.user!.emailVerified) {
-            if (authState.userType == UserTypes.admin.name) {
-              return state.namedLocation(AppRoutes.adminPageName);
-            }
-            if (authState.userType == UserTypes.user.name) {
-              return state.namedLocation(AppRoutes.homePageName);
-            }
+          if (authState.userType == UserTypes.admin.name) {
+            return state.namedLocation(AppRoutes.adminPageName);
+          } else if (authState.userType == UserTypes.user.name) {
+            return state.namedLocation(AppRoutes.homePageName);
           } else {
             return state.namedLocation(AppRoutes.signInPageName);
           }
@@ -123,7 +121,7 @@ GoRouter goRouter = GoRouter(
             final email = state.uri.queryParameters['email'];
             final goBackPage = state.uri.queryParameters['page'];
             final isForgot = state.uri.queryParameters['isForgot'];
-            return EmailVerificationPage(
+            return EmailSendPage(
               email: email!,
               page: goBackPage!,
               isForgot: isForgot == 'true',

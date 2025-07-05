@@ -14,14 +14,12 @@ import '../../../../domain/usecases/auth/sign_up_params.dart';
 import '../../../models/user/user_model.dart';
 
 abstract class UserAuthRemoteDataSource {
-  Future<String> signInUser(SignInParams signInParams);
+  Future<User?> signInUser(SignInParams signInParams);
   Future<String> signUpUser(SignUpParams signUpParams);
   Future<String> sendEmailVerification();
-  Future<bool> checkEmailVerification();
   Stream<User?> get user;
   Future<String> signOutUser();
   Future<String> forgotPassword(String email);
-  Future<User?> refreshUser(User user);
 }
 
 class UserAuthRemoteDataSourceImpl implements UserAuthRemoteDataSource {
@@ -36,7 +34,7 @@ class UserAuthRemoteDataSourceImpl implements UserAuthRemoteDataSource {
   });
 
   @override
-  Future<String> signInUser(SignInParams signInParams) async {
+  Future<User?> signInUser(SignInParams signInParams) async {
     try {
       final userCredential = await auth.signInWithEmailAndPassword(
         email: signInParams.email,
@@ -66,7 +64,7 @@ class UserAuthRemoteDataSourceImpl implements UserAuthRemoteDataSource {
         });
       }
 
-      return uid;
+      return user;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-email') {
         throw AuthException(
@@ -120,7 +118,7 @@ class UserAuthRemoteDataSourceImpl implements UserAuthRemoteDataSource {
 
       UserModel userAuthModel = UserModel(
         userId: credential.user!.uid,
-        userType: 'user',
+        userType: UserTypes.user.name,
         userName: signUpParams.userName,
         email: signUpParams.email,
         password: signUpParams.password,
@@ -177,34 +175,13 @@ class UserAuthRemoteDataSourceImpl implements UserAuthRemoteDataSource {
     try {
       final currentUser = auth.currentUser;
       if (currentUser != null) {
+        await currentUser.reload();
+
         await auth.currentUser?.sendEmailVerification();
+
         return ResponseTypes.success.response;
       } else {
         return ResponseTypes.failure.response;
-      }
-    } on FirebaseAuthException catch (e) {
-      throw AuthException(errorMessage: e.toString());
-    } on AuthException catch (e) {
-      throw AuthException(
-        errorMessage: e.errorMessage,
-        stackTrace: e.stackTrace,
-      );
-    } catch (e, stackTrace) {
-      throw AuthException(
-        errorMessage: e.toString(),
-        stackTrace: stackTrace,
-      );
-    }
-  }
-
-  @override
-  Future<bool> checkEmailVerification() async {
-    try {
-      final currentUser = auth.currentUser;
-      if (currentUser != null) {
-        return await Future.value(auth.currentUser!.emailVerified);
-      } else {
-        return await Future.value(false);
       }
     } on FirebaseAuthException catch (e) {
       throw AuthException(errorMessage: e.toString());
@@ -276,16 +253,6 @@ class UserAuthRemoteDataSourceImpl implements UserAuthRemoteDataSource {
         stackTrace: stackTrace,
       );
     }
-  }
-
-  @override
-  Future<User?> refreshUser(User user) async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-
-    await user.reload();
-    User? refreshedUser = auth.currentUser;
-
-    return refreshedUser;
   }
 
   Future<String> getDeviceToken() async {

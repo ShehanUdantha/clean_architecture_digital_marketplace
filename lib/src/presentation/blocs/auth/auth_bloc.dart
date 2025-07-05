@@ -1,9 +1,17 @@
 import 'dart:async';
 
+import 'package:Pixelcart/src/config/routes/router.dart';
+import 'package:Pixelcart/src/core/constants/error_messages.dart';
+import 'package:Pixelcart/src/domain/usecases/auth/forgot_password_usecase.dart';
+import 'package:Pixelcart/src/domain/usecases/auth/send_email_verification_usecase.dart';
+import 'package:Pixelcart/src/domain/usecases/auth/sign_in_params.dart';
+import 'package:Pixelcart/src/domain/usecases/auth/sign_up_params.dart';
+import 'package:Pixelcart/src/domain/usecases/auth/user_sign_in_usecase.dart';
+import 'package:Pixelcart/src/domain/usecases/auth/user_sign_up_usecase.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/utils/extension.dart';
-import '../../../domain/usecases/auth/refresh_user_usecase.dart';
 import '../../../core/usecases/usecase.dart';
 import '../../../core/utils/enum.dart';
 import '../../../domain/usecases/auth/get_auth_user_usecase.dart';
@@ -20,7 +28,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final GetAuthUserUseCase getAuthUserUseCase;
   final GetUserTypeUseCase getUserTypeUseCase;
   final UserSignOutUseCase userSignOutUseCase;
-  final RefreshUserUseCase refreshUserUseCase;
+  final UserSignUpUseCase userSignUpUseCase;
+  final SendEmailVerificationUseCase sendEmailVerificationUseCase;
+  final UserSignInUseCase userSignInUseCase;
+  final ForgotPasswordUseCase forgotPasswordUseCase;
 
   late final StreamSubscription<User?> userSubscription;
 
@@ -28,11 +39,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     this.getAuthUserUseCase,
     this.getUserTypeUseCase,
     this.userSignOutUseCase,
-    this.refreshUserUseCase,
-  ) : super(const LoadingState(statusValue: BlocStatus.loading)) {
+    this.userSignUpUseCase,
+    this.sendEmailVerificationUseCase,
+    this.userSignInUseCase,
+    this.forgotPasswordUseCase,
+  ) : super(const AuthState(status: BlocStatus.loading)) {
     on<CheckUserAuthEvent>(onCheckUserAuth);
+    on<SignUpButtonClickedEvent>(onSignUpButtonClickedEvent);
+    on<SendEmailButtonClickedEvent>(onSendEmailButtonClickedEvent);
+    on<SignInButtonClickedEvent>(onSignInButtonClickedEvent);
+    on<GetUserTypeEvent>(onGetUserTypeEvent);
     on<SignOutEvent>(onSignOutEvent);
-    on<RefreshUserEvent>(onRefreshUserEvent);
+    on<SendResetLinkButtonClickedEvent>(onSendResetLinkButtonClickedEvent);
     on<SetAuthStatusToDefault>(onSetStatusToDefault);
 
     userSubscription = getAuthUserUseCase.user.listen((user) {
@@ -52,13 +70,140 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     result.fold(
       (l) => emit(
-        const AuthFailureState(statusValue: BlocStatus.error),
+        state.copyWith(
+          authMessage: l.errorMessage,
+          status: BlocStatus.error,
+        ),
       ),
       (r) => emit(
-        AuthSuccessState(
-          userValue: event.user!,
-          userTypeValue: r,
-          statusValue: BlocStatus.success,
+        state.copyWith(
+          user: () => event.user,
+          userType: r,
+          status: BlocStatus.success,
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> onSignUpButtonClickedEvent(
+    SignUpButtonClickedEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(state.copyWith(status: BlocStatus.loading));
+
+    final result = await userSignUpUseCase.call(event.signUpParams);
+
+    result.fold(
+      (l) => emit(
+        state.copyWith(
+          authMessage: l.errorMessage,
+          status: BlocStatus.error,
+        ),
+      ),
+      (r) => emit(
+        state.copyWith(status: BlocStatus.success),
+      ),
+    );
+  }
+
+  FutureOr<void> onSendEmailButtonClickedEvent(
+    SendEmailButtonClickedEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(state.copyWith(status: BlocStatus.loading));
+
+    final result = await sendEmailVerificationUseCase.call(NoParams());
+
+    result.fold(
+      (l) => emit(
+        state.copyWith(
+          authMessage: l.errorMessage,
+          status: BlocStatus.error,
+        ),
+      ),
+      (r) {
+        if (r == ResponseTypes.success.response) {
+          emit(
+            state.copyWith(status: BlocStatus.success),
+          );
+        } else {
+          emit(
+            state.copyWith(
+              authMessage: rootNavigatorKey
+                      .currentContext?.loc.failedToSendEmailVerification ??
+                  AppErrorMessages.failedToSendEmailVerification,
+              status: BlocStatus.error,
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  FutureOr<void> onSignInButtonClickedEvent(
+    SignInButtonClickedEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(state.copyWith(status: BlocStatus.loading));
+
+    final result = await userSignInUseCase.call(event.signInParams);
+
+    result.fold(
+      (l) => emit(
+        state.copyWith(
+          authMessage: l.errorMessage,
+          status: BlocStatus.error,
+        ),
+      ),
+      (r) {
+        if (r != null) {
+          emit(
+            state.copyWith(user: () => r),
+          );
+
+          if (r.emailVerified) {
+            add(GetUserTypeEvent(uid: r.uid));
+          } else {
+            emit(
+              state.copyWith(
+                authMessage:
+                    rootNavigatorKey.currentContext?.loc.emailNotVerifiedYet ??
+                        AppErrorMessages.emailNotVerifiedYet,
+                status: BlocStatus.error,
+              ),
+            );
+          }
+        } else {
+          emit(
+            state.copyWith(
+              authMessage:
+                  rootNavigatorKey.currentContext?.loc.unauthorizedAccess ??
+                      AppErrorMessages.unauthorizedAccess,
+              status: BlocStatus.error,
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  FutureOr<void> onGetUserTypeEvent(
+    GetUserTypeEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    final result = await getUserTypeUseCase.call(event.uid);
+
+    result.fold(
+      (l) => emit(
+        state.copyWith(
+          authMessage: l.errorMessage,
+          status: BlocStatus.error,
+        ),
+      ),
+      (r) => emit(
+        state.copyWith(
+          userType: r,
+          status: BlocStatus.success,
         ),
       ),
     );
@@ -68,36 +213,67 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     SignOutEvent event,
     Emitter<AuthState> emit,
   ) async {
+    emit(state.copyWith(status: BlocStatus.loading));
+
     final result = await userSignOutUseCase.call(NoParams());
+
     result.fold(
       (l) => emit(
-        const AuthFailureState(statusValue: BlocStatus.error),
+        state.copyWith(
+          authMessage: l.errorMessage,
+          status: BlocStatus.error,
+        ),
       ),
       (r) {
         if (r == ResponseTypes.success.response) {
           emit(
-            const SignOutState(signOutStatusValue: BlocStatus.success),
+            state.copyWith(status: BlocStatus.success),
           );
         } else {
           emit(
-            const SignOutState(signOutStatusValue: BlocStatus.error),
+            state.copyWith(
+              authMessage:
+                  rootNavigatorKey.currentContext?.loc.unauthorizedAccess ??
+                      AppErrorMessages.unauthorizedAccess,
+              status: BlocStatus.error,
+            ),
           );
         }
       },
     );
   }
 
-  FutureOr<void> onRefreshUserEvent(
-    RefreshUserEvent event,
+  FutureOr<void> onSendResetLinkButtonClickedEvent(
+    SendResetLinkButtonClickedEvent event,
     Emitter<AuthState> emit,
   ) async {
-    final result = await refreshUserUseCase.refreshUserCall(state.user);
-    emit(
-      AuthSuccessState(
-        userValue: result!,
-        userTypeValue: state.userType,
-        statusValue: BlocStatus.success,
+    emit(state.copyWith(status: BlocStatus.loading));
+
+    final result = await forgotPasswordUseCase.call(event.email);
+
+    result.fold(
+      (l) => emit(
+        state.copyWith(
+          authMessage: l.errorMessage,
+          status: BlocStatus.error,
+        ),
       ),
+      (r) {
+        if (r == ResponseTypes.success.response) {
+          emit(
+            state.copyWith(status: BlocStatus.success),
+          );
+        } else {
+          emit(
+            state.copyWith(
+              authMessage:
+                  rootNavigatorKey.currentContext?.loc.invalidForgotEmail ??
+                      AppErrorMessages.invalidForgotEmail,
+              status: BlocStatus.error,
+            ),
+          );
+        }
+      },
     );
   }
 
@@ -106,10 +282,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) {
     emit(
-      const InitialState(
-        statusValue: BlocStatus.initial,
-        userTypeValue: '',
-        signOutStatusValue: BlocStatus.initial,
+      state.copyWith(
+        user: () => null,
+        status: BlocStatus.initial,
+        authMessage: '',
+        userType: '',
       ),
     );
   }

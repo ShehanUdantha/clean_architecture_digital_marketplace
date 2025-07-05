@@ -49,5 +49,9 @@
 	<string>Scan your card to add it automatically</string>
 	<key>NSCameraUsageDescription</key>
 	<string>To scan cards</string>
+	<key>CFBundleAllowMixedLocalizations</key>
+    <true/>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>en</string>
 </dict>
 </plist>

@@ -1,10 +1,13 @@
 import 'dart:io';
+import 'package:Pixelcart/src/core/widgets/blur_loading_overlay_widget.dart';
+import 'package:Pixelcart/src/core/widgets/elevated_loading_button_widget.dart';
+import 'package:Pixelcart/src/presentation/blocs/admin_home/admin_home_bloc.dart';
+import 'package:Pixelcart/src/presentation/blocs/user_home/user_home_bloc.dart';
 
 import '../../../core/utils/extension.dart';
 
 import '../../../core/utils/enum.dart';
 import '../../../core/utils/helper.dart';
-import '../../blocs/user_home/user_home_bloc.dart';
 import '../../widgets/profile/profile_card_widget.dart';
 
 import '../../../core/constants/routes_name.dart';
@@ -29,19 +32,27 @@ class ProfilePage extends StatelessWidget {
   Widget _bodyWidget(BuildContext context) {
     return SafeArea(
       child: BlocConsumer<AuthBloc, AuthState>(
-        listenWhen: (previous, current) =>
-            previous.signOutStatus != current.signOutStatus,
+        listenWhen: (previous, current) => previous.status != current.status,
         listener: (context, state) {
-          if (state.signOutStatus == BlocStatus.success) {
-            context.read<UserHomeBloc>().add(SetUserDetailsToDefault());
-            context.read<AuthBloc>().add(SetAuthStatusToDefault());
+          if (state.status == BlocStatus.error) {
+            _hideBlurLoading(context);
+          }
+
+          if (state.status == BlocStatus.success) {
+            _hideBlurLoading(context);
             context.goNamed(AppRoutes.signInPageName);
+            context.read<UserHomeBloc>().add(SetUserDetailsToDefault());
+            context.read<AdminHomeBloc>().add(SetAdminDetailsToDefault());
+            context.read<AuthBloc>().add(SetAuthStatusToDefault());
           }
         },
         buildWhen: (previous, current) =>
             previous.userType != current.userType ||
-            previous.signOutStatus != current.signOutStatus,
-        builder: (context, authState) {
+            previous.status != current.status,
+        builder: (context, state) {
+          final isLoading = state.status == BlocStatus.loading;
+          final isUser = state.userType == UserTypes.user.name;
+
           return Padding(
             padding: const EdgeInsets.all(16.0).copyWith(bottom: 0),
             child: SingleChildScrollView(
@@ -57,59 +68,56 @@ class ProfilePage extends StatelessWidget {
                       children: [
                         ProfileCardWidget(
                           title: context.loc.userInformation,
-                          function: () =>
-                              authState.signOutStatus == BlocStatus.loading
-                                  ? () {}
-                                  : _moveToPage(
-                                      context,
-                                      authState.userType == UserTypes.user.name
-                                          ? AppRoutes.userInfoPageName
-                                          : AppRoutes.adminInfoPageName,
-                                    ),
+                          function: () => isLoading
+                              ? () {}
+                              : _moveToPage(
+                                  context,
+                                  isUser
+                                      ? AppRoutes.userInfoPageName
+                                      : AppRoutes.adminInfoPageName,
+                                ),
                         ),
                         const SizedBox(
-                          height: 16,
+                          height: 16.0,
                         ),
-                        if (authState.userType == UserTypes.user.name)
+                        if (isUser)
                           ProfileCardWidget(
                             title: context.loc.purchaseHistory,
-                            function: () =>
-                                authState.signOutStatus == BlocStatus.loading
-                                    ? () {}
-                                    : _moveToPage(
-                                        context,
-                                        AppRoutes.purchaseHistoryPageName,
-                                      ),
+                            function: () => isLoading
+                                ? () {}
+                                : _moveToPage(
+                                    context,
+                                    AppRoutes.purchaseHistoryPageName,
+                                  ),
                           ),
-                        if (authState.userType == UserTypes.user.name)
+                        if (isUser)
                           const SizedBox(
-                            height: 16,
+                            height: 16.0,
                           ),
                         ProfileCardWidget(
                           title: context.loc.settings,
-                          function: () =>
-                              authState.signOutStatus == BlocStatus.loading
-                                  ? () {}
-                                  : _moveToPage(
-                                      context,
-                                      authState.userType == UserTypes.user.name
-                                          ? AppRoutes.settingsPageName
-                                          : AppRoutes.adminSettingsPageName,
-                                    ),
+                          function: () => isLoading
+                              ? () {}
+                              : _moveToPage(
+                                  context,
+                                  isUser
+                                      ? AppRoutes.settingsPageName
+                                      : AppRoutes.adminSettingsPageName,
+                                ),
                         ),
                         const SizedBox(
-                          height: 16,
+                          height: 16.0,
                         ),
                       ],
                     ),
                   ),
-                  ElevatedButtonWidget(
-                    title: context.loc.signOut,
-                    function: () =>
-                        authState.signOutStatus == BlocStatus.loading
-                            ? () {}
-                            : _handleSignOut(context),
-                  ),
+                  isLoading
+                      ? const ElevatedLoadingButtonWidget()
+                      : ElevatedButtonWidget(
+                          title: context.loc.signOut,
+                          function: () =>
+                              isLoading ? () {} : _handleSignOut(context),
+                        ),
                 ],
               ),
             ),
@@ -120,10 +128,29 @@ class ProfilePage extends StatelessWidget {
   }
 
   void _handleSignOut(BuildContext context) {
+    _showBlurLoading(context);
     context.read<AuthBloc>().add(SignOutEvent());
   }
 
   void _moveToPage(BuildContext context, String pathName) {
     context.goNamed(pathName);
+  }
+
+  void _showBlurLoading(BuildContext context) {
+    showGeneralDialog(
+      barrierDismissible: false,
+      barrierLabel: 'Loading...',
+      barrierColor: Colors.transparent,
+      context: context,
+      pageBuilder: (_, __, ___) {
+        return const BlurLoadingOverlayWidget();
+      },
+    );
+  }
+
+  void _hideBlurLoading(BuildContext context) {
+    if (Navigator.canPop(context)) {
+      Navigator.of(context, rootNavigator: true).pop();
+    }
   }
 }

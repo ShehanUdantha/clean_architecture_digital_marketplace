@@ -42,7 +42,7 @@ class UserInfoPage extends StatelessWidget {
                 function: () => _handleBackButton(context, isUser),
               ),
               const SizedBox(
-                height: 16,
+                height: 16.0,
               ),
               SizedBox(
                 height: Helper.screeHeight(context) * 0.718,
@@ -57,7 +57,7 @@ class UserInfoPage extends StatelessWidget {
                       isReadOnly: true,
                     ),
                     const SizedBox(
-                      height: 16,
+                      height: 16.0,
                     ),
                     InputFieldTitleWidget(
                       title: context.loc.userEmail,

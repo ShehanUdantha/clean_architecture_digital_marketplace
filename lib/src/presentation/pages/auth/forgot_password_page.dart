@@ -1,3 +1,5 @@
+import 'package:Pixelcart/src/presentation/blocs/auth/auth_bloc.dart';
+
 import '../../../core/utils/extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,8 +15,6 @@ import '../../../core/widgets/elevated_button_widget.dart';
 import '../../../core/widgets/elevated_loading_button_widget.dart';
 import '../../../core/widgets/input_field_widget.dart';
 import '../../../core/widgets/page_header_widget.dart';
-import '../../blocs/forgot_password/forgot_password_bloc.dart';
-import '../../blocs/network/network_bloc.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
@@ -40,88 +40,87 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   }
 
   Widget _bodyWidget() {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: BlocConsumer<ForgotPasswordBloc, ForgotPasswordState>(
-            listenWhen: (previous, current) =>
-                previous.status != current.status,
-            listener: (context, state) {
-              if (state.status == BlocStatus.error) {
-                Helper.showSnackBar(
-                  context,
-                  state.authMessage,
-                );
-                context
-                    .read<ForgotPasswordBloc>()
-                    .add(SetForgotStatusToDefault());
-              }
-              if (state.status == BlocStatus.success) {
-                context.goNamed(
-                  AppRoutes.emailVerificationAndForgotPasswordPageName,
-                  queryParameters: {
-                    'email': state.email,
-                    'page': AuthTypes.forgot.auth,
-                    'isForgot': 'true',
-                  },
-                );
-                context
-                    .read<ForgotPasswordBloc>()
-                    .add(SetForgotStatusToDefault());
-              }
+    return BlocConsumer<AuthBloc, AuthState>(
+      listenWhen: (previous, current) => previous.status != current.status,
+      listener: (context, state) {
+        if (state.status == BlocStatus.error) {
+          Helper.showSnackBar(
+            context,
+            state.authMessage,
+          );
+        }
+        if (state.status == BlocStatus.success) {
+          context.goNamed(
+            AppRoutes.emailVerificationAndForgotPasswordPageName,
+            queryParameters: {
+              'email': _emailController.text.trim(),
+              'page': AuthTypes.forgot.auth,
+              'isForgot': 'true',
             },
-            buildWhen: (previous, current) => previous.status != current.status,
-            builder: (context, state) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  PageHeaderWidget(
-                    title: context.loc.forgotPassword,
-                    function: () => state.status == BlocStatus.loading
-                        ? () {}
-                        : _handleBackButton(),
-                  ),
-                  const SizedBox(
-                    height: 16.0,
-                  ),
-                  Text(
-                    context.loc.forgotPasswordMessage,
-                    style: const TextStyle(
-                      color: AppColors.textThird,
+          );
+        }
+      },
+      buildWhen: (previous, current) => previous.status != current.status,
+      builder: (context, state) {
+        final isLoading = state.status == BlocStatus.loading;
+
+        return PopScope(
+          canPop: !isLoading,
+          onPopInvokedWithResult: (didPop, result) => {
+            if (!didPop && !isLoading) {_handleBackButton()},
+          },
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    PageHeaderWidget(
+                      title: context.loc.forgotPassword,
+                      function: () => isLoading ? () {} : _handleBackButton(),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  Form(
-                    child: Column(
-                      children: [
-                        InputFieldWidget(
-                          controller: _emailController,
-                          hint: context.loc.emailAddress,
-                          prefix: const Icon(Iconsax.direct_right),
-                          keyBoardType: TextInputType.emailAddress,
-                          isReadOnly: state.status == BlocStatus.loading,
-                        ),
-                      ],
+                    const SizedBox(
+                      height: 16.0,
                     ),
-                  ),
-                  const SizedBox(
-                    height: 26.0,
-                  ),
-                  state.status == BlocStatus.loading
-                      ? const ElevatedLoadingButtonWidget()
-                      : ElevatedButtonWidget(
-                          title: context.loc.submit,
-                          function: () => _handleForgotPassword(),
-                        ),
-                ],
-              );
-            },
+                    Text(
+                      context.loc.forgotPasswordMessage,
+                      style: const TextStyle(
+                        color: AppColors.textThird,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                    Form(
+                      child: Column(
+                        children: [
+                          InputFieldWidget(
+                            controller: _emailController,
+                            hint: context.loc.emailAddress,
+                            prefix: const Icon(Iconsax.direct_right),
+                            keyBoardType: TextInputType.emailAddress,
+                            isReadOnly: isLoading,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 26.0,
+                    ),
+                    isLoading
+                        ? const ElevatedLoadingButtonWidget()
+                        : ElevatedButtonWidget(
+                            title: context.loc.submit,
+                            function: () => _handleForgotPassword(),
+                          ),
+                  ],
+                ),
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -130,20 +129,16 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   }
 
   void _handleForgotPassword() {
-    final networkType = context.read<NetworkBloc>().state.networkTypes;
-
     String? emailValidity = AppValidator.validateEmail(_emailController.text);
 
-    if (networkType == NetworkTypes.connected) {
-      if (emailValidity == null) {
-        context.read<ForgotPasswordBloc>().add(
-              SendResetLinkButtonClickedEvent(email: _emailController.text),
-            );
-      } else {
-        Helper.showSnackBar(context, emailValidity);
-      }
+    if (emailValidity == null) {
+      context.read<AuthBloc>().add(
+            SendResetLinkButtonClickedEvent(
+              email: _emailController.text.trim(),
+            ),
+          );
     } else {
-      Helper.showSnackBar(context, context.loc.noInternetMessage);
+      Helper.showSnackBar(context, emailValidity);
     }
   }
 }

@@ -24,12 +24,8 @@ import 'src/presentation/blocs/product/product_bloc.dart';
 import 'src/presentation/blocs/users/users_bloc.dart';
 import 'src/presentation/blocs/auth/auth_bloc.dart';
 import 'src/presentation/blocs/cart/cart_bloc.dart';
-import 'src/presentation/blocs/forgot_password/forgot_password_bloc.dart';
-import 'src/presentation/blocs/network/network_bloc.dart';
 import 'src/presentation/blocs/product_details/product_details_bloc.dart';
 import 'src/presentation/blocs/purchase/purchase_bloc.dart';
-import 'src/presentation/blocs/sign_in/sign_in_bloc.dart';
-import 'src/presentation/blocs/sign_up/sign_up_bloc.dart';
 import 'src/presentation/blocs/stripe/stripe_bloc.dart';
 import 'src/presentation/blocs/user_home/user_home_bloc.dart';
 
@@ -77,16 +73,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => locator.sl<SignUpBloc>(),
-        ),
-        BlocProvider(
-          create: (context) => locator.sl<SignInBloc>(),
-        ),
-        BlocProvider(
           create: (context) => locator.sl<AuthBloc>(),
-        ),
-        BlocProvider(
-          create: (context) => locator.sl<ForgotPasswordBloc>(),
         ),
         BlocProvider(
           create: (context) => locator.sl<AdminHomeBloc>(),
@@ -120,9 +107,6 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) =>
               locator.sl<NotificationBloc>()..add(GetAllNotificationsEvent()),
-        ),
-        BlocProvider(
-          create: (context) => locator.sl<NetworkBloc>(),
         ),
         BlocProvider(
           create: (context) => locator.sl<ThemeCubit>(),

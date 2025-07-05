@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../core/constants/assets_paths.dart';
 import '../../../core/utils/helper.dart';
 
-class SplashScreen extends StatelessWidget {
-  const SplashScreen({super.key});
+class SplashPage extends StatelessWidget {
+  const SplashPage({super.key});
 
   @override
   Widget build(BuildContext context) {

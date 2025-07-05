@@ -52,8 +52,11 @@ void main() {
 
   //     return stripeBloc;
   //   },
-  //   act: (bloc) {},
-  //   expect: () => [],
+  //   act: (bloc) => bloc.add(MakePaymentRequestEvent(amount: paymentAmount)),
+  //   expect: () => [
+  //     const StripeState().copyWith(status: BlocStatus.loading),
+  //     const StripeState().copyWith(status: BlocStatus.success, message: ''),
+  //   ],
   // );
 
   blocTest<StripeBloc, StripeState>(
