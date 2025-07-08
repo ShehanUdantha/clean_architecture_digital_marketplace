@@ -5,7 +5,6 @@ import 'package:Pixelcart/src/presentation/blocs/theme/theme_cubit.dart';
 
 import '../../../core/constants/routes_name.dart';
 import '../../../core/utils/enum.dart';
-import '../../../core/widgets/elevated_loading_button_widget.dart';
 import '../../blocs/cart/cart_bloc.dart';
 import '../../blocs/purchase/purchase_bloc.dart';
 import '../../blocs/stripe/stripe_bloc.dart';
@@ -59,12 +58,16 @@ class CheckOutWidget extends StatelessWidget {
                 context.goNamed(AppRoutes.purchaseHistoryPageName);
               }
             },
+            buildWhen: (previous, current) =>
+                previous.subTotal != current.subTotal ||
+                previous.transactionFee != current.transactionFee ||
+                previous.totalPrice != current.totalPrice,
             builder: (context, cartState) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const SizedBox(
-                    height: 16,
+                    height: 16.0,
                   ),
                   Text(
                     context.loc.paymentInformation,
@@ -77,7 +80,7 @@ class CheckOutWidget extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(
-                    height: 20,
+                    height: 20.0,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -104,7 +107,7 @@ class CheckOutWidget extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(
-                    height: 5,
+                    height: 5.0,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -131,7 +134,7 @@ class CheckOutWidget extends StatelessWidget {
                     ],
                   ),
                   const Divider(
-                    height: 40,
+                    height: 40.0,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -158,7 +161,7 @@ class CheckOutWidget extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(
-                    height: 20,
+                    height: 20.0,
                   ),
                   BlocConsumer<StripeBloc, StripeState>(
                     listenWhen: (previous, current) =>
@@ -188,21 +191,23 @@ class CheckOutWidget extends StatelessWidget {
                     buildWhen: (previous, current) =>
                         previous.status != current.status,
                     builder: (context, state) {
-                      if (state.status == BlocStatus.loading) {
-                        return const ElevatedLoadingButtonWidget();
-                      }
+                      final isLoading = state.status == BlocStatus.loading;
+
                       return ElevatedButtonWidget(
                         title: context.loc.checkOut,
-                        function: () => _handleCheckOutButtonClick(
-                            context, cartState.totalPrice),
+                        function: () => isLoading
+                            ? () {}
+                            : _handleCheckOutButtonClick(
+                                context,
+                                cartState.totalPrice,
+                              ),
+                        isButtonLoading: isLoading,
                       );
                     },
                   ),
-                  Helper.isLandscape(context)
-                      ? const SizedBox(
-                          height: 12,
-                        )
-                      : const SizedBox(),
+                  SizedBox(
+                    height: Helper.isLandscape(context) ? 12.0 : 0.0,
+                  ),
                 ],
               );
             },

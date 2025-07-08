@@ -19,8 +19,7 @@ class AdminHomePage extends StatefulWidget {
 class _AdminHomePageState extends State<AdminHomePage> {
   @override
   void initState() {
-    initAdminHomePage();
-
+    _initAdminHomePage();
     super.initState();
   }
 
@@ -32,23 +31,27 @@ class _AdminHomePageState extends State<AdminHomePage> {
   }
 
   Widget _bodyWidget(BuildContext context) {
-    final adminHomeState = context.watch<AdminHomeBloc>().state;
-
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              MainHeaderWidget(
-                userName: adminHomeState.userEntity.userName,
+              BlocBuilder<AdminHomeBloc, AdminHomeState>(
+                buildWhen: (previous, current) =>
+                    previous.userEntity != current.userEntity,
+                builder: (context, state) {
+                  return MainHeaderWidget(
+                    userName: state.userEntity.userName,
+                  );
+                },
               ),
               const SizedBox(
-                height: 26,
+                height: 26.0,
               ),
               const MonthlyStatusWidget(),
               const SizedBox(
-                height: 15,
+                height: 15.0,
               ),
               const TopSellingProductsWidget(),
             ],
@@ -58,7 +61,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
-  void initAdminHomePage() {
+  void _initAdminHomePage() {
     context.read<AdminHomeBloc>().add(GetAdminDetailsEvent());
 
     final getCurrentUserId = context.read<AuthBloc>().currentUserId ?? "-1";

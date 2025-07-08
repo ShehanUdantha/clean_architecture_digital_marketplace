@@ -12,7 +12,6 @@ import 'package:iconsax/iconsax.dart';
 
 import '../../../../domain/entities/product/product_entity.dart';
 import '../../../../core/widgets/elevated_button_widget.dart';
-import '../../../../core/widgets/elevated_loading_button_widget.dart';
 import '../../../../core/widgets/input_field_widget.dart';
 import '../../../../core/widgets/page_header_widget.dart';
 import '../../../../core/constants/colors.dart';
@@ -121,35 +120,33 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
                 previous.productAddAndEditStatus !=
                 current.productAddAndEditStatus,
             builder: (context, state) {
+              final isLoading =
+                  state.productAddAndEditStatus == BlocStatus.loading;
+
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   PageHeaderWidget(
                     title: '$headerName ${context.loc.product}',
-                    function: () => () =>
-                        state.productAddAndEditStatus == BlocStatus.loading
-                            ? () {}
-                            : _handleBackButton(),
+                    function: () => isLoading ? () {} : _handleBackButton(),
                   ),
                   const SizedBox(
-                    height: 16,
+                    height: 16.0,
                   ),
                   Form(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         GestureDetector(
-                          onTap: () => state.productAddAndEditStatus ==
-                                  BlocStatus.loading
-                              ? () {}
-                              : _handleSelectCoverImage(),
+                          onTap: () =>
+                              isLoading ? () {} : _handleSelectCoverImage(),
                           child: UploadCoverImageWidget(
                             coverImage: coverImage,
                             sharedCoverImage: sharedCoverImage,
                           ),
                         ),
                         const SizedBox(
-                          height: 16,
+                          height: 16.0,
                         ),
                         Text(
                           context.loc.uploadSubImages,
@@ -158,7 +155,7 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
                           ),
                         ),
                         const SizedBox(
-                          height: 8,
+                          height: 8.0,
                         ),
                         SizedBox(
                           height: Helper.isLandscape(context)
@@ -168,14 +165,13 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
                           child: Row(
                             children: [
                               GestureDetector(
-                                onTap: () => state.productAddAndEditStatus ==
-                                        BlocStatus.loading
+                                onTap: () => isLoading
                                     ? () {}
                                     : _handleSelectSubImages(),
                                 child: const SubImagesAddButtonWidget(),
                               ),
                               const SizedBox(
-                                width: 8,
+                                width: 8.0,
                               ),
                               subImages != null || sharedSubImages != null
                                   ? Expanded(
@@ -213,7 +209,7 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
                                                   : const SizedBox()
                                               : const SizedBox(),
                                           const SizedBox(
-                                            width: 5,
+                                            width: 5.0,
                                           ),
                                           // already exist sub images list - in firestore
                                           sharedSubImages != null
@@ -254,48 +250,44 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
                           ),
                         ),
                         const SizedBox(
-                          height: 16,
+                          height: 16.0,
                         ),
                         InputFieldWidget(
                           controller: _productNameController,
                           hint: context.loc.productName,
                           prefix: const Icon(Iconsax.bag_2),
-                          isReadOnly: state.productAddAndEditStatus ==
-                              BlocStatus.loading,
+                          isReadOnly: isLoading,
                         ),
                         const SizedBox(
-                          height: 16,
+                          height: 16.0,
                         ),
                         InputFieldWidget(
                           controller: _productPriceController,
                           hint: context.loc.price,
                           prefix: const Icon(Iconsax.dollar_circle),
                           keyBoardType: TextInputType.number,
-                          isReadOnly: state.productAddAndEditStatus ==
-                              BlocStatus.loading,
+                          isReadOnly: isLoading,
                         ),
                         const SizedBox(
-                          height: 16,
+                          height: 16.0,
                         ),
                         DropDownWidget(
                           value: sharedCategoryDropDownValue ?? '0',
                           items: _createProductCategoryList(context),
                           function: (value) => _handleCategoryDropDown(value),
-                          isReadOnly: state.productAddAndEditStatus ==
-                              BlocStatus.loading,
+                          isReadOnly: isLoading,
                         ),
                         const SizedBox(
-                          height: 16,
+                          height: 16.0,
                         ),
                         DropDownWidget(
                           value: sharedMarketingTypeDropDownValue ?? '0',
                           items: _createMarketingList(context),
                           function: (value) => _handleMarketingDropDown(value),
-                          isReadOnly: state.productAddAndEditStatus ==
-                              BlocStatus.loading,
+                          isReadOnly: isLoading,
                         ),
                         const SizedBox(
-                          height: 16,
+                          height: 16.0,
                         ),
                         InputFieldWidget(
                           controller: _productDescriptionController,
@@ -303,19 +295,16 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
                           prefix: const Icon(Iconsax.card_edit),
                           isTextArea: true,
                           areaSize: 5,
-                          isReadOnly: state.productAddAndEditStatus ==
-                              BlocStatus.loading,
+                          isReadOnly: isLoading,
                         ),
                         const SizedBox(
-                          height: 16,
+                          height: 16.0,
                         ),
                         Row(
                           children: [
                             TextButton(
-                              onPressed: () => state.productAddAndEditStatus ==
-                                      BlocStatus.loading
-                                  ? () {}
-                                  : _handleUploadAsset(),
+                              onPressed: () =>
+                                  isLoading ? () {} : _handleUploadAsset(),
                               style: const ButtonStyle(
                                 backgroundColor: WidgetStatePropertyAll(
                                   AppColors.textPrimary,
@@ -329,7 +318,7 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
                               ),
                             ),
                             const SizedBox(
-                              width: 10,
+                              width: 10.0,
                             ),
                             SizedBox(
                               width: Helper.isLandscape(context)
@@ -362,16 +351,15 @@ class _ProductAddEditPageState extends State<ProductAddEditPage> {
                     ),
                   ),
                   const SizedBox(
-                    height: 32,
+                    height: 32.0,
                   ),
-                  state.productAddAndEditStatus == BlocStatus.loading
-                      ? const ElevatedLoadingButtonWidget()
-                      : ElevatedButtonWidget(
-                          title: '$headerName ${context.loc.product}',
-                          function: () => _handleSubmitButton(),
-                        ),
+                  ElevatedButtonWidget(
+                    title: '$headerName ${context.loc.product}',
+                    function: () => _handleSubmitButton(),
+                    isButtonLoading: isLoading,
+                  ),
                   const SizedBox(
-                    height: 16,
+                    height: 16.0,
                   ),
                 ],
               );

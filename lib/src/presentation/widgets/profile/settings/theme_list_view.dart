@@ -1,12 +1,12 @@
 import 'package:Pixelcart/src/core/utils/helper.dart';
 import 'package:Pixelcart/src/presentation/blocs/theme/theme_cubit.dart';
 
-import '../../../core/utils/extension.dart';
+import '../../../../core/utils/extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../core/constants/colors.dart';
-import '../../../core/constants/lists.dart';
+import '../../../../core/constants/colors.dart';
+import '../../../../core/constants/lists.dart';
 
 class ThemeListView extends StatelessWidget {
   const ThemeListView({
@@ -80,7 +80,7 @@ class ThemeListView extends StatelessWidget {
                   );
                 },
                 separatorBuilder: (context, index) {
-                  return const SizedBox(height: 16);
+                  return const SizedBox(height: 16.0);
                 },
               ),
             ],

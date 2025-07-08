@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:Pixelcart/src/core/widgets/blur_loading_overlay_widget.dart';
-import 'package:Pixelcart/src/core/widgets/elevated_loading_button_widget.dart';
 import 'package:Pixelcart/src/presentation/blocs/admin_home/admin_home_bloc.dart';
 import 'package:Pixelcart/src/presentation/blocs/user_home/user_home_bloc.dart';
 
@@ -111,13 +110,11 @@ class ProfilePage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  isLoading
-                      ? const ElevatedLoadingButtonWidget()
-                      : ElevatedButtonWidget(
-                          title: context.loc.signOut,
-                          function: () =>
-                              isLoading ? () {} : _handleSignOut(context),
-                        ),
+                  ElevatedButtonWidget(
+                    title: context.loc.signOut,
+                    function: () => isLoading ? () {} : _handleSignOut(context),
+                    isButtonLoading: isLoading,
+                  ),
                 ],
               ),
             ),

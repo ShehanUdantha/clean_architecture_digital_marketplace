@@ -3,8 +3,8 @@ import 'package:Pixelcart/src/presentation/blocs/theme/theme_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../core/constants/colors.dart';
-import '../../../core/utils/helper.dart';
+import '../../../../core/constants/colors.dart';
+import '../../../../core/utils/helper.dart';
 
 class SettingsCardWidget extends StatelessWidget {
   final String title;

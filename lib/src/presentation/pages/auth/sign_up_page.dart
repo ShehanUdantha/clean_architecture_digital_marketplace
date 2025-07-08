@@ -11,7 +11,6 @@ import '../../../core/utils/helper.dart';
 import '../../../core/utils/validator.dart';
 import '../../../core/widgets/base_icon_button_widget.dart';
 import '../../../core/widgets/elevated_button_widget.dart';
-import '../../../core/widgets/elevated_loading_button_widget.dart';
 import '../../../core/widgets/input_field_widget.dart';
 import '../../../domain/usecases/auth/sign_up_params.dart';
 import '../../blocs/auth/auth_bloc.dart';
@@ -139,12 +138,11 @@ class _SignUpPageState extends State<SignUpPage> {
                     const SizedBox(
                       height: 32.0,
                     ),
-                    isLoading
-                        ? const ElevatedLoadingButtonWidget()
-                        : ElevatedButtonWidget(
-                            title: context.loc.signUp,
-                            function: () => _handleSignUp(),
-                          ),
+                    ElevatedButtonWidget(
+                      title: context.loc.signUp,
+                      function: () => _handleSignUp(),
+                      isButtonLoading: isLoading,
+                    ),
                   ],
                 ),
               ),

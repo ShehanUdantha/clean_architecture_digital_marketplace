@@ -37,7 +37,7 @@ class NotificationManagePage extends StatelessWidget {
               function: () => _handleBackButton(context),
             ),
             const SizedBox(
-              height: 26,
+              height: 26.0,
             ),
             BlocConsumer<NotificationBloc, NotificationState>(
               listenWhen: (previous, current) =>

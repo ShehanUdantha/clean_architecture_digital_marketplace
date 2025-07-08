@@ -1,16 +1,16 @@
-import '../../../core/utils/extension.dart';
+import '../../../../core/utils/extension.dart';
 
-import '../../../core/constants/routes_name.dart';
-import '../../../core/widgets/linear_loading_indicator.dart';
-import '../../blocs/purchase/purchase_bloc.dart';
-import '../../widgets/profile/purchase_products_builder_widget.dart';
+import '../../../../core/constants/routes_name.dart';
+import '../../../../core/widgets/linear_loading_indicator.dart';
+import '../../../blocs/purchase/purchase_bloc.dart';
+import '../../../widgets/profile/purchase/purchase_products_builder_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/utils/enum.dart';
-import '../../../core/utils/helper.dart';
-import '../../../core/widgets/page_header_widget.dart';
+import '../../../../core/utils/enum.dart';
+import '../../../../core/utils/helper.dart';
+import '../../../../core/widgets/page_header_widget.dart';
 
 class PurchaseProductViewPage extends StatefulWidget {
   final List<String> productIds;
@@ -28,11 +28,7 @@ class PurchaseProductViewPage extends StatefulWidget {
 class _PurchaseProductViewPageState extends State<PurchaseProductViewPage> {
   @override
   void initState() {
-    context.read<PurchaseBloc>().add(
-          GetAllPurchaseItemsByItsProductIds(
-            productIds: widget.productIds,
-          ),
-        );
+    _initPurchaseProductViewPage();
     super.initState();
   }
 
@@ -47,7 +43,7 @@ class _PurchaseProductViewPageState extends State<PurchaseProductViewPage> {
     return PopScope(
       canPop: true,
       onPopInvokedWithResult: (didPop, result) => {
-        if (!didPop) {_handleBackButton(context)},
+        if (!didPop) {_handleBackButton()},
       },
       child: SafeArea(
         child: Padding(
@@ -56,10 +52,10 @@ class _PurchaseProductViewPageState extends State<PurchaseProductViewPage> {
             children: [
               PageHeaderWidget(
                 title: context.loc.purchaseProducts,
-                function: () => _handleBackButton(context),
+                function: () => _handleBackButton(),
               ),
               const SizedBox(
-                height: 16,
+                height: 16.0,
               ),
               BlocConsumer<PurchaseBloc, PurchaseState>(
                 listenWhen: (previous, current) =>
@@ -120,7 +116,15 @@ class _PurchaseProductViewPageState extends State<PurchaseProductViewPage> {
     );
   }
 
-  void _handleBackButton(BuildContext context) {
+  void _initPurchaseProductViewPage() {
+    context.read<PurchaseBloc>().add(
+          GetAllPurchaseItemsByItsProductIds(
+            productIds: widget.productIds,
+          ),
+        );
+  }
+
+  void _handleBackButton() {
     context.goNamed(AppRoutes.purchaseHistoryPageName);
   }
 }

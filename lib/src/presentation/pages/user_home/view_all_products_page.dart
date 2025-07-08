@@ -44,7 +44,7 @@ class ViewAllProductsPage extends StatelessWidget {
               function: () => _handleBackButton(context),
             ),
             const SizedBox(
-              height: 16,
+              height: 16.0,
             ),
             ProductGridViewListBuilderWidget(
               productsList: _handleGetClickedType(

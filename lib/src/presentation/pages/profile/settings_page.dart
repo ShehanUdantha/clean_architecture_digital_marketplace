@@ -10,10 +10,10 @@ import '../../../core/constants/routes_name.dart';
 import '../../../core/utils/enum.dart';
 import '../../../core/utils/helper.dart';
 import '../../../core/widgets/page_header_widget.dart';
-import '../../widgets/settings/language_list_view.dart';
-import '../../widgets/settings/settings_card_widget.dart';
+import '../../widgets/profile/settings/language_list_view.dart';
+import '../../widgets/profile/settings/settings_card_widget.dart';
 import '../../blocs/auth/auth_bloc.dart';
-import '../../widgets/settings/theme_list_view.dart';
+import '../../widgets/profile/settings/theme_list_view.dart';
 
 class SettingsPage extends StatelessWidget {
   final bool fromAuth;
@@ -43,7 +43,7 @@ class SettingsPage extends StatelessWidget {
                 function: () => _handleBackButton(context),
               ),
               const SizedBox(
-                height: 16,
+                height: 16.0,
               ),
               BlocBuilder<ThemeCubit, ThemeState>(
                 buildWhen: (previous, current) =>
@@ -57,7 +57,7 @@ class SettingsPage extends StatelessWidget {
                 },
               ),
               const SizedBox(
-                height: 16,
+                height: 16.0,
               ),
               BlocBuilder<LanguageCubit, LanguageState>(
                 buildWhen: (previous, current) =>

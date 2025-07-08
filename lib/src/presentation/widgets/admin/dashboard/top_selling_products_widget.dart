@@ -45,7 +45,7 @@ class TopSellingProductsWidget extends StatelessWidget {
               ),
             ),
             const SizedBox(
-              height: 20,
+              height: 20.0,
             ),
             SizedBox(
               height: Helper.screeHeight(context) * 0.26,

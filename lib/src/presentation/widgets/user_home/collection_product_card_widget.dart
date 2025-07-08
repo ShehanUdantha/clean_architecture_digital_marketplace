@@ -95,7 +95,7 @@ class CollectionProductCardWidget extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(
-                        height: 3,
+                        height: 3.0,
                       ),
                       Text(
                         product.category,
@@ -105,7 +105,7 @@ class CollectionProductCardWidget extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(
-                        height: 3,
+                        height: 3.0,
                       ),
                       SizedBox(
                         width: Helper.screeWidth(context),
@@ -135,7 +135,7 @@ class CollectionProductCardWidget extends StatelessWidget {
                                     color: AppColors.lightRed,
                                   ),
                                   const SizedBox(
-                                    width: 5,
+                                    width: 5.0,
                                   ),
                                   Text(
                                     product.likes.length.toString(),

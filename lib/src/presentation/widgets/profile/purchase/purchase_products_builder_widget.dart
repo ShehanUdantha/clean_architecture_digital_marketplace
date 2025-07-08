@@ -2,12 +2,12 @@
 
 import 'package:Pixelcart/src/core/utils/extension.dart';
 
-import '../../../core/widgets/product_linear_card_widget.dart';
+import '../../../../core/widgets/product_linear_card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../core/utils/helper.dart';
-import '../../blocs/purchase/purchase_bloc.dart';
+import '../../../../core/utils/helper.dart';
+import '../../../blocs/purchase/purchase_bloc.dart';
 
 class PurchaseProductsBuilderWidget extends StatelessWidget {
   const PurchaseProductsBuilderWidget({super.key});
@@ -44,6 +44,8 @@ class PurchaseProductsBuilderWidget extends StatelessWidget {
     String productId,
     String productName,
   ) async {
+    Helper.getNotificationPermission();
+
     bool result = await Helper.storagePermissionRequest();
     if (result) {
       context.read<PurchaseBloc>().add(

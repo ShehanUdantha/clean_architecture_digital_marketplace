@@ -7,7 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/widgets/elevated_button_widget.dart';
-import '../../../../core/widgets/elevated_loading_button_widget.dart';
 import '../../../../core/widgets/input_field_widget.dart';
 import '../../../../core/widgets/linear_loading_indicator.dart';
 import '../../../../core/widgets/page_header_widget.dart';
@@ -49,7 +48,7 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
               function: () => _handleBackButton(),
             ),
             const SizedBox(
-              height: 16,
+              height: 16.0,
             ),
             BlocConsumer<CategoryBloc, CategoryState>(
               listenWhen: (previous, current) =>
@@ -69,7 +68,10 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
                       .read<CategoryBloc>()
                       .add(SetCategoryAddStatusToDefault());
                   context.read<CategoryBloc>().add(GetAllCategoriesEvent());
+
                   _categoryController.clear();
+                  FocusScope.of(context).unfocus();
+
                   Helper.showSnackBar(
                     context,
                     context.loc.categoryAdded,
@@ -79,6 +81,8 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
               buildWhen: (previous, current) =>
                   previous.categoryAddStatus != current.categoryAddStatus,
               builder: (context, state) {
+                final isLoading = state.categoryAddStatus == BlocStatus.loading;
+
                 return Row(
                   children: [
                     SizedBox(
@@ -86,30 +90,26 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
                       child: InputFieldWidget(
                         controller: _categoryController,
                         hint: context.loc.categoryName,
-                        isReadOnly:
-                            state.categoryAddStatus == BlocStatus.loading,
+                        isReadOnly: isLoading,
                       ),
                     ),
                     const SizedBox(
-                      width: 10,
+                      width: 10.0,
                     ),
                     Expanded(
-                      child: state.categoryAddStatus == BlocStatus.loading
-                          ? const ElevatedLoadingButtonWidget(
-                              radius: 15.0,
-                            )
-                          : ElevatedButtonWidget(
-                              title: context.loc.add,
-                              radius: 15.0,
-                              function: () => _handleCategoryAdd(),
-                            ),
+                      child: ElevatedButtonWidget(
+                        title: context.loc.add,
+                        radius: 15.0,
+                        function: () => _handleCategoryAdd(),
+                        isButtonLoading: isLoading,
+                      ),
                     ),
                   ],
                 );
               },
             ),
             const SizedBox(
-              height: 16,
+              height: 16.0,
             ),
             BlocConsumer<CategoryBloc, CategoryState>(
               listenWhen: (previous, current) =>
@@ -162,7 +162,7 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
   }
 
   void _handleCategoryAdd() {
-    if (_categoryController.text.isNotEmpty) {
+    if (_categoryController.text.trim().isNotEmpty) {
       context.read<CategoryBloc>().add(
             CategoryAddButtonClickedEvent(
               category: _categoryController.text,

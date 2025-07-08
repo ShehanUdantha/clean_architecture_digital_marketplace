@@ -40,7 +40,7 @@ class ProductManagePage extends StatelessWidget {
               function: () => _handleBackButton(context),
             ),
             const SizedBox(
-              height: 16,
+              height: 16.0,
             ),
             SizedBox(
               height: Helper.isLandscape(context)
@@ -85,7 +85,7 @@ class ProductManagePage extends StatelessWidget {
               ),
             ),
             const SizedBox(
-              height: 26,
+              height: 26.0,
             ),
             BlocConsumer<ProductBloc, ProductState>(
               listenWhen: (previous, current) =>

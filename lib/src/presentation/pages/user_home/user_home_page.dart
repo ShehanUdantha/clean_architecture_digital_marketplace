@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:Pixelcart/src/presentation/widgets/user_home/product_category_horizontal_list_widget.dart';
+
 import '../../blocs/notification/notification_bloc.dart';
 import '../../blocs/auth/auth_bloc.dart';
 
@@ -8,7 +10,6 @@ import '../../widgets/user_home/search_product_list_builder_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../core/widgets/category_chip_widget.dart';
 import '../../../core/utils/helper.dart';
 import '../../blocs/user_home/user_home_bloc.dart';
 import '../../widgets/user_home/base_collection_widget.dart';
@@ -27,19 +28,7 @@ class _UserHomePageState extends State<UserHomePage> {
 
   @override
   void initState() {
-    context.read<UserHomeBloc>()
-      ..add(GetUserDetailsEvent())
-      ..add(GetCategoriesEvent())
-      ..add(GetFeaturedListEvent())
-      ..add(GetTrendingListEvent())
-      ..add(GetLatestListEvent());
-
-    final getCurrentUserId = context.read<AuthBloc>().currentUserId ?? "-1";
-    context
-        .read<NotificationBloc>()
-        .add(GetNotificationCountEvent(userId: getCurrentUserId));
-
-    Helper.getNotificationPermission();
+    _initUserHomePage();
     super.initState();
   }
 
@@ -60,10 +49,12 @@ class _UserHomePageState extends State<UserHomePage> {
     return SafeArea(
       child: BlocBuilder<UserHomeBloc, UserHomeState>(
         buildWhen: (previous, current) =>
-            previous.listOfCategories != current.listOfCategories ||
             previous.currentCategory != current.currentCategory ||
-            previous.userEntity != current.userEntity,
+            previous.userEntity != current.userEntity ||
+            previous.searchQuery != current.searchQuery,
         builder: (context, userHomeState) {
+          final isSearching = userHomeState.searchQuery.trim().isNotEmpty;
+
           return Padding(
             padding: const EdgeInsets.all(16.0).copyWith(bottom: 0),
             child: SingleChildScrollView(
@@ -72,12 +63,12 @@ class _UserHomePageState extends State<UserHomePage> {
                 children: [
                   SizedBox(
                     height: Helper.isLandscape(context)
-                        ? _searchController.text.isEmpty
+                        ? !isSearching
                             ? Helper.screeHeight(context) *
                                 (Platform.isAndroid ? 0.6 : 0.55)
                             : Helper.screeHeight(context) *
                                 (Platform.isAndroid ? 0.45 : 0.40)
-                        : _searchController.text.isEmpty
+                        : !isSearching
                             ? Helper.screeHeight(context) *
                                 (Platform.isAndroid ? 0.3 : 0.25)
                             : Helper.screeHeight(context) *
@@ -89,62 +80,36 @@ class _UserHomePageState extends State<UserHomePage> {
                           userName: userHomeState.userEntity.userName,
                         ),
                         const SizedBox(
-                          height: 8,
+                          height: 8.0,
                         ),
                         SearchBarWidget(
                           controller: _searchController,
-                          function: (value) => _handleSearchQuery(
-                            value,
-                          ),
+                          function: (value) => _handleSearchQuery(value),
                           clearFunction: () => _handleClearFunction(),
                         ),
                         const SizedBox(
-                          height: 26,
+                          height: 26.0,
                         ),
-                        _searchController.text.isEmpty
-                            ? Column(
-                                children: [
-                                  SizedBox(
-                                    height: Helper.isLandscape(context)
-                                        ? Helper.screeHeight(context) *
-                                            (Platform.isAndroid ? 0.10 : 0.09)
-                                        : Helper.screeHeight(context) *
-                                            (Platform.isAndroid ? 0.05 : 0.042),
-                                    child: ListView.builder(
-                                      scrollDirection: Axis.horizontal,
-                                      physics: const ClampingScrollPhysics(),
-                                      itemCount: userHomeState
-                                              .listOfCategories.length +
-                                          1,
-                                      itemBuilder: (context, index) {
-                                        final categoryList =
-                                            Helper.createCategoryHorizontalList(
-                                          userHomeState.listOfCategories,
-                                        );
-                                        return GestureDetector(
-                                          onTap: () =>
-                                              _handleCategoryChipButton(
-                                            index,
-                                            categoryList,
-                                          ),
-                                          child: CategoryChipWidget(
-                                            index: index,
-                                            pickedValue:
-                                                userHomeState.currentCategory,
-                                            categoryList: categoryList,
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              )
-                            : const SizedBox(),
+                        isSearching
+                            ? const SizedBox()
+                            : const ProductCategoryHorizontalListWidget(),
                       ],
                     ),
                   ),
-                  _searchController.text.isEmpty
+                  isSearching
                       ? SizedBox(
+                          height: Helper.screeHeight(context),
+                          child: ListView(
+                            physics: const ClampingScrollPhysics(),
+                            children: const [
+                              SearchProductListBuilderWidget(),
+                              SizedBox(
+                                height: 26.0,
+                              ),
+                            ],
+                          ),
+                        )
+                      : SizedBox(
                           height: Helper.isLandscape(context)
                               ? Helper.screeHeight(context) * 0.15
                               : Helper.screeHeight(context) * 0.58,
@@ -154,18 +119,6 @@ class _UserHomePageState extends State<UserHomePage> {
                               userHomeState.currentCategory == 0
                                   ? const BaseCollectionWidget()
                                   : const ProductsListByCategoryBuilderWidget(),
-                            ],
-                          ),
-                        )
-                      : SizedBox(
-                          height: Helper.screeHeight(context),
-                          child: ListView(
-                            physics: const ClampingScrollPhysics(),
-                            children: const [
-                              SearchProductListBuilderWidget(),
-                              SizedBox(
-                                height: 26.0,
-                              ),
                             ],
                           ),
                         ),
@@ -178,24 +131,27 @@ class _UserHomePageState extends State<UserHomePage> {
     );
   }
 
+  void _initUserHomePage() {
+    context.read<UserHomeBloc>()
+      ..add(GetUserDetailsEvent())
+      ..add(GetCategoriesEvent())
+      ..add(GetFeaturedListEvent())
+      ..add(GetTrendingListEvent())
+      ..add(GetLatestListEvent());
+
+    final getCurrentUserId = context.read<AuthBloc>().currentUserId ?? "-1";
+    context
+        .read<NotificationBloc>()
+        .add(GetNotificationCountEvent(userId: getCurrentUserId));
+
+    Helper.getNotificationPermission();
+  }
+
   void _handleSearchQuery(
     String value,
   ) {
     context.read<UserHomeBloc>().add(SearchFieldChangeEvent(query: value));
     context.read<UserHomeBloc>().add(GetProductsListByQueryEvent());
-  }
-
-  void _handleCategoryChipButton(
-    int index,
-    List<String> list,
-  ) {
-    context.read<UserHomeBloc>().add(
-          CategoryClickedEvent(
-            value: index,
-            name: list[index],
-          ),
-        );
-    context.read<UserHomeBloc>().add(GetProductsListByCategoryEvent());
   }
 
   void _handleClearFunction() {

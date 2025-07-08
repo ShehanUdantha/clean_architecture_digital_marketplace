@@ -22,11 +22,7 @@ class NotificationViewPage extends StatefulWidget {
 class _NotificationViewPageState extends State<NotificationViewPage> {
   @override
   void initState() {
-    final getCurrentUserId = context.read<AuthBloc>().currentUserId ?? "-1";
-    context
-        .read<NotificationBloc>()
-        .add(ResetNotificationCountEvent(userId: getCurrentUserId));
-
+    _initNotificationViewPage();
     super.initState();
   }
 
@@ -48,7 +44,7 @@ class _NotificationViewPageState extends State<NotificationViewPage> {
               function: () => _handleBackButton(),
             ),
             const SizedBox(
-              height: 26,
+              height: 26.0,
             ),
             BlocConsumer<NotificationBloc, NotificationState>(
               listenWhen: (previous, current) =>
@@ -94,6 +90,13 @@ class _NotificationViewPageState extends State<NotificationViewPage> {
         ),
       ),
     );
+  }
+
+  void _initNotificationViewPage() {
+    final getCurrentUserId = context.read<AuthBloc>().currentUserId ?? "-1";
+    context
+        .read<NotificationBloc>()
+        .add(ResetNotificationCountEvent(userId: getCurrentUserId));
   }
 
   void _handleBackButton() {

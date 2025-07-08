@@ -1,16 +1,16 @@
-import '../../../core/utils/extension.dart';
+import '../../../../core/utils/extension.dart';
 
-import '../../../core/constants/routes_name.dart';
-import '../../../core/widgets/linear_loading_indicator.dart';
-import '../../blocs/purchase/purchase_bloc.dart';
+import '../../../../core/constants/routes_name.dart';
+import '../../../../core/widgets/linear_loading_indicator.dart';
+import '../../../blocs/purchase/purchase_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/utils/enum.dart';
-import '../../../core/utils/helper.dart';
-import '../../../core/widgets/page_header_widget.dart';
-import '../../widgets/profile/purchase_items_history_builder_widget.dart';
+import '../../../../core/utils/enum.dart';
+import '../../../../core/utils/helper.dart';
+import '../../../../core/widgets/page_header_widget.dart';
+import '../../../widgets/profile/purchase/purchase_items_history_builder_widget.dart';
 
 class PurchaseHistoryPage extends StatefulWidget {
   const PurchaseHistoryPage({super.key});
@@ -22,7 +22,7 @@ class PurchaseHistoryPage extends StatefulWidget {
 class _PurchaseHistoryPageState extends State<PurchaseHistoryPage> {
   @override
   void initState() {
-    context.read<PurchaseBloc>().add(GetAllPurchaseHistory());
+    _initPurchaseHistoryPage();
     super.initState();
   }
 
@@ -41,10 +41,10 @@ class _PurchaseHistoryPageState extends State<PurchaseHistoryPage> {
           children: [
             PageHeaderWidget(
               title: context.loc.purchaseHistory,
-              function: () => _handleBackButton(context),
+              function: () => _handleBackButton(),
             ),
             const SizedBox(
-              height: 16,
+              height: 16.0,
             ),
             BlocConsumer<PurchaseBloc, PurchaseState>(
               listenWhen: (previous, current) =>
@@ -83,7 +83,11 @@ class _PurchaseHistoryPageState extends State<PurchaseHistoryPage> {
     );
   }
 
-  void _handleBackButton(BuildContext context) {
+  void _initPurchaseHistoryPage() {
+    context.read<PurchaseBloc>().add(GetAllPurchaseHistory());
+  }
+
+  void _handleBackButton() {
     context.goNamed(AppRoutes.profilePageName);
   }
 }

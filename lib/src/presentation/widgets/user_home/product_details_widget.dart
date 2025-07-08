@@ -14,7 +14,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/widgets/base_icon_button_widget.dart';
 import '../../../core/widgets/elevated_button_widget.dart';
-import '../../../core/widgets/elevated_loading_button_widget.dart';
 import '../../../core/constants/colors.dart';
 import '../../../core/utils/enum.dart';
 import '../../../core/utils/helper.dart';
@@ -32,8 +31,6 @@ class ProductDetailsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final uid = context.read<AuthBloc>().state.user?.uid;
-
     return BlocBuilder<ThemeCubit, ThemeState>(
       buildWhen: (previous, current) => previous.themeMode != current.themeMode,
       builder: (context, themeState) {
@@ -103,7 +100,8 @@ class ProductDetailsWidget extends StatelessWidget {
                                   child: LikeButton(
                                     onTap: (value) =>
                                         _favoriteButton(context, value),
-                                    isLiked: product.likes.contains(uid),
+                                    isLiked:
+                                        _isFavorite(context, product.likes),
                                     likeCount: product.likes.length,
                                     size: 25,
                                   ),
@@ -130,7 +128,7 @@ class ProductDetailsWidget extends StatelessWidget {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 const SizedBox(
-                                  height: 4,
+                                  height: 4.0,
                                 ),
                                 Text(
                                   product.category,
@@ -139,7 +137,7 @@ class ProductDetailsWidget extends StatelessWidget {
                                   ),
                                 ),
                                 const SizedBox(
-                                  height: 8,
+                                  height: 8.0,
                                 ),
                                 Text(
                                   product.description,
@@ -150,7 +148,7 @@ class ProductDetailsWidget extends StatelessWidget {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 const SizedBox(
-                                  height: 24,
+                                  height: 24.0,
                                 ),
                                 SizedBox(
                                   height: Helper.isLandscape(context)
@@ -170,7 +168,7 @@ class ProductDetailsWidget extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(
-                      height: 8,
+                      height: 8.0,
                     ),
                   ],
                 ),
@@ -230,7 +228,8 @@ class ProductDetailsWidget extends StatelessWidget {
                           }
 
                           if (state.favoriteStatus == BlocStatus.success) {
-                            if (state.productEntity.likes.contains(uid)) {
+                            if (_isFavorite(
+                                context, state.productEntity.likes)) {
                               Helper.showSnackBar(
                                 context,
                                 context.loc.addedToFavorite,
@@ -256,25 +255,30 @@ class ProductDetailsWidget extends StatelessWidget {
                             previous.cartedStatus != current.cartedStatus ||
                             previous.cartedItems != current.cartedItems,
                         builder: (context, state) {
-                          if (state.cartedStatus == BlocStatus.loading) {
-                            return const ElevatedLoadingButtonWidget();
-                          }
+                          final isLoading =
+                              state.cartedStatus == BlocStatus.loading;
 
                           return state.cartedItems.contains(product.id)
                               ? ElevatedButtonWidget(
                                   title: context.loc.removeFromCart,
-                                  function: () => _handleRemoveFromCartButton(
-                                    context,
-                                    product.id!,
-                                  ),
+                                  function: () => isLoading
+                                      ? () {}
+                                      : _handleRemoveFromCartButton(
+                                          context,
+                                          product.id!,
+                                        ),
+                                  isButtonLoading: isLoading,
                                 )
                               : ElevatedButtonWidget(
                                   title:
                                       '${context.loc.addToCart} | \$${double.parse(product.price).toStringAsFixed(2)}',
-                                  function: () => _handleAddToCartButton(
-                                    context,
-                                    product.id!,
-                                  ),
+                                  function: () => isLoading
+                                      ? () {}
+                                      : _handleAddToCartButton(
+                                          context,
+                                          product.id!,
+                                        ),
+                                  isButtonLoading: isLoading,
                                 );
                         },
                       ),
@@ -300,5 +304,11 @@ class ProductDetailsWidget extends StatelessWidget {
   Future<bool> _favoriteButton(BuildContext context, bool value) async {
     context.read<ProductDetailsBloc>().add(AddFavoriteToProductEvent());
     return !value;
+  }
+
+  bool _isFavorite(BuildContext context, List<String> likes) {
+    final uid = context.read<AuthBloc>().state.user?.uid ?? "-1";
+
+    return likes.contains(uid);
   }
 }

@@ -26,11 +26,11 @@ class BaseCollectionWidget extends StatelessWidget {
           ),
         ),
         const SizedBox(
-          height: 8,
+          height: 8.0,
         ),
         const FeaturedListBuilderWidget(),
         const SizedBox(
-          height: 16,
+          height: 16.0,
         ),
         CollectionHeaderWidget(
           title: context.loc.trending,
@@ -41,11 +41,11 @@ class BaseCollectionWidget extends StatelessWidget {
           ),
         ),
         const SizedBox(
-          height: 8,
+          height: 8.0,
         ),
         const TrendingListBuilderWidget(),
         const SizedBox(
-          height: 16,
+          height: 16.0,
         ),
         CollectionHeaderWidget(
           title: context.loc.latest,
@@ -56,11 +56,11 @@ class BaseCollectionWidget extends StatelessWidget {
           ),
         ),
         const SizedBox(
-          height: 8,
+          height: 8.0,
         ),
         const LatestListBuilderWidget(),
         const SizedBox(
-          height: 16,
+          height: 16.0,
         ),
       ],
     );

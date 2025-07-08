@@ -12,7 +12,6 @@ import '../../../core/utils/enum.dart';
 import '../../../core/utils/helper.dart';
 import '../../../core/utils/validator.dart';
 import '../../../core/widgets/elevated_button_widget.dart';
-import '../../../core/widgets/elevated_loading_button_widget.dart';
 import '../../../core/widgets/input_field_widget.dart';
 import '../../../core/widgets/page_header_widget.dart';
 
@@ -108,12 +107,11 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     const SizedBox(
                       height: 26.0,
                     ),
-                    isLoading
-                        ? const ElevatedLoadingButtonWidget()
-                        : ElevatedButtonWidget(
-                            title: context.loc.submit,
-                            function: () => _handleForgotPassword(),
-                          ),
+                    ElevatedButtonWidget(
+                      title: context.loc.submit,
+                      function: () => _handleForgotPassword(),
+                      isButtonLoading: isLoading,
+                    ),
                   ],
                 ),
               ),

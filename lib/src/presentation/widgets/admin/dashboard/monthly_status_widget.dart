@@ -64,7 +64,7 @@ class MonthlyStatusWidget extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(
-                            width: 10,
+                            width: 10.0,
                           ),
                           Transform.flip(
                             flipX: true,
@@ -85,7 +85,7 @@ class MonthlyStatusWidget extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(
-                  height: 16,
+                  height: 16.0,
                 ),
                 Align(
                   alignment: Alignment.topRight,
@@ -102,7 +102,7 @@ class MonthlyStatusWidget extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(
-                  height: 5,
+                  height: 5.0,
                 ),
                 Align(
                   alignment: Alignment.topRight,
@@ -139,11 +139,11 @@ class MonthlyStatusWidget extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: 20.0,
                 ),
                 const LineChartCard(),
                 const SizedBox(
-                  height: 10,
+                  height: 10.0,
                 ),
                 if (state.isMonthlyStatusLoading)
                   const LinearLoadingIndicator(

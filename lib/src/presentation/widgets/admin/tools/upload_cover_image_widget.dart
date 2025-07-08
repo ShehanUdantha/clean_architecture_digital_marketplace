@@ -115,7 +115,7 @@ class CoverImageUpdateTextWidget extends StatelessWidget {
                     : AppColors.textPrimary,
               ),
               const SizedBox(
-                height: 10,
+                height: 10.0,
               ),
               Text(
                 context.loc.uploadCoverImage,

@@ -26,8 +26,7 @@ class UserManagePage extends StatefulWidget {
 class _UserManagePageState extends State<UserManagePage> {
   @override
   void initState() {
-    context.read<UsersBloc>().add(GetAllUsersEvent());
-
+    _initUserManagePage();
     super.initState();
   }
 
@@ -121,6 +120,10 @@ class _UserManagePageState extends State<UserManagePage> {
         ),
       ),
     );
+  }
+
+  void _initUserManagePage() {
+    context.read<UsersBloc>().add(GetAllUsersEvent());
   }
 
   void _handleBackButton(BuildContext context) {
