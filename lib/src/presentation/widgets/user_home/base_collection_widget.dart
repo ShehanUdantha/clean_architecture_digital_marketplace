@@ -1,13 +1,13 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../core/constants/routes_name.dart';
 import '../../../core/utils/enum.dart';
 import '../../../core/utils/extension.dart';
 import 'collection_header_widget.dart';
 import 'featured_list_builder_widget.dart';
 import 'latest_list_builder_widget.dart';
 import 'trending_list_builder_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-
-import '../../../core/constants/routes_name.dart';
 
 class BaseCollectionWidget extends StatelessWidget {
   const BaseCollectionWidget({super.key});

@@ -1,6 +1,6 @@
-import 'package:Pixelcart/src/core/services/network_service.dart';
-import 'package:Pixelcart/src/presentation/blocs/language/language_cubit.dart';
-import 'package:Pixelcart/src/presentation/blocs/theme/theme_cubit.dart';
+import 'network_service.dart';
+import '../../presentation/blocs/language/language_cubit.dart';
+import '../../presentation/blocs/theme/theme_cubit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';

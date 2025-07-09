@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:Pixelcart/src/presentation/blocs/theme/theme_cubit.dart';
+import '../../presentation/blocs/theme/theme_cubit.dart';
 
 import '../utils/extension.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

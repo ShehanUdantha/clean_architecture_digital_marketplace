@@ -1,13 +1,13 @@
 import 'dart:async';
 
-import 'package:Pixelcart/src/config/routes/router.dart';
-import 'package:Pixelcart/src/core/constants/error_messages.dart';
-import 'package:Pixelcart/src/domain/usecases/auth/forgot_password_usecase.dart';
-import 'package:Pixelcart/src/domain/usecases/auth/send_email_verification_usecase.dart';
-import 'package:Pixelcart/src/domain/usecases/auth/sign_in_params.dart';
-import 'package:Pixelcart/src/domain/usecases/auth/sign_up_params.dart';
-import 'package:Pixelcart/src/domain/usecases/auth/user_sign_in_usecase.dart';
-import 'package:Pixelcart/src/domain/usecases/auth/user_sign_up_usecase.dart';
+import '../../../config/routes/router.dart';
+import '../../../core/constants/error_messages.dart';
+import '../../../domain/usecases/auth/forgot_password_usecase.dart';
+import '../../../domain/usecases/auth/send_email_verification_usecase.dart';
+import '../../../domain/usecases/auth/sign_in_params.dart';
+import '../../../domain/usecases/auth/sign_up_params.dart';
+import '../../../domain/usecases/auth/user_sign_in_usecase.dart';
+import '../../../domain/usecases/auth/user_sign_up_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

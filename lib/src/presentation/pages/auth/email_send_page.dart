@@ -1,5 +1,3 @@
-import 'package:Pixelcart/src/presentation/blocs/auth/auth_bloc.dart';
-import 'package:Pixelcart/src/presentation/blocs/theme/theme_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -12,6 +10,8 @@ import '../../../core/utils/extension.dart';
 import '../../../core/utils/helper.dart';
 import '../../../core/widgets/base_icon_button_widget.dart';
 import '../../../core/widgets/elevated_button_widget.dart';
+import '../../blocs/auth/auth_bloc.dart';
+import '../../blocs/theme/theme_cubit.dart';
 
 class EmailSendPage extends StatefulWidget {
   final String email;

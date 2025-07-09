@@ -1,6 +1,6 @@
-import 'package:Pixelcart/l10n/generated/app_localizations.dart';
-import 'package:Pixelcart/src/presentation/blocs/language/language_cubit.dart';
-import 'package:Pixelcart/src/presentation/blocs/theme/theme_cubit.dart';
+import 'l10n/generated/app_localizations.dart';
+import 'src/presentation/blocs/language/language_cubit.dart';
+import 'src/presentation/blocs/theme/theme_cubit.dart';
 
 import 'src/core/services/env.dart';
 import 'package:firebase_core/firebase_core.dart';

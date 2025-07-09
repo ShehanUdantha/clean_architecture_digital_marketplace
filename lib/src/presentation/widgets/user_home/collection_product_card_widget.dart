@@ -1,16 +1,16 @@
-import 'package:Pixelcart/src/presentation/blocs/theme/theme_cubit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../core/constants/routes_name.dart';
-import '../../../core/widgets/circular_loading_indicator.dart';
-import '../../../domain/entities/product/product_entity.dart';
-import '../../../core/utils/enum.dart';
-import '../../../core/utils/extension.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/colors.dart';
+import '../../../core/constants/routes_name.dart';
+import '../../../core/utils/enum.dart';
+import '../../../core/utils/extension.dart';
 import '../../../core/utils/helper.dart';
+import '../../../core/widgets/circular_loading_indicator.dart';
+import '../../../domain/entities/product/product_entity.dart';
+import '../../blocs/theme/theme_cubit.dart';
 
 class CollectionProductCardWidget extends StatelessWidget {
   final ProductEntity product;

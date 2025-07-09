@@ -1,6 +1,6 @@
-import 'package:Pixelcart/src/core/utils/helper.dart';
-import 'package:Pixelcart/src/presentation/blocs/language/language_cubit.dart';
-import 'package:Pixelcart/src/presentation/blocs/theme/theme_cubit.dart';
+import '../../../../core/utils/helper.dart';
+import '../../../blocs/language/language_cubit.dart';
+import '../../../blocs/theme/theme_cubit.dart';
 
 import '../../../../core/constants/lists.dart';
 import '../../../../core/utils/extension.dart';

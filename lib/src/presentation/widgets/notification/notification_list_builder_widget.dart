@@ -6,8 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/utils/enum.dart';
 import '../../../core/widgets/item_not_found_text.dart';
 import '../../../core/widgets/notification_linear_card_widget.dart';
-import '../../blocs/notification/notification_bloc.dart';
 import '../../blocs/auth/auth_bloc.dart';
+import '../../blocs/notification/notification_bloc.dart';
 
 class NotificationListBuilderWidget extends StatelessWidget {
   final bool isHide;

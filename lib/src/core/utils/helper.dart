@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:Pixelcart/src/core/constants/error_messages.dart';
-import 'package:Pixelcart/src/core/constants/variable_names.dart';
-import 'package:Pixelcart/src/core/services/notification_service.dart';
+import '../constants/error_messages.dart';
+import '../constants/variable_names.dart';
+import '../services/notification_service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:http/http.dart' as http;
-import 'package:Pixelcart/src/core/services/service_locator.dart' as locator;
+import '../services/service_locator.dart' as locator;
 
 import '../../config/routes/router.dart';
 import '../../domain/entities/category/category_entity.dart';

@@ -1,4 +1,4 @@
-import 'package:Pixelcart/src/presentation/blocs/theme/theme_cubit.dart';
+import '../../../blocs/theme/theme_cubit.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -1,5 +1,5 @@
-import 'package:Pixelcart/src/core/constants/lists.dart';
-import 'package:Pixelcart/src/core/constants/variable_names.dart';
+import '../../../core/constants/lists.dart';
+import '../../../core/constants/variable_names.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

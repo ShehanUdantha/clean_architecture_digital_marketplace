@@ -1,7 +1,7 @@
-import 'package:Pixelcart/src/config/routes/router.dart';
-import 'package:Pixelcart/src/core/constants/error_messages.dart';
-import 'package:Pixelcart/src/core/services/network_service.dart';
-import 'package:Pixelcart/src/core/utils/extension.dart';
+import '../../../config/routes/router.dart';
+import '../../../core/constants/error_messages.dart';
+import '../../../core/services/network_service.dart';
+import '../../../core/utils/extension.dart';
 
 import '../../../domain/usecases/auth/sign_in_params.dart';
 import '../../../domain/usecases/auth/sign_up_params.dart';

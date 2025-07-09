@@ -1,4 +1,4 @@
-import 'package:Pixelcart/src/presentation/blocs/theme/theme_cubit.dart';
+import '../../presentation/blocs/theme/theme_cubit.dart';
 
 import '../utils/extension.dart';
 

@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:Pixelcart/src/core/utils/helper.dart';
-import 'package:Pixelcart/src/core/widgets/category_chip_widget.dart';
-import 'package:Pixelcart/src/presentation/blocs/user_home/user_home_bloc.dart';
+import '../../../core/utils/helper.dart';
+import '../../../core/widgets/category_chip_widget.dart';
+import '../../blocs/user_home/user_home_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

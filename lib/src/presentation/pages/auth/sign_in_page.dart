@@ -1,4 +1,3 @@
-import 'package:Pixelcart/src/presentation/blocs/theme/theme_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -16,6 +15,7 @@ import '../../../core/widgets/elevated_button_widget.dart';
 import '../../../core/widgets/input_field_widget.dart';
 import '../../../core/widgets/outline_button_widget.dart';
 import '../../../domain/usecases/auth/sign_in_params.dart';
+import '../../blocs/theme/theme_cubit.dart';
 import '../../blocs/auth/auth_bloc.dart';
 
 class SignInPage extends StatefulWidget {

@@ -1,8 +1,8 @@
 import 'dart:ui';
 
-import 'package:Pixelcart/src/core/constants/colors.dart';
-import 'package:Pixelcart/src/core/utils/helper.dart';
-import 'package:Pixelcart/src/presentation/blocs/theme/theme_cubit.dart';
+import '../constants/colors.dart';
+import '../utils/helper.dart';
+import '../../presentation/blocs/theme/theme_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

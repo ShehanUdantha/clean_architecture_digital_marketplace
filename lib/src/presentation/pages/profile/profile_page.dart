@@ -1,7 +1,7 @@
 import 'dart:io';
-import 'package:Pixelcart/src/core/widgets/blur_loading_overlay_widget.dart';
-import 'package:Pixelcart/src/presentation/blocs/admin_home/admin_home_bloc.dart';
-import 'package:Pixelcart/src/presentation/blocs/user_home/user_home_bloc.dart';
+import '../../../core/widgets/blur_loading_overlay_widget.dart';
+import '../../blocs/admin_home/admin_home_bloc.dart';
+import '../../blocs/user_home/user_home_bloc.dart';
 
 import '../../../core/utils/extension.dart';
 

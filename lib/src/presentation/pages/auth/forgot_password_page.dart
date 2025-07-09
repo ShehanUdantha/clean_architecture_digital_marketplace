@@ -1,6 +1,3 @@
-import 'package:Pixelcart/src/presentation/blocs/auth/auth_bloc.dart';
-
-import '../../../core/utils/extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -9,11 +6,13 @@ import 'package:iconsax/iconsax.dart';
 import '../../../core/constants/colors.dart';
 import '../../../core/constants/routes_name.dart';
 import '../../../core/utils/enum.dart';
+import '../../../core/utils/extension.dart';
 import '../../../core/utils/helper.dart';
 import '../../../core/utils/validator.dart';
 import '../../../core/widgets/elevated_button_widget.dart';
 import '../../../core/widgets/input_field_widget.dart';
 import '../../../core/widgets/page_header_widget.dart';
+import '../../blocs/auth/auth_bloc.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});

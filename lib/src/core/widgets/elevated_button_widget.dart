@@ -1,6 +1,6 @@
-import 'package:Pixelcart/src/core/utils/helper.dart';
-import 'package:Pixelcart/src/core/widgets/circular_loading_indicator.dart';
-import 'package:Pixelcart/src/presentation/blocs/theme/theme_cubit.dart';
+import '../utils/helper.dart';
+import 'circular_loading_indicator.dart';
+import '../../presentation/blocs/theme/theme_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../constants/colors.dart';

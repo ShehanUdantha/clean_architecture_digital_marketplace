@@ -1,4 +1,4 @@
-import 'package:Pixelcart/l10n/generated/app_localizations.dart';
+import '../../../l10n/generated/app_localizations.dart';
 
 import 'enum.dart';
 import 'package:flutter/widgets.dart';

@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:Pixelcart/src/presentation/widgets/user_home/product_category_horizontal_list_widget.dart';
+import '../../widgets/user_home/product_category_horizontal_list_widget.dart';
 
 import '../../blocs/notification/notification_bloc.dart';
 import '../../blocs/auth/auth_bloc.dart';
