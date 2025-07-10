@@ -1,0 +1,123 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:Pixelcart/src/core/utils/extension.dart';
+import 'package:Pixelcart/src/presentation/blocs/theme/theme_cubit.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../../core/constants/colors.dart';
+import '../../../../core/constants/routes_name.dart';
+import '../../../../core/utils/helper.dart';
+import '../../../../domain/entities/product/purchase_products_entity.dart';
+
+class PurchaseItemsCardWidget extends StatelessWidget {
+  final PurchaseProductsEntity purchaseDetails;
+
+  const PurchaseItemsCardWidget({
+    super.key,
+    required this.purchaseDetails,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ThemeCubit, ThemeState>(
+      buildWhen: (previous, current) => previous.themeMode != current.themeMode,
+      builder: (context, themeState) {
+        final isDarkMode =
+            Helper.checkIsDarkMode(context, themeState.themeMode);
+
+        return Container(
+          margin: const EdgeInsets.only(bottom: 10.0),
+          padding: const EdgeInsets.all(8.0).copyWith(left: 12.0),
+          height: Helper.isLandscape(context)
+              ? Helper.screeHeight(context) * 0.3
+              : Helper.screeHeight(context) * 0.135,
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            border: Border.all(
+              color: AppColors.lightDark,
+              width: 1.3,
+            ),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(15.0),
+            ),
+          ),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    width: Helper.screeWidth(context) * 0.5,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${purchaseDetails.products.length} ${purchaseDetails.products.length > 1 ? context.loc.products : context.loc.product}',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: isDarkMode
+                                ? AppColors.textFifth
+                                : AppColors.textPrimary,
+                          ),
+                        ),
+                        Text(
+                          Helper.formatDate(
+                              purchaseDetails.dateCreated.toDate()),
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Text(
+                    '\$${double.parse(purchaseDetails.price).toStringAsFixed(2)}',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      color: isDarkMode
+                          ? AppColors.textSecondary
+                          : AppColors.textPrimary,
+                    ),
+                  ),
+                ],
+              ),
+              const Divider(
+                height: 20.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  GestureDetector(
+                    onTap: () => _moveToProductsView(
+                      context,
+                      purchaseDetails.products,
+                    ),
+                    child: Text(
+                      '${context.loc.viewProducts} >',
+                      style: const TextStyle(
+                        color: AppColors.textThird,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _moveToProductsView(BuildContext context, List<String> productsId) {
+    context.goNamed(
+      AppRoutes.purchaseProductViewPageName,
+      extra: productsId,
+    );
+  }
+}

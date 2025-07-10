@@ -1,3 +1,4 @@
+import '../../../blocs/theme/theme_cubit.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,7 +7,6 @@ import '../../../../core/constants/colors.dart';
 import '../../../../core/constants/lists.dart';
 import '../../../../core/utils/helper.dart';
 import '../../../blocs/admin_home/admin_home_bloc.dart';
-import '../../../blocs/theme/theme_bloc.dart';
 
 class LineChartCard extends StatelessWidget {
   const LineChartCard({
@@ -15,80 +15,91 @@ class LineChartCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
+    return BlocBuilder<ThemeCubit, ThemeState>(
+      buildWhen: (previous, current) => previous.themeMode != current.themeMode,
+      builder: (context, themeState) {
+        final isDarkMode =
+            Helper.checkIsDarkMode(context, themeState.themeMode);
 
-    return BlocBuilder<AdminHomeBloc, AdminHomeState>(
-      builder: (context, state) {
-        List<FlSpot> spots = generateSpots(state.monthlyStatus);
-        return SizedBox(
-          child: AspectRatio(
-            aspectRatio: 9 / 4,
-            child: LineChart(
-              LineChartData(
-                lineTouchData: LineTouchData(
-                  handleBuiltInTouches: true,
-                  touchTooltipData: LineTouchTooltipData(
-                    getTooltipColor: (LineBarSpot spot) {
-                      return AppColors.lightGrey;
-                    },
-                  ),
-                ),
-                gridData: const FlGridData(show: false),
-                titlesData: FlTitlesData(
-                  bottomTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      interval: 1,
-                      getTitlesWidget: (value, meta) => bottomTileWidget(
-                        value,
-                        meta,
-                        context,
+        return BlocBuilder<AdminHomeBloc, AdminHomeState>(
+          buildWhen: (previous, current) =>
+              previous.monthlyStatus != current.monthlyStatus,
+          builder: (context, state) {
+            List<FlSpot> spots = generateSpots(state.monthlyStatus);
+
+            return SizedBox(
+              child: AspectRatio(
+                aspectRatio: 9 / 4,
+                child: LineChart(
+                  LineChartData(
+                    lineTouchData: LineTouchData(
+                      handleBuiltInTouches: true,
+                      touchTooltipData: LineTouchTooltipData(
+                        getTooltipColor: (LineBarSpot spot) {
+                          return AppColors.lightGrey;
+                        },
                       ),
                     ),
-                  ),
-                  leftTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      getTitlesWidget: leftTileWidget,
-                      showTitles: true,
-                      interval: 1,
+                    gridData: const FlGridData(show: false),
+                    titlesData: FlTitlesData(
+                      bottomTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: true,
+                          interval: 1,
+                          getTitlesWidget: (value, meta) => bottomTileWidget(
+                            value,
+                            meta,
+                            context,
+                          ),
+                        ),
+                      ),
+                      leftTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          getTitlesWidget: leftTileWidget,
+                          showTitles: true,
+                          interval: 1,
+                        ),
+                      ),
+                      rightTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false),
+                      ),
+                      topTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false),
+                      ),
                     ),
-                  ),
-                  rightTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                  topTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
+                    borderData: FlBorderData(show: false),
+                    lineBarsData: [
+                      LineChartBarData(
+                        isCurved: true,
+                        color: isDarkMode
+                            ? AppColors.primary
+                            : AppColors.secondary,
+                        barWidth: 2.5,
+                        isStrokeCapRound: true,
+                        belowBarData: BarAreaData(
+                          gradient: const LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              AppColors.grey,
+                              Colors.transparent,
+                            ],
+                          ),
+                          show: true,
+                        ),
+                        dotData: const FlDotData(show: false),
+                        spots: spots,
+                      ),
+                    ],
+                    minX: 0,
+                    maxX: 120,
+                    maxY: 105,
+                    minY: -5,
                   ),
                 ),
-                borderData: FlBorderData(show: false),
-                lineBarsData: [
-                  LineChartBarData(
-                    isCurved: true,
-                    color: isDarkMode ? AppColors.primary : AppColors.secondary,
-                    barWidth: 2.5,
-                    isStrokeCapRound: true,
-                    belowBarData: BarAreaData(
-                      gradient: const LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          AppColors.grey,
-                          Colors.transparent,
-                        ],
-                      ),
-                      show: true,
-                    ),
-                    dotData: const FlDotData(show: false),
-                    spots: spots,
-                  ),
-                ],
-                minX: 0,
-                maxX: 120,
-                maxY: 105,
-                minY: -5,
               ),
-            ),
-          ),
+            );
+          },
         );
       },
     );
@@ -99,7 +110,7 @@ class LineChartCard extends StatelessWidget {
         AppLists.monthlyPurchaseStatusChartBottomTitles(context)[value.toInt()];
     return item != null
         ? SideTitleWidget(
-            axisSide: meta.axisSide,
+            meta: meta,
             space: 10,
             child: Text(
               item.toString(),

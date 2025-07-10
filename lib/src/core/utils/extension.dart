@@ -1,6 +1,7 @@
+import '../../../l10n/generated/app_localizations.dart';
+
 import 'enum.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 extension UserTypesExtension on UserTypes {
   String get name => ['admin', 'user'][index];

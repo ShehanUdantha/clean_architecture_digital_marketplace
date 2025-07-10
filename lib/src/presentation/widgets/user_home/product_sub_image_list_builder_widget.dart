@@ -1,9 +1,9 @@
-import 'product_sub_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/entities/product/product_entity.dart';
 import '../../blocs/product_details/product_details_bloc.dart';
+import 'product_sub_image_widget.dart';
 
 class ProductSubImageListBuilderWidget extends StatelessWidget {
   final ProductEntity product;

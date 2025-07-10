@@ -1,3 +1,7 @@
+import 'l10n/generated/app_localizations.dart';
+import 'src/presentation/blocs/language/language_cubit.dart';
+import 'src/presentation/blocs/theme/theme_cubit.dart';
+
 import 'src/core/services/env.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -7,7 +11,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'src/config/routes/router.dart';
 import 'src/config/theme/theme.dart';
@@ -16,21 +19,15 @@ import 'src/core/services/service_locator.dart' as locator;
 import 'firebase_options.dart';
 import 'src/presentation/blocs/admin_home/admin_home_bloc.dart';
 import 'src/presentation/blocs/category/category_bloc.dart';
-import 'src/presentation/blocs/language/language_bloc.dart';
 import 'src/presentation/blocs/notification/notification_bloc.dart';
 import 'src/presentation/blocs/product/product_bloc.dart';
 import 'src/presentation/blocs/users/users_bloc.dart';
 import 'src/presentation/blocs/auth/auth_bloc.dart';
 import 'src/presentation/blocs/cart/cart_bloc.dart';
-import 'src/presentation/blocs/forgot_password/forgot_password_bloc.dart';
-import 'src/presentation/blocs/network/network_bloc.dart';
 import 'src/presentation/blocs/product_details/product_details_bloc.dart';
 import 'src/presentation/blocs/purchase/purchase_bloc.dart';
-import 'src/presentation/blocs/sign_in/sign_in_bloc.dart';
-import 'src/presentation/blocs/sign_up/sign_up_bloc.dart';
 import 'src/presentation/blocs/stripe/stripe_bloc.dart';
 import 'src/presentation/blocs/user_home/user_home_bloc.dart';
-import 'src/presentation/blocs/theme/theme_bloc.dart';
 
 void main() async {
   // initialize Flutter Binding
@@ -76,16 +73,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => locator.sl<SignUpBloc>(),
-        ),
-        BlocProvider(
-          create: (context) => locator.sl<SignInBloc>(),
-        ),
-        BlocProvider(
           create: (context) => locator.sl<AuthBloc>(),
-        ),
-        BlocProvider(
-          create: (context) => locator.sl<ForgotPasswordBloc>(),
         ),
         BlocProvider(
           create: (context) => locator.sl<AdminHomeBloc>(),
@@ -121,22 +109,17 @@ class MyApp extends StatelessWidget {
               locator.sl<NotificationBloc>()..add(GetAllNotificationsEvent()),
         ),
         BlocProvider(
-          create: (context) => locator.sl<NetworkBloc>(),
+          create: (context) => locator.sl<ThemeCubit>(),
         ),
         BlocProvider(
-          create: (context) =>
-              locator.sl<ThemeBloc>()..add(GetCurrentThemeMode()),
-        ),
-        BlocProvider(
-          create: (context) =>
-              locator.sl<LanguageBloc>()..add(GetCurrentLanguage()),
+          create: (context) => locator.sl<LanguageCubit>(),
         ),
       ],
-      child: BlocBuilder<ThemeBloc, ThemeState>(
+      child: BlocBuilder<ThemeCubit, ThemeState>(
         buildWhen: (previous, current) =>
             previous.themeMode != current.themeMode,
         builder: (context, themeState) {
-          return BlocBuilder<LanguageBloc, LanguageState>(
+          return BlocBuilder<LanguageCubit, LanguageState>(
             buildWhen: (previous, current) =>
                 previous.languageLocale != current.languageLocale,
             builder: (context, languageState) {

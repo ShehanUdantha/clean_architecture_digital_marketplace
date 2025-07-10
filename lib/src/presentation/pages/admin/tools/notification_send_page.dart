@@ -10,7 +10,6 @@ import '../../../../core/constants/routes_name.dart';
 import '../../../../core/utils/enum.dart';
 import '../../../../core/utils/helper.dart';
 import '../../../../core/widgets/elevated_button_widget.dart';
-import '../../../../core/widgets/elevated_loading_button_widget.dart';
 import '../../../../core/widgets/input_field_widget.dart';
 import '../../../../core/widgets/page_header_widget.dart';
 
@@ -79,15 +78,17 @@ class _NotificationSendPageState extends State<NotificationSendPage> {
             },
             buildWhen: (previous, current) => previous.status != current.status,
             builder: (context, state) {
+              final isLoading = state.status == BlocStatus.loading;
+
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   PageHeaderWidget(
                     title: context.loc.sendNotification,
-                    function: () => _handleBackButton(),
+                    function: () => isLoading ? () {} : _handleBackButton(),
                   ),
                   const SizedBox(
-                    height: 16,
+                    height: 16.0,
                   ),
                   Form(
                     child: Column(
@@ -97,32 +98,31 @@ class _NotificationSendPageState extends State<NotificationSendPage> {
                           controller: _notificationTitleController,
                           hint: context.loc.title,
                           prefix: const Icon(Iconsax.notification),
-                          isReadOnly: state.status == BlocStatus.loading,
+                          isReadOnly: isLoading,
                         ),
                         const SizedBox(
-                          height: 16,
+                          height: 16.0,
                         ),
                         InputFieldWidget(
                           controller: _notificationDescriptionController,
                           hint: context.loc.description,
                           prefix: const Icon(Iconsax.text_block),
                           isTextArea: true,
-                          isReadOnly: state.status == BlocStatus.loading,
+                          isReadOnly: isLoading,
                         ),
                       ],
                     ),
                   ),
                   const SizedBox(
-                    height: 32,
+                    height: 32.0,
                   ),
-                  state.status == BlocStatus.loading
-                      ? const ElevatedLoadingButtonWidget()
-                      : ElevatedButtonWidget(
-                          title: context.loc.sendNotification,
-                          function: () => _handleSubmitButton(),
-                        ),
+                  ElevatedButtonWidget(
+                    title: context.loc.sendNotification,
+                    function: () => _handleSubmitButton(),
+                    isButtonLoading: isLoading,
+                  ),
                   const SizedBox(
-                    height: 16,
+                    height: 16.0,
                   ),
                 ],
               );

@@ -32,7 +32,7 @@ class ToolsPage extends StatelessWidget {
                 function: () => _handleProductPage(context),
               ),
               const SizedBox(
-                height: 16,
+                height: 16.0,
               ),
               ToolsCardWidget(
                 title: context.loc.manageCategories,
@@ -40,7 +40,7 @@ class ToolsPage extends StatelessWidget {
                 function: () => _handleCategoryPage(context),
               ),
               const SizedBox(
-                height: 16,
+                height: 16.0,
               ),
               ToolsCardWidget(
                 title: context.loc.manageUsers,
@@ -48,7 +48,7 @@ class ToolsPage extends StatelessWidget {
                 function: () => _handleUserPage(context),
               ),
               const SizedBox(
-                height: 16,
+                height: 16.0,
               ),
               ToolsCardWidget(
                 title: context.loc.manageNotifications,

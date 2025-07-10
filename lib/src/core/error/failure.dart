@@ -43,3 +43,10 @@ class LocalDBFailure extends Failure {
     super.stackTrace,
   });
 }
+
+class NetworkFailure extends Failure {
+  const NetworkFailure({
+    required super.errorMessage,
+    super.stackTrace,
+  });
+}

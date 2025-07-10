@@ -26,8 +26,7 @@ class UserManagePage extends StatefulWidget {
 class _UserManagePageState extends State<UserManagePage> {
   @override
   void initState() {
-    context.read<UsersBloc>().add(GetAllUsersEvent());
-
+    _initUserManagePage();
     super.initState();
   }
 
@@ -39,8 +38,6 @@ class _UserManagePageState extends State<UserManagePage> {
   }
 
   Widget _bodyWidget(BuildContext context) {
-    final usersState = context.watch<UsersBloc>().state;
-
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(16.0).copyWith(bottom: 0),
@@ -60,24 +57,30 @@ class _UserManagePageState extends State<UserManagePage> {
                       (Platform.isAndroid ? 0.10 : 0.09)
                   : Helper.screeHeight(context) *
                       (Platform.isAndroid ? 0.05 : 0.042),
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                physics: const ClampingScrollPhysics(),
-                itemCount: AppLists.listOfUserType.length,
-                itemBuilder: (context, index) {
-                  final userTypeName = AppLists.listOfUserType[index];
+              child: BlocBuilder<UsersBloc, UsersState>(
+                buildWhen: (previous, current) =>
+                    previous.currentUserType != current.currentUserType,
+                builder: (context, usersState) {
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    physics: const ClampingScrollPhysics(),
+                    itemCount: AppLists.listOfUserType.length,
+                    itemBuilder: (context, index) {
+                      final userTypeName = AppLists.listOfUserType[index];
 
-                  return GestureDetector(
-                    onTap: () => _handleUserTypeChipButton(
-                      context,
-                      index,
-                      userTypeName,
-                    ),
-                    child: UserTypeChipWidget(
-                      index: index,
-                      pickedValue: usersState.currentUserType,
-                      userTypeName: userTypeName,
-                    ),
+                      return GestureDetector(
+                        onTap: () => _handleUserTypeChipButton(
+                          context,
+                          index,
+                          userTypeName,
+                        ),
+                        child: UserTypeChipWidget(
+                          index: index,
+                          pickedValue: usersState.currentUserType,
+                          userTypeName: userTypeName,
+                        ),
+                      );
+                    },
                   );
                 },
               ),
@@ -86,6 +89,8 @@ class _UserManagePageState extends State<UserManagePage> {
               height: 26,
             ),
             BlocConsumer<UsersBloc, UsersState>(
+              listenWhen: (previous, current) =>
+                  previous.status != current.status,
               listener: (context, state) {
                 if (state.status == BlocStatus.error) {
                   Helper.showSnackBar(
@@ -94,6 +99,8 @@ class _UserManagePageState extends State<UserManagePage> {
                   );
                 }
               },
+              buildWhen: (previous, current) =>
+                  previous.status != current.status,
               builder: (context, state) {
                 switch (state.status) {
                   case BlocStatus.loading:
@@ -113,6 +120,10 @@ class _UserManagePageState extends State<UserManagePage> {
         ),
       ),
     );
+  }
+
+  void _initUserManagePage() {
+    context.read<UsersBloc>().add(GetAllUsersEvent());
   }
 
   void _handleBackButton(BuildContext context) {

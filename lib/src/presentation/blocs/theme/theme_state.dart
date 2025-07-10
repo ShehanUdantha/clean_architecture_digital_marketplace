@@ -1,4 +1,4 @@
-part of 'theme_bloc.dart';
+part of 'theme_cubit.dart';
 
 class ThemeState extends Equatable {
   final String themeName;

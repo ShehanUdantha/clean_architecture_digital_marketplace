@@ -6,8 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/utils/enum.dart';
 import '../../../core/widgets/item_not_found_text.dart';
 import '../../../core/widgets/notification_linear_card_widget.dart';
-import '../../blocs/notification/notification_bloc.dart';
 import '../../blocs/auth/auth_bloc.dart';
+import '../../blocs/notification/notification_bloc.dart';
 
 class NotificationListBuilderWidget extends StatelessWidget {
   final bool isHide;
@@ -19,30 +19,41 @@ class NotificationListBuilderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final notificationState = context.watch<NotificationBloc>().state;
-    final authState = context.watch<AuthBloc>().state;
-
     return Expanded(
-      child: notificationState.listOfNotification.isNotEmpty
-          ? ListView.builder(
-              itemCount: notificationState.listOfNotification.length,
-              itemBuilder: (context, index) {
-                return NotificationLinearCardWidget(
-                  notification: notificationState.listOfNotification[index],
-                  deleteFunction: isHide
-                      ? null
-                      : authState.userType == UserTypes.user.name
-                          ? null
-                          : () => _handleDeleteNotification(
-                                context,
-                                notificationState.listOfNotification[index].id!,
-                              ),
+      child: BlocBuilder<AuthBloc, AuthState>(
+        buildWhen: (previous, current) => previous.userType != current.userType,
+        builder: (context, authState) {
+          return BlocBuilder<NotificationBloc, NotificationState>(
+            buildWhen: (previous, current) =>
+                previous.listOfNotification != current.listOfNotification,
+            builder: (context, notificationState) {
+              if (notificationState.listOfNotification.isEmpty) {
+                return ItemNotFoundText(
+                  title: context.loc.notificationNotReceivedYet,
                 );
-              },
-            )
-          : ItemNotFoundText(
-              title: context.loc.notificationNotReceivedYet,
-            ),
+              }
+
+              return ListView.builder(
+                itemCount: notificationState.listOfNotification.length,
+                itemBuilder: (context, index) {
+                  return NotificationLinearCardWidget(
+                    notification: notificationState.listOfNotification[index],
+                    deleteFunction: isHide
+                        ? null
+                        : authState.userType == UserTypes.user.name
+                            ? null
+                            : () => _handleDeleteNotification(
+                                  context,
+                                  notificationState
+                                      .listOfNotification[index].id!,
+                                ),
+                  );
+                },
+              );
+            },
+          );
+        },
+      ),
     );
   }
 

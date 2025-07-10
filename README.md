@@ -24,6 +24,16 @@ Run the following command to generate the necessary files (e.g., mocks, code rel
 
 `dart run build_runner build`
 
+### 3. (Optional) Configure Firebase Service Account for Push Notifications
+
+If you wish to enable push notifications, you need to configure the 'firebaseServiceAccountJson' used in the project.
+
+All setup instructions are included directly in the file:
+
+`core/constants/firebase_values.dart`
+
+Make sure to follow the comments inside that file to generate and insert your Firebase service account values correctly.
+
 </br>
 
 ## Features
@@ -94,8 +104,6 @@ Admin View
 <img src="./screenshots/admin_profile.jpg" width="250" />
 </p>
 
-#### Others
+</br>
 
-<p float="left">
-<img src="./screenshots/no_internet.jpg" width="250" />
-</p>
+All product images used in this app are for educational purposes only.

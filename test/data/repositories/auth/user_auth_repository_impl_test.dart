@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:Pixelcart/src/core/constants/error_messages.dart';
 import 'package:Pixelcart/src/core/error/exception.dart';
 import 'package:Pixelcart/src/core/error/failure.dart';
+import 'package:Pixelcart/src/core/services/network_service.dart';
 import 'package:Pixelcart/src/core/utils/enum.dart';
 import 'package:Pixelcart/src/core/utils/extension.dart';
 import 'package:Pixelcart/src/data/data_sources/remote/auth/user_auth_remote_data_source.dart';
@@ -14,17 +16,23 @@ import 'package:mockito/mockito.dart';
 import '../../../fixtures/auth_values.dart';
 import 'user_auth_repository_impl_test.mocks.dart';
 
-@GenerateMocks([UserAuthRemoteDataSource, User])
+@GenerateMocks([UserAuthRemoteDataSource, NetworkService, User])
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   late UserAuthRepositoryImpl userAuthRepositoryImpl;
   late MockUser mockFirebaseUser;
   late MockUserAuthRemoteDataSource mockUserAuthRemoteDataSource;
+  late MockNetworkService mockNetworkService;
 
   setUp(() {
     mockUserAuthRemoteDataSource = MockUserAuthRemoteDataSource();
     mockFirebaseUser = MockUser();
+    mockNetworkService = MockNetworkService();
     userAuthRepositoryImpl = UserAuthRepositoryImpl(
-        userAuthRemoteDataSource: mockUserAuthRemoteDataSource);
+      userAuthRemoteDataSource: mockUserAuthRemoteDataSource,
+      networkService: mockNetworkService,
+    );
   });
 
   group(
@@ -34,8 +42,9 @@ void main() {
         'should return a User Id when the sign-in process is successful',
         () async {
           // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockUserAuthRemoteDataSource.signInUser(userSignInParams))
-              .thenAnswer((_) async => userUserId);
+              .thenAnswer((_) async => mockFirebaseUser);
 
           // Act
           final result =
@@ -44,7 +53,7 @@ void main() {
           // Assert
           result.fold(
             (l) => fail('test failed'),
-            (r) => expect(r, userUserId),
+            (r) => expect(r, mockFirebaseUser),
           );
         },
       );
@@ -56,6 +65,7 @@ void main() {
           final authException = AuthException(
             errorMessage: 'Sign-in failed',
           );
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockUserAuthRemoteDataSource.signInUser(userSignInParams))
               .thenThrow(authException);
 
@@ -73,6 +83,29 @@ void main() {
           );
         },
       );
+
+      test(
+        'should return a Failure when network fails in the sign-in process',
+        () async {
+          // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => false);
+
+          // Act
+          final failure = NetworkFailure(
+            errorMessage: AppErrorMessages.noInternetMessage,
+          );
+          final result =
+              await userAuthRepositoryImpl.signInUser(userSignInParams);
+
+          // Assert
+          result.fold(
+            (l) {
+              expect(l, failure);
+            },
+            (r) => fail('test failed'),
+          );
+        },
+      );
     },
   );
 
@@ -83,6 +116,7 @@ void main() {
         'should return a Success Status when the sign-up process is successful',
         () async {
           // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockUserAuthRemoteDataSource.signUpUser(userSignUpParams))
               .thenAnswer((_) async => ResponseTypes.success.response);
 
@@ -105,6 +139,7 @@ void main() {
           final authException = AuthException(
             errorMessage: 'Sign-up failed',
           );
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockUserAuthRemoteDataSource.signUpUser(userSignUpParams))
               .thenThrow(authException);
 
@@ -122,6 +157,29 @@ void main() {
           );
         },
       );
+
+      test(
+        'should return a Failure when network fails in the sign-up process',
+        () async {
+          // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => false);
+
+          // Act
+          final failure = NetworkFailure(
+            errorMessage: AppErrorMessages.noInternetMessage,
+          );
+          final result =
+              await userAuthRepositoryImpl.signUpUser(userSignUpParams);
+
+          // Assert
+          result.fold(
+            (l) {
+              expect(l, failure);
+            },
+            (r) => fail('test failed'),
+          );
+        },
+      );
     },
   );
 
@@ -132,6 +190,7 @@ void main() {
         'should return a Success Status when the email verification sent process is successful',
         () async {
           // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockUserAuthRemoteDataSource.sendEmailVerification())
               .thenAnswer((_) async => ResponseTypes.success.response);
 
@@ -150,6 +209,7 @@ void main() {
         'should return a Failure Status when there is no current user during the email verification sent process',
         () async {
           // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockUserAuthRemoteDataSource.sendEmailVerification())
               .thenAnswer((_) async => ResponseTypes.failure.response);
 
@@ -171,6 +231,7 @@ void main() {
           final authException = AuthException(
             errorMessage: 'Email verification sent failed',
           );
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockUserAuthRemoteDataSource.sendEmailVerification())
               .thenThrow(authException);
 
@@ -187,85 +248,24 @@ void main() {
           );
         },
       );
-    },
-  );
 
-  group(
-    'checkEmailVerification',
-    () {
       test(
-        'should return a True when the email is verified',
+        'should return a Failure when network fails in the email verification sent process',
         () async {
           // Arrange
-          when(mockUserAuthRemoteDataSource.checkEmailVerification())
-              .thenAnswer((_) async => true);
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => false);
 
           // Act
-          final result = await userAuthRepositoryImpl.checkEmailVerification();
+          final failure = NetworkFailure(
+            errorMessage: AppErrorMessages.noInternetMessage,
+          );
+          final result = await userAuthRepositoryImpl.sendEmailVerification();
 
           // Assert
           result.fold(
-            (l) => fail('test failed'),
-            (r) => expect(r, true),
-          );
-        },
-      );
-
-      test(
-        'should return a False when the email is not verified',
-        () async {
-          // Arrange
-          when(mockUserAuthRemoteDataSource.checkEmailVerification())
-              .thenAnswer((_) async => false);
-
-          // Act
-          final result = await userAuthRepositoryImpl.checkEmailVerification();
-
-          // Assert
-          result.fold(
-            (l) => fail('test failed'),
-            (r) => expect(r, false),
-          );
-        },
-      );
-
-      test(
-        'should return a False when there is no current user during the email verification process',
-        () async {
-          // Arrange
-          when(mockUserAuthRemoteDataSource.checkEmailVerification())
-              .thenAnswer((_) async => false);
-
-          // Act
-          final result = await userAuthRepositoryImpl.checkEmailVerification();
-
-          // Assert
-          result.fold(
-            (l) => fail('test failed'),
-            (r) => expect(r, false),
-          );
-        },
-      );
-
-      test(
-        'should return a Failure when the check email verification process fails',
-        () async {
-          // Arrange
-          final authException = AuthException(
-            errorMessage: 'Check email verification failed',
-          );
-          when(mockUserAuthRemoteDataSource.checkEmailVerification())
-              .thenThrow(authException);
-
-          // Act
-          final failure = FirebaseFailure(
-            errorMessage: 'Check email verification failed',
-          );
-          final result = await userAuthRepositoryImpl.checkEmailVerification();
-
-          // Assert
-          result.fold(
-            (l) => expect(l, failure),
+            (l) {
+              expect(l, failure);
+            },
             (r) => fail('test failed'),
           );
         },
@@ -342,6 +342,7 @@ void main() {
         'should return a Success Status when the sign-out process is successful',
         () async {
           // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockUserAuthRemoteDataSource.signOutUser())
               .thenAnswer((_) async => ResponseTypes.success.response);
 
@@ -360,6 +361,7 @@ void main() {
         'should return a Failure Status when the currentUser is null',
         () async {
           // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockUserAuthRemoteDataSource.signOutUser())
               .thenAnswer((_) async => ResponseTypes.failure.response);
 
@@ -378,10 +380,10 @@ void main() {
         'should return a Failure when the sign-out process fails',
         () async {
           // Arrange
-
           final authException = AuthException(
             errorMessage: 'Sign-out failed',
           );
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockUserAuthRemoteDataSource.signOutUser())
               .thenThrow(authException);
 
@@ -398,6 +400,28 @@ void main() {
           );
         },
       );
+
+      test(
+        'should return a Failure when network fails in the sign-out process',
+        () async {
+          // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => false);
+
+          // Act
+          final failure = NetworkFailure(
+            errorMessage: AppErrorMessages.noInternetMessage,
+          );
+          final result = await userAuthRepositoryImpl.signOutUser();
+
+          // Assert
+          result.fold(
+            (l) {
+              expect(l, failure);
+            },
+            (r) => fail('test failed'),
+          );
+        },
+      );
     },
   );
 
@@ -408,6 +432,7 @@ void main() {
         'should return a Success Status when the forgot password process is successful',
         () async {
           // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockUserAuthRemoteDataSource.forgotPassword(userUserEmail))
               .thenAnswer((_) async => ResponseTypes.success.response);
 
@@ -427,6 +452,7 @@ void main() {
         'should return a Failure when the email is not stored in firestore',
         () async {
           // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockUserAuthRemoteDataSource.forgotPassword(userUserEmail))
               .thenAnswer((_) async => ResponseTypes.failure.response);
 
@@ -449,6 +475,7 @@ void main() {
           final authException = AuthException(
             errorMessage: 'forgot password failed',
           );
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockUserAuthRemoteDataSource.forgotPassword(userUserEmail))
               .thenThrow(authException);
 
@@ -466,46 +493,26 @@ void main() {
           );
         },
       );
-    },
-  );
 
-  group(
-    'refreshUser',
-    () {
       test(
-        'should return a Firebase user when the refresh user process is successful',
+        'should return a Failure when network fails in the forgot password process',
         () async {
           // Arrange
-          when(mockUserAuthRemoteDataSource.refreshUser(mockFirebaseUser))
-              .thenAnswer((_) async => mockFirebaseUser);
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => false);
 
           // Act
-          final result =
-              await userAuthRepositoryImpl.refreshUser(mockFirebaseUser);
-
-          // Assert
-          expect(
-            result,
-            mockFirebaseUser,
+          final failure = NetworkFailure(
+            errorMessage: AppErrorMessages.noInternetMessage,
           );
-        },
-      );
-
-      test(
-        'should return a Null value when the refresh user process is fails',
-        () async {
-          // Arrange
-          when(mockUserAuthRemoteDataSource.refreshUser(mockFirebaseUser))
-              .thenAnswer((_) async => null);
-
-          // Act
           final result =
-              await userAuthRepositoryImpl.refreshUser(mockFirebaseUser);
+              await userAuthRepositoryImpl.forgotPassword(userUserEmail);
 
           // Assert
-          expect(
-            result,
-            null,
+          result.fold(
+            (l) {
+              expect(l, failure);
+            },
+            (r) => fail('test failed'),
           );
         },
       );

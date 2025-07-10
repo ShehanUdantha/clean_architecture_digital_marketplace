@@ -1,5 +1,7 @@
+import 'package:Pixelcart/src/core/constants/error_messages.dart';
 import 'package:Pixelcart/src/core/error/exception.dart';
 import 'package:Pixelcart/src/core/error/failure.dart';
+import 'package:Pixelcart/src/core/services/network_service.dart';
 import 'package:Pixelcart/src/core/utils/enum.dart';
 import 'package:Pixelcart/src/core/utils/extension.dart';
 import 'package:Pixelcart/src/data/data_sources/remote/notification/notification_remote_data_source.dart';
@@ -11,15 +13,21 @@ import 'package:mockito/mockito.dart';
 import '../../../fixtures/notification_values.dart';
 import 'notification_repository_impl_test.mocks.dart';
 
-@GenerateMocks([NotificationRemoteDataSource])
+@GenerateMocks([NotificationRemoteDataSource, NetworkService])
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   late NotificationRepositoryImpl notificationRepositoryImpl;
   late MockNotificationRemoteDataSource mockNotificationRemoteDataSource;
+  late MockNetworkService mockNetworkService;
 
   setUp(() {
     mockNotificationRemoteDataSource = MockNotificationRemoteDataSource();
+    mockNetworkService = MockNetworkService();
     notificationRepositoryImpl = NotificationRepositoryImpl(
-        notificationRemoteDataSource: mockNotificationRemoteDataSource);
+      notificationRemoteDataSource: mockNotificationRemoteDataSource,
+      networkService: mockNetworkService,
+    );
   });
 
   group(
@@ -29,6 +37,7 @@ void main() {
         'should return a Success Status when the send notification process is successful',
         () async {
           // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockNotificationRemoteDataSource
                   .sendNotification(notificationEntityToSend))
               .thenAnswer((_) async => ResponseTypes.success.response);
@@ -52,6 +61,7 @@ void main() {
           final dBException = DBException(
             errorMessage: 'Send notification failed - (Firebase)',
           );
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockNotificationRemoteDataSource
                   .sendNotification(notificationEntityToSend))
               .thenThrow(dBException);
@@ -78,6 +88,7 @@ void main() {
           final apiException = APIException(
             errorMessage: 'Send notification failed - (API)',
           );
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockNotificationRemoteDataSource
                   .sendNotification(notificationEntityToSend))
               .thenThrow(apiException);
@@ -96,6 +107,29 @@ void main() {
           );
         },
       );
+
+      test(
+        'should return a Failure when network fails in the send notification process',
+        () async {
+          // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => false);
+
+          // Act
+          final failure = NetworkFailure(
+            errorMessage: AppErrorMessages.noInternetMessage,
+          );
+          final result = await notificationRepositoryImpl
+              .sendNotification(notificationEntityToSend);
+
+          // Assert
+          result.fold(
+            (l) {
+              expect(l, failure);
+            },
+            (r) => fail('test failed'),
+          );
+        },
+      );
     },
   );
 
@@ -106,6 +140,7 @@ void main() {
         'should return a Success Status when the delete notification process is successful',
         () async {
           // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockNotificationRemoteDataSource
                   .deleteNotification(notificationId))
               .thenAnswer((_) async => ResponseTypes.success.response);
@@ -129,6 +164,7 @@ void main() {
           final dBException = DBException(
             errorMessage: 'Delete notification failed',
           );
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockNotificationRemoteDataSource
                   .deleteNotification(notificationId))
               .thenThrow(dBException);
@@ -147,6 +183,29 @@ void main() {
           );
         },
       );
+
+      test(
+        'should return a Failure when network fails in the delete notification process',
+        () async {
+          // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => false);
+
+          // Act
+          final failure = NetworkFailure(
+            errorMessage: AppErrorMessages.noInternetMessage,
+          );
+          final result = await notificationRepositoryImpl
+              .deleteNotification(notificationId);
+
+          // Assert
+          result.fold(
+            (l) {
+              expect(l, failure);
+            },
+            (r) => fail('test failed'),
+          );
+        },
+      );
     },
   );
 
@@ -157,6 +216,7 @@ void main() {
         'should return a List of notifications when the get all notifications process is successful',
         () async {
           // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockNotificationRemoteDataSource.getAllNotifications())
               .thenAnswer((_) async => notificationEntities);
 
@@ -178,6 +238,7 @@ void main() {
           final dBException = DBException(
             errorMessage: 'Get all notifications failed',
           );
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockNotificationRemoteDataSource.getAllNotifications())
               .thenThrow(dBException);
 
@@ -190,6 +251,28 @@ void main() {
           );
           result.fold(
             (l) => expect(l, failure),
+            (r) => fail('test failed'),
+          );
+        },
+      );
+
+      test(
+        'should return a Failure when network fails in the get all notifications process',
+        () async {
+          // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => false);
+
+          // Act
+          final failure = NetworkFailure(
+            errorMessage: AppErrorMessages.noInternetMessage,
+          );
+          final result = await notificationRepositoryImpl.getAllNotifications();
+
+          // Assert
+          result.fold(
+            (l) {
+              expect(l, failure);
+            },
             (r) => fail('test failed'),
           );
         },

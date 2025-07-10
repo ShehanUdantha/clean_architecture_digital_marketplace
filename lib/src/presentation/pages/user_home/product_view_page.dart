@@ -28,11 +28,7 @@ class ProductViewPage extends StatefulWidget {
 class _ProductViewPageState extends State<ProductViewPage> {
   @override
   void initState() {
-    context.read<ProductDetailsBloc>()
-      ..add(
-        GetProductDetailsEvent(id: widget.productId),
-      )
-      ..add(GetCartedItemsEvent());
+    _initProductViewPage();
     super.initState();
   }
 
@@ -46,6 +42,7 @@ class _ProductViewPageState extends State<ProductViewPage> {
   Widget _bodyWidget(BuildContext context) {
     return SafeArea(
       child: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
+        buildWhen: (previous, current) => previous.status != current.status,
         builder: (context, state) {
           switch (state.status) {
             case BlocStatus.loading:
@@ -71,9 +68,18 @@ class _ProductViewPageState extends State<ProductViewPage> {
     );
   }
 
+  void _initProductViewPage() {
+    context.read<ProductDetailsBloc>()
+      ..add(
+        GetProductDetailsEvent(id: widget.productId),
+      )
+      ..add(GetCartedItemsEvent());
+  }
+
   void _handleBackButton(BuildContext context, String routeName, String? type) {
     if (routeName == BackPageTypes.home.page) {
       context.goNamed(AppRoutes.homePageName);
+      FocusScope.of(context).unfocus();
     } else if (routeName == BackPageTypes.view.page) {
       context.goNamed(
         AppRoutes.viewAllProductsPageName,

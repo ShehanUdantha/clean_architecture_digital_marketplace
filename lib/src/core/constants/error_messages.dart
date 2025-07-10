@@ -27,4 +27,6 @@ class AppErrorMessages {
       'Download file directory not found!';
   static const String anErrorOccurredWhileDownloading =
       'An error occurred while downloading';
+  static const String noInternetMessage =
+      'Please check your internet connection and Try again!';
 }

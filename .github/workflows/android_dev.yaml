@@ -1,9 +1,6 @@
 name: "Pixelcart Dev - Android"
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - main

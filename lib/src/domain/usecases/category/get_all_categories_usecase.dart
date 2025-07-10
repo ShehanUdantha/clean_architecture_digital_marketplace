@@ -1,8 +1,9 @@
-import '../../../core/usecases/usecase.dart';
+import 'package:dartz/dartz.dart';
+
 import '../../../core/error/failure.dart';
+import '../../../core/usecases/usecase.dart';
 import '../../entities/category/category_entity.dart';
 import '../../repositories/category/category_repository.dart';
-import 'package:dartz/dartz.dart';
 
 class GetAllCategoriesUseCase extends UseCase<List<CategoryEntity>, NoParams> {
   final CategoryRepository categoryRepository;

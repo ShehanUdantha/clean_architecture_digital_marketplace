@@ -17,9 +17,10 @@ class CartListBuilderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<CartBloc, CartState>(
       buildWhen: (previous, current) =>
-          previous.listStatus != current.listStatus,
+          previous.listStatus != current.listStatus ||
+          previous.listOfCartedItems != current.listOfCartedItems,
       builder: (context, state) {
-        if (state.listStatus == BlocStatus.loading) {
+        if (state.listStatus == BlocStatus.initial) {
           return const CircularLoadingIndicator();
         }
 
@@ -30,6 +31,8 @@ class CartListBuilderWidget extends StatelessWidget {
                 buildWhen: (previous, current) =>
                     previous.status != current.status,
                 builder: (context, stripeState) {
+                  final isLoading = stripeState.status == BlocStatus.loading;
+
                   return ListView.builder(
                     physics: const BouncingScrollPhysics(),
                     itemCount: state.listOfCartedItems.length,
@@ -37,14 +40,13 @@ class CartListBuilderWidget extends StatelessWidget {
                       return ProductLinearCardWidget(
                         product: state.listOfCartedItems[index],
                         isEdit: false,
-                        deleteFunction: () =>
-                            stripeState.status == BlocStatus.loading
-                                ? () {}
-                                : _handleDeleteProduct(
-                                    context,
-                                    state.listOfCartedItems[index].id!,
-                                    state.listOfCartedItems.length,
-                                  ),
+                        deleteFunction: () => isLoading
+                            ? () {}
+                            : _handleDeleteProduct(
+                                context,
+                                state.listOfCartedItems[index].id!,
+                                state.listOfCartedItems.length,
+                              ),
                       );
                     },
                   );

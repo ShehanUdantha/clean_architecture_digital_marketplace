@@ -11,12 +11,9 @@ import '../../../core/utils/helper.dart';
 import '../../../core/utils/validator.dart';
 import '../../../core/widgets/base_icon_button_widget.dart';
 import '../../../core/widgets/elevated_button_widget.dart';
-import '../../../core/widgets/elevated_loading_button_widget.dart';
 import '../../../core/widgets/input_field_widget.dart';
 import '../../../domain/usecases/auth/sign_up_params.dart';
 import '../../blocs/auth/auth_bloc.dart';
-import '../../blocs/network/network_bloc.dart';
-import '../../blocs/sign_up/sign_up_bloc.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -46,42 +43,40 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Widget _bodyWidget() {
-    final networkState = context.watch<NetworkBloc>().state;
+    return BlocConsumer<AuthBloc, AuthState>(
+      listenWhen: (previous, current) => previous.status != current.status,
+      listener: (context, state) {
+        if (state.status == BlocStatus.error) {
+          Helper.showSnackBar(
+            context,
+            state.authMessage,
+          );
+        }
+        if (state.status == BlocStatus.success) {
+          context.goNamed(
+            AppRoutes.emailVerificationAndForgotPasswordPageName,
+            queryParameters: {
+              'email': _emailController.text.trim(),
+              'page': AuthTypes.signUp.auth,
+              'isForgot': 'false',
+            },
+          );
+        }
+      },
+      buildWhen: (previous, current) => previous.status != current.status,
+      builder: (context, state) {
+        final isLoading = state.status == BlocStatus.loading;
 
-    return WillPopScope(
-      onWillPop: () => _handleWillPop(context),
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: SingleChildScrollView(
-            child: BlocConsumer<SignUpBloc, SignUpState>(
-              listenWhen: (previous, current) =>
-                  previous.status != current.status,
-              listener: (context, state) {
-                if (state.status == BlocStatus.error) {
-                  Helper.showSnackBar(
-                    context,
-                    state.authMessage,
-                  );
-                  context.read<SignUpBloc>().add(SetSignUpStatusToDefault());
-                }
-                if (state.status == BlocStatus.success) {
-                  context.goNamed(
-                    AppRoutes.emailVerificationAndForgotPasswordPageName,
-                    queryParameters: {
-                      'email': _emailController.text,
-                      'page': AuthTypes.signUp.auth,
-                      'isForgot': 'false',
-                    },
-                  );
-                  context.read<SignUpBloc>().add(SetSignUpStatusToDefault());
-                  context.read<AuthBloc>().add(RefreshUserEvent());
-                }
-              },
-              buildWhen: (previous, current) =>
-                  previous.status != current.status,
-              builder: (context, state) {
-                return Column(
+        return PopScope(
+          canPop: !isLoading,
+          onPopInvokedWithResult: (didPop, result) => {
+            if (!didPop && !isLoading) {_handleBackButton()},
+          },
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -92,7 +87,8 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                         Positioned(
                           child: BaseIconButtonWidget(
-                            function: () => _handleBackButton(),
+                            function: () =>
+                                isLoading ? () {} : _handleBackButton(),
                           ),
                         ),
                       ],
@@ -113,20 +109,20 @@ class _SignUpPageState extends State<SignUpPage> {
                             controller: _userNameController,
                             hint: context.loc.userName,
                             prefix: const Icon(Iconsax.user),
-                            isReadOnly: state.status == BlocStatus.loading,
+                            isReadOnly: isLoading,
                           ),
                           const SizedBox(
-                            height: 16,
+                            height: 16.0,
                           ),
                           InputFieldWidget(
                             controller: _emailController,
                             hint: context.loc.emailAddress,
                             prefix: const Icon(Iconsax.direct_right),
                             keyBoardType: TextInputType.emailAddress,
-                            isReadOnly: state.status == BlocStatus.loading,
+                            isReadOnly: isLoading,
                           ),
                           const SizedBox(
-                            height: 16,
+                            height: 16.0,
                           ),
                           InputFieldWidget(
                             controller: _passwordController,
@@ -134,7 +130,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             prefix: const Icon(Iconsax.password_check),
                             suffix: const Icon(Iconsax.eye),
                             suffixSecondary: const Icon(Iconsax.eye_slash),
-                            isReadOnly: state.status == BlocStatus.loading,
+                            isReadOnly: isLoading,
                           ),
                         ],
                       ),
@@ -142,60 +138,50 @@ class _SignUpPageState extends State<SignUpPage> {
                     const SizedBox(
                       height: 32.0,
                     ),
-                    state.status == BlocStatus.loading
-                        ? const ElevatedLoadingButtonWidget()
-                        : ElevatedButtonWidget(
-                            title: context.loc.signUp,
-                            function: () => _handleSignUp(networkState),
-                          ),
+                    ElevatedButtonWidget(
+                      title: context.loc.signUp,
+                      function: () => _handleSignUp(),
+                      isButtonLoading: isLoading,
+                    ),
                   ],
-                );
-              },
+                ),
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
-  }
-
-  Future<bool> _handleWillPop(BuildContext context) async {
-    context.goNamed(AppRoutes.signInPageName);
-    return Future.value(false);
   }
 
   void _handleBackButton() {
     context.goNamed(AppRoutes.signInPageName);
   }
 
-  void _handleSignUp(NetworkState networkState) {
+  void _handleSignUp() {
     String? emailValidity = AppValidator.validateEmail(_emailController.text);
     String? passwordValidity =
         AppValidator.validatePassword(_passwordController.text);
 
-    if (networkState.networkTypes == NetworkTypes.connected) {
-      if (_userNameController.text.isNotEmpty) {
-        if (emailValidity == null) {
-          if (passwordValidity == null) {
-            context.read<SignUpBloc>().add(
-                  SignUpButtonClickedEvent(
-                    signUpParams: SignUpParams(
-                      userName: _userNameController.text,
-                      email: _emailController.text,
-                      password: _passwordController.text,
-                    ),
+    if (_userNameController.text.isNotEmpty) {
+      if (emailValidity == null) {
+        if (passwordValidity == null) {
+          context.read<AuthBloc>().add(
+                SignUpButtonClickedEvent(
+                  signUpParams: SignUpParams(
+                    userName: _userNameController.text.trim(),
+                    email: _emailController.text.trim(),
+                    password: _passwordController.text.trim(),
                   ),
-                );
-          } else {
-            Helper.showSnackBar(context, passwordValidity);
-          }
+                ),
+              );
         } else {
-          Helper.showSnackBar(context, emailValidity);
+          Helper.showSnackBar(context, passwordValidity);
         }
       } else {
-        Helper.showSnackBar(context, context.loc.requiredUserName);
+        Helper.showSnackBar(context, emailValidity);
       }
     } else {
-      Helper.showSnackBar(context, context.loc.noInternetMessage);
+      Helper.showSnackBar(context, context.loc.requiredUserName);
     }
   }
 }

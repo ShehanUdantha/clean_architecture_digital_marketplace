@@ -1,11 +1,11 @@
-import '../../../core/utils/enum.dart';
-import '../../../core/widgets/circular_loading_indicator.dart';
-import 'collection_list_builder_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/utils/enum.dart';
 import '../../../core/utils/helper.dart';
+import '../../../core/widgets/circular_loading_indicator.dart';
 import '../../blocs/user_home/user_home_bloc.dart';
+import 'collection_list_builder_widget.dart';
 
 class TrendingListBuilderWidget extends StatelessWidget {
   const TrendingListBuilderWidget({
@@ -19,6 +19,8 @@ class TrendingListBuilderWidget extends StatelessWidget {
           ? Helper.screeHeight(context) * 0.75
           : Helper.screeHeight(context) * 0.355,
       child: BlocBuilder<UserHomeBloc, UserHomeState>(
+        buildWhen: (previous, current) =>
+            previous.trendingStatus != current.trendingStatus,
         builder: (context, state) {
           switch (state.trendingStatus) {
             case BlocStatus.loading:

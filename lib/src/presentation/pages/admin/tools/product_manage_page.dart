@@ -30,9 +30,6 @@ class ProductManagePage extends StatelessWidget {
   }
 
   Widget _bodyWidget(BuildContext context) {
-    final categoryState = context.watch<CategoryBloc>().state;
-    final productState = context.watch<ProductBloc>().state;
-
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(16.0).copyWith(bottom: 0),
@@ -43,7 +40,7 @@ class ProductManagePage extends StatelessWidget {
               function: () => _handleBackButton(context),
             ),
             const SizedBox(
-              height: 16,
+              height: 16.0,
             ),
             SizedBox(
               height: Helper.isLandscape(context)
@@ -51,31 +48,44 @@ class ProductManagePage extends StatelessWidget {
                       (Platform.isAndroid ? 0.10 : 0.09)
                   : Helper.screeHeight(context) *
                       (Platform.isAndroid ? 0.05 : 0.042),
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                physics: const ClampingScrollPhysics(),
-                itemCount: categoryState.listOfCategories.length + 1,
-                itemBuilder: (context, index) {
-                  final categoryList = Helper.createCategoryHorizontalList(
-                    categoryState.listOfCategories,
-                  );
-                  return GestureDetector(
-                    onTap: () => _handleCategoryChipButton(
-                      context,
-                      index,
-                      categoryList,
-                    ),
-                    child: CategoryChipWidget(
-                      index: index,
-                      pickedValue: productState.currentCategory,
-                      categoryList: categoryList,
-                    ),
+              child: BlocBuilder<CategoryBloc, CategoryState>(
+                buildWhen: (previous, current) =>
+                    previous.listOfCategories != current.listOfCategories,
+                builder: (context, categoryState) {
+                  return BlocBuilder<ProductBloc, ProductState>(
+                    buildWhen: (previous, current) =>
+                        previous.currentCategory != current.currentCategory,
+                    builder: (context, productState) {
+                      return ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        physics: const ClampingScrollPhysics(),
+                        itemCount: categoryState.listOfCategories.length + 1,
+                        itemBuilder: (context, index) {
+                          final categoryList =
+                              Helper.createCategoryHorizontalList(
+                            categoryState.listOfCategories,
+                          );
+                          return GestureDetector(
+                            onTap: () => _handleCategoryChipButton(
+                              context,
+                              index,
+                              categoryList,
+                            ),
+                            child: CategoryChipWidget(
+                              index: index,
+                              pickedValue: productState.currentCategory,
+                              categoryList: categoryList,
+                            ),
+                          );
+                        },
+                      );
+                    },
                   );
                 },
               ),
             ),
             const SizedBox(
-              height: 26,
+              height: 26.0,
             ),
             BlocConsumer<ProductBloc, ProductState>(
               listenWhen: (previous, current) =>
@@ -101,6 +111,8 @@ class ProductManagePage extends StatelessWidget {
                   context.read<ProductBloc>().add(GetAllProductsEvent());
                 }
               },
+              buildWhen: (previous, current) =>
+                  previous.status != current.status,
               builder: (context, state) {
                 switch (state.status) {
                   case BlocStatus.loading:
