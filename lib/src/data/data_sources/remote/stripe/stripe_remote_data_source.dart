@@ -39,19 +39,19 @@ class StripRemoteDataSourceImpl implements StripeRemoteDataSource {
       if (response.statusCode == 200) {
         return StripeModel.fromMap(jsonDecode(response.body));
       } else {
-        throw StripeException(
+        throw StripesException(
           errorMessage: jsonDecode(response.body)['error']['message'] ??
               (rootNavigatorKey.currentContext?.loc.stripPaymentFail ??
                   AppErrorMessages.stripPaymentFail),
         );
       }
-    } on StripeException catch (e) {
-      throw StripeException(
+    } on StripesException catch (e) {
+      throw StripesException(
         errorMessage: e.errorMessage,
         stackTrace: e.stackTrace,
       );
     } catch (e, stackTrace) {
-      throw StripeException(
+      throw StripesException(
         errorMessage: e.toString(),
         stackTrace: stackTrace,
       );

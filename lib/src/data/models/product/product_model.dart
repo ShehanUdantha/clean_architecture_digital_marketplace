@@ -11,7 +11,7 @@ class ProductModel extends ProductEntity {
     required super.description,
     required super.coverImage,
     required super.subImages,
-    required super.zipFile,
+    super.zipFile,
     required super.dateCreated,
     required super.likes,
     required super.status,
@@ -59,7 +59,7 @@ class ProductModel extends ProductEntity {
         description: map['description'],
         coverImage: map['coverImage'],
         subImages: map['subImages'],
-        zipFile: map['zipFile'],
+        zipFile: map.data().containsKey('zipFile') ? map['zipFile'] : null,
         dateCreated: map['dateCreated'],
         likes: List<String>.from((map['likes'] as List).map((e) => e)),
         status: map['status'],
@@ -67,19 +67,22 @@ class ProductModel extends ProductEntity {
 
   factory ProductModel.fromDocument(
     DocumentSnapshot<Map<String, dynamic>> document,
-  ) =>
-      ProductModel(
-        id: document['id'],
-        productName: document['productName'],
-        price: document['price'],
-        category: document['category'],
-        marketingType: document['marketingType'],
-        description: document['description'],
-        coverImage: document['coverImage'],
-        subImages: document['subImages'],
-        zipFile: document['zipFile'],
-        dateCreated: document['dateCreated'],
-        likes: List<String>.from((document['likes'] as List).map((e) => e)),
-        status: document['status'],
-      );
+  ) {
+    final data = document.data()!;
+
+    return ProductModel(
+      id: data['id'],
+      productName: data['productName'],
+      price: data['price'],
+      category: data['category'],
+      marketingType: data['marketingType'],
+      description: data['description'],
+      coverImage: data['coverImage'],
+      subImages: data['subImages'],
+      zipFile: data.containsKey('zipFile') ? data['zipFile'] : null,
+      dateCreated: data['dateCreated'],
+      likes: List<String>.from((data['likes'] as List).map((e) => e)),
+      status: data['status'],
+    );
+  }
 }

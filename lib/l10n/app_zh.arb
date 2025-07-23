@@ -149,5 +149,7 @@
   "couldNotDownload": "无法下载",
   "anErrorOccurredWhileDownloading": "下载时发生错误",
   "downloadFileDirectoryNotFound": "未找到下载文件目录！",
-  "downloadURLNotFound": "未找到下载链接！"
+  "downloadURLNotFound": "未找到下载链接！",
+  "purchaseHistoryNotFound": "未找到购买记录！",
+  "productListDoesNotMatchWithPurchaseHistory": "产品列表与购买记录不匹配。"
 }

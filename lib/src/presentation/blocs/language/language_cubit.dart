@@ -11,7 +11,9 @@ part 'language_state.dart';
 class LanguageCubit extends Cubit<LanguageState> {
   final SharedPreferences sharedPreferences;
 
-  LanguageCubit(this.sharedPreferences) : super(const LanguageState()) {
+  LanguageCubit(this.sharedPreferences) : super(const LanguageState());
+
+  void init() {
     getCurrentLanguage();
   }
 

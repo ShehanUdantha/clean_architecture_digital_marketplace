@@ -8,10 +8,10 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/constants/colors.dart';
 import '../../../../core/constants/routes_name.dart';
 import '../../../../core/utils/helper.dart';
-import '../../../../domain/entities/product/purchase_products_entity.dart';
+import '../../../../domain/entities/cart/purchase_entity.dart';
 
 class PurchaseItemsCardWidget extends StatelessWidget {
-  final PurchaseProductsEntity purchaseDetails;
+  final PurchaseEntity purchaseDetails;
 
   const PurchaseItemsCardWidget({
     super.key,
@@ -96,7 +96,7 @@ class PurchaseItemsCardWidget extends StatelessWidget {
                   GestureDetector(
                     onTap: () => _moveToProductsView(
                       context,
-                      purchaseDetails.products,
+                      purchaseDetails,
                     ),
                     child: Text(
                       '${context.loc.viewProducts} >',
@@ -114,10 +114,11 @@ class PurchaseItemsCardWidget extends StatelessWidget {
     );
   }
 
-  void _moveToProductsView(BuildContext context, List<String> productsId) {
+  void _moveToProductsView(
+      BuildContext context, PurchaseEntity purchaseDetails) {
     context.goNamed(
       AppRoutes.purchaseProductViewPageName,
-      extra: productsId,
+      extra: purchaseDetails,
     );
   }
 }

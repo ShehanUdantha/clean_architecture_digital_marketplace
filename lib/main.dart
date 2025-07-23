@@ -109,10 +109,10 @@ class MyApp extends StatelessWidget {
               locator.sl<NotificationBloc>()..add(GetAllNotificationsEvent()),
         ),
         BlocProvider(
-          create: (context) => locator.sl<ThemeCubit>(),
+          create: (context) => locator.sl<ThemeCubit>()..init(),
         ),
         BlocProvider(
-          create: (context) => locator.sl<LanguageCubit>(),
+          create: (context) => locator.sl<LanguageCubit>()..init(),
         ),
       ],
       child: BlocBuilder<ThemeCubit, ThemeState>(

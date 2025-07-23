@@ -15,16 +15,16 @@ const SignUpParams userSignUpParams = SignUpParams(
 );
 
 const userUserId = 'sampleId123';
-const userUserType = 'User';
+const userUserType = 'user';
 const userUserEmail = 'testUser@example.com';
 
 const userAdminId = 'sampleId234';
-const userAdminType = 'Admin';
+const userAdminType = 'admin';
 const userAdminEmail = 'testAdmin@example.com';
 
 const UserEntity userUserEntity = UserEntity(
   userId: 'sampleId123',
-  userType: 'User',
+  userType: 'user',
   userName: 'test user',
   email: 'testUser@example.com',
   password: 'password123',
@@ -33,7 +33,7 @@ const UserEntity userUserEntity = UserEntity(
 
 const UserModel userUserModel = UserModel(
   userId: 'sampleId123',
-  userType: 'User',
+  userType: 'user',
   userName: 'test user',
   email: 'testUser@example.com',
   password: 'password123',
@@ -42,7 +42,7 @@ const UserModel userUserModel = UserModel(
 
 const UserEntity userAdminEntity = UserEntity(
   userId: 'sampleId234',
-  userType: 'Admin',
+  userType: 'admin',
   userName: 'test admin',
   email: 'testAdmin@example.com',
   password: 'password123',
@@ -51,7 +51,7 @@ const UserEntity userAdminEntity = UserEntity(
 
 const UserModel userAdminModel = UserModel(
   userId: 'sampleId234',
-  userType: 'Admin',
+  userType: 'admin',
   userName: 'test admin',
   email: 'testAdmin@example.com',
   password: 'password123',

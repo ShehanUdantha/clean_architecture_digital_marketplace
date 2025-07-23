@@ -207,13 +207,13 @@ class Helper {
     return fileName.replaceAll(RegExp(r'[<>:"/\\|?*]'), '_').toLowerCase();
   }
 
-  static Future<void> downloadFile(String fileUrl, String fileName) async {
+  static Future<void> downloadFile(String? fileUrl, String fileName) async {
     final fileDirectory = await createFolder();
     final notificationService = locator.sl<NotificationService>();
 
     final modifiedFileName = modifyTheFileName(fileName);
 
-    if (fileUrl.isNotEmpty) {
+    if (fileUrl != null && fileUrl != '') {
       if (fileDirectory != null) {
         final filePath = '${fileDirectory.path}/$modifiedFileName.zip';
         final file = File(filePath);

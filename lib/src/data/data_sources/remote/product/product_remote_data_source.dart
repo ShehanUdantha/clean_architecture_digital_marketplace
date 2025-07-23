@@ -91,7 +91,6 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
             description: productEntity.description,
             coverImage: coverImageUrl,
             subImages: subImagesUrls,
-            zipFile: zipFileUrl,
             dateCreated: DateTime.now(),
             likes: const [],
             status: ProductStatus.active.product,
@@ -101,6 +100,13 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
               .collection(AppVariableNames.products)
               .doc(productId)
               .set(productModel.toJson());
+
+          await fireStore
+              .collection(AppVariableNames.products)
+              .doc(productId)
+              .collection(AppVariableNames.productData)
+              .doc('files')
+              .set({'zipFile': zipFileUrl});
 
           return ResponseTypes.success.response;
         } else {
@@ -227,6 +233,22 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   @override
   Future<List<ProductModel>> getAllProducts(String category) async {
     try {
+      final currentUser = auth.currentUser;
+
+      final userDoc = await fireStore
+          .collection(AppVariableNames.users)
+          .doc(currentUser!.uid)
+          .get();
+
+      if (!userDoc.exists) {
+        throw AuthException(
+            errorMessage: rootNavigatorKey.currentContext?.loc.userNotFound ??
+                AppErrorMessages.userNotFound);
+      }
+
+      final userModel =
+          UserModel.fromMap(userDoc.data() as Map<String, dynamic>);
+
       final result = category != 'All Items'
           ? await fireStore
               .collection(AppVariableNames.products)
@@ -238,8 +260,45 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
               .where('status', isEqualTo: ProductStatus.active.product)
               .get();
 
-      return List<ProductModel>.from(
-          (result.docs).map((e) => ProductModel.fromMap(e)));
+      if (userModel.userType == UserTypes.admin.name) {
+        return await Future.wait(result.docs.map((doc) async {
+          final product = ProductModel.fromMap(doc);
+
+          // Fetch zip file from sub collection
+          final zipDoc = await fireStore
+              .collection(AppVariableNames.products)
+              .doc(product.id)
+              .collection(AppVariableNames.productData)
+              .doc('files')
+              .get();
+
+          if (zipDoc.exists) {
+            final zipData = zipDoc.data();
+
+            ProductModel modifiedProductModel = ProductModel(
+              id: product.id,
+              productName: product.productName,
+              price: product.price,
+              category: product.category,
+              marketingType: product.marketingType,
+              description: product.description,
+              coverImage: product.coverImage,
+              subImages: product.subImages,
+              dateCreated: product.dateCreated,
+              likes: product.likes,
+              status: product.status,
+              zipFile: zipData?['zipFile'],
+            );
+
+            return modifiedProductModel;
+          } else {
+            return product;
+          }
+        }).toList());
+      } else {
+        return List<ProductModel>.from(
+            (result.docs).map((e) => ProductModel.fromMap(e)));
+      }
     } on FirebaseAuthException catch (e) {
       throw AuthException(errorMessage: e.toString());
     } on FirebaseException catch (e) {
@@ -271,6 +330,7 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
           .collection(AppVariableNames.users)
           .doc(currentUser!.uid)
           .get();
+
       if (!userDoc.exists) {
         throw AuthException(
             errorMessage: rootNavigatorKey.currentContext?.loc.userNotFound ??
@@ -530,8 +590,14 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
             "description": productEntity.description,
             "coverImage": coverImageUrl,
             "subImages": subImagesUrls,
-            "zipFile": zipFileUrl,
           });
+
+          await fireStore
+              .collection(AppVariableNames.products)
+              .doc(productId)
+              .collection(AppVariableNames.productData)
+              .doc('files')
+              .set({'zipFile': zipFileUrl});
 
           return ResponseTypes.success.response;
         } else {
@@ -579,11 +645,21 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   }
 
   Future<List<String>> getSubImagesUrls(ProductEntity productEntity) async {
-    final tempSubImagesUrls = productEntity.subImages != null
-        ? await uploadMultipleImages(
-            productEntity.subImages, productEntity.id ?? "")
-        : [];
+    List<String> uploadedUrls = [];
 
-    return [...tempSubImagesUrls, ...productEntity.sharedSubImages ?? []];
+    if (productEntity.subImages is List<Uint8List>) {
+      final subImagesList = productEntity.subImages as List<Uint8List>;
+      if (subImagesList.isNotEmpty) {
+        uploadedUrls = await uploadMultipleImages(
+          subImagesList,
+          productEntity.id ?? "",
+        );
+      }
+    }
+
+    return [
+      ...uploadedUrls,
+      ...?productEntity.sharedSubImages,
+    ];
   }
 }

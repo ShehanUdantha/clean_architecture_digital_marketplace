@@ -109,7 +109,7 @@ void main() {
           // Arrange
           when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockUserRemoteDataSource.getUserType(userUserId))
-              .thenAnswer((_) async => userTypeForUser);
+              .thenAnswer((_) async => userTypeForUser.toLowerCase());
 
           // Act
           final result = await userRepositoryImpl.getUserType(userUserId);
@@ -117,7 +117,7 @@ void main() {
           // Assert
           result.fold(
             (l) => fail('test failed'),
-            (r) => expect(r, userTypeForUser),
+            (r) => expect(r, userTypeForUser.toLowerCase()),
           );
         },
       );

@@ -36,7 +36,7 @@ class StripeRepositoryImpl implements StripeRepository {
 
       final result = await stripeRemoteDataSource.makePayments(amount);
       return Right(result);
-    } on StripeException catch (e) {
+    } on StripesException catch (e) {
       return Left(
         StripeFailure(
           errorMessage: e.errorMessage,

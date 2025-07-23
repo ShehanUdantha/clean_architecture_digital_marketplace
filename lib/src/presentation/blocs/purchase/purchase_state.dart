@@ -1,14 +1,12 @@
 part of 'purchase_bloc.dart';
 
 class PurchaseState extends Equatable {
-  final List<PurchaseProductsEntity> listOfPurchase;
+  final List<PurchaseEntity> listOfPurchase;
   final BlocStatus status;
   final String message;
   final List<ProductEntity> listOfPurchaseProducts;
   final BlocStatus productStatus;
   final String productMessage;
-  final BlocStatus downloadStatus;
-  final String downloadMessage;
 
   const PurchaseState({
     this.listOfPurchase = const [],
@@ -17,19 +15,15 @@ class PurchaseState extends Equatable {
     this.listOfPurchaseProducts = const [],
     this.productMessage = '',
     this.productStatus = BlocStatus.initial,
-    this.downloadMessage = '',
-    this.downloadStatus = BlocStatus.initial,
   });
 
   PurchaseState copyWith({
-    List<PurchaseProductsEntity>? listOfPurchase,
+    List<PurchaseEntity>? listOfPurchase,
     BlocStatus? status,
     String? message,
     List<ProductEntity>? listOfPurchaseProducts,
     BlocStatus? productStatus,
     String? productMessage,
-    BlocStatus? downloadStatus,
-    String? downloadMessage,
   }) =>
       PurchaseState(
         listOfPurchase: listOfPurchase ?? this.listOfPurchase,
@@ -39,8 +33,6 @@ class PurchaseState extends Equatable {
             listOfPurchaseProducts ?? this.listOfPurchaseProducts,
         productMessage: productMessage ?? this.productMessage,
         productStatus: productStatus ?? this.productStatus,
-        downloadMessage: downloadMessage ?? this.downloadMessage,
-        downloadStatus: downloadStatus ?? this.downloadStatus,
       );
 
   @override
@@ -51,7 +43,5 @@ class PurchaseState extends Equatable {
         listOfPurchaseProducts,
         productMessage,
         productStatus,
-        downloadMessage,
-        downloadStatus,
       ];
 }

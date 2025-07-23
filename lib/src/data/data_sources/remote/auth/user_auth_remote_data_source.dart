@@ -93,8 +93,15 @@ class UserAuthRemoteDataSourceImpl implements UserAuthRemoteDataSource {
       } else {
         throw AuthException(errorMessage: e.toString());
       }
+    } on FirebaseException catch (e) {
+      throw DBException(errorMessage: e.toString());
     } on AuthException catch (e) {
       throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } on DBException catch (e) {
+      throw DBException(
         errorMessage: e.errorMessage,
         stackTrace: e.stackTrace,
       );
@@ -157,8 +164,15 @@ class UserAuthRemoteDataSourceImpl implements UserAuthRemoteDataSource {
       } else {
         throw AuthException(errorMessage: e.toString());
       }
+    } on FirebaseException catch (e) {
+      throw DBException(errorMessage: e.toString());
     } on AuthException catch (e) {
       throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } on DBException catch (e) {
+      throw DBException(
         errorMessage: e.errorMessage,
         stackTrace: e.stackTrace,
       );
@@ -242,8 +256,15 @@ class UserAuthRemoteDataSourceImpl implements UserAuthRemoteDataSource {
       }
     } on FirebaseAuthException catch (e) {
       throw AuthException(errorMessage: e.toString());
+    } on FirebaseException catch (e) {
+      throw DBException(errorMessage: e.toString());
     } on AuthException catch (e) {
       throw AuthException(
+        errorMessage: e.errorMessage,
+        stackTrace: e.stackTrace,
+      );
+    } on DBException catch (e) {
+      throw DBException(
         errorMessage: e.errorMessage,
         stackTrace: e.stackTrace,
       );

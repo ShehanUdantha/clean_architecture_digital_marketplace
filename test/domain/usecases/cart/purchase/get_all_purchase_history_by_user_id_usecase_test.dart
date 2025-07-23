@@ -23,7 +23,7 @@ void main() {
   });
 
   test(
-    'should return a List of PurchaseProductsModels when the get all purchase history by user id process is successful',
+    'should return a List of PurchaseModels when the get all purchase history by user id process is successful',
     () async {
       // Arrange
       when(mockPurchaseRepository.getAllPurchaseHistoryByUserId())

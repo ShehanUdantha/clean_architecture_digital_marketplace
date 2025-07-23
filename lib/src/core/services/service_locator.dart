@@ -48,7 +48,6 @@ import '../../domain/usecases/auth/user_sign_up_usecase.dart';
 import '../../domain/usecases/cart/add_product_to_cart_usecase.dart';
 import '../../domain/usecases/cart/get_all_carted_items_details_by_id_usecase.dart';
 import '../../domain/usecases/cart/get_carted_items_usecase.dart';
-import '../../domain/usecases/cart/purchase/download_product_by_product_id_usecase.dart';
 import '../../domain/usecases/cart/purchase/get_all_purchase_history_by_month_usecase.dart';
 import '../../domain/usecases/cart/purchase/get_all_purchase_history_by_user_id_usecase.dart';
 import '../../domain/usecases/cart/purchase/get_all_purchase_items_by_product_id_usecase.dart';
@@ -361,9 +360,6 @@ Future<void> serviceLocator() async {
   sl.registerSingleton<GetAllPurchaseItemsByItsProductIdsUseCase>(
     GetAllPurchaseItemsByItsProductIdsUseCase(purchaseRepository: sl()),
   );
-  sl.registerSingleton<DownloadProductByProductIdUsecase>(
-    DownloadProductByProductIdUsecase(purchaseRepository: sl()),
-  );
 
   // bloc
   // auth
@@ -465,7 +461,6 @@ Future<void> serviceLocator() async {
   // purchase
   sl.registerFactory<PurchaseBloc>(
     () => PurchaseBloc(
-      sl(),
       sl(),
       sl(),
     ),

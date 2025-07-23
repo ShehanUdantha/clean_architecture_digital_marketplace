@@ -10,7 +10,9 @@ part 'theme_state.dart';
 class ThemeCubit extends Cubit<ThemeState> {
   final SharedPreferences sharedPreferences;
 
-  ThemeCubit(this.sharedPreferences) : super(const ThemeState()) {
+  ThemeCubit(this.sharedPreferences) : super(const ThemeState());
+
+  void init() {
     getCurrentThemeMode();
   }
 

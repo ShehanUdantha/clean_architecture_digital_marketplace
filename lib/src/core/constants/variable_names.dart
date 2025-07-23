@@ -5,6 +5,7 @@ class AppVariableNames {
   static const String purchase = 'purchase';
   static const String history = 'history';
   static const String products = 'products';
+  static const String productData = 'productData';
   static const String categories = 'categories';
   static const String notifications = 'notifications';
 

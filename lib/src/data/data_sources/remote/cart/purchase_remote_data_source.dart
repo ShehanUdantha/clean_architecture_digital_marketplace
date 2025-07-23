@@ -2,6 +2,7 @@
 import 'package:Pixelcart/src/config/routes/router.dart';
 import 'package:Pixelcart/src/core/constants/error_messages.dart';
 import 'package:Pixelcart/src/data/models/user/user_model.dart';
+import 'package:Pixelcart/src/domain/entities/cart/purchase_entity.dart';
 
 import '../../../../core/constants/variable_names.dart';
 import '../../../../core/utils/extension.dart';
@@ -10,16 +11,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../../../domain/usecases/cart/purchase/year_and_month_params.dart';
 import '../../../models/product/product_model.dart';
-import '../../../models/product/purchase_products_model.dart';
+import '../../../models/cart/purchase_model.dart';
 
 import '../../../../core/error/exception.dart';
 import '../../../../core/utils/enum.dart';
 
 abstract class PurchaseRemoteDataSource {
-  Future<List<PurchaseProductsModel>> getAllPurchaseHistoryByUserId();
+  Future<List<PurchaseModel>> getAllPurchaseHistoryByUserId();
   Future<List<ProductModel>> getAllPurchaseItemsByItsProductIds(
-      List<String> productIds);
-  Future<String> downloadProductByProductId(String productId);
+      PurchaseEntity purchaseDetails);
   Future<Map<String, int>> getAllPurchaseHistoryByMonth(
       YearAndMonthParams yearAndMonthParams);
   Future<double> getAllPurchasesTotalBalanceByMonth(
@@ -40,7 +40,7 @@ class PurchaseRemoteDataSourceImpl implements PurchaseRemoteDataSource {
   });
 
   @override
-  Future<List<PurchaseProductsModel>> getAllPurchaseHistoryByUserId() async {
+  Future<List<PurchaseModel>> getAllPurchaseHistoryByUserId() async {
     try {
       final currentUser = auth.currentUser;
 
@@ -51,8 +51,8 @@ class PurchaseRemoteDataSourceImpl implements PurchaseRemoteDataSource {
           .orderBy('date', descending: true)
           .get();
 
-      return List<PurchaseProductsModel>.from(
-          (result.docs).map((e) => PurchaseProductsModel.fromMap(e.data())));
+      return List<PurchaseModel>.from(
+          (result.docs).map((e) => PurchaseModel.fromMap(e.data())));
     } on FirebaseAuthException catch (e) {
       throw AuthException(errorMessage: e.toString());
     } on FirebaseException catch (e) {
@@ -77,52 +77,79 @@ class PurchaseRemoteDataSourceImpl implements PurchaseRemoteDataSource {
 
   @override
   Future<List<ProductModel>> getAllPurchaseItemsByItsProductIds(
-      List<String> productIds) async {
+      PurchaseEntity purchaseDetails) async {
     try {
+      final currentUser = auth.currentUser;
+
       final List<ProductModel> productList = [];
 
-      for (final productId in productIds) {
-        final result = await fireStore
+      final result = await fireStore
+          .collection(AppVariableNames.purchase)
+          .doc(currentUser!.uid)
+          .collection(AppVariableNames.history)
+          .doc(purchaseDetails.purchaseId)
+          .get();
+
+      if (!result.exists) {
+        throw DBException(
+            errorMessage:
+                rootNavigatorKey.currentContext?.loc.purchaseHistoryNotFound ??
+                    AppErrorMessages.purchaseHistoryNotFound);
+      }
+
+      final historyProducts =
+          Set<String>.from(PurchaseModel.fromDocument(result).products);
+
+      if (!historyProducts.containsAll(purchaseDetails.products)) {
+        throw DBException(
+            errorMessage: rootNavigatorKey
+                    .currentContext?.loc.purchaseHistoryNotFound ??
+                AppErrorMessages.productListDoesNotMatchWithPurchaseHistory);
+      }
+
+      for (final productId in purchaseDetails.products) {
+        final productResult = await fireStore
             .collection(AppVariableNames.products)
             .doc(productId)
             .get();
-        productList.add(ProductModel.fromDocument(result));
+
+        if (productResult.exists) {
+          final product = ProductModel.fromDocument(productResult);
+
+          // Fetch zip file from sub collection
+          final zipDoc = await fireStore
+              .collection(AppVariableNames.products)
+              .doc(product.id)
+              .collection(AppVariableNames.productData)
+              .doc('files')
+              .get();
+
+          if (zipDoc.exists) {
+            final zipData = zipDoc.data();
+
+            ProductModel modifiedProductModel = ProductModel(
+              id: product.id,
+              productName: product.productName,
+              price: product.price,
+              category: product.category,
+              marketingType: product.marketingType,
+              description: product.description,
+              coverImage: product.coverImage,
+              subImages: product.subImages,
+              dateCreated: product.dateCreated,
+              likes: product.likes,
+              status: product.status,
+              zipFile: zipData?['zipFile'],
+            );
+
+            productList.add(modifiedProductModel);
+          } else {
+            productList.add(product);
+          }
+        }
       }
 
       return productList;
-    } on FirebaseAuthException catch (e) {
-      throw AuthException(errorMessage: e.toString());
-    } on FirebaseException catch (e) {
-      throw DBException(errorMessage: e.toString());
-    } on AuthException catch (e) {
-      throw AuthException(
-        errorMessage: e.errorMessage,
-        stackTrace: e.stackTrace,
-      );
-    } on DBException catch (e) {
-      throw DBException(
-        errorMessage: e.errorMessage,
-        stackTrace: e.stackTrace,
-      );
-    } catch (e, stackTrace) {
-      throw DBException(
-        errorMessage: e.toString(),
-        stackTrace: stackTrace,
-      );
-    }
-  }
-
-  @override
-  Future<String> downloadProductByProductId(String productId) async {
-    try {
-      final result = await fireStore
-          .collection(AppVariableNames.products)
-          .doc(productId)
-          .get();
-
-      ProductModel productModel = ProductModel.fromDocument(result);
-
-      return productModel.zipFile;
     } on FirebaseAuthException catch (e) {
       throw AuthException(errorMessage: e.toString());
     } on FirebaseException catch (e) {
@@ -174,16 +201,14 @@ class PurchaseRemoteDataSourceImpl implements PurchaseRemoteDataSource {
         DateTime endOfMonth =
             DateTime(yearAndMonthParams.year, yearAndMonthParams.month + 1, 1);
 
-        CollectionReference purchaseCollection =
-            fireStore.collection(AppVariableNames.purchase);
-        QuerySnapshot usersSnapshot = await purchaseCollection.get();
+        final QuerySnapshot usersSnapshot =
+            await fireStore.collection(AppVariableNames.purchase).get();
 
         for (QueryDocumentSnapshot userDoc in usersSnapshot.docs) {
-          CollectionReference historyCollection = purchaseCollection
+          QuerySnapshot historySnapshot = await fireStore
+              .collection(AppVariableNames.purchase)
               .doc(userDoc.id)
-              .collection(AppVariableNames.history);
-
-          QuerySnapshot historySnapshot = await historyCollection
+              .collection(AppVariableNames.history)
               .where('date', isGreaterThanOrEqualTo: startOfMonth)
               .where('date', isLessThan: endOfMonth)
               .get();
@@ -261,16 +286,14 @@ class PurchaseRemoteDataSourceImpl implements PurchaseRemoteDataSource {
         DateTime endOfMonth =
             DateTime(yearAndMonthParams.year, yearAndMonthParams.month + 1, 1);
 
-        CollectionReference purchaseCollection =
-            fireStore.collection(AppVariableNames.purchase);
-        QuerySnapshot usersSnapshot = await purchaseCollection.get();
+        final QuerySnapshot usersSnapshot =
+            await fireStore.collection(AppVariableNames.purchase).get();
 
         for (QueryDocumentSnapshot userDoc in usersSnapshot.docs) {
-          CollectionReference historyCollection = purchaseCollection
+          QuerySnapshot historySnapshot = await fireStore
+              .collection(AppVariableNames.purchase)
               .doc(userDoc.id)
-              .collection(AppVariableNames.history);
-
-          QuerySnapshot historySnapshot = await historyCollection
+              .collection(AppVariableNames.history)
               .where('date', isGreaterThanOrEqualTo: startOfMonth)
               .where('date', isLessThan: endOfMonth)
               .get();
@@ -335,7 +358,7 @@ class PurchaseRemoteDataSourceImpl implements PurchaseRemoteDataSource {
       if (userModel.userType == UserTypes.admin.name) {
         double percentage = 0.00;
 
-        final double thisMonthBalance =
+        final double selectedMonthBalance =
             await getAllPurchasesTotalBalanceByMonth(yearAndMonthParams);
 
         final yearAndMonthParamsForLatMonth = YearAndMonthParams(
@@ -350,12 +373,13 @@ class PurchaseRemoteDataSourceImpl implements PurchaseRemoteDataSource {
             await getAllPurchasesTotalBalanceByMonth(
                 yearAndMonthParamsForLatMonth);
 
-        if (lastMonthBalance > 0 && thisMonthBalance > 0) {
+        if (lastMonthBalance > 0 && selectedMonthBalance > 0) {
           percentage =
-              ((thisMonthBalance - lastMonthBalance) / lastMonthBalance) * 100;
-        } else if (lastMonthBalance <= 0 && thisMonthBalance > 0) {
+              ((selectedMonthBalance - lastMonthBalance) / lastMonthBalance) *
+                  100;
+        } else if (lastMonthBalance <= 0 && selectedMonthBalance > 0) {
           percentage = 100;
-        } else if (lastMonthBalance > 0 && thisMonthBalance <= 0) {
+        } else if (lastMonthBalance > 0 && selectedMonthBalance <= 0) {
           percentage = -100;
         }
 
@@ -418,16 +442,14 @@ class PurchaseRemoteDataSourceImpl implements PurchaseRemoteDataSource {
         DateTime endOfMonth =
             DateTime(yearAndMonthParams.year, yearAndMonthParams.month + 1, 1);
 
-        CollectionReference purchaseCollection =
-            fireStore.collection(AppVariableNames.purchase);
-        QuerySnapshot usersSnapshot = await purchaseCollection.get();
+        final QuerySnapshot usersSnapshot =
+            await fireStore.collection(AppVariableNames.purchase).get();
 
         for (QueryDocumentSnapshot userDoc in usersSnapshot.docs) {
-          CollectionReference historyCollection = purchaseCollection
+          QuerySnapshot historySnapshot = await fireStore
+              .collection(AppVariableNames.purchase)
               .doc(userDoc.id)
-              .collection(AppVariableNames.history);
-
-          QuerySnapshot historySnapshot = await historyCollection
+              .collection(AppVariableNames.history)
               .where('date', isGreaterThanOrEqualTo: startOfMonth)
               .where('date', isLessThan: endOfMonth)
               .get();

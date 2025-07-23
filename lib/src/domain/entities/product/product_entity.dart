@@ -24,7 +24,7 @@ class ProductEntity extends Equatable {
     required this.description,
     required this.coverImage,
     required this.subImages,
-    required this.zipFile,
+    this.zipFile,
     this.dateCreated,
     required this.likes,
     required this.status,

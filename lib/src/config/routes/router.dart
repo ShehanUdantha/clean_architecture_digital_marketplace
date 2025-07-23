@@ -1,3 +1,5 @@
+import '../../domain/entities/cart/purchase_entity.dart';
+
 import '../../core/utils/extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -254,10 +256,11 @@ GoRouter goRouter = GoRouter(
                   name: AppRoutes.purchaseProductViewPageName,
                   path: AppRoutes.purchaseProductViewPagePath,
                   builder: (context, state) {
-                    List<String> productIdsList = state.extra as List<String>;
+                    final PurchaseEntity purchaseDetails =
+                        state.extra as PurchaseEntity;
 
                     return PurchaseProductViewPage(
-                      productIds: productIdsList,
+                      purchaseDetails: purchaseDetails,
                     );
                   },
                   // sub routes

@@ -15,12 +15,22 @@ void main() {
 
   setUp(() {
     mockSharedPreferences = MockSharedPreferences();
-    when(mockSharedPreferences.getString(AppVariableNames.currentTheme))
-        .thenReturn(null);
   });
 
   blocTest<ThemeCubit, ThemeState>(
-    'emits updated state when UpdateThemeMode is called',
+    'emits no state when no theme is stored in SharedPreferences when init is called',
+    build: () {
+      when(mockSharedPreferences.getString(AppVariableNames.currentTheme))
+          .thenReturn(null);
+
+      return ThemeCubit(mockSharedPreferences);
+    },
+    act: (cubit) => cubit.init(),
+    expect: () => [],
+  );
+
+  blocTest<ThemeCubit, ThemeState>(
+    'emits updated state with themeName, themeMode when UpdateThemeMode is called',
     build: () {
       when(mockSharedPreferences.setString(
         AppVariableNames.currentTheme,
@@ -41,33 +51,20 @@ void main() {
     ],
   );
 
-  // TODO: need to implement
-  // blocTest<ThemeCubit, ThemeState>(
-  //   'emits updated state with themeName, themeMode when GetCurrentThemeMode is called',
-  //   build: () {
-  //     when(mockSharedPreferences.getString(AppVariableNames.currentTheme))
-  //         .thenReturn(currentThemeKey);
-
-  //     return ThemeCubit(mockSharedPreferences);
-  //   },
-  //   act: (_) {},
-  //   expect: () => [
-  //     const ThemeState().copyWith(
-  //       themeName: currentThemeKey,
-  //       themeMode: currentThemeValue,
-  //     ),
-  //   ],
-  // );
-
   blocTest<ThemeCubit, ThemeState>(
-    'emits no state when no theme is stored in SharedPreferences on GetCurrentThemeMode',
+    'emits updated state with themeName, themeMode when GetCurrentThemeMode is called',
     build: () {
       when(mockSharedPreferences.getString(AppVariableNames.currentTheme))
-          .thenReturn(null);
+          .thenReturn(currentThemeKey);
 
       return ThemeCubit(mockSharedPreferences);
     },
     act: (cubit) => cubit.getCurrentThemeMode(),
-    expect: () => [],
+    expect: () => [
+      const ThemeState().copyWith(
+        themeName: currentThemeKey,
+        themeMode: currentThemeValue,
+      ),
+    ],
   );
 }

@@ -1,6 +1,7 @@
 import '../../../../core/utils/extension.dart';
 
 import '../../../../core/constants/routes_name.dart';
+import '../../../../core/widgets/builder_error_message_widget.dart';
 import '../../../../core/widgets/linear_loading_indicator.dart';
 import '../../../blocs/purchase/purchase_bloc.dart';
 import 'package:flutter/material.dart';
@@ -69,8 +70,8 @@ class _PurchaseHistoryPageState extends State<PurchaseHistoryPage> {
                   case BlocStatus.success:
                     return const PurchaseItemsHistoryBuilder();
                   case BlocStatus.error:
-                    return Center(
-                      child: Text(state.message),
+                    return BuilderErrorMessageWidget(
+                      message: state.message,
                     );
                   default:
                     return const SizedBox();

@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
-class PurchaseProductsEntity extends Equatable {
+class PurchaseEntity extends Equatable {
   final String purchaseId;
   final String price;
   final Timestamp dateCreated;
   final List<String> products;
 
-  const PurchaseProductsEntity({
+  const PurchaseEntity({
     required this.purchaseId,
     required this.price,
     required this.dateCreated,

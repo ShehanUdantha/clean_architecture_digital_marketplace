@@ -1,3 +1,4 @@
+import '../../../core/widgets/builder_error_message_widget.dart';
 import '../../../core/widgets/circular_loading_indicator.dart';
 import 'collection_list_builder_widget.dart';
 import 'package:flutter/material.dart';
@@ -30,8 +31,8 @@ class LatestListBuilderWidget extends StatelessWidget {
                 productsList: state.listOfLatest,
               );
             case BlocStatus.error:
-              return Center(
-                child: Text(state.latestMessage),
+              return BuilderErrorMessageWidget(
+                message: state.latestMessage,
               );
             default:
               return const SizedBox();

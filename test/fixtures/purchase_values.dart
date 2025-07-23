@@ -1,51 +1,34 @@
 import 'package:Pixelcart/src/data/models/product/product_model.dart';
-import 'package:Pixelcart/src/data/models/product/purchase_products_model.dart';
+import 'package:Pixelcart/src/data/models/cart/purchase_model.dart';
 import 'package:Pixelcart/src/domain/entities/product/product_entity.dart';
-import 'package:Pixelcart/src/domain/entities/product/purchase_products_entity.dart';
+import 'package:Pixelcart/src/domain/entities/cart/purchase_entity.dart';
 import 'package:Pixelcart/src/domain/usecases/cart/purchase/year_and_month_params.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-final List<PurchaseProductsEntity> purchaseEntities = [
-  PurchaseProductsEntity(
+final List<PurchaseEntity> purchaseEntities = [
+  PurchaseEntity(
     purchaseId: '23434',
-    price: '2000.00',
-    dateCreated: Timestamp.now(),
+    price: '2499.98',
+    dateCreated: Timestamp.fromDate(DateTime(2025, 3, 8, 2, 0, 0)),
     products: ['product_003', 'product_001'],
   ),
 ];
 
-final List<PurchaseProductsModel> purchaseModels = [
-  PurchaseProductsModel(
+final List<PurchaseModel> purchaseModels = [
+  PurchaseModel(
     purchaseId: '23434',
-    price: '2000.00',
-    dateCreated: Timestamp.now(),
+    price: '2499.98',
+    dateCreated: Timestamp.fromDate(DateTime(2025, 3, 8, 2, 0, 0)),
     products: ['product_003', 'product_001'],
   ),
 ];
 
 const List<String> purchasedProductIdList = [
   'product_003',
-  'product_002',
+  'product_001',
 ];
 
 const List<ProductEntity> purchasedProductEntities = [
-  ProductEntity(
-    id: 'product_002',
-    productName: 'Product Two',
-    price: '199.99',
-    category: 'Ui Kits',
-    marketingType: 'Latest',
-    description: 'Product Two description',
-    coverImage: 'https://example.com/images/cover/x_2.jpg',
-    subImages: [
-      'https://example.com/images/sub/x_3.jpg',
-      'https://example.com/images/sub/x_4.jpg',
-    ],
-    zipFile: 'https://example.com/files/x_2.zip',
-    dateCreated: '2025-01-17',
-    likes: ['user_03'],
-    status: 'active',
-  ),
   ProductEntity(
     id: 'product_003',
     productName: 'Product Three',
@@ -61,29 +44,29 @@ const List<ProductEntity> purchasedProductEntities = [
     zipFile: 'https://example.com/files/x_3.zip',
     dateCreated: '2025-01-16',
     likes: ['user_02', 'user_01'],
+    status: 'active',
+  ),
+  ProductEntity(
+    id: 'product_001',
+    productName: 'Product One',
+    price: '999.99',
+    category: 'Mockups',
+    marketingType: 'Trending',
+    description: 'Product One description',
+    coverImage: 'https://example.com/images/cover/x_1.jpg',
+    subImages: [
+      'https://example.com/images/sub/x_1.jpg',
+      'https://example.com/images/sub/x_2.jpg',
+    ],
+    zipFile: 'https://example.com/files/x_1.zip',
+    dateCreated: '2025-01-18',
+    likes: ['user_01', 'user_02'],
     status: 'active',
   ),
 ];
 
 const List<ProductModel> purchasedProductModels = [
   ProductModel(
-    id: 'product_002',
-    productName: 'Product Two',
-    price: '199.99',
-    category: 'Ui Kits',
-    marketingType: 'Latest',
-    description: 'Product Two description',
-    coverImage: 'https://example.com/images/cover/x_2.jpg',
-    subImages: [
-      'https://example.com/images/sub/x_3.jpg',
-      'https://example.com/images/sub/x_4.jpg',
-    ],
-    zipFile: 'https://example.com/files/x_2.zip',
-    dateCreated: '2025-01-17',
-    likes: ['user_03'],
-    status: 'active',
-  ),
-  ProductModel(
     id: 'product_003',
     productName: 'Product Three',
     price: '1499.99',
@@ -98,65 +81,88 @@ const List<ProductModel> purchasedProductModels = [
     zipFile: 'https://example.com/files/x_3.zip',
     dateCreated: '2025-01-16',
     likes: ['user_02', 'user_01'],
+    status: 'active',
+  ),
+  ProductModel(
+    id: 'product_001',
+    productName: 'Product One',
+    price: '999.99',
+    category: 'Mockups',
+    marketingType: 'Trending',
+    description: 'Product One description',
+    coverImage: 'https://example.com/images/cover/x_1.jpg',
+    subImages: [
+      'https://example.com/images/sub/x_1.jpg',
+      'https://example.com/images/sub/x_2.jpg',
+    ],
+    zipFile: 'https://example.com/files/x_1.zip',
+    dateCreated: '2025-01-18',
+    likes: ['user_01', 'user_02'],
     status: 'active',
   ),
 ];
 
-const String purchasedProductId = 'product_003';
+const String purchasedId = '23434';
 
-final PurchaseProductsEntity purchasedProductEntity = PurchaseProductsEntity(
+final PurchaseEntity purchasedEntity = PurchaseEntity(
   purchaseId: '23434',
-  price: '2000.00',
+  price: '2499.98',
   dateCreated: Timestamp.fromDate(DateTime(2025, 3, 8, 2, 0, 0)),
   products: ['product_003', 'product_001'],
 );
 
-final PurchaseProductsModel purchasedProductModel = PurchaseProductsModel(
+final PurchaseModel purchasedModel = PurchaseModel(
   purchaseId: '23434',
-  price: '2000.00',
+  price: '2499.98',
   dateCreated: Timestamp.fromDate(DateTime(2025, 3, 8, 2, 0, 0)),
   products: ['product_003', 'product_001'],
 );
 
-final purchasedProductJson = {
+final purchasedJson = {
   'purchaseId': '23434',
-  'price': '2000.00',
+  'price': '2499.98',
   'date': Timestamp.fromDate(DateTime(2025, 3, 8, 2, 0, 0)),
   'ids': ['product_003', 'product_001'],
 };
 
-final yearAndMonthParamsToGetPurchaseHistory = YearAndMonthParams(
-  year: DateTime.now().year,
-  month: DateTime.now().month,
-);
-
-const Map<String, int> purchaseHistoryByYearAndMonth = {
-  '1': 2,
-  '5': 10,
+final purchasedFailureJson = {
+  'purchaseId': '23434',
+  'price': '2499.98',
+  'date': Timestamp.fromDate(DateTime(2025, 3, 8, 2, 0, 0)),
+  'ids': ['product_003', 'product_001', 'product_008'],
 };
 
-const double totalPurchaseAmountByYearAndMonth = 1699.98;
+const String purchasedIdTwo = '45373';
 
-const double totalPurchaseAmountPercentageByYearAndMonth = 8.2;
+final purchasedJsonTwo = {
+  'purchaseId': '45373',
+  'price': '199.99',
+  'date': Timestamp.fromDate(DateTime(2025, 2, 5, 2, 0, 0)),
+  'ids': ['product_002'],
+};
+
+final yearAndMonthParamsToGetPurchaseHistory = YearAndMonthParams(
+  year: 2025,
+  month: 3,
+);
+
+final yearAndMonthParamsToGetPurchaseHistoryTwo = YearAndMonthParams(
+  year: 2025,
+  month: 5,
+);
+
+// key is the day, value is the number of products
+const Map<String, int> purchaseHistoryByYearAndMonth = {
+  '08': 2,
+};
+
+const double totalPurchaseAmountByYearAndMonth = 2499.98;
+
+const double totalPurchaseAmountPercentageByYearAndMonth = 100.0;
+
+const double totalPurchaseAmountPercentageByYearAndMonthTwo = 1150.052502625131;
 
 const List<ProductEntity> topSellingProductEntitiesByYearAndMonth = [
-  ProductEntity(
-    id: 'product_002',
-    productName: 'Product Two',
-    price: '199.99',
-    category: 'Ui Kits',
-    marketingType: 'Latest',
-    description: 'Product Two description',
-    coverImage: 'https://example.com/images/cover/x_2.jpg',
-    subImages: [
-      'https://example.com/images/sub/x_3.jpg',
-      'https://example.com/images/sub/x_4.jpg',
-    ],
-    zipFile: 'https://example.com/files/x_2.zip',
-    dateCreated: '2025-01-17',
-    likes: ['user_03'],
-    status: 'active',
-  ),
   ProductEntity(
     id: 'product_003',
     productName: 'Product Three',
@@ -172,29 +178,29 @@ const List<ProductEntity> topSellingProductEntitiesByYearAndMonth = [
     zipFile: 'https://example.com/files/x_3.zip',
     dateCreated: '2025-01-16',
     likes: ['user_02', 'user_01'],
+    status: 'active',
+  ),
+  ProductEntity(
+    id: 'product_001',
+    productName: 'Product One',
+    price: '999.99',
+    category: 'Mockups',
+    marketingType: 'Trending',
+    description: 'Product One description',
+    coverImage: 'https://example.com/images/cover/x_1.jpg',
+    subImages: [
+      'https://example.com/images/sub/x_1.jpg',
+      'https://example.com/images/sub/x_2.jpg',
+    ],
+    zipFile: 'https://example.com/files/x_1.zip',
+    dateCreated: '2025-01-18',
+    likes: ['user_01', 'user_02'],
     status: 'active',
   ),
 ];
 
 const List<ProductModel> topSellingProductModelsByYearAndMonth = [
   ProductModel(
-    id: 'product_002',
-    productName: 'Product Two',
-    price: '199.99',
-    category: 'Ui Kits',
-    marketingType: 'Latest',
-    description: 'Product Two description',
-    coverImage: 'https://example.com/images/cover/x_2.jpg',
-    subImages: [
-      'https://example.com/images/sub/x_3.jpg',
-      'https://example.com/images/sub/x_4.jpg',
-    ],
-    zipFile: 'https://example.com/files/x_2.zip',
-    dateCreated: '2025-01-17',
-    likes: ['user_03'],
-    status: 'active',
-  ),
-  ProductModel(
     id: 'product_003',
     productName: 'Product Three',
     price: '1499.99',
@@ -211,9 +217,21 @@ const List<ProductModel> topSellingProductModelsByYearAndMonth = [
     likes: ['user_02', 'user_01'],
     status: 'active',
   ),
+  ProductModel(
+    id: 'product_001',
+    productName: 'Product One',
+    price: '999.99',
+    category: 'Mockups',
+    marketingType: 'Trending',
+    description: 'Product One description',
+    coverImage: 'https://example.com/images/cover/x_1.jpg',
+    subImages: [
+      'https://example.com/images/sub/x_1.jpg',
+      'https://example.com/images/sub/x_2.jpg',
+    ],
+    zipFile: 'https://example.com/files/x_1.zip',
+    dateCreated: '2025-01-18',
+    likes: ['user_01', 'user_02'],
+    status: 'active',
+  ),
 ];
-
-const String purchasedProductName = 'Product Three';
-
-const String purchasedProductUrl =
-    'https://firebasestorage.googleapis.com/v0/b/digital-marketplace-22733.appspot.com/o/test%2Ftest_product.zip?alt=media&token=1a1554b2-146b-4f26-960b-a1a3db57';

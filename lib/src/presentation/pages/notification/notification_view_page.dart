@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/constants/routes_name.dart';
 import '../../../core/utils/enum.dart';
 import '../../../core/utils/helper.dart';
+import '../../../core/widgets/builder_error_message_widget.dart';
 import '../../../core/widgets/page_header_widget.dart';
 import '../../../core/widgets/linear_loading_indicator.dart';
 import '../../blocs/notification/notification_bloc.dart';
@@ -78,8 +79,8 @@ class _NotificationViewPageState extends State<NotificationViewPage> {
                       isHide: true,
                     );
                   case BlocStatus.error:
-                    return Center(
-                      child: Text(state.message),
+                    return BuilderErrorMessageWidget(
+                      message: state.message,
                     );
                   default:
                     return const SizedBox();
