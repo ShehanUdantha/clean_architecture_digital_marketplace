@@ -20,10 +20,14 @@ jobs:
       - name: Install Dependencies
         run: flutter pub get
 
-      - name: Install iOS Dependencies
+      - name: Clean and Install iOS Pods
         run: |
           cd ios
-          pod install --repo-update
+          sudo gem install cocoapods
+          pod repo update
+          rm -rf Pods Podfile.lock
+          pod cache clean --all
+          pod install
           cd ..
 
       - name: Create env File
