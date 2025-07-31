@@ -43,10 +43,10 @@ jobs:
         run: flutter test
 
       - name: Build iOS
-        run: flutter build ios --release --no-codesign
+        run: flutter build ios --simulator
 
       - name: Upload iOS
         uses: actions/upload-artifact@v4
         with:
           name: ios-dev-app
-          path: build/ios/iphoneos/
+          path: build/ios/iphonesimulator/
