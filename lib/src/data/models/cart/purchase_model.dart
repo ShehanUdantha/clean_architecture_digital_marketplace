@@ -1,28 +1,28 @@
-import '../../../domain/entities/product/purchase_products_entity.dart';
+import '../../../domain/entities/cart/purchase_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class PurchaseProductsModel extends PurchaseProductsEntity {
-  const PurchaseProductsModel({
+class PurchaseModel extends PurchaseEntity {
+  const PurchaseModel({
     required super.purchaseId,
     required super.price,
     required super.dateCreated,
     required super.products,
   });
 
-  factory PurchaseProductsModel.fromMap(
+  factory PurchaseModel.fromMap(
     Map<String, dynamic> map,
   ) =>
-      PurchaseProductsModel(
+      PurchaseModel(
         purchaseId: map['purchaseId'],
         price: map['price'],
         dateCreated: map['date'],
         products: List<String>.from((map['ids'] as List).map((e) => e)),
       );
 
-  factory PurchaseProductsModel.fromDocument(
+  factory PurchaseModel.fromDocument(
     DocumentSnapshot<Map<String, dynamic>> document,
   ) =>
-      PurchaseProductsModel(
+      PurchaseModel(
         purchaseId: document['purchaseId'],
         price: document['price'],
         dateCreated: document['date'],

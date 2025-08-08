@@ -63,12 +63,13 @@ void main() {
     'emits [loading, error] when MakePaymentRequestEvent is added and payment fails',
     build: () {
       final failure = StripeFailure(errorMessage: 'Payment failed');
-      when(mockMakePaymentsUseCase.call(paymentAmount))
+      when(mockMakePaymentsUseCase.call(stripePaymentAmount))
           .thenAnswer((_) async => Left(failure));
 
       return stripeBloc;
     },
-    act: (bloc) => bloc.add(MakePaymentRequestEvent(amount: paymentAmount)),
+    act: (bloc) =>
+        bloc.add(MakePaymentRequestEvent(amount: stripePaymentAmount)),
     expect: () => [
       const StripeState().copyWith(status: BlocStatus.loading),
       const StripeState().copyWith(

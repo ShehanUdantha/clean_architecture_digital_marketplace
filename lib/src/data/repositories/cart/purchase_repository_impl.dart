@@ -9,7 +9,7 @@ import 'package:Pixelcart/src/core/services/network_service.dart';
 import '../../../core/error/exception.dart';
 import '../../../core/error/failure.dart';
 import '../../../domain/entities/product/product_entity.dart';
-import '../../../domain/entities/product/purchase_products_entity.dart';
+import '../../../domain/entities/cart/purchase_entity.dart';
 import '../../../domain/repositories/cart/purchase_repository.dart';
 import '../../../domain/usecases/cart/purchase/year_and_month_params.dart';
 import '../../data_sources/remote/cart/purchase_remote_data_source.dart';
@@ -24,7 +24,7 @@ class PurchaseRepositoryImpl implements PurchaseRepository {
   });
 
   @override
-  Future<Either<Failure, List<PurchaseProductsEntity>>>
+  Future<Either<Failure, List<PurchaseEntity>>>
       getAllPurchaseHistoryByUserId() async {
     try {
       if (!await (networkService.isConnected())) {
@@ -59,7 +59,7 @@ class PurchaseRepositoryImpl implements PurchaseRepository {
 
   @override
   Future<Either<Failure, List<ProductEntity>>> getAllPurchaseItemsByProductId(
-      List<String> productIds) async {
+      PurchaseEntity purchaseDetails) async {
     try {
       if (!await (networkService.isConnected())) {
         return Left(
@@ -72,41 +72,7 @@ class PurchaseRepositoryImpl implements PurchaseRepository {
       }
 
       final result = await purchaseRemoteDataSource
-          .getAllPurchaseItemsByItsProductIds(productIds);
-      return Right(result);
-    } on AuthException catch (e) {
-      return Left(
-        FirebaseFailure(
-          errorMessage: e.errorMessage,
-          stackTrace: e.stackTrace,
-        ),
-      );
-    } on DBException catch (e) {
-      return Left(
-        FirebaseFailure(
-          errorMessage: e.errorMessage,
-          stackTrace: e.stackTrace,
-        ),
-      );
-    }
-  }
-
-  @override
-  Future<Either<Failure, String>> downloadProductByProductId(
-      String productId) async {
-    try {
-      if (!await (networkService.isConnected())) {
-        return Left(
-          NetworkFailure(
-            errorMessage: rootNavigatorKey.currentContext != null
-                ? rootNavigatorKey.currentContext!.loc.noInternetMessage
-                : AppErrorMessages.noInternetMessage,
-          ),
-        );
-      }
-
-      final result =
-          await purchaseRemoteDataSource.downloadProductByProductId(productId);
+          .getAllPurchaseItemsByItsProductIds(purchaseDetails);
       return Right(result);
     } on AuthException catch (e) {
       return Left(

@@ -1,3 +1,4 @@
+import '../../../../core/widgets/builder_error_message_widget.dart';
 import '../../../blocs/theme/theme_cubit.dart';
 
 import '../../../../core/utils/extension.dart';
@@ -60,8 +61,8 @@ class TopSellingProductsWidget extends StatelessWidget {
                     case BlocStatus.success:
                       return const TopSellingProductBuilderWidget();
                     case BlocStatus.error:
-                      return Center(
-                        child: Text(state.monthlyTopSellingProductsListMessage),
+                      return BuilderErrorMessageWidget(
+                        message: state.monthlyTopSellingProductsListMessage,
                       );
                     default:
                       return const SizedBox();

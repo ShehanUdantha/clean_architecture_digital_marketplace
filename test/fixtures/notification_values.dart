@@ -27,10 +27,24 @@ const notificationEntities = [
   ),
 ];
 
-const String notificationId = 'notification_001';
+const notificationModels = [
+  NotificationModel(
+    id: 'notification_001',
+    title: 'Welcome to the App!',
+    description:
+        'Thank you for signing up. Explore the features and enjoy your journey with us.',
+    dateCreated: '2025-01-15',
+  ),
+  NotificationModel(
+    id: 'notification_002',
+    title: 'Update Available',
+    description:
+        'A new version of the app is now available. Update to enjoy the latest features.',
+    dateCreated: '2025-01-18',
+  ),
+];
 
-const int currentUserNotificationCount = 2;
-const int currentUserNotificationNewCount = 1;
+const String notificationId = 'notification_002';
 
 const NotificationEntity notificationEntity = NotificationEntity(
   id: 'notification_002',
@@ -55,3 +69,7 @@ const notificationJson = {
       'A new version of the app is now available. Update to enjoy the latest features.',
   'dateCreated': '2025-01-18',
 };
+
+const int currentUserNotificationCount = 2;
+const int currentUserNotificationNewCountWithPreviousCount = 3;
+const int currentUserNotificationNewCountWithOutPreviousCount = 1;

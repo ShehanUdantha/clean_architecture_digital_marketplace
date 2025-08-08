@@ -36,11 +36,12 @@ void main() {
         () async {
           // Arrange
           when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
-          when(mockStripeRemoteDataSource.makePayments(paymentAmount))
+          when(mockStripeRemoteDataSource.makePayments(stripePaymentAmount))
               .thenAnswer((_) async => stripeModel);
 
           // Act
-          final result = await stripeRepositoryImpl.makePayments(paymentAmount);
+          final result =
+              await stripeRepositoryImpl.makePayments(stripePaymentAmount);
 
           // Assert
           result.fold(
@@ -54,15 +55,16 @@ void main() {
         'should return a Failure when the make payments process fails',
         () async {
           // Arrange
-          final stripeException = StripeException(
+          final stripesException = StripesException(
             errorMessage: 'Make payments failed',
           );
           when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
-          when(mockStripeRemoteDataSource.makePayments(paymentAmount))
-              .thenThrow(stripeException);
+          when(mockStripeRemoteDataSource.makePayments(stripePaymentAmount))
+              .thenThrow(stripesException);
 
           // Act
-          final result = await stripeRepositoryImpl.makePayments(paymentAmount);
+          final result =
+              await stripeRepositoryImpl.makePayments(stripePaymentAmount);
 
           // Assert
           final failure = StripeFailure(
@@ -85,7 +87,8 @@ void main() {
           final failure = NetworkFailure(
             errorMessage: AppErrorMessages.noInternetMessage,
           );
-          final result = await stripeRepositoryImpl.makePayments(paymentAmount);
+          final result =
+              await stripeRepositoryImpl.makePayments(stripePaymentAmount);
 
           // Assert
           result.fold(

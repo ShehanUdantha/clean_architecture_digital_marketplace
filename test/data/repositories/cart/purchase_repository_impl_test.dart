@@ -32,7 +32,7 @@ void main() {
     'getAllPurchaseHistoryByUserId',
     () {
       test(
-        'should return a List of PurchaseProductsModels when the get all purchase history by user id process is successful',
+        'should return a List of PurchaseModels when the get all purchase history by user id process is successful',
         () async {
           // Arrange
           when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
@@ -103,7 +103,7 @@ void main() {
   );
 
   group(
-    'getAllPurchaseItemsByProductId',
+    'getAllPurchaseItemsByItsProductIds',
     () {
       test(
         'should return a List of ProductsModels when the get all purchase items by product id process is successful',
@@ -111,12 +111,12 @@ void main() {
           // Arrange
           when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockPurchaseRemoteDataSource
-                  .getAllPurchaseItemsByItsProductIds(purchasedProductIdList))
+                  .getAllPurchaseItemsByItsProductIds(purchasedEntity))
               .thenAnswer((_) async => purchasedProductModels);
 
           // Act
           final result = await purchaseRepositoryImpl
-              .getAllPurchaseItemsByProductId(purchasedProductIdList);
+              .getAllPurchaseItemsByProductId(purchasedEntity);
 
           // Assert
           result.fold(
@@ -135,12 +135,12 @@ void main() {
             errorMessage: 'Get all purchase items by product id failed',
           );
           when(mockPurchaseRemoteDataSource
-                  .getAllPurchaseItemsByItsProductIds(purchasedProductIdList))
+                  .getAllPurchaseItemsByItsProductIds(purchasedEntity))
               .thenThrow(dbException);
 
           // Act
           final result = await purchaseRepositoryImpl
-              .getAllPurchaseItemsByProductId(purchasedProductIdList);
+              .getAllPurchaseItemsByProductId(purchasedEntity);
 
           // Assert
           final failure = FirebaseFailure(
@@ -164,83 +164,7 @@ void main() {
             errorMessage: AppErrorMessages.noInternetMessage,
           );
           final result = await purchaseRepositoryImpl
-              .getAllPurchaseItemsByProductId(purchasedProductIdList);
-
-          // Assert
-          result.fold(
-            (l) {
-              expect(l, failure);
-            },
-            (r) => fail('test failed'),
-          );
-        },
-      );
-    },
-  );
-
-  group(
-    'downloadProductByProductId',
-    () {
-      test(
-        'should return a Product file URL when the download product by product id process is successful',
-        () async {
-          // Arrange
-          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
-          when(mockPurchaseRemoteDataSource
-                  .downloadProductByProductId(purchasedProductId))
-              .thenAnswer((_) async => purchasedProductUrl);
-
-          // Act
-          final result = await purchaseRepositoryImpl
-              .downloadProductByProductId(purchasedProductId);
-
-          // Assert
-          result.fold(
-            (l) => fail('test failed'),
-            (r) => expect(r, purchasedProductUrl),
-          );
-        },
-      );
-
-      test(
-        'should return a Failure when the download product by product id process fails',
-        () async {
-          // Arrange
-          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
-          final dbException = DBException(
-            errorMessage: 'Download product by product id failed',
-          );
-          when(mockPurchaseRemoteDataSource
-                  .downloadProductByProductId(purchasedProductId))
-              .thenThrow(dbException);
-
-          // Act
-          final result = await purchaseRepositoryImpl
-              .downloadProductByProductId(purchasedProductId);
-
-          // Assert
-          final failure = FirebaseFailure(
-            errorMessage: 'Download product by product id failed',
-          );
-          result.fold(
-            (l) => expect(l, failure),
-            (r) => fail('test failed'),
-          );
-        },
-      );
-
-      test(
-        'should return a Failure when network fails in the download product by product id process',
-        () async {
-          // Arrange
-          when(mockNetworkService.isConnected()).thenAnswer((_) async => false);
-
-          // Act
-          final failure = NetworkFailure(
-            errorMessage: AppErrorMessages.noInternetMessage,
-          );
-          final result = await purchaseRepositoryImpl
-              .downloadProductByProductId(purchasedProductId);
+              .getAllPurchaseItemsByProductId(purchasedEntity);
 
           // Assert
           result.fold(

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/utils/enum.dart';
 import '../../../core/utils/extension.dart';
+import '../../../core/widgets/builder_error_message_widget.dart';
 import '../../../core/widgets/linear_loading_indicator.dart';
 import '../../blocs/user_home/user_home_bloc.dart';
 import 'product_grid_view_list_builder_widget.dart';
@@ -28,8 +29,8 @@ class SearchProductListBuilderWidget extends StatelessWidget {
                 routeName: BackPageTypes.home.page,
               );
             case BlocStatus.error:
-              return Center(
-                child: Text(state.searchProductsMessage),
+              return BuilderErrorMessageWidget(
+                message: state.searchProductsMessage,
               );
             default:
               return const SizedBox();

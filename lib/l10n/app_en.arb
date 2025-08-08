@@ -149,5 +149,7 @@
   "couldNotDownload":"Could not download",
   "anErrorOccurredWhileDownloading":"An error occurred while downloading",
   "downloadFileDirectoryNotFound":"Download file directory not found!",
-  "downloadURLNotFound":"Download URL not found!"
+  "downloadURLNotFound":"Download URL not found!",
+  "purchaseHistoryNotFound":"Purchase history not found!",
+  "productListDoesNotMatchWithPurchaseHistory":"Product list does not match with purchase history."
 }

@@ -7,7 +7,7 @@ void main() {
     'should create a valid User Entity instance',
     () async {
       expect(userUserTypeEntity.userId, 'sampleId890');
-      expect(userUserTypeEntity.userType, 'User');
+      expect(userUserTypeEntity.userType, 'user');
       expect(userUserTypeEntity.userName, 'John Doe');
       expect(userUserTypeEntity.email, 'john.doe@example.com');
       expect(userUserTypeEntity.password, 'password123');

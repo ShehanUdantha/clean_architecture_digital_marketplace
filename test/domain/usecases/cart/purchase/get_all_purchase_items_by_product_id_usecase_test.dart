@@ -27,12 +27,12 @@ void main() {
     () async {
       // Arrange
       when(mockPurchaseRepository
-              .getAllPurchaseItemsByProductId(purchasedProductIdList))
+              .getAllPurchaseItemsByProductId(purchasedEntity))
           .thenAnswer((_) async => Right(purchasedProductEntities));
 
       // Act
-      final result = await getAllPurchaseItemsByItsProductIdsUseCase
-          .call(purchasedProductIdList);
+      final result =
+          await getAllPurchaseItemsByItsProductIdsUseCase.call(purchasedEntity);
 
       // Assert
       expect(result, Right(purchasedProductEntities));
@@ -47,12 +47,12 @@ void main() {
         errorMessage: 'Get all purchase items by product id failed',
       );
       when(mockPurchaseRepository
-              .getAllPurchaseItemsByProductId(purchasedProductIdList))
+              .getAllPurchaseItemsByProductId(purchasedEntity))
           .thenAnswer((_) async => Left(failure));
 
       // Act
-      final result = await getAllPurchaseItemsByItsProductIdsUseCase
-          .call(purchasedProductIdList);
+      final result =
+          await getAllPurchaseItemsByItsProductIdsUseCase.call(purchasedEntity);
 
       // Assert
       expect(result, Left(failure));

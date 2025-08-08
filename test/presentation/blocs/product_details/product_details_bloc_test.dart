@@ -230,7 +230,7 @@ void main() {
           .thenAnswer((_) async => Right(productIdThreeEntity));
 
       when(mockAddFavoriteUseCase.call(any))
-          .thenAnswer((_) async => Right(productIdThreeNewEntity));
+          .thenAnswer((_) async => Right(productIdThreeFavoriteEntity));
 
       return productDetailsBloc;
     },
@@ -247,7 +247,7 @@ void main() {
       ),
       ProductDetailsState().copyWith(
         status: BlocStatus.success,
-        productEntity: productIdThreeNewEntity,
+        productEntity: productIdThreeFavoriteEntity,
         favoriteStatus: BlocStatus.success,
       ),
     ],

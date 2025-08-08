@@ -45,6 +45,13 @@ class UserAuthRepositoryImpl implements UserAuthRepository {
           stackTrace: e.stackTrace,
         ),
       );
+    } on DBException catch (e) {
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
     }
   }
 
@@ -64,6 +71,13 @@ class UserAuthRepositoryImpl implements UserAuthRepository {
       final result = await userAuthRemoteDataSource.signUpUser(signUpParams);
       return Right(result);
     } on AuthException catch (e) {
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
+    } on DBException catch (e) {
       return Left(
         FirebaseFailure(
           errorMessage: e.errorMessage,
@@ -142,6 +156,13 @@ class UserAuthRepositoryImpl implements UserAuthRepository {
       final result = await userAuthRemoteDataSource.forgotPassword(email);
       return Right(result);
     } on AuthException catch (e) {
+      return Left(
+        FirebaseFailure(
+          errorMessage: e.errorMessage,
+          stackTrace: e.stackTrace,
+        ),
+      );
+    } on DBException catch (e) {
       return Left(
         FirebaseFailure(
           errorMessage: e.errorMessage,

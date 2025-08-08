@@ -1,6 +1,9 @@
+import '../../../../domain/entities/cart/purchase_entity.dart';
+
 import '../../../../core/utils/extension.dart';
 
 import '../../../../core/constants/routes_name.dart';
+import '../../../../core/widgets/builder_error_message_widget.dart';
 import '../../../../core/widgets/linear_loading_indicator.dart';
 import '../../../blocs/purchase/purchase_bloc.dart';
 import '../../../widgets/profile/purchase/purchase_products_builder_widget.dart';
@@ -9,15 +12,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/utils/enum.dart';
-import '../../../../core/utils/helper.dart';
 import '../../../../core/widgets/page_header_widget.dart';
 
 class PurchaseProductViewPage extends StatefulWidget {
-  final List<String> productIds;
+  final PurchaseEntity purchaseDetails;
 
   const PurchaseProductViewPage({
     super.key,
-    required this.productIds,
+    required this.purchaseDetails,
   });
 
   @override
@@ -57,41 +59,7 @@ class _PurchaseProductViewPageState extends State<PurchaseProductViewPage> {
               const SizedBox(
                 height: 16.0,
               ),
-              BlocConsumer<PurchaseBloc, PurchaseState>(
-                listenWhen: (previous, current) =>
-                    previous.productStatus != current.productStatus ||
-                    previous.downloadStatus != current.downloadStatus,
-                listener: (context, state) {
-                  if (state.productStatus == BlocStatus.error) {
-                    Helper.showSnackBar(
-                      context,
-                      state.productMessage,
-                    );
-                    context
-                        .read<PurchaseBloc>()
-                        .add(SetPurchaseProductsStatusToDefault());
-                  }
-
-                  if (state.downloadStatus == BlocStatus.error) {
-                    Helper.showSnackBar(
-                      context,
-                      state.downloadMessage,
-                    );
-                    context
-                        .read<PurchaseBloc>()
-                        .add(SetPurchaseDownloadStatusToDefault());
-                  }
-
-                  if (state.downloadStatus == BlocStatus.success) {
-                    Helper.showSnackBar(
-                      context,
-                      context.loc.productDownloadSuccessful,
-                    );
-                    context
-                        .read<PurchaseBloc>()
-                        .add(SetPurchaseDownloadStatusToDefault());
-                  }
-                },
+              BlocBuilder<PurchaseBloc, PurchaseState>(
                 buildWhen: (previous, current) =>
                     previous.productStatus != current.productStatus,
                 builder: (context, state) {
@@ -101,8 +69,8 @@ class _PurchaseProductViewPageState extends State<PurchaseProductViewPage> {
                     case BlocStatus.success:
                       return const PurchaseProductsBuilderWidget();
                     case BlocStatus.error:
-                      return Center(
-                        child: Text(state.message),
+                      return BuilderErrorMessageWidget(
+                        message: state.message,
                       );
                     default:
                       return const SizedBox();
@@ -119,7 +87,7 @@ class _PurchaseProductViewPageState extends State<PurchaseProductViewPage> {
   void _initPurchaseProductViewPage() {
     context.read<PurchaseBloc>().add(
           GetAllPurchaseItemsByItsProductIds(
-            productIds: widget.productIds,
+            purchaseDetails: widget.purchaseDetails,
           ),
         );
   }

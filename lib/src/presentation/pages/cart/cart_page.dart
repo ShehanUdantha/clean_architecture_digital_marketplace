@@ -1,5 +1,6 @@
 import '../../../core/utils/extension.dart';
 import '../../../core/widgets/app_bar_title_widget.dart';
+import '../../../core/widgets/builder_error_message_widget.dart';
 import '../../../core/widgets/circular_loading_indicator.dart';
 import '../../widgets/cart/no_items_in_cart_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -97,8 +98,8 @@ class _CartPageState extends State<CartPage> {
                         ],
                       );
                     case BlocStatus.error:
-                      return Center(
-                        child: Text(state.message),
+                      return BuilderErrorMessageWidget(
+                        message: state.message,
                       );
                     default:
                       return const SizedBox();

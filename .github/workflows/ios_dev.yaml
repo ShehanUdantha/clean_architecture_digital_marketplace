@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: macos-15
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -15,15 +15,19 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: 3.24.0
+          flutter-version: 3.32.2
 
       - name: Install Dependencies
         run: flutter pub get
 
-      - name: Install iOS Dependencies
+      - name: Clean and Install iOS Pods
         run: |
           cd ios
-          pod install --repo-update
+          sudo gem install cocoapods
+          pod repo update
+          rm -rf Pods Podfile.lock
+          pod cache clean --all
+          pod install
           cd ..
 
       - name: Create env File
@@ -39,10 +43,10 @@ jobs:
         run: flutter test
 
       - name: Build iOS
-        run: flutter build ios --release --no-codesign
+        run: flutter build ios --simulator
 
       - name: Upload iOS
         uses: actions/upload-artifact@v4
         with:
           name: ios-dev-app
-          path: build/ios/iphoneos/
+          path: build/ios/iphonesimulator/

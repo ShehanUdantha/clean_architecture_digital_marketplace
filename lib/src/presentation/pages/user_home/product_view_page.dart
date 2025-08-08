@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/utils/enum.dart';
+import '../../../core/widgets/builder_error_message_widget.dart';
 import '../../../core/widgets/circular_loading_indicator.dart';
 import '../../blocs/product_details/product_details_bloc.dart';
 import '../../widgets/user_home/product_details_widget.dart';
@@ -57,8 +58,8 @@ class _ProductViewPageState extends State<ProductViewPage> {
                 ),
               );
             case BlocStatus.error:
-              return Center(
-                child: Text(state.message),
+              return BuilderErrorMessageWidget(
+                message: state.message,
               );
             default:
               return const SizedBox();

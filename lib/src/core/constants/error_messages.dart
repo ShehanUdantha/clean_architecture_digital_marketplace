@@ -29,4 +29,7 @@ class AppErrorMessages {
       'An error occurred while downloading';
   static const String noInternetMessage =
       'Please check your internet connection and Try again!';
+  static const purchaseHistoryNotFound = 'Purchase history not found!';
+  static const productListDoesNotMatchWithPurchaseHistory =
+      'Product list does not match with purchase history.';
 }

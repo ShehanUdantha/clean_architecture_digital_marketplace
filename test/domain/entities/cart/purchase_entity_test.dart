@@ -5,13 +5,13 @@ import '../../../fixtures/purchase_values.dart';
 
 void main() {
   test(
-    'should create a valid Purchase Products Entity instance',
+    'should create a valid Purchase Entity instance',
     () async {
-      expect(purchasedProductEntity.purchaseId, '23434');
-      expect(purchasedProductEntity.price, '2000.00');
-      expect(purchasedProductEntity.dateCreated,
+      expect(purchasedEntity.purchaseId, '23434');
+      expect(purchasedEntity.price, '2499.98');
+      expect(purchasedEntity.dateCreated,
           Timestamp.fromDate(DateTime(2025, 3, 8, 2, 0, 0)));
-      expect(purchasedProductEntity.products, [
+      expect(purchasedEntity.products, [
         'product_003',
         'product_001',
       ]);

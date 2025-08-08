@@ -132,7 +132,8 @@ void main() {
           // Arrange
           when(mockNotificationLocalDataSource
                   .updateNotificationCount(userUserId))
-              .thenAnswer((_) async => currentUserNotificationNewCount);
+              .thenAnswer((_) async =>
+                  currentUserNotificationNewCountWithPreviousCount);
 
           // Act
           final result = await notificationCountRepositoryImpl
@@ -141,7 +142,7 @@ void main() {
           // Assert
           result.fold(
             (l) => fail('test failed'),
-            (r) => expect(r, currentUserNotificationNewCount),
+            (r) => expect(r, currentUserNotificationNewCountWithPreviousCount),
           );
         },
       );

@@ -8,6 +8,7 @@ import '../../../../core/constants/routes_name.dart';
 import '../../../../core/utils/enum.dart';
 import '../../../../core/utils/extension.dart';
 import '../../../../core/utils/helper.dart';
+import '../../../../core/widgets/builder_error_message_widget.dart';
 import '../../../../core/widgets/category_chip_widget.dart';
 import '../../../../core/widgets/linear_loading_indicator.dart';
 import '../../../../core/widgets/page_header_widget.dart';
@@ -120,8 +121,8 @@ class ProductManagePage extends StatelessWidget {
                   case BlocStatus.success:
                     return const ProductListBuilderWidget();
                   case BlocStatus.error:
-                    return Center(
-                      child: Text(state.message),
+                    return BuilderErrorMessageWidget(
+                      message: state.message,
                     );
                   default:
                     return const SizedBox();

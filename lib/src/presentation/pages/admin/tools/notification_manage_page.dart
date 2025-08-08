@@ -1,5 +1,6 @@
 import '../../../../core/utils/extension.dart';
 
+import '../../../../core/widgets/builder_error_message_widget.dart';
 import '../../../../core/widgets/linear_loading_indicator.dart';
 import '../../../blocs/notification/notification_bloc.dart';
 import '../../../widgets/notification/notification_list_builder_widget.dart';
@@ -72,8 +73,8 @@ class NotificationManagePage extends StatelessWidget {
                   case BlocStatus.success:
                     return const NotificationListBuilderWidget();
                   case BlocStatus.error:
-                    return Center(
-                      child: Text(state.message),
+                    return BuilderErrorMessageWidget(
+                      message: state.message,
                     );
                   default:
                     return const SizedBox();

@@ -1,7 +1,7 @@
-import '../../../../core/utils/extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/utils/extension.dart';
 import '../../../blocs/users/users_bloc.dart';
 import 'category_and_user_card_widget.dart';
 

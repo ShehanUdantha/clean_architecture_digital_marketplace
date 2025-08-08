@@ -129,7 +129,27 @@ void main() {
     'getAllProducts',
     () {
       test(
-        'should return a List of Products when the get all products by category process is successful',
+        'should return a List of Products when the get all products by category (All Items) process is successful',
+        () async {
+          // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
+          when(mockProductRemoteDataSource.getAllProducts(categoryTypeForAll))
+              .thenAnswer((_) async => productsModelsWithZipFiles);
+
+          // Act
+          final result =
+              await productRepositoryImpl.getAllProducts(categoryTypeForAll);
+
+          // Assert
+          result.fold(
+            (l) => fail('test failed'),
+            (r) => expect(r, productsModelsWithZipFiles),
+          );
+        },
+      );
+
+      test(
+        'should return a List of Font Category Products when the get all products by font category process is successful',
         () async {
           // Arrange
           when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
@@ -274,7 +294,7 @@ void main() {
     'getProductByMarketingTypes',
     () {
       test(
-        'should return a List of products when the get products by marketing type process is successful',
+        'should return a List of products when the get products by marketing type (Featured) process is successful',
         () async {
           // Arrange
           when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
@@ -290,6 +310,48 @@ void main() {
           result.fold(
             (l) => fail('test failed'),
             (r) => expect(r, featuredMarketingTypeProducts),
+          );
+        },
+      );
+
+      test(
+        'should return a List of products when the get products by marketing type (Trending) process is successful',
+        () async {
+          // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
+          when(mockProductRemoteDataSource
+                  .getProductByMarketingTypes(marketingTypeTrending))
+              .thenAnswer((_) async => trendingMarketingTypeProductModels);
+
+          // Act
+          final result = await productRepositoryImpl
+              .getProductByMarketingTypes(marketingTypeTrending);
+
+          // Assert
+          result.fold(
+            (l) => fail('test failed'),
+            (r) => expect(r, trendingMarketingTypeProductModels),
+          );
+        },
+      );
+
+      test(
+        'should return a List of products when the get products by marketing type (Latest) process is successful',
+        () async {
+          // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
+          when(mockProductRemoteDataSource
+                  .getProductByMarketingTypes(marketingTypeLatest))
+              .thenAnswer((_) async => latestMarketingTypeProductModel);
+
+          // Act
+          final result = await productRepositoryImpl
+              .getProductByMarketingTypes(marketingTypeLatest);
+
+          // Assert
+          result.fold(
+            (l) => fail('test failed'),
+            (r) => expect(r, latestMarketingTypeProductModel),
           );
         },
       );
@@ -505,7 +567,7 @@ void main() {
           // Arrange
           when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockProductRemoteDataSource.addFavorite(productId))
-              .thenAnswer((_) async => productIdThreeNewModel);
+              .thenAnswer((_) async => productIdThreeFavoriteModel);
 
           // Act
           final result = await productRepositoryImpl.addFavorite(productId);
@@ -513,7 +575,7 @@ void main() {
           // Assert
           result.fold(
             (l) => fail('test failed'),
-            (r) => expect(r, productIdThreeNewModel),
+            (r) => expect(r, productIdThreeFavoriteModel),
           );
         },
       );
@@ -575,12 +637,12 @@ void main() {
         () async {
           // Arrange
           when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
-          when(mockProductRemoteDataSource.editProduct(editProductEntity))
+          when(mockProductRemoteDataSource.editProduct(editedProductEntity))
               .thenAnswer((_) async => ResponseTypes.success.response);
 
           // Act
           final result =
-              await productRepositoryImpl.editProduct(editProductEntity);
+              await productRepositoryImpl.editProduct(editedProductEntity);
 
           // Assert
           result.fold(
@@ -595,12 +657,12 @@ void main() {
         () async {
           // Arrange
           when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
-          when(mockProductRemoteDataSource.editProduct(editProductEntity))
+          when(mockProductRemoteDataSource.editProduct(editedProductEntity))
               .thenAnswer((_) async => ResponseTypes.failure.response);
 
           // Act
           final result =
-              await productRepositoryImpl.editProduct(editProductEntity);
+              await productRepositoryImpl.editProduct(editedProductEntity);
 
           // Assert
           result.fold(
@@ -618,12 +680,12 @@ void main() {
             errorMessage: 'Edit product failed',
           );
           when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
-          when(mockProductRemoteDataSource.editProduct(editProductEntity))
+          when(mockProductRemoteDataSource.editProduct(editedProductEntity))
               .thenThrow(dBException);
 
           // Act
           final result =
-              await productRepositoryImpl.editProduct(editProductEntity);
+              await productRepositoryImpl.editProduct(editedProductEntity);
 
           // Assert
           final failure = FirebaseFailure(
@@ -647,7 +709,7 @@ void main() {
             errorMessage: AppErrorMessages.noInternetMessage,
           );
           final result =
-              await productRepositoryImpl.editProduct(editProductEntity);
+              await productRepositoryImpl.editProduct(editedProductEntity);
 
           // Assert
           result.fold(

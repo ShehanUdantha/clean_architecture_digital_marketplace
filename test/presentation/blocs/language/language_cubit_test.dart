@@ -15,9 +15,19 @@ void main() {
 
   setUp(() {
     mockSharedPreferences = MockSharedPreferences();
-    when(mockSharedPreferences.getString(AppVariableNames.currentLanguage))
-        .thenReturn(null);
   });
+
+  blocTest<LanguageCubit, LanguageState>(
+    'emits no state when no languageName is stored in SharedPreferences when init is called',
+    build: () {
+      when(mockSharedPreferences.getString(AppVariableNames.currentLanguage))
+          .thenReturn(null);
+
+      return LanguageCubit(mockSharedPreferences);
+    },
+    act: (cubit) => cubit.init(),
+    expect: () => [],
+  );
 
   blocTest<LanguageCubit, LanguageState>(
     'emits updated state with languageName, languageLocale when UpdateLanguage is called',
@@ -41,33 +51,20 @@ void main() {
     ],
   );
 
-  // TODO: need to implement
-  // blocTest<LanguageCubit, LanguageState>(
-  //   'emits updated state with languageName, languageLocale when GetCurrentLanguage is called',
-  //   build: () {
-  //     when(mockSharedPreferences.getString(AppVariableNames.currentLanguage))
-  //         .thenReturn(userSelectLanguageName);
-
-  //     return LanguageCubit(mockSharedPreferences);
-  //   },
-  //   act: (_) {},
-  //   expect: () => [
-  //     const LanguageState().copyWith(
-  //       languageName: userSelectLanguageName,
-  //       languageLocale: userSelectLanguageLocale,
-  //     ),
-  //   ],
-  // );
-
   blocTest<LanguageCubit, LanguageState>(
-    'emits no state when no languageName is stored in SharedPreferences on GetCurrentLanguage',
+    'emits updated state with languageName, languageLocale when GetCurrentLanguage is called',
     build: () {
       when(mockSharedPreferences.getString(AppVariableNames.currentLanguage))
-          .thenReturn(null);
+          .thenReturn(userSelectLanguageName);
 
       return LanguageCubit(mockSharedPreferences);
     },
     act: (cubit) => cubit.getCurrentLanguage(),
-    expect: () => [],
+    expect: () => [
+      const LanguageState().copyWith(
+        languageName: userSelectLanguageName,
+        languageLocale: userSelectLanguageLocale,
+      ),
+    ],
   );
 }

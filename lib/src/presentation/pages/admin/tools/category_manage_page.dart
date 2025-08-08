@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/widgets/builder_error_message_widget.dart';
 import '../../../../core/widgets/elevated_button_widget.dart';
 import '../../../../core/widgets/input_field_widget.dart';
 import '../../../../core/widgets/linear_loading_indicator.dart';
@@ -143,8 +144,8 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
                   case BlocStatus.success:
                     return const CategoryListBuilderWidget();
                   case BlocStatus.error:
-                    return Center(
-                      child: Text(state.message),
+                    return BuilderErrorMessageWidget(
+                      message: state.message,
                     );
                   default:
                     return const SizedBox();

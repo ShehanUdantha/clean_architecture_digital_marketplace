@@ -73,6 +73,12 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
           .doc(currentUser!.uid)
           .get();
 
+      if (!result.exists) {
+        throw AuthException(
+            errorMessage: rootNavigatorKey.currentContext?.loc.userNotFound ??
+                AppErrorMessages.userNotFound);
+      }
+
       return UserModel.fromDocument(result);
     } on FirebaseAuthException catch (e) {
       throw AuthException(errorMessage: e.toString());

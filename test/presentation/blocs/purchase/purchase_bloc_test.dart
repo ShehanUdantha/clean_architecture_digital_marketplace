@@ -1,6 +1,5 @@
 import 'package:Pixelcart/src/core/error/failure.dart';
 import 'package:Pixelcart/src/core/utils/enum.dart';
-import 'package:Pixelcart/src/domain/usecases/cart/purchase/download_product_by_product_id_usecase.dart';
 import 'package:Pixelcart/src/domain/usecases/cart/purchase/get_all_purchase_history_by_user_id_usecase.dart';
 import 'package:Pixelcart/src/domain/usecases/cart/purchase/get_all_purchase_items_by_product_id_usecase.dart';
 import 'package:Pixelcart/src/presentation/blocs/purchase/purchase_bloc.dart';
@@ -16,7 +15,6 @@ import 'purchase_bloc_test.mocks.dart';
 @GenerateMocks([
   GetAllPurchaseHistoryByUserIdUseCase,
   GetAllPurchaseItemsByItsProductIdsUseCase,
-  DownloadProductByProductIdUsecase,
 ])
 void main() {
   late PurchaseBloc purchaseBloc;
@@ -24,20 +22,15 @@ void main() {
       mockGetAllPurchaseHistoryByUserIdUseCase;
   late MockGetAllPurchaseItemsByItsProductIdsUseCase
       mockGetAllPurchaseItemsByItsProductIdsUseCase;
-  late MockDownloadProductByProductIdUsecase
-      mockDownloadProductByProductIdUsecase;
 
   setUp(() {
     mockGetAllPurchaseHistoryByUserIdUseCase =
         MockGetAllPurchaseHistoryByUserIdUseCase();
     mockGetAllPurchaseItemsByItsProductIdsUseCase =
         MockGetAllPurchaseItemsByItsProductIdsUseCase();
-    mockDownloadProductByProductIdUsecase =
-        MockDownloadProductByProductIdUsecase();
     purchaseBloc = PurchaseBloc(
       mockGetAllPurchaseHistoryByUserIdUseCase,
       mockGetAllPurchaseItemsByItsProductIdsUseCase,
-      mockDownloadProductByProductIdUsecase,
     );
   });
 
@@ -87,14 +80,13 @@ void main() {
   blocTest<PurchaseBloc, PurchaseState>(
     'emits [loading, success, listOfPurchaseProducts] when GetAllPurchaseItemsByItsProductIds is added and use case return list of purchased products',
     build: () {
-      when(mockGetAllPurchaseItemsByItsProductIdsUseCase
-              .call(purchasedProductIdList))
+      when(mockGetAllPurchaseItemsByItsProductIdsUseCase.call(purchasedEntity))
           .thenAnswer((_) async => Right(purchasedProductEntities));
 
       return purchaseBloc;
     },
     act: (bloc) => bloc.add(
-        GetAllPurchaseItemsByItsProductIds(productIds: purchasedProductIdList)),
+        GetAllPurchaseItemsByItsProductIds(purchaseDetails: purchasedEntity)),
     expect: () => [
       PurchaseState().copyWith(productStatus: BlocStatus.loading),
       PurchaseState().copyWith(
@@ -110,14 +102,13 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Get all purchased products by ids failed',
       );
-      when(mockGetAllPurchaseItemsByItsProductIdsUseCase
-              .call(purchasedProductIdList))
+      when(mockGetAllPurchaseItemsByItsProductIdsUseCase.call(purchasedEntity))
           .thenAnswer((_) async => Left(failure));
 
       return purchaseBloc;
     },
     act: (bloc) => bloc.add(
-        GetAllPurchaseItemsByItsProductIds(productIds: purchasedProductIdList)),
+        GetAllPurchaseItemsByItsProductIds(purchaseDetails: purchasedEntity)),
     expect: () => [
       PurchaseState().copyWith(productStatus: BlocStatus.loading),
       PurchaseState().copyWith(
@@ -147,63 +138,6 @@ void main() {
       PurchaseState().copyWith(
         productStatus: BlocStatus.initial,
         productMessage: '',
-      ),
-    ],
-  );
-
-  // TODO: need to implement
-  // blocTest<PurchaseBloc, PurchaseState>(
-  //   'emits [loading, success] when ProductDownloadEvent is added and use case return success',
-  //   build: () {
-  //     when(mockDownloadProductByProductIdUsecase.call(purchasedProductId))
-  //         .thenAnswer((_) async => Right(purchasedProductUrl));
-
-  //     return purchaseBloc;
-  //   },
-  //   act: (bloc) => bloc.add(
-  //     ProductDownloadEvent(
-  //       productId: purchasedProductId,
-  //       productName: purchasedProductName,
-  //     ),
-  //   ),
-  //   expect: () => [
-  //     PurchaseState().copyWith(downloadStatus: BlocStatus.success),
-  //   ],
-  // );
-
-  blocTest<PurchaseBloc, PurchaseState>(
-    'emits [error, downloadMessage] when ProductDownloadEvent fails',
-    build: () {
-      final failure = FirebaseFailure(
-        errorMessage: 'Product download failed',
-      );
-      when(mockDownloadProductByProductIdUsecase.call(purchasedProductId))
-          .thenAnswer((_) async => Left(failure));
-
-      return purchaseBloc;
-    },
-    act: (bloc) => bloc.add(
-      ProductDownloadEvent(
-        productId: purchasedProductId,
-        productName: purchasedProductName,
-      ),
-    ),
-    expect: () => [
-      PurchaseState().copyWith(
-        downloadStatus: BlocStatus.error,
-        downloadMessage: 'Product download failed',
-      ),
-    ],
-  );
-
-  blocTest<PurchaseBloc, PurchaseState>(
-    'emits updated state with downloadStatus and downloadMessage when SetPurchaseDownloadStatusToDefault is added',
-    build: () => purchaseBloc,
-    act: (bloc) => bloc.add(SetPurchaseDownloadStatusToDefault()),
-    expect: () => [
-      PurchaseState().copyWith(
-        downloadStatus: BlocStatus.initial,
-        downloadMessage: '',
       ),
     ],
   );

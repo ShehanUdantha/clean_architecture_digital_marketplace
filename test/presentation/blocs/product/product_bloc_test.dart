@@ -86,12 +86,12 @@ void main() {
       bloc.add(MarketingTypeFieldChangeEvent(type: marketingTypeFeatured));
       bloc.add(
         ProductUploadButtonClickedEvent(
-          coverImage: null,
-          subImages: [],
-          zipFile: null,
-          productName: newProductName,
-          productPrice: newProductPrice,
-          productDescription: newProductDescription,
+          coverImage: newProductEntity.coverImage,
+          subImages: newProductEntity.subImages,
+          zipFile: newProductEntity.zipFile,
+          productName: newProductEntity.productName,
+          productPrice: newProductEntity.price,
+          productDescription: newProductEntity.description,
         ),
       );
     },
@@ -129,12 +129,12 @@ void main() {
       bloc.add(MarketingTypeFieldChangeEvent(type: marketingTypeFeatured));
       bloc.add(
         ProductUploadButtonClickedEvent(
-          coverImage: null,
-          subImages: [],
-          zipFile: null,
-          productName: newProductName,
-          productPrice: newProductPrice,
-          productDescription: newProductDescription,
+          coverImage: newProductEntity.coverImage,
+          subImages: newProductEntity.subImages,
+          zipFile: newProductEntity.zipFile,
+          productName: newProductEntity.productName,
+          productPrice: newProductEntity.price,
+          productDescription: newProductEntity.description,
         ),
       );
     },
@@ -176,12 +176,12 @@ void main() {
       bloc.add(MarketingTypeFieldChangeEvent(type: marketingTypeFeatured));
       bloc.add(
         ProductUploadButtonClickedEvent(
-          coverImage: null,
-          subImages: [],
-          zipFile: null,
-          productName: newProductName,
-          productPrice: newProductPrice,
-          productDescription: newProductDescription,
+          coverImage: newProductEntity.coverImage,
+          subImages: newProductEntity.subImages,
+          zipFile: newProductEntity.zipFile,
+          productName: newProductEntity.productName,
+          productPrice: newProductEntity.price,
+          productDescription: newProductEntity.description,
         ),
       );
     },
@@ -210,7 +210,7 @@ void main() {
   blocTest<ProductBloc, ProductState>(
     'emits [category, marketingType, loading, success] when ProductEditButtonClickedEvent is added and use case return success',
     build: () {
-      when(mockEditProductUseCase.call(editProductEntity))
+      when(mockEditProductUseCase.call(expectedEditedProductEntityInBloc))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       return productBloc;
@@ -220,15 +220,18 @@ void main() {
       bloc.add(MarketingTypeFieldChangeEvent(type: marketingTypeFeatured));
       bloc.add(
         ProductEditButtonClickedEvent(
-          coverImage: null,
-          subImages: [],
-          zipFile: null,
-          id: editProductId,
-          productName: newProductName,
-          productPrice: newProductPrice,
-          productDescription: editProductDescription,
-          likes: [],
-          status: editProductStatus,
+          id: editedProductEntity.id!,
+          coverImage: editedProductEntity.coverImage,
+          // newly added sub images list
+          subImages: editedProductEntity.subImages,
+          zipFile: editedProductEntity.zipFile,
+          productName: editedProductEntity.productName,
+          productPrice: editedProductEntity.price,
+          productDescription: editedProductEntity.description,
+          // already exist sub images list - in firestore
+          sharedSubImages: editedProductEntity.sharedSubImages,
+          likes: editedProductEntity.likes,
+          status: editedProductEntity.status,
         ),
       );
     },
@@ -256,7 +259,7 @@ void main() {
   blocTest<ProductBloc, ProductState>(
     'emits [category, marketingType, loading, error, productAddAndEditMessage] when ProductEditButtonClickedEvent is added and use case return failure',
     build: () {
-      when(mockEditProductUseCase.call(editProductEntity))
+      when(mockEditProductUseCase.call(expectedEditedProductEntityInBloc))
           .thenAnswer((_) async => Right(ResponseTypes.failure.response));
 
       return productBloc;
@@ -266,15 +269,18 @@ void main() {
       bloc.add(MarketingTypeFieldChangeEvent(type: marketingTypeFeatured));
       bloc.add(
         ProductEditButtonClickedEvent(
-          coverImage: null,
-          subImages: [],
-          zipFile: null,
-          id: editProductId,
-          productName: newProductName,
-          productPrice: newProductPrice,
-          productDescription: editProductDescription,
-          likes: [],
-          status: editProductStatus,
+          id: editedProductEntity.id!,
+          coverImage: editedProductEntity.coverImage,
+          // newly added sub images list
+          subImages: editedProductEntity.subImages,
+          zipFile: editedProductEntity.zipFile,
+          productName: editedProductEntity.productName,
+          productPrice: editedProductEntity.price,
+          productDescription: editedProductEntity.description,
+          // already exist sub images list - in firestore
+          sharedSubImages: editedProductEntity.sharedSubImages,
+          likes: editedProductEntity.likes,
+          status: editedProductEntity.status,
         ),
       );
     },
@@ -306,7 +312,7 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Product edit failed',
       );
-      when(mockEditProductUseCase.call(editProductEntity))
+      when(mockEditProductUseCase.call(expectedEditedProductEntityInBloc))
           .thenAnswer((_) async => Left(failure));
 
       return productBloc;
@@ -316,15 +322,18 @@ void main() {
       bloc.add(MarketingTypeFieldChangeEvent(type: marketingTypeFeatured));
       bloc.add(
         ProductEditButtonClickedEvent(
-          coverImage: null,
-          subImages: [],
-          zipFile: null,
-          id: editProductId,
-          productName: newProductName,
-          productPrice: newProductPrice,
-          productDescription: editProductDescription,
-          likes: [],
-          status: editProductStatus,
+          id: editedProductEntity.id!,
+          coverImage: editedProductEntity.coverImage,
+          // newly added sub images list
+          subImages: editedProductEntity.subImages,
+          zipFile: editedProductEntity.zipFile,
+          productName: editedProductEntity.productName,
+          productPrice: editedProductEntity.price,
+          productDescription: editedProductEntity.description,
+          // already exist sub images list - in firestore
+          sharedSubImages: editedProductEntity.sharedSubImages,
+          likes: editedProductEntity.likes,
+          status: editedProductEntity.status,
         ),
       );
     },
