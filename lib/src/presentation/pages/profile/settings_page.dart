@@ -52,7 +52,7 @@ class SettingsPage extends StatelessWidget {
                   return SettingsCardWidget(
                     title: context.loc.theme,
                     actionWidgetTitle: state.themeName,
-                    actionWidgetFunction: () => _showThemeBottomSheet(),
+                    actionWidgetFunction: () => _showThemeBottomSheet(context),
                   );
                 },
               ),
@@ -66,7 +66,8 @@ class SettingsPage extends StatelessWidget {
                   return SettingsCardWidget(
                     title: context.loc.language,
                     actionWidgetTitle: state.languageName,
-                    actionWidgetFunction: () => _showLanguagesBottomSheet(),
+                    actionWidgetFunction: () =>
+                        _showLanguagesBottomSheet(context),
                   );
                 },
               ),
@@ -90,11 +91,11 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  void _showThemeBottomSheet() {
-    Helper.displayBottomSheet(const ThemeListView());
+  void _showThemeBottomSheet(BuildContext context) {
+    Helper.displayBottomSheet(context, const ThemeListView());
   }
 
-  void _showLanguagesBottomSheet() {
-    Helper.displayBottomSheet(const LanguageListView());
+  void _showLanguagesBottomSheet(BuildContext context) {
+    Helper.displayBottomSheet(context, const LanguageListView());
   }
 }

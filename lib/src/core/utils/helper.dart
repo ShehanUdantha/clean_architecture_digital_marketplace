@@ -158,10 +158,10 @@ class Helper {
     return timeago.format(date);
   }
 
-  static void displayBottomSheet(Widget childWidget) {
+  static void displayBottomSheet(BuildContext context, Widget childWidget) {
     showModalBottomSheet(
       showDragHandle: true,
-      context: rootNavigatorKey.currentContext!,
+      context: context,
       builder: (context) {
         return childWidget;
       },
