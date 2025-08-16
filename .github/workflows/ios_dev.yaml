@@ -3,11 +3,11 @@ name: "Pixelcart Dev - iOS"
 on:
   pull_request:
     branches:
-      - main
+      - dev
 
 jobs:
   build:
-    runs-on: macos-15
+    runs-on: macos-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -20,14 +20,11 @@ jobs:
       - name: Install Dependencies
         run: flutter pub get
 
-      - name: Clean and Install iOS Pods
+      - name: Install iOS Dependencies
         run: |
           cd ios
-          sudo gem install cocoapods
-          pod repo update
           rm -rf Pods Podfile.lock
-          pod cache clean --all
-          pod install
+          pod install --repo-update
           cd ..
 
       - name: Create env File
@@ -43,10 +40,10 @@ jobs:
         run: flutter test
 
       - name: Build iOS
-        run: flutter build ios --simulator
+        run: flutter build ios --release --no-codesign
 
       - name: Upload iOS
         uses: actions/upload-artifact@v4
         with:
           name: ios-dev-app
-          path: build/ios/iphonesimulator/
+          path: build/ios/iphoneos/
