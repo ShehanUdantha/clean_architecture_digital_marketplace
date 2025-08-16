@@ -1194,7 +1194,7 @@ PODS:
   - BoringSSL-GRPC/Implementation (0.0.37):
     - BoringSSL-GRPC/Interface (= 0.0.37)
   - BoringSSL-GRPC/Interface (0.0.37)
-  - cloud_firestore (5.6.10):
+  - cloud_firestore (5.6.12):
     - Firebase/Firestore (= 11.15.0)
     - firebase_core
     - Flutter
@@ -1251,22 +1251,22 @@ PODS:
   - Firebase/Storage (11.15.0):
     - Firebase/CoreOnly
     - FirebaseStorage (~> 11.15.0)
-  - firebase_auth (5.6.1):
+  - firebase_auth (5.7.0):
     - Firebase/Auth (= 11.15.0)
     - firebase_core
     - Flutter
-  - firebase_core (3.15.0):
+  - firebase_core (3.15.2):
     - Firebase/CoreOnly (= 11.15.0)
     - Flutter
-  - firebase_crashlytics (4.3.8):
+  - firebase_crashlytics (4.3.10):
     - Firebase/Crashlytics (= 11.15.0)
     - firebase_core
     - Flutter
-  - firebase_messaging (15.2.8):
+  - firebase_messaging (15.2.10):
     - Firebase/Messaging (= 11.15.0)
     - firebase_core
     - Flutter
-  - firebase_storage (12.4.8):
+  - firebase_storage (12.4.10):
     - Firebase/Storage (= 11.15.0)
     - firebase_core
     - Flutter
@@ -1649,17 +1649,17 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   abseil: a05cc83bf02079535e17169a73c5be5ba47f714b
   BoringSSL-GRPC: dded2a44897e45f28f08ae87a55ee4bcd19bc508
-  cloud_firestore: 3f371b6dad2c9ba8bc4bff735c85870b3f527006
+  cloud_firestore: fdcc87898326e396d6ef6df543acf9b5c2034b95
   connectivity_plus: cb623214f4e1f6ef8fe7403d580fdad517d2f7dd
   DKImagePickerController: 946cec48c7873164274ecc4624d19e3da4c1ef3c
   DKPhotoGallery: b3834fecb755ee09a593d7c9e389d8b5d6deed60
   file_picker: a0560bc09d61de87f12d246fc47d2119e6ef37be
   Firebase: d99ac19b909cd2c548339c2241ecd0d1599ab02e
-  firebase_auth: 5be3036c1b9a080697788696db398e637d6c8401
-  firebase_core: c727a02c560a53f1f1e56e18f16515eb5753c492
-  firebase_crashlytics: 6273355054ed9b46631aa7d5d8a02367ca2c5141
-  firebase_messaging: 4158969b04b667f5435731ec9d6e453bb58b0c4c
-  firebase_storage: eb042e3a04a79219525fd976f1010d98f1794edd
+  firebase_auth: 50af8366c87bb88c80ebeae62eb60189c7246b9b
+  firebase_core: 995454a784ff288be5689b796deb9e9fa3601818
+  firebase_crashlytics: 30dcd6dfd2fe895c0848af46722a4227346c19aa
+  firebase_messaging: f4a41dd102ac18b840eba3f39d67e77922d3f707
+  firebase_storage: 1144b3236855c52ff52741b12374862ee84d5a28
   FirebaseAppCheckInterop: 06fe5a3799278ae4667e6c432edd86b1030fa3df
   FirebaseAuth: a6575e5fbf46b046c58dc211a28a5fbdd8d4c83b
   FirebaseAuthInterop: 7087d7a4ee4bc4de019b2d0c240974ed5d89e2fd
@@ -1676,7 +1676,7 @@ SPEC CHECKSUMS:
   FirebaseSharedSwift: e17c654ef1f1a616b0b33054e663ad1035c8fd40
   FirebaseStorage: 50fc9ee147392943e492467db6b52759b0447037
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  flutter_local_notifications: a5a732f069baa862e728d839dd2ebb904737effb
+  flutter_local_notifications: 395056b3175ba4f08480a7c5de30cd36d69827e4
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
   GoogleUtilities: 00c88b9a86066ef77f0da2fab05f65d7768ed8e1
   "gRPC-C++": cc207623316fb041a7a3e774c252cf68a058b9e8
@@ -1703,6 +1703,6 @@ SPEC CHECKSUMS:
   StripeUICore: 17a4f3adb81ae05ab885e1b353022a430176eab1
   SwiftyGif: 706c60cf65fa2bc5ee0313beece843c8eb8194d4
 
-PODFILE CHECKSUM: fabcfe7292f38d1b493cdfd2bee39dfad667adae
+PODFILE CHECKSUM: 09ad841289a106009b47f1fd4845d7b406622a7a
 
 COCOAPODS: 1.16.2
