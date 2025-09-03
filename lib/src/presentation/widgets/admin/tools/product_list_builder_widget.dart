@@ -18,27 +18,33 @@ class ProductListBuilderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final productState = context.watch<ProductBloc>().state;
-
     return Expanded(
-      child: productState.listOfProducts.isNotEmpty
-          ? ListView.builder(
-              itemCount: productState.listOfProducts.length,
-              itemBuilder: (context, index) {
-                return ProductLinearCardWidget(
-                  product: productState.listOfProducts[index],
-                  deleteFunction: () => _handleDeleteProduct(
-                    context,
-                    productState.listOfProducts[index].id!,
-                  ),
-                  editFunction: () => _handleEditProduct(
-                    context,
-                    productState.listOfProducts[index],
-                  ),
-                );
-              },
-            )
-          : ItemNotFoundText(title: context.loc.productsNotAddedYet),
+      child: BlocBuilder<ProductBloc, ProductState>(
+        buildWhen: (previous, current) =>
+            previous.listOfProducts != current.listOfProducts,
+        builder: (context, productState) {
+          if (productState.listOfProducts.isEmpty) {
+            return ItemNotFoundText(title: context.loc.productsNotAddedYet);
+          }
+
+          return ListView.builder(
+            itemCount: productState.listOfProducts.length,
+            itemBuilder: (context, index) {
+              return ProductLinearCardWidget(
+                product: productState.listOfProducts[index],
+                deleteFunction: () => _handleDeleteProduct(
+                  context,
+                  productState.listOfProducts[index].id!,
+                ),
+                editFunction: () => _handleEditProduct(
+                  context,
+                  productState.listOfProducts[index],
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 

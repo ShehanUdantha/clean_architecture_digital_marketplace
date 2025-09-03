@@ -1,11 +1,15 @@
 import 'dart:async';
 
+import 'package:Pixelcart/src/core/constants/error_messages.dart';
 import 'package:Pixelcart/src/core/error/failure.dart';
 import 'package:Pixelcart/src/core/utils/enum.dart';
 import 'package:Pixelcart/src/core/utils/extension.dart';
+import 'package:Pixelcart/src/domain/usecases/auth/forgot_password_usecase.dart';
 import 'package:Pixelcart/src/domain/usecases/auth/get_auth_user_usecase.dart';
-import 'package:Pixelcart/src/domain/usecases/auth/refresh_user_usecase.dart';
+import 'package:Pixelcart/src/domain/usecases/auth/send_email_verification_usecase.dart';
+import 'package:Pixelcart/src/domain/usecases/auth/user_sign_in_usecase.dart';
 import 'package:Pixelcart/src/domain/usecases/auth/user_sign_out_usecase.dart';
+import 'package:Pixelcart/src/domain/usecases/auth/user_sign_up_usecase.dart';
 import 'package:Pixelcart/src/domain/usecases/user/get_user_type_usecase.dart';
 import 'package:Pixelcart/src/presentation/blocs/auth/auth_bloc.dart';
 import 'package:bloc_test/bloc_test.dart';
@@ -22,25 +26,37 @@ import 'auth_bloc_test.mocks.dart';
   GetAuthUserUseCase,
   GetUserTypeUseCase,
   UserSignOutUseCase,
-  RefreshUserUseCase,
+  UserSignUpUseCase,
+  SendEmailVerificationUseCase,
+  UserSignInUseCase,
+  ForgotPasswordUseCase,
   User,
 ])
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   late AuthBloc authBloc;
+  late MockUser mockUser;
   late MockGetAuthUserUseCase mockGetAuthUserUseCase;
   late MockGetUserTypeUseCase mockGetUserTypeUseCase;
   late MockUserSignOutUseCase mockUserSignOutUseCase;
-  late MockRefreshUserUseCase mockRefreshUserUseCase;
-  late MockUser mockUser;
+  late MockUserSignUpUseCase mockUserSignUpUseCase;
+  late MockSendEmailVerificationUseCase mockSendEmailVerificationUseCase;
+  late MockUserSignInUseCase mockUserSignInUseCase;
+  late MockForgotPasswordUseCase mockForgotPasswordUseCase;
   late StreamController<User?> userStreamController;
 
   setUp(() {
+    mockUser = MockUser();
     mockGetAuthUserUseCase = MockGetAuthUserUseCase();
     mockGetUserTypeUseCase = MockGetUserTypeUseCase();
     mockUserSignOutUseCase = MockUserSignOutUseCase();
-    mockRefreshUserUseCase = MockRefreshUserUseCase();
-    mockUser = MockUser();
+    mockUserSignUpUseCase = MockUserSignUpUseCase();
+    mockSendEmailVerificationUseCase = MockSendEmailVerificationUseCase();
+    mockUserSignInUseCase = MockUserSignInUseCase();
+    mockForgotPasswordUseCase = MockForgotPasswordUseCase();
     userStreamController = StreamController<User?>();
+
     when(mockGetAuthUserUseCase.user)
         .thenAnswer((_) => userStreamController.stream);
 
@@ -48,7 +64,10 @@ void main() {
       mockGetAuthUserUseCase,
       mockGetUserTypeUseCase,
       mockUserSignOutUseCase,
-      mockRefreshUserUseCase,
+      mockUserSignUpUseCase,
+      mockSendEmailVerificationUseCase,
+      mockUserSignInUseCase,
+      mockForgotPasswordUseCase,
     );
   });
 
@@ -58,7 +77,7 @@ void main() {
   });
 
   blocTest<AuthBloc, AuthState>(
-    'emits AuthSuccessState when CheckUserAuthEvent is added and use case return user type',
+    'emits [success, user, userType] when CheckUserAuthEvent is added and use case return user type',
     build: () {
       when(mockUser.uid).thenReturn(userUserId);
 
@@ -68,16 +87,16 @@ void main() {
     },
     act: (bloc) => bloc.add(CheckUserAuthEvent(user: mockUser)),
     expect: () => [
-      AuthSuccessState(
-        userValue: mockUser,
-        userTypeValue: userUserType,
-        statusValue: BlocStatus.success,
+      AuthState().copyWith(
+        status: BlocStatus.success,
+        user: () => mockUser,
+        userType: userUserType,
       ),
     ],
   );
 
   blocTest<AuthBloc, AuthState>(
-    'emits AuthFailureState when CheckUserAuthEvent fails',
+    'emits [error, authMessage] when CheckUserAuthEvent is added and use case return a failure',
     build: () {
       final failure = FirebaseFailure(
         errorMessage: 'Get user type by id failed',
@@ -91,14 +110,230 @@ void main() {
     },
     act: (bloc) => bloc.add(CheckUserAuthEvent(user: mockUser)),
     expect: () => [
-      AuthFailureState(
-        statusValue: BlocStatus.error,
+      AuthState().copyWith(
+        status: BlocStatus.error,
+        authMessage: 'Get user type by id failed',
       ),
     ],
   );
 
   blocTest<AuthBloc, AuthState>(
-    'emits SignOutState with success when SignOutEvent is added and use case return success',
+    'emits [loading, success] when SignUpButtonClickedEvent is added and use cases return success',
+    build: () {
+      when(mockUserSignUpUseCase.call(userSignUpParams))
+          .thenAnswer((_) async => Right(ResponseTypes.success.response));
+
+      return authBloc;
+    },
+    act: (bloc) =>
+        bloc.add(SignUpButtonClickedEvent(signUpParams: userSignUpParams)),
+    expect: () => [
+      AuthState().copyWith(status: BlocStatus.loading),
+      AuthState().copyWith(status: BlocStatus.success),
+    ],
+  );
+
+  blocTest<AuthBloc, AuthState>(
+    'emits [loading, error, authMessage] when SignUpButtonClickedEvent is added and use case return a failure',
+    build: () {
+      final failure = FirebaseFailure(
+        errorMessage: 'User SignUp failed',
+      );
+      when(mockUserSignUpUseCase.call(userSignUpParams))
+          .thenAnswer((_) async => Left(failure));
+
+      return authBloc;
+    },
+    act: (bloc) =>
+        bloc.add(SignUpButtonClickedEvent(signUpParams: userSignUpParams)),
+    expect: () => [
+      AuthState().copyWith(status: BlocStatus.loading),
+      AuthState().copyWith(
+        status: BlocStatus.error,
+        authMessage: 'User SignUp failed',
+      ),
+    ],
+  );
+
+  blocTest<AuthBloc, AuthState>(
+    'emits [loading, success] when SendEmailButtonClickedEvent is added and use cases return a Success Status',
+    build: () {
+      when(mockSendEmailVerificationUseCase.call(any))
+          .thenAnswer((_) async => Right(ResponseTypes.success.response));
+
+      return authBloc;
+    },
+    act: (bloc) => bloc.add(SendEmailButtonClickedEvent()),
+    expect: () => [
+      AuthState().copyWith(status: BlocStatus.loading),
+      AuthState().copyWith(status: BlocStatus.success),
+    ],
+  );
+
+  blocTest<AuthBloc, AuthState>(
+    'emits [loading, error, authMessage] when SendEmailButtonClickedEvent is added and current user is null then return a Failure Status',
+    build: () {
+      when(mockSendEmailVerificationUseCase.call(any))
+          .thenAnswer((_) async => Right(ResponseTypes.failure.response));
+
+      return authBloc;
+    },
+    act: (bloc) => bloc.add(SendEmailButtonClickedEvent()),
+    expect: () => [
+      AuthState().copyWith(status: BlocStatus.loading),
+      AuthState().copyWith(
+        status: BlocStatus.error,
+        authMessage: AppErrorMessages.failedToSendEmailVerification,
+      ),
+    ],
+  );
+
+  blocTest<AuthBloc, AuthState>(
+    'emits [loading, error, authMessage] when SendEmailButtonClickedEvent is added and use cases return a failure',
+    build: () {
+      final failure = FirebaseFailure(
+        errorMessage: 'Email send failed',
+      );
+
+      when(mockSendEmailVerificationUseCase.call(any))
+          .thenAnswer((_) async => Left(failure));
+
+      return authBloc;
+    },
+    act: (bloc) => bloc.add(SendEmailButtonClickedEvent()),
+    expect: () => [
+      AuthState().copyWith(status: BlocStatus.loading),
+      AuthState().copyWith(
+        status: BlocStatus.error,
+        authMessage: 'Email send failed',
+      ),
+    ],
+  );
+
+  blocTest<AuthBloc, AuthState>(
+    'emits [loading, user, success, userType] when SignInButtonClickedEvent is added and both user sign-in and getUserType use cases return success',
+    build: () {
+      when(mockUserSignInUseCase.call(userSignInParams))
+          .thenAnswer((_) async => Right(mockUser));
+
+      when(mockUser.emailVerified).thenReturn(true);
+      when(mockUser.uid).thenReturn(userUserId);
+
+      when(mockGetUserTypeUseCase.call(userUserId))
+          .thenAnswer((_) async => Right(userUserType));
+
+      return authBloc;
+    },
+    act: (bloc) =>
+        bloc.add(SignInButtonClickedEvent(signInParams: userSignInParams)),
+    expect: () => [
+      AuthState().copyWith(status: BlocStatus.loading),
+      AuthState().copyWith(status: BlocStatus.loading, user: () => mockUser),
+      AuthState().copyWith(
+        status: BlocStatus.success,
+        user: () => mockUser,
+        userType: userUserType,
+      ),
+    ],
+  );
+
+  blocTest<AuthBloc, AuthState>(
+    'emits [loading, user, error, authMessage] when SignInButtonClickedEvent is added and user sign-in use case succeeds but getUserType use case return a failure',
+    build: () {
+      when(mockUserSignInUseCase.call(userSignInParams))
+          .thenAnswer((_) async => Right(mockUser));
+
+      when(mockUser.emailVerified).thenReturn(true);
+      when(mockUser.uid).thenReturn(userUserId);
+
+      final failure = FirebaseFailure(
+        errorMessage: 'Get user type failed',
+      );
+
+      when(mockGetUserTypeUseCase.call(userUserId))
+          .thenAnswer((_) async => Left(failure));
+
+      return authBloc;
+    },
+    act: (bloc) =>
+        bloc.add(SignInButtonClickedEvent(signInParams: userSignInParams)),
+    expect: () => [
+      AuthState().copyWith(status: BlocStatus.loading),
+      AuthState().copyWith(status: BlocStatus.loading, user: () => mockUser),
+      AuthState().copyWith(
+        status: BlocStatus.error,
+        user: () => mockUser,
+        authMessage: 'Get user type failed',
+      ),
+    ],
+  );
+
+  blocTest<AuthBloc, AuthState>(
+    'emits [loading, user, error, authMessage] when SignInButtonClickedEvent is added and user sign-in use case succeeds but email is not verified',
+    build: () {
+      when(mockUserSignInUseCase.call(userSignInParams))
+          .thenAnswer((_) async => Right(mockUser));
+
+      when(mockUser.emailVerified).thenReturn(false);
+
+      return authBloc;
+    },
+    act: (bloc) =>
+        bloc.add(SignInButtonClickedEvent(signInParams: userSignInParams)),
+    expect: () => [
+      AuthState().copyWith(status: BlocStatus.loading),
+      AuthState().copyWith(status: BlocStatus.loading, user: () => mockUser),
+      AuthState().copyWith(
+        status: BlocStatus.error,
+        user: () => mockUser,
+        authMessage: AppErrorMessages.emailNotVerifiedYet,
+      ),
+    ],
+  );
+
+  blocTest<AuthBloc, AuthState>(
+    'emits [loading, error, authMessage] when SignInButtonClickedEvent is added and user sign-in use case returns null',
+    build: () {
+      when(mockUserSignInUseCase.call(userSignInParams))
+          .thenAnswer((_) async => Right(null));
+
+      return authBloc;
+    },
+    act: (bloc) =>
+        bloc.add(SignInButtonClickedEvent(signInParams: userSignInParams)),
+    expect: () => [
+      AuthState().copyWith(status: BlocStatus.loading),
+      AuthState().copyWith(
+        status: BlocStatus.error,
+        authMessage: AppErrorMessages.unauthorizedAccess,
+      ),
+    ],
+  );
+
+  blocTest<AuthBloc, AuthState>(
+    'emits [loading, error, authMessage] when SignInButtonClickedEvent is added and user sign-in use case return a failure',
+    build: () {
+      final failure = FirebaseFailure(
+        errorMessage: 'User SignIn failed',
+      );
+      when(mockUserSignInUseCase.call(userSignInParams))
+          .thenAnswer((_) async => Left(failure));
+
+      return authBloc;
+    },
+    act: (bloc) =>
+        bloc.add(SignInButtonClickedEvent(signInParams: userSignInParams)),
+    expect: () => [
+      AuthState().copyWith(status: BlocStatus.loading),
+      AuthState().copyWith(
+        status: BlocStatus.error,
+        authMessage: 'User SignIn failed',
+      ),
+    ],
+  );
+
+  blocTest<AuthBloc, AuthState>(
+    'emits [loading, success] when SignOutEvent is added and use case return Success Status',
     build: () {
       when(mockUserSignOutUseCase.call(any))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
@@ -106,12 +341,13 @@ void main() {
     },
     act: (bloc) => bloc.add(SignOutEvent()),
     expect: () => [
-      const SignOutState(signOutStatusValue: BlocStatus.success),
+      AuthState().copyWith(status: BlocStatus.loading),
+      AuthState().copyWith(status: BlocStatus.success),
     ],
   );
 
   blocTest<AuthBloc, AuthState>(
-    'emits SignOutState with error when SignOutEvent is added and use case return success',
+    'emits [loading, error] when SignOutEvent is added and current user is null then return a Failure Status',
     build: () {
       when(mockUserSignOutUseCase.call(any))
           .thenAnswer((_) async => Right(ResponseTypes.failure.response));
@@ -119,48 +355,100 @@ void main() {
     },
     act: (bloc) => bloc.add(SignOutEvent()),
     expect: () => [
-      const SignOutState(signOutStatusValue: BlocStatus.error),
+      AuthState().copyWith(status: BlocStatus.loading),
+      AuthState().copyWith(
+        status: BlocStatus.error,
+        authMessage: AppErrorMessages.unauthorizedAccess,
+      ),
     ],
   );
 
   blocTest<AuthBloc, AuthState>(
-    'emits AuthFailureState when SignOutEvent fails',
+    'emits [loading, error] when SignOutEvent is added and use case return a failure',
     build: () {
       final failure = FirebaseFailure(
         errorMessage: 'User sign out failed',
       );
-
       when(mockUserSignOutUseCase.call(any))
           .thenAnswer((_) async => Left(failure));
       return authBloc;
     },
     act: (bloc) => bloc.add(SignOutEvent()),
     expect: () => [
-      const AuthFailureState(statusValue: BlocStatus.error),
+      AuthState().copyWith(status: BlocStatus.loading),
+      AuthState().copyWith(
+        status: BlocStatus.error,
+        authMessage: 'User sign out failed',
+      ),
     ],
   );
 
-  // TODO: need to implement
-  // blocTest<AuthBloc, AuthState>(
-  //   'emits updated AuthSuccessState when RefreshUserEvent is added',
-  //   build: () {
-  //     when(mockRefreshUserUseCase.refreshUserCall(mockUser))
-  //         .thenAnswer((_) async => mockUser);
-  //     return authBloc;
-  //   },
-  //   act: (bloc) => bloc.add(RefreshUserEvent()),
-  //   expect: () => [],
-  // );
+  blocTest<AuthBloc, AuthState>(
+    'emits [loading, success] when SendResetLinkButtonClickedEvent is added and use case return success',
+    build: () {
+      when(mockForgotPasswordUseCase.call(userUserEmail))
+          .thenAnswer((_) async => Right(ResponseTypes.success.response));
+
+      return authBloc;
+    },
+    act: (bloc) =>
+        bloc.add(SendResetLinkButtonClickedEvent(email: userUserEmail)),
+    expect: () => [
+      AuthState().copyWith(status: BlocStatus.loading),
+      AuthState().copyWith(status: BlocStatus.success),
+    ],
+  );
+  blocTest<AuthBloc, AuthState>(
+    'emits [loading, error] when SendResetLinkButtonClickedEvent is added and use case return Failure status',
+    build: () {
+      when(mockForgotPasswordUseCase.call(userUserEmail))
+          .thenAnswer((_) async => Right(ResponseTypes.failure.response));
+
+      return authBloc;
+    },
+    act: (bloc) =>
+        bloc.add(SendResetLinkButtonClickedEvent(email: userUserEmail)),
+    expect: () => [
+      AuthState().copyWith(status: BlocStatus.loading),
+      AuthState().copyWith(
+        status: BlocStatus.error,
+        authMessage: AppErrorMessages.invalidForgotEmail,
+      ),
+    ],
+  );
 
   blocTest<AuthBloc, AuthState>(
-    'emits InitialState when SetAuthStatusToDefault is added',
+    'emits [loading, error] when SendResetLinkButtonClickedEvent and use case return a failure',
+    build: () {
+      final failure = FirebaseFailure(
+        errorMessage: 'Password reset email send failed',
+      );
+      when(mockForgotPasswordUseCase.call(userUserEmail))
+          .thenAnswer((_) async => Left(failure));
+
+      return authBloc;
+    },
+    act: (bloc) =>
+        bloc.add(SendResetLinkButtonClickedEvent(email: userUserEmail)),
+    expect: () => [
+      AuthState().copyWith(status: BlocStatus.loading),
+      AuthState().copyWith(
+        status: BlocStatus.error,
+        authMessage: 'Password reset email send failed',
+      ),
+    ],
+  );
+
+  blocTest<AuthBloc, AuthState>(
+    'emits [user, status, authMessage, userType] when SetAuthStatusToDefault is added',
     build: () => authBloc,
     act: (bloc) => bloc.add(SetAuthStatusToDefault()),
     expect: () => [
-      const InitialState(
-        statusValue: BlocStatus.initial,
-        userTypeValue: '',
-        signOutStatusValue: BlocStatus.initial,
+      AuthState().copyWith(
+        status: BlocStatus.initial,
+        user: () => null,
+        userType: '',
+        authMessage: '',
       )
     ],
   );

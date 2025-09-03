@@ -1,5 +1,7 @@
+import 'package:Pixelcart/src/core/constants/error_messages.dart';
 import 'package:Pixelcart/src/core/error/exception.dart';
 import 'package:Pixelcart/src/core/error/failure.dart';
+import 'package:Pixelcart/src/core/services/network_service.dart';
 import 'package:Pixelcart/src/data/data_sources/remote/stripe/stripe_remote_data_source.dart';
 import 'package:Pixelcart/src/data/repositories/stripe/stripe_repository_impl.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -9,15 +11,21 @@ import 'package:mockito/mockito.dart';
 import '../../../fixtures/stripe_values.dart';
 import 'stripe_repository_impl_test.mocks.dart';
 
-@GenerateMocks([StripeRemoteDataSource])
+@GenerateMocks([StripeRemoteDataSource, NetworkService])
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   late StripeRepositoryImpl stripeRepositoryImpl;
   late MockStripeRemoteDataSource mockStripeRemoteDataSource;
+  late MockNetworkService mockNetworkService;
 
   setUp(() {
     mockStripeRemoteDataSource = MockStripeRemoteDataSource();
+    mockNetworkService = MockNetworkService();
     stripeRepositoryImpl = StripeRepositoryImpl(
-        stripeRemoteDataSource: mockStripeRemoteDataSource);
+      stripeRemoteDataSource: mockStripeRemoteDataSource,
+      networkService: mockNetworkService,
+    );
   });
 
   group(
@@ -27,11 +35,13 @@ void main() {
         'should return a Strip payment details when the make payments process is successful',
         () async {
           // Arrange
-          when(mockStripeRemoteDataSource.makePayments(paymentAmount))
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
+          when(mockStripeRemoteDataSource.makePayments(stripePaymentAmount))
               .thenAnswer((_) async => stripeModel);
 
           // Act
-          final result = await stripeRepositoryImpl.makePayments(paymentAmount);
+          final result =
+              await stripeRepositoryImpl.makePayments(stripePaymentAmount);
 
           // Assert
           result.fold(
@@ -45,14 +55,16 @@ void main() {
         'should return a Failure when the make payments process fails',
         () async {
           // Arrange
-          final stripeException = StripeException(
+          final stripesException = StripesException(
             errorMessage: 'Make payments failed',
           );
-          when(mockStripeRemoteDataSource.makePayments(paymentAmount))
-              .thenThrow(stripeException);
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
+          when(mockStripeRemoteDataSource.makePayments(stripePaymentAmount))
+              .thenThrow(stripesException);
 
           // Act
-          final result = await stripeRepositoryImpl.makePayments(paymentAmount);
+          final result =
+              await stripeRepositoryImpl.makePayments(stripePaymentAmount);
 
           // Assert
           final failure = StripeFailure(
@@ -60,6 +72,29 @@ void main() {
           );
           result.fold(
             (l) => expect(l, failure),
+            (r) => fail('test failed'),
+          );
+        },
+      );
+
+      test(
+        'should return a Failure when network fails in the make payments process',
+        () async {
+          // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => false);
+
+          // Act
+          final failure = NetworkFailure(
+            errorMessage: AppErrorMessages.noInternetMessage,
+          );
+          final result =
+              await stripeRepositoryImpl.makePayments(stripePaymentAmount);
+
+          // Assert
+          result.fold(
+            (l) {
+              expect(l, failure);
+            },
             (r) => fail('test failed'),
           );
         },

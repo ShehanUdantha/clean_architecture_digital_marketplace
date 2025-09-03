@@ -26,13 +26,14 @@ void main() {
     () async {
       // Arrange
       when(mockNotificationCountRepository.updateNotificationCount(userUserId))
-          .thenAnswer((_) async => Right(currentUserNotificationNewCount));
+          .thenAnswer((_) async =>
+              Right(currentUserNotificationNewCountWithPreviousCount));
 
       // Act
       final result = await updateNotificationCountUseCase.call(userUserId);
 
       // Assert
-      expect(result, Right(currentUserNotificationNewCount));
+      expect(result, Right(currentUserNotificationNewCountWithPreviousCount));
     },
   );
 

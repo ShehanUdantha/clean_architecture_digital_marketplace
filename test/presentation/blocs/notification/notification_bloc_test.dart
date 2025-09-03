@@ -206,15 +206,15 @@ void main() {
   blocTest<NotificationBloc, NotificationState>(
     'emits [notificationCount] when UpdateNotificationCountEvent is added and use case return new notification count',
     build: () {
-      when(mockUpdateNotificationCountUseCase.call(userUserId))
-          .thenAnswer((_) async => Right(currentUserNotificationNewCount));
+      when(mockUpdateNotificationCountUseCase.call(userUserId)).thenAnswer(
+          (_) async => Right(currentUserNotificationNewCountWithPreviousCount));
 
       return notificationBloc;
     },
     act: (bloc) => bloc.add(UpdateNotificationCountEvent(userId: userUserId)),
     expect: () => [
       NotificationState().copyWith(
-        notificationCount: currentUserNotificationNewCount,
+        notificationCount: currentUserNotificationNewCountWithPreviousCount,
       ),
     ],
   );

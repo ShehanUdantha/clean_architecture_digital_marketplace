@@ -1,9 +1,6 @@
 name: "Pixelcart Dev - iOS"
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - main
@@ -18,9 +15,15 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: 3.24.0
+          flutter-version: 3.32.2
 
-      - name: Install Dependencies
+      - name: Clean iOS Pods
+        run: |
+          cd ios
+          rm -rf Pods Podfile.lock
+          cd ..
+
+      - name: Install Flutter Dependencies
         run: flutter pub get
 
       - name: Install iOS Dependencies

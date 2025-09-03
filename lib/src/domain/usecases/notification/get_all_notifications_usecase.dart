@@ -1,9 +1,9 @@
+import 'package:dartz/dartz.dart';
+
+import '../../../core/error/failure.dart';
+import '../../../core/usecases/usecase.dart';
 import '../../entities/notification/notification_entity.dart';
 import '../../repositories/notification/notification_repository.dart';
-
-import '../../../core/usecases/usecase.dart';
-import '../../../core/error/failure.dart';
-import 'package:dartz/dartz.dart';
 
 class GetAllNotificationsUseCase
     extends UseCase<List<NotificationEntity>, NoParams> {

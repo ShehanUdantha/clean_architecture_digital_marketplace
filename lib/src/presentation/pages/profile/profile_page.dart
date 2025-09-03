@@ -1,10 +1,12 @@
 import 'dart:io';
+import '../../../core/widgets/blur_loading_overlay_widget.dart';
+import '../../blocs/admin_home/admin_home_bloc.dart';
+import '../../blocs/user_home/user_home_bloc.dart';
 
 import '../../../core/utils/extension.dart';
 
 import '../../../core/utils/enum.dart';
 import '../../../core/utils/helper.dart';
-import '../../blocs/user_home/user_home_bloc.dart';
 import '../../widgets/profile/profile_card_widget.dart';
 
 import '../../../core/constants/routes_name.dart';
@@ -27,86 +29,125 @@ class ProfilePage extends StatelessWidget {
   }
 
   Widget _bodyWidget(BuildContext context) {
-    final authState = context.watch<AuthBloc>().state;
-
     return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0).copyWith(bottom: 0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              AppBarTitleWidget(title: context.loc.profile),
-              SizedBox(
-                height: Helper.screeHeight(context) *
-                    (Platform.isAndroid ? 0.718 : 0.679),
-                child: ListView(
-                  physics: const NeverScrollableScrollPhysics(),
-                  children: [
-                    ProfileCardWidget(
-                      title: context.loc.userInformation,
-                      function: () => _moveToPage(
-                        context,
-                        authState.userType == UserTypes.user.name
-                            ? AppRoutes.userInfoPageName
-                            : AppRoutes.adminInfoPageName,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    if (authState.userType == UserTypes.user.name)
-                      ProfileCardWidget(
-                        title: context.loc.purchaseHistory,
-                        function: () => _moveToPage(
-                          context,
-                          AppRoutes.purchaseHistoryPageName,
+      child: BlocConsumer<AuthBloc, AuthState>(
+        listenWhen: (previous, current) => previous.status != current.status,
+        listener: (context, state) {
+          if (state.status == BlocStatus.error) {
+            _hideBlurLoading(context);
+          }
+
+          if (state.status == BlocStatus.success) {
+            _hideBlurLoading(context);
+            context.goNamed(AppRoutes.signInPageName);
+            context.read<UserHomeBloc>().add(SetUserDetailsToDefault());
+            context.read<AdminHomeBloc>().add(SetAdminDetailsToDefault());
+            context.read<AuthBloc>().add(SetAuthStatusToDefault());
+          }
+        },
+        buildWhen: (previous, current) =>
+            previous.userType != current.userType ||
+            previous.status != current.status,
+        builder: (context, state) {
+          final isLoading = state.status == BlocStatus.loading;
+          final isUser = state.userType == UserTypes.user.name;
+
+          return Padding(
+            padding: const EdgeInsets.all(16.0).copyWith(bottom: 0),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  AppBarTitleWidget(title: context.loc.profile),
+                  SizedBox(
+                    height: Helper.screeHeight(context) *
+                        (Platform.isAndroid ? 0.718 : 0.679),
+                    child: ListView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: [
+                        ProfileCardWidget(
+                          title: context.loc.userInformation,
+                          function: () => isLoading
+                              ? () {}
+                              : _moveToPage(
+                                  context,
+                                  isUser
+                                      ? AppRoutes.userInfoPageName
+                                      : AppRoutes.adminInfoPageName,
+                                ),
                         ),
-                      ),
-                    if (authState.userType == UserTypes.user.name)
-                      const SizedBox(
-                        height: 16,
-                      ),
-                    ProfileCardWidget(
-                      title: context.loc.settings,
-                      function: () => _moveToPage(
-                        context,
-                        authState.userType == UserTypes.user.name
-                            ? AppRoutes.settingsPageName
-                            : AppRoutes.adminSettingsPageName,
-                      ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        if (isUser)
+                          ProfileCardWidget(
+                            title: context.loc.purchaseHistory,
+                            function: () => isLoading
+                                ? () {}
+                                : _moveToPage(
+                                    context,
+                                    AppRoutes.purchaseHistoryPageName,
+                                  ),
+                          ),
+                        if (isUser)
+                          const SizedBox(
+                            height: 16.0,
+                          ),
+                        ProfileCardWidget(
+                          title: context.loc.settings,
+                          function: () => isLoading
+                              ? () {}
+                              : _moveToPage(
+                                  context,
+                                  isUser
+                                      ? AppRoutes.settingsPageName
+                                      : AppRoutes.adminSettingsPageName,
+                                ),
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                      ],
                     ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                  ],
-                ),
+                  ),
+                  ElevatedButtonWidget(
+                    title: context.loc.signOut,
+                    function: () => isLoading ? () {} : _handleSignOut(context),
+                    isButtonLoading: isLoading,
+                  ),
+                ],
               ),
-              BlocListener<AuthBloc, AuthState>(
-                listener: (context, state) {
-                  if (state.signOutStatus == BlocStatus.success) {
-                    context.read<UserHomeBloc>().add(SetUserDetailsToDefault());
-                    context.read<AuthBloc>().add(SetAuthStatusToDefault());
-                    context.goNamed(AppRoutes.signInPageName);
-                  }
-                },
-                child: ElevatedButtonWidget(
-                  title: context.loc.signOut,
-                  function: () => _handleSignOut(context),
-                ),
-              ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
 
   void _handleSignOut(BuildContext context) {
+    _showBlurLoading(context);
     context.read<AuthBloc>().add(SignOutEvent());
   }
 
   void _moveToPage(BuildContext context, String pathName) {
     context.goNamed(pathName);
+  }
+
+  void _showBlurLoading(BuildContext context) {
+    showGeneralDialog(
+      barrierDismissible: false,
+      barrierLabel: 'Loading...',
+      barrierColor: Colors.transparent,
+      context: context,
+      pageBuilder: (_, __, ___) {
+        return const BlurLoadingOverlayWidget();
+      },
+    );
+  }
+
+  void _hideBlurLoading(BuildContext context) {
+    if (Navigator.canPop(context)) {
+      Navigator.of(context, rootNavigator: true).pop();
+    }
   }
 }

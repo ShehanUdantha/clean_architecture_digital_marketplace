@@ -1,3 +1,6 @@
+import 'network_service.dart';
+import '../../presentation/blocs/language/language_cubit.dart';
+import '../../presentation/blocs/theme/theme_cubit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -36,10 +39,8 @@ import '../../domain/repositories/notification/notification_repository.dart';
 import '../../domain/repositories/product/product_repository.dart';
 import '../../domain/repositories/stripe/stripe_repository.dart';
 import '../../domain/repositories/user/user_repository.dart';
-import '../../domain/usecases/auth/check_email_verification_usecase.dart';
 import '../../domain/usecases/auth/forgot_password_usecase.dart';
 import '../../domain/usecases/auth/get_auth_user_usecase.dart';
-import '../../domain/usecases/auth/refresh_user_usecase.dart';
 import '../../domain/usecases/auth/send_email_verification_usecase.dart';
 import '../../domain/usecases/auth/user_sign_in_usecase.dart';
 import '../../domain/usecases/auth/user_sign_out_usecase.dart';
@@ -47,7 +48,6 @@ import '../../domain/usecases/auth/user_sign_up_usecase.dart';
 import '../../domain/usecases/cart/add_product_to_cart_usecase.dart';
 import '../../domain/usecases/cart/get_all_carted_items_details_by_id_usecase.dart';
 import '../../domain/usecases/cart/get_carted_items_usecase.dart';
-import '../../domain/usecases/cart/purchase/download_product_by_product_id_usecase.dart';
 import '../../domain/usecases/cart/purchase/get_all_purchase_history_by_month_usecase.dart';
 import '../../domain/usecases/cart/purchase/get_all_purchase_history_by_user_id_usecase.dart';
 import '../../domain/usecases/cart/purchase/get_all_purchase_items_by_product_id_usecase.dart';
@@ -81,17 +81,11 @@ import '../../presentation/blocs/admin_home/admin_home_bloc.dart';
 import '../../presentation/blocs/auth/auth_bloc.dart';
 import '../../presentation/blocs/cart/cart_bloc.dart';
 import '../../presentation/blocs/category/category_bloc.dart';
-import '../../presentation/blocs/forgot_password/forgot_password_bloc.dart';
-import '../../presentation/blocs/language/language_bloc.dart';
-import '../../presentation/blocs/network/network_bloc.dart';
 import '../../presentation/blocs/notification/notification_bloc.dart';
 import '../../presentation/blocs/product/product_bloc.dart';
 import '../../presentation/blocs/product_details/product_details_bloc.dart';
 import '../../presentation/blocs/purchase/purchase_bloc.dart';
-import '../../presentation/blocs/sign_in/sign_in_bloc.dart';
-import '../../presentation/blocs/sign_up/sign_up_bloc.dart';
 import '../../presentation/blocs/stripe/stripe_bloc.dart';
-import '../../presentation/blocs/theme/theme_bloc.dart';
 import '../../presentation/blocs/user_home/user_home_bloc.dart';
 import '../../presentation/blocs/users/users_bloc.dart';
 import '../constants/variable_names.dart';
@@ -108,6 +102,11 @@ Future<void> serviceLocator() async {
 
   // http for network request
   sl.registerSingleton<http.Client>(http.Client());
+
+  // network
+  sl.registerSingleton<NetworkService>(
+    NetworkService(connectivity: Connectivity()),
+  );
 
   // local storage
   sl.registerSingleton<Box<dynamic>>(
@@ -180,41 +179,49 @@ Future<void> serviceLocator() async {
   sl.registerSingleton<UserAuthRepository>(
     UserAuthRepositoryImpl(
       userAuthRemoteDataSource: sl(),
+      networkService: sl(),
     ),
   );
   sl.registerSingleton<CategoryRepository>(
     CategoryRepositoryImpl(
       categoryRemoteDataSource: sl(),
+      networkService: sl(),
     ),
   );
   sl.registerSingleton<ProductRepository>(
     ProductRepositoryImpl(
       productRemoteDataSource: sl(),
+      networkService: sl(),
     ),
   );
   sl.registerSingleton<UserRepository>(
     UserRepositoryImpl(
       userRemoteDataSource: sl(),
+      networkService: sl(),
     ),
   );
   sl.registerSingleton<CartRepository>(
     CartRepositoryImpl(
       cartRemoteDataSource: sl(),
+      networkService: sl(),
     ),
   );
   sl.registerSingleton<StripeRepository>(
     StripeRepositoryImpl(
       stripeRemoteDataSource: sl(),
+      networkService: sl(),
     ),
   );
   sl.registerSingleton<PurchaseRepository>(
     PurchaseRepositoryImpl(
       purchaseRemoteDataSource: sl(),
+      networkService: sl(),
     ),
   );
   sl.registerSingleton<NotificationRepository>(
     NotificationRepositoryImpl(
       notificationRemoteDataSource: sl(),
+      networkService: sl(),
     ),
   );
   sl.registerSingleton<NotificationCountRepository>(
@@ -234,9 +241,6 @@ Future<void> serviceLocator() async {
   sl.registerSingleton<UserSignInUseCase>(
     UserSignInUseCase(userAuthRepository: sl()),
   );
-  sl.registerSingleton<CheckEmailVerificationUseCase>(
-    CheckEmailVerificationUseCase(userAuthRepository: sl()),
-  );
   sl.registerSingleton<GetUserTypeUseCase>(
     GetUserTypeUseCase(userRepository: sl()),
   );
@@ -248,9 +252,6 @@ Future<void> serviceLocator() async {
   );
   sl.registerSingleton<ForgotPasswordUseCase>(
     ForgotPasswordUseCase(userAuthRepository: sl()),
-  );
-  sl.registerSingleton<RefreshUserUseCase>(
-    RefreshUserUseCase(userAuthRepository: sl()),
   );
 
   // admin
@@ -359,38 +360,22 @@ Future<void> serviceLocator() async {
   sl.registerSingleton<GetAllPurchaseItemsByItsProductIdsUseCase>(
     GetAllPurchaseItemsByItsProductIdsUseCase(purchaseRepository: sl()),
   );
-  sl.registerSingleton<DownloadProductByProductIdUsecase>(
-    DownloadProductByProductIdUsecase(purchaseRepository: sl()),
-  );
 
   // bloc
   // auth
-  sl.registerFactory<SignUpBloc>(
-    () => SignUpBloc(
-      sl(),
-      sl(),
-    ),
-  );
-  sl.registerFactory<SignInBloc>(
-    () => SignInBloc(
-      sl(),
-      sl(),
-      sl(),
-    ),
-  );
+
   sl.registerFactory<AuthBloc>(
     () => AuthBloc(
       sl(),
       sl(),
       sl(),
       sl(),
-    ),
-  );
-  sl.registerFactory<ForgotPasswordBloc>(
-    () => ForgotPasswordBloc(
+      sl(),
+      sl(),
       sl(),
     ),
   );
+
   // admin
   // admin home
   sl.registerFactory<AdminHomeBloc>(
@@ -478,29 +463,19 @@ Future<void> serviceLocator() async {
     () => PurchaseBloc(
       sl(),
       sl(),
-      sl(),
-    ),
-  );
-
-  // network
-  sl.registerSingleton<Connectivity>(Connectivity());
-
-  sl.registerFactory<NetworkBloc>(
-    () => NetworkBloc(
-      sl(),
     ),
   );
 
   // theme
-  sl.registerFactory<ThemeBloc>(
-    () => ThemeBloc(
+  sl.registerFactory<ThemeCubit>(
+    () => ThemeCubit(
       sl(),
     ),
   );
 
   // language
-  sl.registerFactory<LanguageBloc>(
-    () => LanguageBloc(
+  sl.registerFactory<LanguageCubit>(
+    () => LanguageCubit(
       sl(),
     ),
   );

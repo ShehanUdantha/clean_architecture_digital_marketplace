@@ -1,5 +1,7 @@
+import 'package:Pixelcart/src/core/constants/error_messages.dart';
 import 'package:Pixelcart/src/core/error/exception.dart';
 import 'package:Pixelcart/src/core/error/failure.dart';
+import 'package:Pixelcart/src/core/services/network_service.dart';
 import 'package:Pixelcart/src/core/utils/enum.dart';
 import 'package:Pixelcart/src/core/utils/extension.dart';
 import 'package:Pixelcart/src/data/data_sources/remote/cart/cart_remote_data_source.dart';
@@ -11,15 +13,21 @@ import 'package:mockito/mockito.dart';
 import '../../../fixtures/cart_values.dart';
 import 'cart_repository_impl_test.mocks.dart';
 
-@GenerateMocks([CartRemoteDataSource])
+@GenerateMocks([CartRemoteDataSource, NetworkService])
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   late CartRepositoryImpl cartRepositoryImpl;
   late MockCartRemoteDataSource mockCartRemoteDataSource;
+  late MockNetworkService mockNetworkService;
 
   setUp(() {
     mockCartRemoteDataSource = MockCartRemoteDataSource();
-    cartRepositoryImpl =
-        CartRepositoryImpl(cartRemoteDataSource: mockCartRemoteDataSource);
+    mockNetworkService = MockNetworkService();
+    cartRepositoryImpl = CartRepositoryImpl(
+      cartRemoteDataSource: mockCartRemoteDataSource,
+      networkService: mockNetworkService,
+    );
   });
 
   group(
@@ -29,6 +37,7 @@ void main() {
         'should return a Success Status when the add product to cart process is successful',
         () async {
           // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockCartRemoteDataSource.addProductToCart(cartedProductId))
               .thenAnswer((_) async => ResponseTypes.success.response);
 
@@ -51,6 +60,7 @@ void main() {
           final dbException = DBException(
             errorMessage: 'Add product to cart failed',
           );
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockCartRemoteDataSource.addProductToCart(cartedProductId))
               .thenThrow(dbException);
 
@@ -68,6 +78,29 @@ void main() {
           );
         },
       );
+
+      test(
+        'should return a Failure when network fails in the add product to cart process',
+        () async {
+          // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => false);
+
+          // Act
+          final failure = NetworkFailure(
+            errorMessage: AppErrorMessages.noInternetMessage,
+          );
+          final result =
+              await cartRepositoryImpl.addProductToCart(cartedProductId);
+
+          // Assert
+          result.fold(
+            (l) {
+              expect(l, failure);
+            },
+            (r) => fail('test failed'),
+          );
+        },
+      );
     },
   );
 
@@ -78,6 +111,7 @@ void main() {
         'should return a List of Products when the get all carted items details by id process is successful',
         () async {
           // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockCartRemoteDataSource.getAllCartedItemsDetailsById())
               .thenAnswer((_) async => cartedProductModels);
 
@@ -99,6 +133,7 @@ void main() {
           final dbException = DBException(
             errorMessage: 'Get all carted items details by id failed',
           );
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockCartRemoteDataSource.getAllCartedItemsDetailsById())
               .thenThrow(dbException);
 
@@ -115,6 +150,28 @@ void main() {
           );
         },
       );
+
+      test(
+        'should return a Failure when network fails in the get all carted items details by id process',
+        () async {
+          // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => false);
+
+          // Act
+          final failure = NetworkFailure(
+            errorMessage: AppErrorMessages.noInternetMessage,
+          );
+          final result = await cartRepositoryImpl.getAllCartedItemsDetails();
+
+          // Assert
+          result.fold(
+            (l) {
+              expect(l, failure);
+            },
+            (r) => fail('test failed'),
+          );
+        },
+      );
     },
   );
 
@@ -125,6 +182,7 @@ void main() {
         'should return a List of Carted Items Ids when the get carted items process is successful',
         () async {
           // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockCartRemoteDataSource.getCartedItems())
               .thenAnswer((_) async => cartedProductsIds);
 
@@ -146,6 +204,7 @@ void main() {
           final dbException = DBException(
             errorMessage: 'Get carted items failed',
           );
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockCartRemoteDataSource.getCartedItems())
               .thenThrow(dbException);
 
@@ -162,6 +221,28 @@ void main() {
           );
         },
       );
+
+      test(
+        'should return a Failure when network fails in the get carted items process',
+        () async {
+          // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => false);
+
+          // Act
+          final failure = NetworkFailure(
+            errorMessage: AppErrorMessages.noInternetMessage,
+          );
+          final result = await cartRepositoryImpl.getCartedItems();
+
+          // Assert
+          result.fold(
+            (l) {
+              expect(l, failure);
+            },
+            (r) => fail('test failed'),
+          );
+        },
+      );
     },
   );
 
@@ -172,6 +253,7 @@ void main() {
         'should return a Success Status when the remove product from cart process is successful',
         () async {
           // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockCartRemoteDataSource.removeProductFromCart(cartedProductId))
               .thenAnswer((_) async => ResponseTypes.success.response);
 
@@ -194,6 +276,7 @@ void main() {
           final dbException = DBException(
             errorMessage: 'Remove product from cart failed',
           );
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockCartRemoteDataSource.removeProductFromCart(cartedProductId))
               .thenThrow(dbException);
 
@@ -211,6 +294,29 @@ void main() {
           );
         },
       );
+
+      test(
+        'should return a Failure when network fails in the remove product from cart process',
+        () async {
+          // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => false);
+
+          // Act
+          final failure = NetworkFailure(
+            errorMessage: AppErrorMessages.noInternetMessage,
+          );
+          final result =
+              await cartRepositoryImpl.removeProductFromCart(cartedProductId);
+
+          // Assert
+          result.fold(
+            (l) {
+              expect(l, failure);
+            },
+            (r) => fail('test failed'),
+          );
+        },
+      );
     },
   );
 
@@ -221,6 +327,7 @@ void main() {
         'should return a Success Status when the set cart details to purchase history and delete cart process is successful',
         () async {
           // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockCartRemoteDataSource
                   .setCartDetailsToPurchaseHistoryAndDeleteCart(
                       cartedProductEntitiesListSubTotal.toString()))
@@ -247,6 +354,7 @@ void main() {
             errorMessage:
                 'Set cart details to purchase history and delete cart failed',
           );
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockCartRemoteDataSource
                   .setCartDetailsToPurchaseHistoryAndDeleteCart(
                       cartedProductEntitiesListSubTotal.toString()))
@@ -264,6 +372,30 @@ void main() {
           );
           result.fold(
             (l) => expect(l, failure),
+            (r) => fail('test failed'),
+          );
+        },
+      );
+
+      test(
+        'should return a Failure when network fails in the set cart details to purchase history and delete cart process',
+        () async {
+          // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => false);
+
+          // Act
+          final failure = NetworkFailure(
+            errorMessage: AppErrorMessages.noInternetMessage,
+          );
+          final result = await cartRepositoryImpl
+              .setCartDetailsToPurchaseHistoryAndDeleteCart(
+                  cartedProductEntitiesListSubTotal.toString());
+
+          // Assert
+          result.fold(
+            (l) {
+              expect(l, failure);
+            },
             (r) => fail('test failed'),
           );
         },

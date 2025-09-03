@@ -149,5 +149,7 @@
   "couldNotDownload": "Impossible de télécharger",
   "anErrorOccurredWhileDownloading": "Une erreur est survenue lors du téléchargement",
   "downloadFileDirectoryNotFound": "Répertoire du fichier de téléchargement introuvable !",
-  "downloadURLNotFound": "URL de téléchargement introuvable !"
+  "downloadURLNotFound": "URL de téléchargement introuvable !",
+  "purchaseHistoryNotFound": "Historique des achats introuvable !",
+  "productListDoesNotMatchWithPurchaseHistory": "La liste de produits ne correspond pas à l'historique des achats."
 }

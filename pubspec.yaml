@@ -48,7 +48,7 @@ dependencies:
   go_router: ^14.2.7
   http: ^1.2.2
   iconsax: ^0.0.8
-  intl: ^0.19.0
+  intl: ^0.20.2
   uuid: ^4.5.0
   permission_handler: ^11.3.1
   like_button: ^2.0.5
@@ -59,7 +59,7 @@ dependencies:
   path_provider: ^2.1.4
   timeago: ^3.7.0
   shared_preferences: ^2.3.2
-  fl_chart: ^0.69.0
+  fl_chart: ^1.0.0
   envied: ^1.0.0
   flutter_localizations:
     sdk: flutter

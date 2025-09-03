@@ -1,7 +1,8 @@
+import 'package:dartz/dartz.dart';
+
 import '../../../../core/error/failure.dart';
 import '../../../../core/usecases/usecase.dart';
 import '../../../repositories/cart/cart_repository.dart';
-import 'package:dartz/dartz.dart';
 
 class SetCartDetailsToPurchaseHistoryAndDeleteCartUseCase
     extends UseCase<String, String> {

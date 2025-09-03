@@ -1,9 +1,6 @@
 name: "Pixelcart Dev - Android"
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - main
@@ -24,7 +21,16 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: 3.24.0
+          flutter-version: 3.32.2
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install NDK and Command Line Tools
+        run: sdkmanager "ndk;29.0.13113456" "cmdline-tools;latest"
+
+      - name: Accept licenses
+        run: yes | sdkmanager --licenses
 
       - name: Install Dependencies
         run: flutter pub get

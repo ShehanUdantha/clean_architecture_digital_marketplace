@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/constants/routes_name.dart';
 import '../../../core/utils/enum.dart';
 import '../../../core/utils/helper.dart';
+import '../../../core/widgets/builder_error_message_widget.dart';
 import '../../../core/widgets/page_header_widget.dart';
 import '../../../core/widgets/linear_loading_indicator.dart';
 import '../../blocs/notification/notification_bloc.dart';
@@ -22,11 +23,7 @@ class NotificationViewPage extends StatefulWidget {
 class _NotificationViewPageState extends State<NotificationViewPage> {
   @override
   void initState() {
-    final getCurrentUserId = context.read<AuthBloc>().currentUserId ?? "-1";
-    context
-        .read<NotificationBloc>()
-        .add(ResetNotificationCountEvent(userId: getCurrentUserId));
-
+    _initNotificationViewPage();
     super.initState();
   }
 
@@ -48,9 +45,12 @@ class _NotificationViewPageState extends State<NotificationViewPage> {
               function: () => _handleBackButton(),
             ),
             const SizedBox(
-              height: 26,
+              height: 26.0,
             ),
             BlocConsumer<NotificationBloc, NotificationState>(
+              listenWhen: (previous, current) =>
+                  previous.status != current.status ||
+                  previous.isDeleted != current.isDeleted,
               listener: (context, state) {
                 if (state.status == BlocStatus.error) {
                   Helper.showSnackBar(
@@ -68,6 +68,8 @@ class _NotificationViewPageState extends State<NotificationViewPage> {
                   );
                 }
               },
+              buildWhen: (previous, current) =>
+                  previous.status != current.status,
               builder: (context, state) {
                 switch (state.status) {
                   case BlocStatus.loading:
@@ -77,8 +79,8 @@ class _NotificationViewPageState extends State<NotificationViewPage> {
                       isHide: true,
                     );
                   case BlocStatus.error:
-                    return Center(
-                      child: Text(state.message),
+                    return BuilderErrorMessageWidget(
+                      message: state.message,
                     );
                   default:
                     return const SizedBox();
@@ -89,6 +91,13 @@ class _NotificationViewPageState extends State<NotificationViewPage> {
         ),
       ),
     );
+  }
+
+  void _initNotificationViewPage() {
+    final getCurrentUserId = context.read<AuthBloc>().currentUserId ?? "-1";
+    context
+        .read<NotificationBloc>()
+        .add(ResetNotificationCountEvent(userId: getCurrentUserId));
   }
 
   void _handleBackButton() {

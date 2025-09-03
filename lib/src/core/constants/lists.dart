@@ -87,7 +87,9 @@ class AppLists {
     100: '100',
   };
 
-  static monthlyPurchaseStatusChartBottomTitles(BuildContext context) => {
+  static Map<int, String> monthlyPurchaseStatusChartBottomTitles(
+          BuildContext context) =>
+      {
         20: '${context.loc.week} 1',
         40: '${context.loc.week} 2',
         60: '${context.loc.week} 3',

@@ -1,5 +1,6 @@
 import '../../../core/utils/extension.dart';
 import '../../../core/widgets/app_bar_title_widget.dart';
+import '../../../core/widgets/builder_error_message_widget.dart';
 import '../../../core/widgets/circular_loading_indicator.dart';
 import '../../widgets/cart/no_items_in_cart_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,8 +24,7 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   @override
   void initState() {
-    context.read<CartBloc>().add(GetAllCartedProductsDetailsByIdEvent());
-
+    _initCartPage();
     super.initState();
   }
 
@@ -45,6 +45,9 @@ class _CartPageState extends State<CartPage> {
             children: [
               AppBarTitleWidget(title: context.loc.cart),
               BlocConsumer<CartBloc, CartState>(
+                listenWhen: (previous, current) =>
+                    previous.status != current.status ||
+                    previous.message != current.message,
                 listener: (context, state) {
                   if (state.status == BlocStatus.error) {
                     Helper.showSnackBar(
@@ -70,6 +73,9 @@ class _CartPageState extends State<CartPage> {
                     }
                   }
                 },
+                buildWhen: (previous, current) =>
+                    previous.status != current.status ||
+                    previous.listOfCartedItems != current.listOfCartedItems,
                 builder: (context, state) {
                   switch (state.status) {
                     case BlocStatus.loading:
@@ -92,8 +98,8 @@ class _CartPageState extends State<CartPage> {
                         ],
                       );
                     case BlocStatus.error:
-                      return Center(
-                        child: Text(state.message),
+                      return BuilderErrorMessageWidget(
+                        message: state.message,
                       );
                     default:
                       return const SizedBox();
@@ -105,5 +111,9 @@ class _CartPageState extends State<CartPage> {
         ),
       ),
     );
+  }
+
+  void _initCartPage() {
+    context.read<CartBloc>().add(GetAllCartedProductsDetailsByIdEvent());
   }
 }

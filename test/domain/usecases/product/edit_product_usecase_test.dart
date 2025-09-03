@@ -26,11 +26,11 @@ void main() {
     'should return a Success Status when the edit product process is successful',
     () async {
       // Arrange
-      when(mockProductRepository.editProduct(editProductEntity))
+      when(mockProductRepository.editProduct(editedProductEntity))
           .thenAnswer((_) async => Right(ResponseTypes.success.response));
 
       // Act
-      final result = await editProductUseCase.call(editProductEntity);
+      final result = await editProductUseCase.call(editedProductEntity);
 
       // Assert
       expect(result, Right(ResponseTypes.success.response));
@@ -41,11 +41,11 @@ void main() {
     'should return a Failure status when attempting to edit a product that does not exist in firestore',
     () async {
       // Arrange
-      when(mockProductRepository.editProduct(editProductEntity))
+      when(mockProductRepository.editProduct(editedProductEntity))
           .thenAnswer((_) async => Right(ResponseTypes.failure.response));
 
       // Act
-      final result = await editProductUseCase.call(editProductEntity);
+      final result = await editProductUseCase.call(editedProductEntity);
 
       // Assert
       expect(result, Right(ResponseTypes.failure.response));
@@ -59,11 +59,11 @@ void main() {
       final failure = FirebaseFailure(
         errorMessage: 'Edit product failed',
       );
-      when(mockProductRepository.editProduct(editProductEntity))
+      when(mockProductRepository.editProduct(editedProductEntity))
           .thenAnswer((_) async => Left(failure));
 
       // Act
-      final result = await editProductUseCase.call(editProductEntity);
+      final result = await editProductUseCase.call(editedProductEntity);
 
       // Assert
       expect(result, Left(failure));

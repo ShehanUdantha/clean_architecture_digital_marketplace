@@ -1,7 +1,7 @@
+import '../utils/helper.dart';
+import '../../presentation/blocs/theme/theme_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../presentation/blocs/theme/theme_bloc.dart';
 import '../constants/colors.dart';
 
 class InputFieldWidget extends StatefulWidget {
@@ -37,54 +37,59 @@ class _InputFieldWidgetState extends State<InputFieldWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
+    return BlocBuilder<ThemeCubit, ThemeState>(
+      buildWhen: (previous, current) => previous.themeMode != current.themeMode,
+      builder: (context, state) {
+        final isDarkMode = Helper.checkIsDarkMode(context, state.themeMode);
 
-    return TextField(
-      controller: widget.controller,
-      obscureText: widget.suffix != null ? isSuffixClicked : false,
-      maxLines: widget.isTextArea ? widget.areaSize : 1,
-      keyboardType: widget.keyBoardType,
-      readOnly: widget.isReadOnly ?? false,
-      style: TextStyle(
-        color: isDarkMode ? AppColors.textFifth : AppColors.textPrimary,
-        fontWeight: FontWeight.normal,
-      ),
-      decoration: InputDecoration(
-        prefixIcon: widget.prefix,
-        prefixIconColor: AppColors.textThird,
-        suffixIcon: widget.suffix != null
-            ? IconButton(
-                onPressed: () {
-                  setState(() {
-                    isSuffixClicked = !isSuffixClicked;
-                  });
-                },
-                icon: isSuffixClicked
-                    ? widget.suffixSecondary != null
-                        ? widget.suffixSecondary!
-                        : widget.suffix!
-                    : widget.suffix!,
-              )
-            : const SizedBox(),
-        suffixIconColor: AppColors.textThird,
-        hintText: widget.hint,
-        hintStyle: const TextStyle(
-          color: AppColors.textThird,
-          fontWeight: FontWeight.normal,
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15.0),
-          borderSide: const BorderSide(color: AppColors.lightGrey),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15.0),
-          borderSide: const BorderSide(color: AppColors.lightGrey),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15.0),
-          borderSide: const BorderSide(color: AppColors.grey),
-        ),
-      ),
+        return TextField(
+          controller: widget.controller,
+          obscureText: widget.suffix != null ? isSuffixClicked : false,
+          maxLines: widget.isTextArea ? widget.areaSize : 1,
+          keyboardType: widget.keyBoardType,
+          readOnly: widget.isReadOnly ?? false,
+          style: TextStyle(
+            color: isDarkMode ? AppColors.textFifth : AppColors.textPrimary,
+            fontWeight: FontWeight.normal,
+          ),
+          decoration: InputDecoration(
+            prefixIcon: widget.prefix,
+            prefixIconColor: AppColors.textThird,
+            suffixIcon: widget.suffix != null
+                ? IconButton(
+                    onPressed: () {
+                      setState(() {
+                        isSuffixClicked = !isSuffixClicked;
+                      });
+                    },
+                    icon: isSuffixClicked
+                        ? widget.suffixSecondary != null
+                            ? widget.suffixSecondary!
+                            : widget.suffix!
+                        : widget.suffix!,
+                  )
+                : const SizedBox(),
+            suffixIconColor: AppColors.textThird,
+            hintText: widget.hint,
+            hintStyle: const TextStyle(
+              color: AppColors.textThird,
+              fontWeight: FontWeight.normal,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15.0),
+              borderSide: const BorderSide(color: AppColors.lightGrey),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15.0),
+              borderSide: const BorderSide(color: AppColors.lightGrey),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15.0),
+              borderSide: const BorderSide(color: AppColors.grey),
+            ),
+          ),
+        );
+      },
     );
   }
 }

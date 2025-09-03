@@ -24,11 +24,11 @@ void main() {
     'should return a Strip payment details when the make payments process is successful',
     () async {
       // Arrange
-      when(mockStripeRepository.makePayments(paymentAmount))
+      when(mockStripeRepository.makePayments(stripePaymentAmount))
           .thenAnswer((_) async => Right(stripeModel));
 
       // Act
-      final result = await makePaymentsUseCase.call(paymentAmount);
+      final result = await makePaymentsUseCase.call(stripePaymentAmount);
 
       // Assert
       expect(result, Right(stripeModel));
@@ -42,11 +42,11 @@ void main() {
       final failure = StripeFailure(
         errorMessage: 'Make payments failed',
       );
-      when(mockStripeRepository.makePayments(paymentAmount))
+      when(mockStripeRepository.makePayments(stripePaymentAmount))
           .thenAnswer((_) async => Left(failure));
 
       // Act
-      final result = await makePaymentsUseCase.call(paymentAmount);
+      final result = await makePaymentsUseCase.call(stripePaymentAmount);
 
       // Assert
       expect(result, Left(failure));

@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:Pixelcart/src/core/constants/variable_names.dart';
+import '../constants/variable_names.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';

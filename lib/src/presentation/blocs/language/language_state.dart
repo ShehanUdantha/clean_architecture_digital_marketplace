@@ -1,4 +1,4 @@
-part of 'language_bloc.dart';
+part of 'language_cubit.dart';
 
 class LanguageState extends Equatable {
   final String languageName;

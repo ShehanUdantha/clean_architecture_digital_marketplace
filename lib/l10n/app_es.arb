@@ -149,5 +149,7 @@
   "couldNotDownload": "No se pudo descargar",
   "anErrorOccurredWhileDownloading": "Ocurrió un error durante la descarga",
   "downloadFileDirectoryNotFound": "¡Directorio de archivos de descarga no encontrado!",
-  "downloadURLNotFound": "¡URL de descarga no encontrada!"
+  "downloadURLNotFound": "¡URL de descarga no encontrada!",
+  "purchaseHistoryNotFound": "¡Historial de compras no encontrado!",
+  "productListDoesNotMatchWithPurchaseHistory": "La lista de productos no coincide con el historial de compras."
 }

@@ -18,7 +18,7 @@ const List<ProductEntity> cartedProductEntities = [
     ],
     zipFile: 'https://example.com/files/x_2.zip',
     dateCreated: '2025-01-17',
-    likes: ['user_03'],
+    likes: ['sampleId246'],
     status: 'active',
   ),
   ProductEntity(
@@ -35,7 +35,7 @@ const List<ProductEntity> cartedProductEntities = [
     ],
     zipFile: 'https://example.com/files/x_3.zip',
     dateCreated: '2025-01-16',
-    likes: ['user_02', 'user_01'],
+    likes: ['sampleId678', 'sampleId123'],
     status: 'active',
   ),
 ];
@@ -55,7 +55,7 @@ const List<ProductModel> cartedProductModels = [
     ],
     zipFile: 'https://example.com/files/x_2.zip',
     dateCreated: '2025-01-17',
-    likes: ['user_03'],
+    likes: ['sampleId246'],
     status: 'active',
   ),
   ProductModel(
@@ -72,10 +72,64 @@ const List<ProductModel> cartedProductModels = [
     ],
     zipFile: 'https://example.com/files/x_3.zip',
     dateCreated: '2025-01-16',
-    likes: ['user_02', 'user_01'],
+    likes: ['sampleId678', 'sampleId123'],
     status: 'active',
   ),
 ];
+
+const ProductModel activeFirstProductModel = ProductModel(
+  id: 'product_002',
+  productName: 'Product Two',
+  price: '199.99',
+  category: 'Ui Kits',
+  marketingType: 'Latest',
+  description: 'Product Two description',
+  coverImage: 'https://example.com/images/cover/x_2.jpg',
+  subImages: [
+    'https://example.com/images/sub/x_3.jpg',
+    'https://example.com/images/sub/x_4.jpg',
+  ],
+  zipFile: 'https://example.com/files/x_2.zip',
+  dateCreated: '2025-01-17',
+  likes: ['sampleId246'],
+  status: 'active',
+);
+
+const ProductModel activeSecondProductModel = ProductModel(
+  id: 'product_003',
+  productName: 'Product Three',
+  price: '1499.99',
+  category: 'Fonts',
+  marketingType: 'Featured',
+  description: 'Product Three description',
+  coverImage: 'https://example.com/images/cover/x_3.jpg',
+  subImages: [
+    'https://example.com/images/sub/x_5.jpg',
+    'https://example.com/images/sub/x_6.jpg',
+  ],
+  zipFile: 'https://example.com/files/x_3.zip',
+  dateCreated: '2025-01-16',
+  likes: ['sampleId678', 'sampleId123'],
+  status: 'active',
+);
+
+const ProductModel inactiveProductModel = ProductModel(
+  id: 'product_004',
+  productName: 'Product Four',
+  price: '109.99',
+  category: 'Icons',
+  marketingType: 'Featured',
+  description: 'Product Four description',
+  coverImage: 'https://example.com/images/cover/x_4.jpg',
+  subImages: [
+    'https://example.com/images/sub/x_7.jpg',
+    'https://example.com/images/sub/x_8.jpg',
+  ],
+  zipFile: 'https://example.com/files/x_4.zip',
+  dateCreated: '2024-11-25',
+  likes: [],
+  status: 'deActive',
+);
 
 const double cartedProductEntitiesListSubTotal = 1699.98;
 const double cartedProductEntitiesListTransactionFee = 62.89926;

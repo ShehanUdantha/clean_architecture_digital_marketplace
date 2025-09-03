@@ -1,5 +1,7 @@
+import 'package:Pixelcart/src/core/constants/error_messages.dart';
 import 'package:Pixelcart/src/core/error/exception.dart';
 import 'package:Pixelcart/src/core/error/failure.dart';
+import 'package:Pixelcart/src/core/services/network_service.dart';
 import 'package:Pixelcart/src/data/data_sources/remote/user/user_remote_data_source.dart';
 import 'package:Pixelcart/src/data/repositories/user/user_repository_impl.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -10,15 +12,21 @@ import '../../../fixtures/auth_values.dart';
 import '../../../fixtures/users_values.dart';
 import 'user_repository_impl_test.mocks.dart';
 
-@GenerateMocks([UserRemoteDataSource])
+@GenerateMocks([UserRemoteDataSource, NetworkService])
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   late UserRepositoryImpl userRepositoryImpl;
   late MockUserRemoteDataSource mockUserRemoteDataSource;
+  late MockNetworkService mockNetworkService;
 
   setUp(() {
     mockUserRemoteDataSource = MockUserRemoteDataSource();
-    userRepositoryImpl =
-        UserRepositoryImpl(userRemoteDataSource: mockUserRemoteDataSource);
+    mockNetworkService = MockNetworkService();
+    userRepositoryImpl = UserRepositoryImpl(
+      userRemoteDataSource: mockUserRemoteDataSource,
+      networkService: mockNetworkService,
+    );
   });
 
   group(
@@ -28,6 +36,7 @@ void main() {
         'should return a Current user details when the get user details process is successful',
         () async {
           // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockUserRemoteDataSource.getUserDetails())
               .thenAnswer((_) async => userUserModel);
 
@@ -49,6 +58,7 @@ void main() {
           final dbException = DBException(
             errorMessage: 'Get user details failed',
           );
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockUserRemoteDataSource.getUserDetails())
               .thenThrow(dbException);
 
@@ -65,6 +75,28 @@ void main() {
           );
         },
       );
+
+      test(
+        'should return a Failure when network fails in the get user details process',
+        () async {
+          // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => false);
+
+          // Act
+          final failure = NetworkFailure(
+            errorMessage: AppErrorMessages.noInternetMessage,
+          );
+          final result = await userRepositoryImpl.getUserDetails();
+
+          // Assert
+          result.fold(
+            (l) {
+              expect(l, failure);
+            },
+            (r) => fail('test failed'),
+          );
+        },
+      );
     },
   );
 
@@ -75,8 +107,9 @@ void main() {
         'should return a user type according to the user id when the get user type process is successful',
         () async {
           // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockUserRemoteDataSource.getUserType(userUserId))
-              .thenAnswer((_) async => userTypeForUser);
+              .thenAnswer((_) async => userTypeForUser.toLowerCase());
 
           // Act
           final result = await userRepositoryImpl.getUserType(userUserId);
@@ -84,7 +117,7 @@ void main() {
           // Assert
           result.fold(
             (l) => fail('test failed'),
-            (r) => expect(r, userTypeForUser),
+            (r) => expect(r, userTypeForUser.toLowerCase()),
           );
         },
       );
@@ -96,6 +129,7 @@ void main() {
           final dbException = DBException(
             errorMessage: 'Get user type failed',
           );
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockUserRemoteDataSource.getUserType(userUserId))
               .thenThrow(dbException);
 
@@ -112,6 +146,28 @@ void main() {
           );
         },
       );
+
+      test(
+        'should return a Failure when network fails in the get user type process',
+        () async {
+          // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => false);
+
+          // Act
+          final failure = NetworkFailure(
+            errorMessage: AppErrorMessages.noInternetMessage,
+          );
+          final result = await userRepositoryImpl.getUserType(userUserId);
+
+          // Assert
+          result.fold(
+            (l) {
+              expect(l, failure);
+            },
+            (r) => fail('test failed'),
+          );
+        },
+      );
     },
   );
 
@@ -122,6 +178,7 @@ void main() {
         'should return an All type of users when the get all users (userType - "All Account") process is successful',
         () async {
           // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockUserRemoteDataSource.getAllUsers(userTypeForAll))
               .thenAnswer((_) async => allTypeOfUserModels);
 
@@ -140,6 +197,7 @@ void main() {
         'should return Only users when the get all users (userType - "User") process is successful',
         () async {
           // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockUserRemoteDataSource.getAllUsers(userTypeForUser))
               .thenAnswer((_) async => onlyUserModels);
 
@@ -158,6 +216,7 @@ void main() {
         'should return Only admins when the get all users (userType - "Admin") process is successful',
         () async {
           // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockUserRemoteDataSource.getAllUsers(userTypeForAdmin))
               .thenAnswer((_) async => onlyAdminModels);
 
@@ -179,6 +238,7 @@ void main() {
           final dbException = DBException(
             errorMessage: 'Get all users (userType - "All Account") failed',
           );
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockUserRemoteDataSource.getAllUsers(userTypeForAll))
               .thenThrow(dbException);
 
@@ -203,6 +263,7 @@ void main() {
           final dbException = DBException(
             errorMessage: 'Get all users (userType - "User") failed',
           );
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockUserRemoteDataSource.getAllUsers(userTypeForUser))
               .thenThrow(dbException);
 
@@ -227,6 +288,7 @@ void main() {
           final dbException = DBException(
             errorMessage: 'Get all users (userType - "Admin") failed',
           );
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => true);
           when(mockUserRemoteDataSource.getAllUsers(userTypeForAdmin))
               .thenThrow(dbException);
 
@@ -239,6 +301,28 @@ void main() {
           );
           result.fold(
             (l) => expect(l, failure),
+            (r) => fail('test failed'),
+          );
+        },
+      );
+
+      test(
+        'should return a Failure when network fails in the get all users process',
+        () async {
+          // Arrange
+          when(mockNetworkService.isConnected()).thenAnswer((_) async => false);
+
+          // Act
+          final failure = NetworkFailure(
+            errorMessage: AppErrorMessages.noInternetMessage,
+          );
+          final result = await userRepositoryImpl.getAllUsers(userTypeForAdmin);
+
+          // Assert
+          result.fold(
+            (l) {
+              expect(l, failure);
+            },
             (r) => fail('test failed'),
           );
         },

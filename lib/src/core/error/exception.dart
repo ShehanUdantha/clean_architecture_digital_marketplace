@@ -22,8 +22,8 @@ class DBException extends Exception {
   });
 }
 
-class StripeException extends Exception {
-  StripeException({
+class StripesException extends Exception {
+  StripesException({
     required super.errorMessage,
     super.stackTrace,
   });

@@ -1,18 +1,18 @@
-import '../../../../core/error/failure.dart';
-import '../../../../core/usecases/usecase.dart';
-import '../../../entities/product/purchase_products_entity.dart';
-import '../../../repositories/cart/purchase_repository.dart';
 import 'package:dartz/dartz.dart';
 
+import '../../../../core/error/failure.dart';
+import '../../../../core/usecases/usecase.dart';
+import '../../../entities/cart/purchase_entity.dart';
+import '../../../repositories/cart/purchase_repository.dart';
+
 class GetAllPurchaseHistoryByUserIdUseCase
-    extends UseCase<List<PurchaseProductsEntity>, NoParams> {
+    extends UseCase<List<PurchaseEntity>, NoParams> {
   final PurchaseRepository purchaseRepository;
 
   GetAllPurchaseHistoryByUserIdUseCase({required this.purchaseRepository});
 
   @override
-  Future<Either<Failure, List<PurchaseProductsEntity>>> call(
-      NoParams params) async {
+  Future<Either<Failure, List<PurchaseEntity>>> call(NoParams params) async {
     return await purchaseRepository.getAllPurchaseHistoryByUserId();
   }
 }

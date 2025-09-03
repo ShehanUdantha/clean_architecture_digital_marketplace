@@ -25,13 +25,28 @@ void main() {
     () async {
       // Arrange
       when(mockProductRepository.addFavorite(productId))
-          .thenAnswer((_) async => Right(productIdThreeNewEntity));
+          .thenAnswer((_) async => Right(productIdThreeFavoriteEntity));
 
       // Act
       final result = await addFavoriteUseCase.call(productId);
 
       // Assert
-      expect(result, Right(productIdThreeNewEntity));
+      expect(result, Right(productIdThreeFavoriteEntity));
+    },
+  );
+
+  test(
+    'should return a Product when the remove favorite from the product process is successful',
+    () async {
+      // Arrange
+      when(mockProductRepository.addFavorite(productId))
+          .thenAnswer((_) async => Right(productIdThreeEntity));
+
+      // Act
+      final result = await addFavoriteUseCase.call(productId);
+
+      // Assert
+      expect(result, Right(productIdThreeEntity));
     },
   );
 

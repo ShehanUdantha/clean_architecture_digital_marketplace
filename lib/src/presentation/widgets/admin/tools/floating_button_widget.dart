@@ -1,9 +1,10 @@
+import '../../../../core/utils/helper.dart';
+import '../../../blocs/theme/theme_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../../core/constants/colors.dart';
-import '../../../blocs/theme/theme_bloc.dart';
 
 class FloatingButtonWidget extends StatelessWidget {
   final Function function;
@@ -15,15 +16,22 @@ class FloatingButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = context.watch<ThemeBloc>().isDarkMode(context);
+    return BlocBuilder<ThemeCubit, ThemeState>(
+      buildWhen: (previous, current) => previous.themeMode != current.themeMode,
+      builder: (context, themeState) {
+        final isDarkMode =
+            Helper.checkIsDarkMode(context, themeState.themeMode);
 
-    return FloatingActionButton(
-      onPressed: () => function(),
-      backgroundColor: isDarkMode ? AppColors.lightGrey : AppColors.secondary,
-      child: Icon(
-        Iconsax.add,
-        color: isDarkMode ? AppColors.textPrimary : AppColors.textFifth,
-      ),
+        return FloatingActionButton(
+          onPressed: () => function(),
+          backgroundColor:
+              isDarkMode ? AppColors.lightGrey : AppColors.secondary,
+          child: Icon(
+            Iconsax.add,
+            color: isDarkMode ? AppColors.textPrimary : AppColors.textFifth,
+          ),
+        );
+      },
     );
   }
 }
