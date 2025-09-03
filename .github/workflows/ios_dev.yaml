@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-14
+    runs-on: macos-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -17,13 +17,18 @@ jobs:
         with:
           flutter-version: 3.32.2
 
-      - name: Install Dependencies
+      - name: Clean iOS Pods
+        run: |
+          cd ios
+          rm -rf Pods Podfile.lock
+          cd ..
+
+      - name: Install Flutter Dependencies
         run: flutter pub get
 
       - name: Install iOS Dependencies
         run: |
           cd ios
-          rm -rf Pods Podfile.lock
           pod install --repo-update
           cd ..
 
