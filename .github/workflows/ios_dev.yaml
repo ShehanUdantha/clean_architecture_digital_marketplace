@@ -3,7 +3,7 @@ name: "Pixelcart Dev - iOS"
 on:
   pull_request:
     branches:
-      - dev
+      - main
 
 jobs:
   build:
